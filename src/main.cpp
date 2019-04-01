@@ -5,9 +5,9 @@
 
 #include <hpx/hpx_main.hpp>             // Need main source file
 
+#include "inp/input.h"         // Input class
+#include "model/fd/fDModel.h" // Model class
 #include <iostream>
-#include "io/input.h"                   // Input class
-#include "model/fd/fdModel.h"           // Model class
 
 #include <boost/program_options.hpp>    // program options
 
@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
 //  std::uint64_t t = hpx::util::high_resolution_clock::now();
 
   // read input data
-  io::Input *deck = new io::Input(filename);
+  inp::Input *deck = new inp::Input(filename);
 
   // check which model to run
 //  if (deck->getSpatialDiscretization() == "finite_difference")

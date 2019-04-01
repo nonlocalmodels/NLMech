@@ -10,7 +10,7 @@
 #include <string>
 
 // forward declaration of interior flags deck
-namespace io {
+namespace inp {
 struct InteriorFlagsDeck;
 }
 
@@ -25,7 +25,7 @@ public:
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
    */
-  InteriorFlags(io::InteriorFlagsDeck *deck);
+  InteriorFlags(inp::InteriorFlagsDeck *deck);
 
 private:
   /**

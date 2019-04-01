@@ -39,3 +39,6 @@ core.*
 
 # build directory
 build
+
+# ide directory
+.idea

@@ -10,7 +10,7 @@
 #include <string>
 
 // forward declaration of loading deck
-namespace io {
+namespace inp {
 struct LoadingDeck;
 }
 
@@ -24,7 +24,7 @@ public:
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
    */
-  Loading(io::LoadingDeck *deck);
+  Loading(inp::LoadingDeck *deck);
 
 private:
   /**
@@ -39,6 +39,6 @@ private:
 
 };
 
-} // namespace io
+} // namespace inp
 
 #endif // NEIGHBOR_H

@@ -10,7 +10,7 @@
 #include <string>
 
 // forward declaration of fracture deck
-namespace io {
+namespace inp {
 struct FractureDeck;
 }
 
@@ -25,7 +25,7 @@ public:
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
    */
-  Fracture(io::FractureDeck *deck);
+  Fracture(inp::FractureDeck *deck);
 
 private:
   /**

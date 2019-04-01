@@ -21,7 +21,7 @@ namespace compare {
  * @return Result true if approximately equal else false
  */
 
-bool approximatelyEqual(const double a, const double b);
+bool approximatelyEqual(const double& a, const double& b);
 
 /*!
  * @brief Compares if a is essentially equal to b
@@ -30,7 +30,7 @@ bool approximatelyEqual(const double a, const double b);
  * @return Result true if essentially equal else false
  */
 
-bool essentiallyEqual(const double a, const double b);
+bool essentiallyEqual(const double& a, const double& b);
 
 /*!
  * @brief Compares if a > to b
@@ -39,7 +39,7 @@ bool essentiallyEqual(const double a, const double b);
  * @return Result true if a is definitely greater than b
  */
 
-bool definitelyGreaterThan(const double a, const double b);
+bool definitelyGreaterThan(const double& a, const double& b);
 
 /*!
  * @brief Compares if a is < to b
@@ -48,7 +48,7 @@ bool definitelyGreaterThan(const double a, const double b);
  * @return Result true if a is definitely less than b
  */
 
-bool definitelyLessThan(const double a, const double b);
+bool definitelyLessThan(const double& a, const double& b);
 
 } // namespace compare
 

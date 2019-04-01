@@ -4,6 +4,6 @@
 // (See accompanying file LICENSE.txt)
 
 #include "initialCondition.h"
-#include "../io/decks/initialConditionDeck.h"
+#include "../inp/decks/initialConditionDeck.h"
 
-loading::InitialCondition::InitialCondition(io::InitialConditionDeck *deck){}
+loading::InitialCondition::InitialCondition(inp::InitialConditionDeck *deck){}

@@ -4,6 +4,8 @@
 // (See accompanying file LICENSE.txt)
 
 #include "material.h"
-#include "../io/decks/materialDeck.h"
+#include "../inp/decks/materialDeck.h"
 
-material::Material::Material(io::MaterialDeck *deck){}
+material::Material::Material(inp::MaterialDeck *deck){}
+
+bool material::Material::isStateActive() { return false; }

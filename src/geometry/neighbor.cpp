@@ -4,6 +4,6 @@
 // (See accompanying file LICENSE.txt)
 
 #include "neighbor.h"
-#include "../io/decks/neighborDeck.h"
+#include "../inp/decks/neighborDeck.h"
 
-geometry::Neighbor::Neighbor(io::NeighborDeck *deck){}
+geometry::Neighbor::Neighbor(inp::NeighborDeck *deck){}

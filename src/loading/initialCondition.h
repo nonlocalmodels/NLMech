@@ -10,7 +10,7 @@
 #include <string>
 
 // forward declaration of initial condition deck
-namespace io {
+namespace inp {
 struct InitialConditionDeck;
 }
 
@@ -24,7 +24,7 @@ public:
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
    */
-  InitialCondition(io::InitialConditionDeck *deck);
+  InitialCondition(inp::InitialConditionDeck *deck);
 
 private:
   /**
@@ -39,6 +39,6 @@ private:
 
 };
 
-} // namespace io
+} // namespace inp
 
 #endif // NEIGHBOR_H

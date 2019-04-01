@@ -10,7 +10,7 @@
 #include <string>
 
 // forward declaration of neighbor deck
-namespace io {
+namespace inp {
 struct NeighborDeck;
 }
 
@@ -25,7 +25,7 @@ public:
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
    */
-  Neighbor(io::NeighborDeck *deck);
+  Neighbor(inp::NeighborDeck *deck);
 
 private:
   /**

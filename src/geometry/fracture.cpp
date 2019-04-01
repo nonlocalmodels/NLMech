@@ -4,6 +4,6 @@
 // (See accompanying file LICENSE.txt)
 
 #include "fracture.h"
-#include "../io/decks/fractureDeck.h"
+#include "../inp/decks/fractureDeck.h"
 
-geometry::Fracture::Fracture(io::FractureDeck *deck){}
+geometry::Fracture::Fracture(inp::FractureDeck *deck){}

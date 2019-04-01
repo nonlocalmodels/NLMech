@@ -4,6 +4,6 @@
 // (See accompanying file LICENSE.txt)
 
 #include "interiorFlags.h"
-#include "../io/decks/interiorFlagsDeck.h"
+#include "../inp/decks/interiorFlagsDeck.h"
 
-geometry::InteriorFlags::InteriorFlags(io::InteriorFlagsDeck *deck){}
+geometry::InteriorFlags::InteriorFlags(inp::InteriorFlagsDeck *deck){}

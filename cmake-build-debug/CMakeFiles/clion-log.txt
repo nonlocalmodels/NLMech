@@ -1,0 +1,26 @@
+/home/prashant/Softwares/local/clion/clion-2019.1/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/prashant/work/nonlocal_methods_work/NLMech_v0.1
+-- The CXX compiler identification is GNU 5.4.0
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+CMake Error at CMakeLists.txt:19 (find_package):
+  By not providing "FindHPX.cmake" in CMAKE_MODULE_PATH this project has
+  asked CMake to find a package configuration file provided by "HPX", but
+  CMake did not find one.
+
+  Could not find a package configuration file provided by "HPX" with any of
+  the following names:
+
+    HPXConfig.cmake
+    hpx-config.cmake
+
+  Add the installation prefix of "HPX" to CMAKE_PREFIX_PATH or set "HPX_DIR"
+  to a directory containing one of the above files.  If "HPX" provides a
+  separate development package or SDK, be sure it has been installed.
+
+
+-- Configuring incomplete, errors occurred!
+See also "/home/prashant/work/nonlocal_methods_work/NLMech_v0.1/cmake-build-debug/CMakeFiles/CMakeOutput.log".

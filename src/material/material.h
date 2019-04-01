@@ -10,7 +10,7 @@
 #include <string>
 
 // forward declaration of material deck
-namespace io {
+namespace inp {
 struct MaterialDeck;
 }
 
@@ -24,7 +24,9 @@ public:
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
    */
-  Material(io::MaterialDeck *deck);
+  Material(inp::MaterialDeck *deck);
+
+  bool isStateActive();
 
 private:
   /**
@@ -39,6 +41,6 @@ private:
 
 };
 
-} // namespace io
+} // namespace inp
 
 #endif // NEIGHBOR_H

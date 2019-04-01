@@ -39,6 +39,10 @@ if (VTK_VERSION VERSION_LESS "6")
     message(FATAL_ERROR "ERROR: Only VTK library 6+ supported")
 endif ()
 
+# Blas and Lapack
+find_package(BLAS REQUIRED)
+find_package(LAPACK REQUIRED)
+
 # Add flags to compiler
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lpthread")
@@ -56,18 +60,20 @@ else ()
 endif ()
 
 # include important directories
+include_directories(src/external/blaze/include/)
 include_directories(${VTK_INCLUDE_DIRS})
 include_directories(${HPX_INCLUDE_DIRS})
-include_directories(src/)
+include_directories(src)
 link_directories(${HPX_LIBRARY_DIR})
 
 # Add subdirectories
 add_subdirectory(src/util)
-add_subdirectory(src/io)
+add_subdirectory(src/inp)
 add_subdirectory(src/material)
 add_subdirectory(src/loading)
 add_subdirectory(src/geometry)
 add_subdirectory(src/model)
+add_subdirectory(docs)
 
 # Build executable
 add_hpx_executable(NLMech SOURCES src/main.cpp DEPENDENCIES Util IO

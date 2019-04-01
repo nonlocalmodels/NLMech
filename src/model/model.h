@@ -10,6 +10,16 @@
 #include <vector>
 #include <cstdlib>
 
+#include "../util/point.h"
+#include "../util/matrix.h"
+
+//namespace util {
+//
+// forward declaration
+//struct Point3;
+//struct SymMatrix3;
+//}
+
 //! Collection of models
 namespace model {
 
@@ -48,14 +58,14 @@ protected:
    */
   /**@{*/
 
-  /*! @brief Current positions of the nodes */
-  std::vector<double> d_y;
+  /*! @brief Displacement of the nodes */
+  std::vector<util::Point3> d_u;
 
   /*! @brief Velocity of the nodes */
-  std::vector<double> d_v;
+  std::vector<util::Point3> d_v;
 
   /*! @brief Total force on the nodes */
-  std::vector<double> d_f;
+  std::vector<util::Point3> d_f;
 
   /*! @brief Hydrostatic strains at the nodes */
   std::vector<double> d_hS;
@@ -89,6 +99,12 @@ protected:
 
   /*! @brief Bond-based fracture energy of the nodes */
   std::vector<float> d_eFB;
+
+  /*! @brief Strains of the nodes */
+  std::vector<util::SymMatrix3> d_strain;
+
+  /*! @brief Stress of the nodes */
+  std::vector<util::SymMatrix3> d_stress;
 
   /*! @brief Total internal energy */
   float d_te;

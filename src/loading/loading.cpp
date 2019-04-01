@@ -4,6 +4,6 @@
 // (See accompanying file LICENSE.txt)
 
 #include "loading.h"
-#include "../io/decks/loadingDeck.h"
+#include "../inp/decks/loadingDeck.h"
 
-loading::Loading::Loading(io::LoadingDeck *deck){}
+loading::Loading::Loading(inp::LoadingDeck *deck){}
