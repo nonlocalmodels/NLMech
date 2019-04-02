@@ -7,7 +7,6 @@
 #define POLICYDECK_H
 
 #include <vector>
-#include <iostream>       // error handling
 
 namespace inp {
 

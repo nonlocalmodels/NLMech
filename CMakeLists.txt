@@ -18,16 +18,16 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 # HPX
 find_package(HPX REQUIRED)
 
-if(NOT (HPX_BUILD_TYPE STREQUAL CMAKE_BUILD_TYPE))
+if (NOT (HPX_BUILD_TYPE STREQUAL CMAKE_BUILD_TYPE))
     message("HPX_BUILD_TYPE: " ${HPX_BUILD_TYPE} " CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
     message(FATAL_ERROR "Build types used for HPX and this library have to match")
-endif()
+endif ()
 
 list(APPEND CMAKE_MODULE_PATH "${HPX_PREFIX}/../cmake/")
 
-if(${HPX_FOUND})
+if (${HPX_FOUND})
     message("${HPX_INCLUDE_DIRS}")
-endif()
+endif ()
 
 # YAML
 find_package(YamlCpp REQUIRED)
@@ -60,6 +60,7 @@ else ()
 endif ()
 
 # include important directories
+include_directories(src/external/)
 include_directories(src/external/blaze/include/)
 include_directories(${VTK_INCLUDE_DIRS})
 include_directories(${HPX_INCLUDE_DIRS})
@@ -68,13 +69,15 @@ link_directories(${HPX_LIBRARY_DIR})
 
 # Add subdirectories
 add_subdirectory(src/util)
+add_subdirectory(src/rw)
 add_subdirectory(src/inp)
 add_subdirectory(src/material)
 add_subdirectory(src/loading)
 add_subdirectory(src/geometry)
+add_subdirectory(src/fe)
 add_subdirectory(src/model)
 add_subdirectory(docs)
 
 # Build executable
 add_hpx_executable(NLMech SOURCES src/main.cpp DEPENDENCIES Util IO
-        Material Loading Geometry Model ${YAML_CPP_LIB})
+        Material Loading Geometry Model ${YAML_CPP_LIB} ${VTK_LIBRARIES})

@@ -6,8 +6,8 @@
 #ifndef INITIALCONDITIONDECK_H
 #define INITIALCONDITIONDECK_H
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace inp {
 

@@ -207,7 +207,7 @@ inline void copy(std::vector<util::Point3> a, std::vector<util::Point3> &b) {
  * @param b Point b
  */
 inline std::vector<util::Point3> add(std::vector<util::Point3> a,
-                                    std::vector<util::Point3> b) {
+                                     std::vector<util::Point3> b) {
 
   std::vector<util::Point3> res;
   for (size_t i = 0; i < a.size(); i++)
@@ -222,7 +222,7 @@ inline std::vector<util::Point3> add(std::vector<util::Point3> a,
  * @param b Point b
  */
 inline std::vector<util::Point3> subb(std::vector<util::Point3> a,
-                                     std::vector<util::Point3> b) {
+                                      std::vector<util::Point3> b) {
 
   std::vector<util::Point3> res;
   for (size_t i = 0; i < a.size(); i++)

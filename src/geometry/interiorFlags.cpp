@@ -6,4 +6,4 @@
 #include "interiorFlags.h"
 #include "../inp/decks/interiorFlagsDeck.h"
 
-geometry::InteriorFlags::InteriorFlags(inp::InteriorFlagsDeck *deck){}
+geometry::InteriorFlags::InteriorFlags(inp::InteriorFlagsDeck *deck) {}

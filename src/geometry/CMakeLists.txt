@@ -3,7 +3,7 @@
 # Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 # (See accompanying file LICENSE.txt)
 
-AUX_SOURCE_DIRECTORY(./ SOURCES) 
+AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(Geometry ${SOURCES})
 target_link_libraries(Geometry IO)

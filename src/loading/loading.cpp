@@ -6,4 +6,4 @@
 #include "loading.h"
 #include "../inp/decks/loadingDeck.h"
 
-loading::Loading::Loading(inp::LoadingDeck *deck){}
+loading::Loading::Loading(inp::LoadingDeck *deck) {}

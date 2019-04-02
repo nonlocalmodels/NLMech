@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE.txt)
 
 #include "transfomation.h"
-#include <cmath>            // definition of sin, cosine etc
+#include <cmath> // definition of sin, cosine etc
 
 std::vector<double>
 util::transformation::rotateCW2D(const std::vector<double> x,
@@ -17,7 +17,7 @@ util::transformation::rotateCW2D(const std::vector<double> x,
 
 std::vector<double>
 util::transformation::rotateACW2D(const std::vector<double> x,
-                                 const double theta) {
+                                  const double theta) {
 
   return rotateCW2D(x, -theta);
 }

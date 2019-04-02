@@ -6,4 +6,4 @@
 #include "fracture.h"
 #include "../inp/decks/fractureDeck.h"
 
-geometry::Fracture::Fracture(inp::FractureDeck *deck){}
+geometry::Fracture::Fracture(inp::FractureDeck *deck) {}

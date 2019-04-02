@@ -7,12 +7,14 @@
 #include <iostream>
 
 // utils
-#include "../../util/point.h"
 #include "../../util/matrix.h"
+#include "../../util/point.h"
 
 // include high level class declarations
+#include "../../fe/massMatrix.h"
+#include "../../fe/mesh.h"
+#include "../../fe/quadrature.h"
 #include "../../geometry/fracture.h"
-#include "../../geometry/geometry.h"
 #include "../../geometry/interiorFlags.h"
 #include "../../geometry/neighbor.h"
 #include "../../inp/input.h"
@@ -21,9 +23,9 @@
 #include "../../loading/loading.h"
 #include "../../material/material.h"
 
-model::FDModel::FDModel(inp::Input *deck)  {
+model::FDModel::FDModel(inp::Input *deck) {
 
-  std::cout<<"Here\n";
+  std::cout << "Here\n";
 
   // store pointer to the input data
   d_input_p = deck;
@@ -39,16 +41,14 @@ model::FDModel::FDModel(inp::Input *deck)  {
   setupBoundaryCondition();
 }
 
-size_t model::FDModel::currentStep() {
-  return d_n;
-}
+size_t model::FDModel::currentStep() { return d_n; }
 
-float model::FDModel::getEnergy() {
-  return d_te - d_tw + d_tk;
-}
+float model::FDModel::getEnergy() { return d_te - d_tw + d_tk; }
 
 void model::FDModel::initHObjects() {
-  d_geometry_p = new geometry::Geometry(d_input_p->getGeometryDeck());
+  d_mesh_p = new fe::Mesh(d_input_p->getMeshDeck());
+  d_massMatrix_p = new fe::MassMatrix(d_input_p->getMassMatrixDeck());
+  d_quadrature_p = new fe::Quadrature(d_input_p->getQuadratureDeck());
   d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck());
   d_interiorFlags_p =
       new geometry::InteriorFlags(d_input_p->getInteriorFlagsDeck());
@@ -67,9 +67,9 @@ void model::FDModel::init() {
   d_n = 0;
 
   // get number of nodes, total number of dofs (fixed and free together)
-  size_t nnodes = d_geometry_p->getNumNodes();
-  size_t ndofs = d_geometry_p->getNumDofs();
-  size_t dim = d_geometry_p->getDimension();
+  size_t nnodes = d_mesh_p->getNumNodes();
+  size_t ndofs = d_mesh_p->getNumDofs();
+  size_t dim = d_mesh_p->getDimension();
 
   // initialize major simulation data
   d_u = std::vector<util::Point3>(nnodes, util::Point3());

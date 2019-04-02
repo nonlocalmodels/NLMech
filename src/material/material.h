@@ -6,8 +6,8 @@
 #ifndef MATERIAL_H
 #define MATERIAL_H
 
-#include <vector>
 #include <string>
+#include <vector>
 
 // forward declaration of material deck
 namespace inp {
@@ -35,12 +35,11 @@ private:
   /**@{*/
 
   /*! @brief Vector of initial (reference) coordinates of nodes */
-//  std::vector<double> d_nd;
+  //  std::vector<double> d_nd;
 
   /** @}*/
-
 };
 
-} // namespace inp
+} // namespace material
 
 #endif // NEIGHBOR_H

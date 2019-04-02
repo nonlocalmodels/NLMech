@@ -7,6 +7,8 @@
     <generated>
       <config projectName="NLMech" targetName="Geometry" />
       <config projectName="NLMech" targetName="doc_develop" />
+      <config projectName="NLMech" targetName="FE" />
+      <config projectName="NLMech" targetName="RW" />
       <config projectName="NLMech" targetName="doc" />
       <config projectName="NLMech" targetName="NLMech_exe" />
       <config projectName="NLMech" targetName="IO" />
@@ -23,59 +25,91 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52b6175d-7e8c-4d1c-853b-d71d66d49617" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/inp/decks/geometryDeck.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/inp/decks/initialConditionDeck.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/inp/decks/interiorFlagsDeck.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/inp/decks/loadingDeck.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/inp/decks/materialDeck.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/inp/decks/modelDeck.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/inp/decks/neighborDeck.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/inp/decks/outputDeck.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/inp/decks/solverDeck.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/inp/input.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/inp/policy.cpp" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/inp/policy.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeCache.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.13.4/CMakeCXXCompiler.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.13.4/CMakeDetermineCompilerABI_CXX.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.13.4/CMakeSystem.cmake" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/3.13.4/CompilerIdCXX/CMakeCXXCompilerId.cpp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/CMakeOutput.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-environment.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/cmake.check_cache" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/feature_tests.cxx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake/FindYamlCpp.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake/FindYamlCpp.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/docs/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/conf.doxy" beforeDir="false" afterPath="$PROJECT_DIR$/docs/conf.doxy" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notes/debug_function.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/notes/debug_function.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/Blaze.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/Blaze.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/Math.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/Math.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/Tutorial.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/Tutorial.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/Util.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/Util.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Accuracy.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Accuracy.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Aliases.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Aliases.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/BLAS.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/BLAS.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Band.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Band.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Column.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Column.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Constraints.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Constraints.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/DenseMatrix.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/DenseMatrix.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/DenseVector.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/DenseVector.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Epsilon.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Epsilon.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Exception.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Exception.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Forward.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Forward.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Functions.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Functions.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Functors.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Functors.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Infinity.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Infinity.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/LAPACK.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/LAPACK.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Matrix.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Matrix.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Row.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Row.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/SIMD.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/SIMD.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/SMP.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/SMP.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Shims.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Shims.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Submatrix.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Submatrix.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Subvector.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Subvector.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Traits.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Traits.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/TypeTraits.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/TypeTraits.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Vector.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Vector.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Views.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/external/blaze/include/blaze/math/Views.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geometry/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/geometry/fracture.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/fracture.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/geometry/fracture.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/fracture.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geometry/geometry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/geometry.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geometry/geometry.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/geometry.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geometry/geometry.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/mesh.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geometry/geometry.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/mesh.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/geometry/interiorFlags.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/interiorFlags.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/geometry/interiorFlags.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/interiorFlags.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/geometry/neighbor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/neighbor.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/geometry/neighbor.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/neighbor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/decks/fractureDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/fractureDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/decks/geometryDeck.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/decks/initialConditionDeck.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/decks/interiorFlagsDeck.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/decks/loadingDeck.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/decks/materialDeck.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/decks/neighborDeck.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/decks/outputDeck.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/decks/policyDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/policyDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/decks/problemDeck.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/decks/solverDeck.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/input.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/input.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/input.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/policy.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/io/policy.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/decks/geometryDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/meshDeck.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/decks/initialConditionDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/initialConditionDeck.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/decks/loadingDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/loadingDeck.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/decks/materialDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/materialDeck.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/decks/outputDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/outputDeck.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/decks/policyDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/policyDeck.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/decks/solverDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/solverDeck.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/input.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/input.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/input.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/input.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/policy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/policy.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/policy.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/policy.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/loading/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/loading/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/loading/initialCondition.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/loading/initialCondition.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/loading/initialCondition.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/loading/initialCondition.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/loading/loading.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/loading/loading.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/loading/loading.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/loading/loading.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/material.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/material.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/material/material.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/material.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/fd/fdModel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/fd/fdModel.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/fd/fDModel.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/model/model.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/model.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/compare.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/compare.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/compare.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/compare.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/matrixBlaze.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/matrixBlaze.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/point.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/point.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/transformation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/transformation.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -109,82 +143,133 @@
     <favorites_list name="NLMech" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/util/matrixBlaze.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" selection-start-line="7" selection-end-line="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="45" lean-forward="true" selection-start-line="7" selection-start-column="45" selection-end-line="7" selection-end-column="45" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/util/CMakeLists.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="64" selection-start-line="8" selection-start-column="47" selection-end-line="8" selection-end-column="64" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/geometry/geometry.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1305">
-              <caret line="87" column="4" selection-start-line="87" selection-start-column="4" selection-end-line="92" selection-end-column="28" />
-              <folding>
-                <element signature="e#150#171#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/geometry/geometry.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" selection-start-line="7" selection-end-line="7" />
-              <folding>
-                <element signature="e#189#206#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/model/CMakeLists.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="9" column="61" selection-start-line="9" selection-start-column="61" selection-end-line="9" selection-end-column="61" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/geometry/CMakeLists.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="120">
-              <caret line="8" column="33" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/fe/mesh.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="270">
+                  <caret line="114" lean-forward="true" selection-start-line="114" selection-end-line="114" />
+                  <folding>
+                    <element signature="e#182#242#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="541">
+                  <caret line="82" column="72" selection-start-line="82" selection-start-column="72" selection-end-line="82" selection-end-column="72" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/fe/mesh.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="194">
+                  <caret line="74" lean-forward="true" selection-start-line="74" selection-end-line="74" />
+                  <folding>
+                    <element signature="e#150#167#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/rw/mshReader.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-1801">
+                  <caret line="69" column="4" lean-forward="true" selection-start-line="69" selection-start-column="4" selection-end-line="69" selection-end-column="4" />
+                  <folding>
+                    <element signature="e#150#172#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/rw/mshReader.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="855">
+                  <caret line="57" selection-start-line="57" selection-end-line="57" />
+                  <folding>
+                    <element signature="e#220#237#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/util/point.h">
+              <provider selected="true" editor-type-id="text-editor" />
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="165">
+                  <caret line="38" column="33" selection-start-line="38" selection-start-column="33" selection-end-line="38" selection-end-column="33" />
+                  <folding>
+                    <element signature="e#150#170#0" expanded="true" />
+                    <element signature="e#304#336#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="324">
+                  <caret line="41" column="1" lean-forward="true" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+                  <folding>
+                    <element signature="e#187#212#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/rw/reader.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="150">
+                  <caret line="10" selection-start-line="10" selection-end-line="10" />
+                  <folding>
+                    <element signature="e#232#249#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CMakeLists.txt" />
+      </list>
+    </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
       <find>getSpatialDiscretization</find>
+      <find>geometry</find>
+      <find>count</find>
+      <find>reader</find>
     </findStrings>
+    <replaceStrings>
+      <replace>fe</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -192,45 +277,9 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/io/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/model/fd/fdModel.h" />
-        <option value="$PROJECT_DIR$/src/model/model.cpp" />
-        <option value="$PROJECT_DIR$/src/model/fd/fdModel.cpp" />
-        <option value="$PROJECT_DIR$/src/io/decks/problemDeck.h" />
-        <option value="$PROJECT_DIR$/src/io/decks/neighborDeck.h" />
-        <option value="$PROJECT_DIR$/src/io/decks/fractureDeck.h" />
-        <option value="$PROJECT_DIR$/src/io/decks/interiorFlagsDeck.h" />
-        <option value="$PROJECT_DIR$/src/util/compare.h" />
-        <option value="$PROJECT_DIR$/src/util/compare.cpp" />
-        <option value="$PROJECT_DIR$/src/io/decks/loadingDeck.h" />
-        <option value="$PROJECT_DIR$/src/io/decks/materialDeck.h" />
-        <option value="$PROJECT_DIR$/src/io/decks/policyDeck.h" />
-        <option value="$PROJECT_DIR$/src/io/decks/solverDeck.h" />
-        <option value="$PROJECT_DIR$/src/geometry/fracture.h" />
-        <option value="$PROJECT_DIR$/src/geometry/interiorFlags.h" />
-        <option value="$PROJECT_DIR$/src/geometry/neighbor.h" />
-        <option value="$PROJECT_DIR$/src/io/decks/initialConditionDeck.h" />
-        <option value="$PROJECT_DIR$/src/io/decks/outputDeck.h" />
-        <option value="$PROJECT_DIR$/src/loading/initialCondition.h" />
-        <option value="$PROJECT_DIR$/src/loading/loading.h" />
-        <option value="$PROJECT_DIR$/src/io/decks/modelDeck.h" />
-        <option value="$PROJECT_DIR$/src/io/input.cpp" />
-        <option value="$PROJECT_DIR$/src/util/point.h" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/util/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/util/types.hpp" />
-        <option value="$PROJECT_DIR$/src/model/model.h" />
-        <option value="$PROJECT_DIR$/src/util/matrix.h" />
-        <option value="$PROJECT_DIR$/src/io/decks/geometryDeck.h" />
-        <option value="$PROJECT_DIR$/src/material/material.h" />
-        <option value="$PROJECT_DIR$/src/model/fd/fDModel.h" />
-        <option value="$PROJECT_DIR$/src/io/policy.h" />
-        <option value="$PROJECT_DIR$/src/io/policy.cpp" />
         <option value="$PROJECT_DIR$/src/io/reader.cpp" />
         <option value="$PROJECT_DIR$/src/io/reader.h" />
         <option value="$PROJECT_DIR$/src/io/input.h" />
-        <option value="$PROJECT_DIR$/src/model/fd/fDModel.cpp" />
-        <option value="$PROJECT_DIR$/src/inp/input.cpp" />
         <option value="$PROJECT_DIR$/src/loading/initialCondition.cpp" />
         <option value="$PROJECT_DIR$/src/material/material.cpp" />
         <option value="$PROJECT_DIR$/src/loading/loading.cpp" />
@@ -242,13 +291,52 @@
         <option value="$PROJECT_DIR$/src/util/matrixBlaze.h" />
         <option value="$PROJECT_DIR$/src/geometry/geometry.h" />
         <option value="$PROJECT_DIR$/src/geometry/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/rw/writer.cpp" />
+        <option value="$PROJECT_DIR$/src/rw/writer.h" />
+        <option value="$PROJECT_DIR$/src/rw/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/fem/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/fem/quadrature.h" />
+        <option value="$PROJECT_DIR$/src/fem/quadrature.cpp" />
+        <option value="$PROJECT_DIR$/src/fem/massMatrix.h" />
+        <option value="$PROJECT_DIR$/src/fem/massMatrix.cpp" />
+        <option value="$PROJECT_DIR$/src/fe/geometry.cpp" />
+        <option value="$PROJECT_DIR$/src/fe/geometry.h" />
+        <option value="$PROJECT_DIR$/src/inp/decks/geometryDeck.h" />
         <option value="$PROJECT_DIR$/src/model/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/model/fd/fDModel.h" />
+        <option value="$PROJECT_DIR$/src/model/fd/fDModel.cpp" />
+        <option value="$PROJECT_DIR$/src/inp/decks/policyDeck.h" />
+        <option value="$PROJECT_DIR$/src/inp/input.h" />
+        <option value="$PROJECT_DIR$/src/inp/decks/meshDeck.h" />
+        <option value="$PROJECT_DIR$/src/inp/input.cpp" />
+        <option value="$PROJECT_DIR$/src/inp/policy.cpp" />
+        <option value="$PROJECT_DIR$/src/fe/quadrature.cpp" />
+        <option value="$PROJECT_DIR$/src/fe/quadrature.h" />
+        <option value="$PROJECT_DIR$/src/fe/massMatrix.cpp" />
+        <option value="$PROJECT_DIR$/src/inp/decks/quadratureDeck.h" />
+        <option value="$PROJECT_DIR$/src/inp/decks/massMatrixDeck.h" />
+        <option value="$PROJECT_DIR$/src/fe/massMatrix.h" />
+        <option value="$PROJECT_DIR$/src/fe/mesh.h" />
+        <option value="$PROJECT_DIR$/src/fe/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/rw/vtkReader.hpp" />
+        <option value="$PROJECT_DIR$/src/util/globalDefs.h" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/rw/reader.h" />
+        <option value="$PROJECT_DIR$/src/rw/vtkReader.h" />
+        <option value="$PROJECT_DIR$/src/rw/mshReader.h" />
+        <option value="$PROJECT_DIR$/src/rw/reader.cpp" />
+        <option value="$PROJECT_DIR$/src/rw/vtkReader.cpp" />
+        <option value="$PROJECT_DIR$/src/rw/mshReader.cpp" />
+        <option value="$PROJECT_DIR$/src/fe/mesh.cpp" />
       </list>
     </option>
   </component>
+  <component name="NamedScopeManager">
+    <scope name="Src" pattern="!file[NLMech]:src/external//*&amp;&amp;!file[NLMech]:cmake-build-debug//*" />
+  </component>
   <component name="OCFindUsagesOptions" text="false" ivars="false" properties="true" derivedClasses="false" />
   <component name="OCResolveContextSettings">
-    <option name="configuration" value="0-Model" />
+    <option name="configuration" value="0-RW" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="277" />
@@ -280,7 +368,7 @@
               <item name="NLMech" type="b2602c69:ProjectViewProjectNode" />
               <item name="NLMech_v0.1" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="geometry" type="462c0819:PsiDirectoryNode" />
+              <item name="fe" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="NLMech" type="b2602c69:ProjectViewProjectNode" />
@@ -299,6 +387,12 @@
               <item name="NLMech" type="b2602c69:ProjectViewProjectNode" />
               <item name="NLMech_v0.1" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="rw" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="b2602c69:ProjectViewProjectNode" />
+              <item name="NLMech_v0.1" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="util" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -310,10 +404,11 @@
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="TODO_SCOPE" value="All Places" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.advertisement.text.overridden" value="true" />
     <property name="full.screen.before.presentation.mode" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/io/decks" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/inp/decks" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.stylelint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -328,7 +423,12 @@
     <property name="settings.editor.selected.configurable" value="CMakeSettings" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/fe" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/inp/decks" />
+      <recent name="$PROJECT_DIR$/src/fem" />
       <recent name="$PROJECT_DIR$/src/io/decks" />
       <recent name="$PROJECT_DIR$/src/io" />
       <recent name="$PROJECT_DIR$/cmake" />
@@ -347,6 +447,11 @@
     </option>
   </component>
   <component name="RunManager" selected="CMake Application.NLMech_exe">
+    <configuration name="FE" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="FE" CONFIG_NAME="Debug_1">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Geometry" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Geometry" CONFIG_NAME="Debug_1">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -372,8 +477,13 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NLMech_exe" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i input_2d_new.yaml --hpx:threads=1" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="NLMech_exe" CONFIG_NAME="Debug_1" RUN_TARGET_PROJECT_NAME="NLMech" RUN_TARGET_NAME="NLMech_exe">
+    <configuration name="NLMech_exe" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i input_2d_new.yaml --hpx:threads=1" WORKING_DIR="file://$PROJECT_DIR$/build/imp" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="NLMech_exe" CONFIG_NAME="Debug_1" RUN_TARGET_PROJECT_NAME="NLMech" RUN_TARGET_NAME="NLMech_exe">
       <method v="2" />
+    </configuration>
+    <configuration name="RW" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="RW" CONFIG_NAME="Debug_1">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
     </configuration>
     <configuration name="Util" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Util" CONFIG_NAME="Debug_1">
       <method v="2">
@@ -394,13 +504,18 @@
       <item itemvalue="CMake Application.NLMech_exe" />
       <item itemvalue="CMake Application.doc" />
       <item itemvalue="CMake Application.doc_develop" />
+      <item itemvalue="CMake Application.FE" />
       <item itemvalue="CMake Application.Geometry" />
       <item itemvalue="CMake Application.IO" />
       <item itemvalue="CMake Application.Loading" />
       <item itemvalue="CMake Application.Material" />
       <item itemvalue="CMake Application.Model" />
+      <item itemvalue="CMake Application.RW" />
       <item itemvalue="CMake Application.Util" />
     </list>
+  </component>
+  <component name="StructureViewFactory">
+    <option name="ACTIVE_ACTIONS" value=",INHERITORS_AND_CATEGORIES" />
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -417,12 +532,12 @@
       <workItem from="1554046904988" duration="44602000" />
       <workItem from="1554136415539" duration="10124000" />
       <workItem from="1554148486943" duration="8000" />
-      <workItem from="1554148508613" duration="343000" />
+      <workItem from="1554148508613" duration="20337000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="101891000" />
+    <option name="totallyTimeSpent" value="121885000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -437,18 +552,18 @@
     <frame x="52" y="-11" width="1869" height="1092" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49949032" visible="true" weight="0.20757826" />
-      <window_info id="Structure" order="1" sideWeight="0.5005097" side_tool="true" weight="0.19659528" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.20757826" />
+      <window_info id="Structure" order="1" sideWeight="0.50152904" side_tool="true" weight="0.20757826" />
       <window_info id="Favorites" order="2" sideWeight="0.50083196" side_tool="true" weight="0.2539913" />
       <window_info anchor="bottom" id="Messages" order="0" sideWeight="0.49854863" weight="0.3282365" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3282365" />
-      <window_info anchor="bottom" id="Terminal" order="2" weight="0.3286991" />
-      <window_info active="true" anchor="bottom" id="Run" order="3" visible="true" weight="0.32925585" />
-      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="Terminal" order="2" weight="0.3282365" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.32925585" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.39959225" />
       <window_info anchor="bottom" id="Database Changes" order="5" />
-      <window_info anchor="bottom" id="TODO" order="6" weight="0.32935324" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32925585" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5014514" side_tool="true" weight="0.32998884" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.32935324" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.32925585" />
       <window_info anchor="bottom" id="CMake" order="9" weight="0.3282365" />
       <window_info anchor="bottom" id="Tail" order="10" />
       <window_info anchor="bottom" id="Message" order="11" />
@@ -458,7 +573,7 @@
       <window_info anchor="right" id="Database" order="0" weight="0.32946298" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="1" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.24986272" />
     </layout>
     <layout-to-restore>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49916804" visible="true" weight="0.19220209" />
@@ -488,215 +603,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/docs/conf.doxy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="419" column="78" selection-start-line="419" selection-start-column="78" selection-end-line="419" selection-end-column="78" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file:///usr/include/stdlib.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="773" column="11" selection-start-line="773" selection-start-column="11" selection-end-line="773" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/transformation.cpp">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/compare.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" column="33" lean-forward="true" selection-start-line="21" selection-start-column="2" selection-end-line="22" selection-end-column="33" />
-          <folding>
-            <element signature="e#150#170#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/compare.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="615">
-          <caret line="41" column="61" lean-forward="true" selection-start-line="41" selection-end-line="41" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/loadingDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="42" lean-forward="true" selection-start-line="42" selection-end-line="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/neighborDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="27" column="2" lean-forward="true" selection-start-line="27" selection-start-column="2" selection-end-line="31" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/geometry/fracture.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="2" lean-forward="true" selection-start-line="1" selection-start-column="2" selection-end-line="1" selection-end-column="2" />
-          <folding>
-            <element signature="e#189#206#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/geometry/interiorFlags.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="10" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/geometry/neighbor.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="10" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/outputDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="10" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/Point.hpp" />
-    <entry file="file://$PROJECT_DIR$/src/util/point.hpp" />
-    <entry file="file://$PROJECT_DIR$/src/util/types.hpp" />
-    <entry file="file://$PROJECT_DIR$/src/util/point.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="20" lean-forward="true" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
-          <folding>
-            <element signature="e#193#209#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/matrix.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="495">
-          <caret line="33" column="33" lean-forward="true" selection-start-line="33" selection-start-column="33" selection-end-line="33" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/modelDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="36" column="25" lean-forward="true" selection-start-line="36" selection-start-column="2" selection-end-line="36" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/material/material.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="28" column="23" lean-forward="true" selection-start-line="28" selection-start-column="23" selection-end-line="28" selection-end-column="23" />
-          <folding>
-            <element signature="e#189#206#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/policyDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="24" column="10" lean-forward="true" selection-start-line="24" selection-start-column="10" selection-end-line="24" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/solverDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="3" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/reader.h" />
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/materialDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="45">
-          <caret line="3" column="38" lean-forward="true" selection-start-line="3" selection-start-column="38" selection-end-line="3" selection-end-column="38" />
-          <folding>
-            <element signature="e#197#214#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/interiorFlagsDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="21" selection-start-line="24" selection-start-column="21" selection-end-line="24" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/initialConditionDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="17" lean-forward="true" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
-          <folding>
-            <element signature="e#213#230#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/geometryDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="25" lean-forward="true" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/input.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-450">
-          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/fractureDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1305">
-          <caret line="87" column="21" lean-forward="true" selection-start-line="87" selection-start-column="21" selection-end-line="87" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/policy.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1005">
-          <caret line="67" column="41" selection-start-line="67" selection-start-column="41" selection-end-line="67" selection-end-column="41" />
-          <folding>
-            <element signature="e#150#169#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/loading/loading.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="10" selection-start-line="9" selection-start-column="10" selection-end-line="9" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2236">
-          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
-          <folding>
-            <element signature="e#187#212#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/loading/initialCondition.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -736,34 +642,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="51" selection-start-line="51" selection-end-line="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="18" column="29" selection-start-line="18" selection-start-column="29" selection-end-line="18" selection-end-column="29" />
-          <folding>
-            <element signature="e#150#170#0" expanded="true" />
-            <element signature="e#201#230#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/input.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="20" selection-start-line="20" selection-end-line="20" />
-          <folding>
-            <element signature="e#149#168#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/loading/initialCondition.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="90">
@@ -792,10 +670,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/CMakeLists.txt">
+    <entry file="file://$PROJECT_DIR$/src/util/matrixBlaze.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="64" selection-start-line="8" selection-start-column="47" selection-end-line="8" selection-end-column="64" />
+        <state relative-caret-position="195">
+          <caret line="13" column="34" lean-forward="true" selection-start-line="13" selection-start-column="34" selection-end-line="13" selection-end-column="34" />
         </state>
       </provider>
     </entry>
@@ -806,30 +684,59 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/matrixBlaze.h">
+    <entry file="file://$PROJECT_DIR$/src/rw/writer.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        <state relative-caret-position="225">
+          <caret line="15" column="8" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="8" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/geometry/geometry.h">
+    <entry file="file://$PROJECT_DIR$/src/rw/writer.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
-          <caret line="7" selection-start-line="7" selection-end-line="7" />
-          <folding>
-            <element signature="e#189#206#0" expanded="true" />
-          </folding>
+          <caret line="7" column="24" selection-start-line="7" selection-start-column="24" selection-end-line="7" selection-end-column="24" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/geometry/geometry.cpp">
+    <entry file="file://$PROJECT_DIR$/src/util/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1305">
-          <caret line="87" column="4" selection-start-line="87" selection-start-column="4" selection-end-line="92" selection-end-column="28" />
-          <folding>
-            <element signature="e#150#171#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="120">
+          <caret line="8" column="65" lean-forward="true" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fem/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="30" lean-forward="true" selection-start-line="8" selection-start-column="30" selection-end-line="8" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fem/quadrature.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="32" selection-start-line="11" selection-start-column="32" selection-end-line="11" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fem/quadrature.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="21" column="1" selection-start-line="21" selection-start-column="1" selection-end-line="21" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fem/massMatrix.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="32" lean-forward="true" selection-start-line="11" selection-start-column="32" selection-end-line="11" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fem/massMatrix.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
         </state>
       </provider>
     </entry>
@@ -843,7 +750,266 @@
     <entry file="file://$PROJECT_DIR$/src/model/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
-          <caret line="9" column="61" selection-start-line="9" selection-start-column="61" selection-end-line="9" selection-end-column="61" />
+          <caret line="9" column="64" selection-start-line="9" selection-start-column="64" selection-end-line="9" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/decks/policyDeck.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/decks/quadratureDeck.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="23" column="5" lean-forward="true" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/policy.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="19" lean-forward="true" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+          <folding>
+            <element signature="e#150#169#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/quadrature.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="57" selection-end-line="15" selection-end-column="2" />
+          <folding>
+            <element signature="e#150#173#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/massMatrix.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="19" lean-forward="true" selection-start-line="8" selection-start-column="19" selection-end-line="8" selection-end-column="19" />
+          <folding>
+            <element signature="e#150#173#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/input.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/decks/massMatrixDeck.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="20" column="44" lean-forward="true" selection-start-line="20" selection-start-column="44" selection-end-line="20" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/quadrature.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="5" lean-forward="true" selection-start-line="18" selection-start-column="5" selection-end-line="18" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/massMatrix.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="59" selection-start-line="12" selection-start-column="59" selection-end-line="12" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/input.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="299">
+          <caret line="151" column="5" lean-forward="true" selection-start-line="151" selection-start-column="5" selection-end-line="151" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/decks/meshDeck.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="22" selection-start-line="16" selection-start-column="22" selection-end-line="16" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" lean-forward="true" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/vtkReader.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="59" column="2" selection-start-line="59" selection-start-column="2" selection-end-line="59" selection-end-column="12" />
+          <folding>
+            <element signature="e#197#225#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="541">
+          <caret line="82" column="72" selection-start-line="82" selection-start-column="72" selection-end-line="82" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/vtkReader.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-114">
+          <caret line="35" column="5" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="25" />
+          <folding>
+            <element signature="e#197#225#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/feElementDefs.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="58" column="34" selection-start-line="58" selection-start-column="17" selection-end-line="58" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/point.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/vtkReader.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
+          <folding>
+            <element signature="e#150#172#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/reader.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="22" lean-forward="true" selection-start-line="7" selection-start-column="22" selection-end-line="7" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/reader.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" selection-start-line="10" selection-end-line="10" />
+          <folding>
+            <element signature="e#232#249#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/mshReader.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="855">
+          <caret line="57" selection-start-line="57" selection-end-line="57" />
+          <folding>
+            <element signature="e#220#237#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/mshReader.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1801">
+          <caret line="69" column="4" lean-forward="true" selection-start-line="69" selection-start-column="4" selection-end-line="69" selection-end-column="4" />
+          <folding>
+            <element signature="e#150#172#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/mesh.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="194">
+          <caret line="74" lean-forward="true" selection-start-line="74" selection-end-line="74" />
+          <folding>
+            <element signature="e#150#167#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="uml://JavaScript-modules-diagram//home/prashant/work/nonlocal_methods_work/NLMech_v0.1/src">
+      <provider selected="true" editor-type-id="UmlEditorProvider">
+        <state>
+          <ID>JavaScript-modules-diagram</ID>
+          <OriginalElement>$PROJECT_DIR$/src</OriginalElement>
+          <nodes />
+          <notes />
+          <edges />
+          <settings layout="Hierarchic Group" zoom="1.0" x="360.5" y="464.0" />
+          <SelectedNodes />
+          <Categories>
+            <Category>All</Category>
+          </Categories>
+          <VISIBILITY>Details</VISIBILITY>
+        </state>
+      </provider>
+    </entry>
+    <entry file="uml://JavaScript-modules-diagram//home/prashant/work/nonlocal_methods_work/NLMech_v0.1/src/model">
+      <provider selected="true" editor-type-id="UmlEditorProvider">
+        <state>
+          <ID>JavaScript-modules-diagram</ID>
+          <OriginalElement>$PROJECT_DIR$/src/model</OriginalElement>
+          <nodes />
+          <notes />
+          <edges />
+          <settings layout="Hierarchic Group" zoom="1.0" x="360.5" y="464.0" />
+          <SelectedNodes />
+          <Categories>
+            <Category>All</Category>
+          </Categories>
+          <VISIBILITY>Details</VISIBILITY>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/mesh.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="114" lean-forward="true" selection-start-line="114" selection-end-line="114" />
+          <folding>
+            <element signature="e#182#242#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="38" column="33" selection-start-line="38" selection-start-column="33" selection-end-line="38" selection-end-column="33" />
+          <folding>
+            <element signature="e#150#170#0" expanded="true" />
+            <element signature="e#304#336#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="41" column="1" lean-forward="true" selection-start-line="41" selection-start-column="1" selection-end-line="41" selection-end-column="1" />
+          <folding>
+            <element signature="e#187#212#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -852,6 +1018,7 @@
     <states>
       <state key="ScopeChooserConfigurable.UI">
         <settings>
+          <last-edited>Src</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -859,6 +1026,9 @@
               </list>
             </option>
           </splitter-proportions>
+          <order>
+            <scope name="Src" />
+          </order>
         </settings>
       </state>
     </states>

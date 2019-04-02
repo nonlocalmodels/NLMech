@@ -9,29 +9,33 @@
 #include <hpx/config.hpp>
 #include <vector>
 
-
 // include model abstraction class
 #ifndef MODEL_ABSTRACTIONS_H
 #include "../model.h"
 #endif
 
 // forward declaration of class
+namespace fe {
+class MassMatrix;
+class Mesh;
+class Quadrature;
+} // namespace fe
+
 namespace geometry {
 class Fracture;
-class Geometry;
 class InteriorFlags;
 class Neighbor;
-}
+} // namespace geometry
 
 namespace inp {
 class Input;
 class Policy;
-}
+} // namespace inp
 
 namespace loading {
 class InitialCondition;
 class Loading;
-}
+} // namespace loading
 
 namespace material {
 class Material;
@@ -58,13 +62,13 @@ public:
    * @brief Return the current time step
    * @return Time step
    */
-  size_t currentStep() override ;
+  size_t currentStep() override;
 
   /*!
    * @brief Return the total energy
    * @return Total energy
    */
-  float getEnergy() override ;
+  float getEnergy() override;
 
   /** @}*/
 
@@ -159,15 +163,22 @@ private:
    */
   /**@{*/
 
+  /*! @brief Pointer to Mass matrix object containing mass matrix (if any) */
+  fe::MassMatrix *d_massMatrix_p;
+
+  /*! @brief Pointer to Mesh object containing list of node,
+   * element-node connectivity and other fem related information
+   */
+  fe::Mesh *d_mesh_p;
+
+  /*! @brief Pointer to Quadrature object providing methods for quadrature
+   * point approximation of integration */
+  fe::Quadrature *d_quadrature_p;
+
   /*! @brief Pointer to Fracture object containing fracture state
    * information of each interacting bond
    */
   geometry::Fracture *d_fracture_p;
-
-  /*! @brief Pointer to Geometry object containing list of node,
-   * element-node connectivity and other fem related information
-   */
-  geometry::Geometry *d_geometry_p;
 
   /*! @brief Pointer to Neighbor object containing list of neighboring nodes
    * for each node

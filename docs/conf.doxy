@@ -796,7 +796,10 @@ INPUT                  = ../src/main.cpp \
 						 ../src/loading \
 						 ../src/material \
 						 ../src/model \
-						 ../src/model/fd
+						 ../src/model/fd \
+                               ../src/fe \
+                               ../src/util \
+                               ../src/rw
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses

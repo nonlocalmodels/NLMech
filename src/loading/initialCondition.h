@@ -6,8 +6,8 @@
 #ifndef INITIALCONDITION_H
 #define INITIALCONDITION_H
 
-#include <vector>
 #include <string>
+#include <vector>
 
 // forward declaration of initial condition deck
 namespace inp {
@@ -33,12 +33,11 @@ private:
   /**@{*/
 
   /*! @brief Vector of initial (reference) coordinates of nodes */
-//  std::vector<double> d_nd;
+  //  std::vector<double> d_nd;
 
   /** @}*/
-
 };
 
-} // namespace inp
+} // namespace loading
 
 #endif // NEIGHBOR_H

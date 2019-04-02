@@ -3,13 +3,13 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#include <hpx/hpx_main.hpp>             // Need main source file
+#include <hpx/hpx_main.hpp> // Need main source file
 
-#include "inp/input.h"         // Input class
+#include "inp/input.h"        // Input class
 #include "model/fd/fDModel.h" // Model class
 #include <iostream>
 
-#include <boost/program_options.hpp>    // program options
+#include <boost/program_options.hpp> // program options
 
 //! Main driver
 int main(int argc, char *argv[]) {
@@ -40,22 +40,22 @@ int main(int argc, char *argv[]) {
   }
 
   // record current time
-//  std::uint64_t t = hpx::util::high_resolution_clock::now();
+  //  std::uint64_t t = hpx::util::high_resolution_clock::now();
 
   // read input data
   inp::Input *deck = new inp::Input(filename);
 
   // check which model to run
-//  if (deck->getSpatialDiscretization() == "finite_difference")
-    model::FDModel fdModel(deck);
+  //  if (deck->getSpatialDiscretization() == "finite_difference")
+  model::FDModel fdModel(deck);
 
   // get time elapsed
-//  std::uint64_t elapsed = hpx::util::high_resolution_clock::now() - t;
+  //  std::uint64_t elapsed = hpx::util::high_resolution_clock::now() - t;
   // get number of threads
-//  std::uint64_t const os_thread_count = hpx::get_os_thread_count();
+  //  std::uint64_t const os_thread_count = hpx::get_os_thread_count();
 
-//  std::cout << "Number of threads= " << os_thread_count
-//            << " Time elapsed= " << elapsed / 1e9 << "\n";
+  //  std::cout << "Number of threads= " << os_thread_count
+  //            << " Time elapsed= " << elapsed / 1e9 << "\n";
 
   return EXIT_SUCCESS;
 }

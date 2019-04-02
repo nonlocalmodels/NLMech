@@ -5,29 +5,46 @@
 //
 //  Copyright (C) 2012-2017 Klaus Iglberger - All Rights Reserved
 //
-//  This file is part of the Blaze library. You can redistribute it and/or modify it under
-//  the terms of the New (Revised) BSD License. Redistribution and use in source and binary
-//  forms, with or without modification, are permitted provided that the following conditions
+//  This file is part of the Blaze library. You can redistribute it and/or
+modify it under
+//  the terms of the New (Revised) BSD License. Redistribution and use in source
+and binary
+//  forms, with or without modification, are permitted provided that the
+following conditions
 //  are met:
 //
-//  1. Redistributions of source code must retain the above copyright notice, this list of
+//  1. Redistributions of source code must retain the above copyright notice,
+this list of
 //     conditions and the following disclaimer.
-//  2. Redistributions in binary form must reproduce the above copyright notice, this list
-//     of conditions and the following disclaimer in the documentation and/or other materials
+//  2. Redistributions in binary form must reproduce the above copyright notice,
+this list
+//     of conditions and the following disclaimer in the documentation and/or
+other materials
 //     provided with the distribution.
-//  3. Neither the names of the Blaze development group nor the names of its contributors
-//     may be used to endorse or promote products derived from this software without specific
+//  3. Neither the names of the Blaze development group nor the names of its
+contributors
+//     may be used to endorse or promote products derived from this software
+without specific
 //     prior written permission.
 //
-//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
-//  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
-//  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-//  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-//  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-//  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY
+//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+NO EVENT
+//  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED
+//  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR
+//  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN
+//  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN
+//  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+OF SUCH
 //  DAMAGE.
 */
 //=================================================================================================
@@ -35,18 +52,16 @@
 #ifndef _BLAZE_MATH_MATRIX_H_
 #define _BLAZE_MATH_MATRIX_H_
 
-
 //*************************************************************************************************
 // Includes
 //*************************************************************************************************
 
-#include <iomanip>
-#include <ostream>
 #include <blaze/math/Aliases.h>
 #include <blaze/math/Exception.h>
-#include <blaze/math/expressions/Matrix.h>
 #include <blaze/math/RelaxationFlag.h>
-
+#include <blaze/math/expressions/Matrix.h>
+#include <iomanip>
+#include <ostream>
 
 namespace blaze {
 
@@ -59,44 +74,35 @@ namespace blaze {
 //*************************************************************************************************
 /*!\name Matrix functions */
 //@{
-template< typename MT, bool SO >
-inline bool isSymmetric( const Matrix<MT,SO>& m );
+template <typename MT, bool SO>
+inline bool isSymmetric(const Matrix<MT, SO> &m);
 
-template< typename MT, bool SO >
-inline bool isHermitian( const Matrix<MT,SO>& m );
+template <typename MT, bool SO>
+inline bool isHermitian(const Matrix<MT, SO> &m);
 
-template< typename MT, bool SO >
-inline bool isUniform( const Matrix<MT,SO>& m );
+template <typename MT, bool SO> inline bool isUniform(const Matrix<MT, SO> &m);
 
-template< typename MT, bool SO >
-inline bool isLower( const Matrix<MT,SO>& m );
+template <typename MT, bool SO> inline bool isLower(const Matrix<MT, SO> &m);
 
-template< typename MT, bool SO >
-inline bool isUniLower( const Matrix<MT,SO>& m );
+template <typename MT, bool SO> inline bool isUniLower(const Matrix<MT, SO> &m);
 
-template< typename MT, bool SO >
-inline bool isStrictlyLower( const Matrix<MT,SO>& m );
+template <typename MT, bool SO>
+inline bool isStrictlyLower(const Matrix<MT, SO> &m);
 
-template< typename MT, bool SO >
-inline bool isUpper( const Matrix<MT,SO>& m );
+template <typename MT, bool SO> inline bool isUpper(const Matrix<MT, SO> &m);
 
-template< typename MT, bool SO >
-inline bool isUniUpper( const Matrix<MT,SO>& m );
+template <typename MT, bool SO> inline bool isUniUpper(const Matrix<MT, SO> &m);
 
-template< typename MT, bool SO >
-inline bool isStrictlyUpper( const Matrix<MT,SO>& m );
+template <typename MT, bool SO>
+inline bool isStrictlyUpper(const Matrix<MT, SO> &m);
 
-template< typename MT, bool SO >
-inline bool isDiagonal( const Matrix<MT,SO>& m );
+template <typename MT, bool SO> inline bool isDiagonal(const Matrix<MT, SO> &m);
 
-template< typename MT, bool SO >
-inline bool isIdentity( const Matrix<MT,SO>& m );
+template <typename MT, bool SO> inline bool isIdentity(const Matrix<MT, SO> &m);
 
-template< typename MT, bool SO >
-inline auto trace( const Matrix<MT,SO>& m );
+template <typename MT, bool SO> inline auto trace(const Matrix<MT, SO> &m);
 //@}
 //*************************************************************************************************
-
 
 //*************************************************************************************************
 /*!\brief Checks if the given matrix is symmetric.
@@ -105,8 +111,10 @@ inline auto trace( const Matrix<MT,SO>& m );
 // \param m The matrix to be checked.
 // \return \a true if the matrix is symmetric, \a false if not.
 //
-// This function checks if the given dense or sparse matrix is symmetric. The matrix is considered
-// to be symmetric if it is a square matrix whose transpose is equal to itself (\f$ A = A^T \f$).
+// This function checks if the given dense or sparse matrix is symmetric. The
+matrix is considered
+// to be symmetric if it is a square matrix whose transpose is equal to itself
+(\f$ A = A^T \f$).
 // The following code example demonstrates the use of the function:
 
    \code
@@ -115,30 +123,32 @@ inline auto trace( const Matrix<MT,SO>& m );
    if( isSymmetric( A ) ) { ... }
    \endcode
 
-// Optionally, it is possible to switch between strict semantics (blaze::strict) and relaxed
+// Optionally, it is possible to switch between strict semantics (blaze::strict)
+and relaxed
 // semantics (blaze::relaxed):
 
    \code
    if( isSymmetric<relaxed>( A ) ) { ... }
    \endcode
 
-// It is also possible to check if a matrix expression results in a symmetric matrix:
+// It is also possible to check if a matrix expression results in a symmetric
+matrix:
 
    \code
    if( isSymmetric( A * B ) ) { ... }
    \endcode
 
-// However, note that this might require the complete evaluation of the expression, including
+// However, note that this might require the complete evaluation of the
+expression, including
 // the generation of a temporary matrix.
 */
-template< typename MT  // Type of the matrix
-        , bool SO >    // Storage order
-inline bool isSymmetric( const Matrix<MT,SO>& m )
-{
-   return isSymmetric<relaxed>( ~m );
+template <typename MT // Type of the matrix
+          ,
+          bool SO> // Storage order
+inline bool isSymmetric(const Matrix<MT, SO> &m) {
+  return isSymmetric<relaxed>(~m);
 }
 //*************************************************************************************************
-
 
 //*************************************************************************************************
 /*!\brief Checks if the given matrix is Hermitian.
@@ -147,10 +157,14 @@ inline bool isSymmetric( const Matrix<MT,SO>& m )
 // \param m The matrix to be checked.
 // \return \a true if the matrix is Hermitian, \a false if not.
 //
-// This function checks if the given dense or sparse matrix is an Hermitian matrix. The matrix
-// is considered to be an Hermitian matrix if it is a square matrix whose conjugate transpose is
-// equal to itself (\f$ A = \overline{A^T} \f$), i.e. each matrix element \f$ a_{ij} \f$ is equal
-// to the complex conjugate of the element \f$ a_{ji} \f$. The following code example demonstrates
+// This function checks if the given dense or sparse matrix is an Hermitian
+matrix. The matrix
+// is considered to be an Hermitian matrix if it is a square matrix whose
+conjugate transpose is
+// equal to itself (\f$ A = \overline{A^T} \f$), i.e. each matrix element \f$
+a_{ij} \f$ is equal
+// to the complex conjugate of the element \f$ a_{ji} \f$. The following code
+example demonstrates
 // the use of the function:
 
    \code
@@ -159,30 +173,32 @@ inline bool isSymmetric( const Matrix<MT,SO>& m )
    if( isHermitian( A ) ) { ... }
    \endcode
 
-// Optionally, it is possible to switch between strict semantics (blaze::strict) and relaxed
+// Optionally, it is possible to switch between strict semantics (blaze::strict)
+and relaxed
 // semantics (blaze::relaxed):
 
    \code
    if( isHermitian<relaxed>( A ) ) { ... }
    \endcode
 
-// It is also possible to check if a matrix expression results in an Hermitian matrix:
+// It is also possible to check if a matrix expression results in an Hermitian
+matrix:
 
    \code
    if( isHermitian( A * B ) ) { ... }
    \endcode
 
-// However, note that this might require the complete evaluation of the expression, including
+// However, note that this might require the complete evaluation of the
+expression, including
 // the generation of a temporary matrix.
 */
-template< typename MT  // Type of the matrix
-        , bool SO >    // Storage order
-inline bool isHermitian( const Matrix<MT,SO>& m )
-{
-   return isHermitian<relaxed>( ~m );
+template <typename MT // Type of the matrix
+          ,
+          bool SO> // Storage order
+inline bool isHermitian(const Matrix<MT, SO> &m) {
+  return isHermitian<relaxed>(~m);
 }
 //*************************************************************************************************
-
 
 //*************************************************************************************************
 /*!\brief Checks if the given matrix is a uniform matrix.
@@ -191,8 +207,10 @@ inline bool isHermitian( const Matrix<MT,SO>& m )
 // \param m The matrix to be checked.
 // \return \a true if the matrix is a uniform matrix, \a false if not.
 //
-// This function checks if the given dense or sparse matrix is a uniform matrix. The matrix
-// is considered to be uniform if all its elements are identical. The following code example
+// This function checks if the given dense or sparse matrix is a uniform matrix.
+The matrix
+// is considered to be uniform if all its elements are identical. The following
+code example
 // demonstrates the use of the function:
 
    \code
@@ -201,30 +219,32 @@ inline bool isHermitian( const Matrix<MT,SO>& m )
    if( isUniform( A ) ) { ... }
    \endcode
 
-// Optionally, it is possible to switch between strict semantics (blaze::strict) and relaxed
+// Optionally, it is possible to switch between strict semantics (blaze::strict)
+and relaxed
 // semantics (blaze::relaxed):
 
    \code
    if( isUniform<relaxed>( A ) ) { ... }
    \endcode
 
-// It is also possible to check if a matrix expression results in a uniform matrix:
+// It is also possible to check if a matrix expression results in a uniform
+matrix:
 
    \code
    if( isUniform( A * B ) ) { ... }
    \endcode
 
-// However, note that this might require the complete evaluation of the expression, including
+// However, note that this might require the complete evaluation of the
+expression, including
 // the generation of a temporary matrix.
 */
-template< typename MT  // Type of the matrix
-        , bool SO >    // Storage order
-inline bool isUniform( const Matrix<MT,SO>& m )
-{
-   return isUniform<relaxed>( ~m );
+template <typename MT // Type of the matrix
+          ,
+          bool SO> // Storage order
+inline bool isUniform(const Matrix<MT, SO> &m) {
+  return isUniform<relaxed>(~m);
 }
 //*************************************************************************************************
-
 
 //*************************************************************************************************
 /*!\brief Checks if the given matrix is a lower triangular matrix.
@@ -233,8 +253,10 @@ inline bool isUniform( const Matrix<MT,SO>& m )
 // \param m The matrix to be checked.
 // \return \a true if the matrix is a lower triangular matrix, \a false if not.
 //
-// This function checks if the given dense or sparse matrix is a lower triangular matrix. The
-// matrix is considered to be lower triangular if it is a square matrix of the form
+// This function checks if the given dense or sparse matrix is a lower
+triangular matrix. The
+// matrix is considered to be lower triangular if it is a square matrix of the
+form
 
                         \f[\left(\begin{array}{*{5}{c}}
                         l_{0,0} & 0       & 0       & \cdots & 0       \\
@@ -244,7 +266,8 @@ inline bool isUniform( const Matrix<MT,SO>& m )
                         l_{N,0} & l_{N,1} & l_{N,2} & \cdots & l_{N,N} \\
                         \end{array}\right).\f]
 
-// \f$ 0 \times 0 \f$ or \f$ 1 \times 1 \f$ matrices are considered as trivially lower triangular.
+// \f$ 0 \times 0 \f$ or \f$ 1 \times 1 \f$ matrices are considered as trivially
+lower triangular.
 // The following code example demonstrates the use of the function:
 
    \code
@@ -253,40 +276,45 @@ inline bool isUniform( const Matrix<MT,SO>& m )
    if( isLower( A ) ) { ... }
    \endcode
 
-// Optionally, it is possible to switch between strict semantics (blaze::strict) and relaxed
+// Optionally, it is possible to switch between strict semantics (blaze::strict)
+and relaxed
 // semantics (blaze::relaxed):
 
    \code
    if( isLower<relaxed>( A ) ) { ... }
    \endcode
 
-// It is also possible to check if a matrix expression results in a lower triangular matrix:
+// It is also possible to check if a matrix expression results in a lower
+triangular matrix:
 
    \code
    if( isLower( A * B ) ) { ... }
    \endcode
 
-// However, note that this might require the complete evaluation of the expression, including
+// However, note that this might require the complete evaluation of the
+expression, including
 // the generation of a temporary matrix.
 */
-template< typename MT  // Type of the matrix
-        , bool SO >    // Storage order
-inline bool isLower( const Matrix<MT,SO>& m )
-{
-   return isLower<relaxed>( ~m );
+template <typename MT // Type of the matrix
+          ,
+          bool SO> // Storage order
+inline bool isLower(const Matrix<MT, SO> &m) {
+  return isLower<relaxed>(~m);
 }
 //*************************************************************************************************
-
 
 //*************************************************************************************************
 /*!\brief Checks if the given matrix is a lower unitriangular matrix.
 // \ingroup matrix
 //
 // \param m The matrix to be checked.
-// \return \a true if the matrix is a lower unitriangular matrix, \a false if not.
+// \return \a true if the matrix is a lower unitriangular matrix, \a false if
+not.
 //
-// This function checks if the given dense or sparse matrix is a lower unitriangular matrix. The
-// matrix is considered to be lower unitriangular if it is a square matrix of the form
+// This function checks if the given dense or sparse matrix is a lower
+unitriangular matrix. The
+// matrix is considered to be lower unitriangular if it is a square matrix of
+the form
 
                         \f[\left(\begin{array}{*{5}{c}}
                         1       & 0       & 0       & \cdots & 0      \\
@@ -304,40 +332,45 @@ inline bool isLower( const Matrix<MT,SO>& m )
    if( isUniLower( A ) ) { ... }
    \endcode
 
-// Optionally, it is possible to switch between strict semantics (blaze::strict) and relaxed
+// Optionally, it is possible to switch between strict semantics (blaze::strict)
+and relaxed
 // semantics (blaze::relaxed):
 
    \code
    if( isUniLower<relaxed>( A ) ) { ... }
    \endcode
 
-// It is also possible to check if a matrix expression results in a lower unitriangular matrix:
+// It is also possible to check if a matrix expression results in a lower
+unitriangular matrix:
 
    \code
    if( isUniLower( A * B ) ) { ... }
    \endcode
 
-// However, note that this might require the complete evaluation of the expression, including
+// However, note that this might require the complete evaluation of the
+expression, including
 // the generation of a temporary matrix.
 */
-template< typename MT  // Type of the matrix
-        , bool SO >    // Storage order
-inline bool isUniLower( const Matrix<MT,SO>& m )
-{
-   return isUniLower<relaxed>( ~m );
+template <typename MT // Type of the matrix
+          ,
+          bool SO> // Storage order
+inline bool isUniLower(const Matrix<MT, SO> &m) {
+  return isUniLower<relaxed>(~m);
 }
 //*************************************************************************************************
-
 
 //*************************************************************************************************
 /*!\brief Checks if the given matrix is a strictly lower triangular matrix.
 // \ingroup matrix
 //
 // \param m The matrix to be checked.
-// \return \a true if the matrix is a strictly lower triangular matrix, \a false if not.
+// \return \a true if the matrix is a strictly lower triangular matrix, \a false
+if not.
 //
-// This function checks if the given dense or sparse matrix is a strictly lower triangular matrix.
-// The matrix is considered to be strictly lower triangular if it is a square matrix of the form
+// This function checks if the given dense or sparse matrix is a strictly lower
+triangular matrix.
+// The matrix is considered to be strictly lower triangular if it is a square
+matrix of the form
 
                         \f[\left(\begin{array}{*{5}{c}}
                         0       & 0       & 0       & \cdots & 0      \\
@@ -355,31 +388,33 @@ inline bool isUniLower( const Matrix<MT,SO>& m )
    if( isStrictlyLower( A ) ) { ... }
    \endcode
 
-// Optionally, it is possible to switch between strict semantics (blaze::strict) and relaxed
+// Optionally, it is possible to switch between strict semantics (blaze::strict)
+and relaxed
 // semantics (blaze::relaxed):
 
    \code
    if( isStrictlyLower<relaxed>( A ) ) { ... }
    \endcode
 
-// It is also possible to check if a matrix expression results in a strictly lower triangular
+// It is also possible to check if a matrix expression results in a strictly
+lower triangular
 // matrix:
 
    \code
    if( isStrictlyLower( A * B ) ) { ... }
    \endcode
 
-// However, note that this might require the complete evaluation of the expression, including
+// However, note that this might require the complete evaluation of the
+expression, including
 // the generation of a temporary matrix.
 */
-template< typename MT  // Type of the matrix
-        , bool SO >    // Storage order
-inline bool isStrictlyLower( const Matrix<MT,SO>& m )
-{
-   return isStrictlyLower<relaxed>( ~m );
+template <typename MT // Type of the matrix
+          ,
+          bool SO> // Storage order
+inline bool isStrictlyLower(const Matrix<MT, SO> &m) {
+  return isStrictlyLower<relaxed>(~m);
 }
 //*************************************************************************************************
-
 
 //*************************************************************************************************
 /*!\brief Checks if the given matrix is an upper triangular matrix.
@@ -388,8 +423,10 @@ inline bool isStrictlyLower( const Matrix<MT,SO>& m )
 // \param m The matrix to be checked.
 // \return \a true if the matrix is an upper triangular matrix, \a false if not.
 //
-// This function checks if the given dense or sparse matrix is an upper triangular matrix. The
-// matrix is considered to be upper triangular if it is a square matrix of the form
+// This function checks if the given dense or sparse matrix is an upper
+triangular matrix. The
+// matrix is considered to be upper triangular if it is a square matrix of the
+form
 
                         \f[\left(\begin{array}{*{5}{c}}
                         u_{0,0} & u_{0,1} & u_{0,2} & \cdots & u_{0,N} \\
@@ -399,7 +436,8 @@ inline bool isStrictlyLower( const Matrix<MT,SO>& m )
                         0       & 0       & 0       & \cdots & u_{N,N} \\
                         \end{array}\right).\f]
 
-// \f$ 0 \times 0 \f$ or \f$ 1 \times 1 \f$ matrices are considered as trivially upper triangular.
+// \f$ 0 \times 0 \f$ or \f$ 1 \times 1 \f$ matrices are considered as trivially
+upper triangular.
 // The following code example demonstrates the use of the function:
 
    \code
@@ -408,40 +446,45 @@ inline bool isStrictlyLower( const Matrix<MT,SO>& m )
    if( isUpper( A ) ) { ... }
    \endcode
 
-// Optionally, it is possible to switch between strict semantics (blaze::strict) and relaxed
+// Optionally, it is possible to switch between strict semantics (blaze::strict)
+and relaxed
 // semantics (blaze::relaxed):
 
    \code
    if( isUpper<relaxed>( A ) ) { ... }
    \endcode
 
-// It is also possible to check if a matrix expression results in an upper triangular matrix:
+// It is also possible to check if a matrix expression results in an upper
+triangular matrix:
 
    \code
    if( isUpper( A * B ) ) { ... }
    \endcode
 
-// However, note that this might require the complete evaluation of the expression, including
+// However, note that this might require the complete evaluation of the
+expression, including
 // the generation of a temporary matrix.
 */
-template< typename MT  // Type of the matrix
-        , bool SO >    // Storage order
-inline bool isUpper( const Matrix<MT,SO>& m )
-{
-   return isUpper<relaxed>( ~m );
+template <typename MT // Type of the matrix
+          ,
+          bool SO> // Storage order
+inline bool isUpper(const Matrix<MT, SO> &m) {
+  return isUpper<relaxed>(~m);
 }
 //*************************************************************************************************
-
 
 //*************************************************************************************************
 /*!\brief Checks if the given matrix is an upper unitriangular matrix.
 // \ingroup matrix
 //
 // \param m The matrix to be checked.
-// \return \a true if the matrix is an upper unitriangular matrix, \a false if not.
+// \return \a true if the matrix is an upper unitriangular matrix, \a false if
+not.
 //
-// This function checks if the given dense or sparse matrix is an upper unitriangular matrix. The
-// matrix is considered to be upper unitriangular if it is a square matrix of the form
+// This function checks if the given dense or sparse matrix is an upper
+unitriangular matrix. The
+// matrix is considered to be upper unitriangular if it is a square matrix of
+the form
 
                         \f[\left(\begin{array}{*{5}{c}}
                         1      & u_{0,1} & u_{0,2} & \cdots & u_{0,N} \\
@@ -459,40 +502,45 @@ inline bool isUpper( const Matrix<MT,SO>& m )
    if( isUniUpper( A ) ) { ... }
    \endcode
 
-// Optionally, it is possible to switch between strict semantics (blaze::strict) and relaxed
+// Optionally, it is possible to switch between strict semantics (blaze::strict)
+and relaxed
 // semantics (blaze::relaxed):
 
    \code
    if( isUniUpper<relaxed>( A ) ) { ... }
    \endcode
 
-// It is also possible to check if a matrix expression results in an upper unitriangular matrix:
+// It is also possible to check if a matrix expression results in an upper
+unitriangular matrix:
 
    \code
    if( isUniUpper( A * B ) ) { ... }
    \endcode
 
-// However, note that this might require the complete evaluation of the expression, including
+// However, note that this might require the complete evaluation of the
+expression, including
 // the generation of a temporary matrix.
 */
-template< typename MT  // Type of the matrix
-        , bool SO >    // Storage order
-inline bool isUniUpper( const Matrix<MT,SO>& m )
-{
-   return isUniUpper<relaxed>( ~m );
+template <typename MT // Type of the matrix
+          ,
+          bool SO> // Storage order
+inline bool isUniUpper(const Matrix<MT, SO> &m) {
+  return isUniUpper<relaxed>(~m);
 }
 //*************************************************************************************************
-
 
 //*************************************************************************************************
 /*!\brief Checks if the given matrix is a strictly upper triangular matrix.
 // \ingroup matrix
 //
 // \param m The matrix to be checked.
-// \return \a true if the matrix is a strictly upper triangular matrix, \a false if not.
+// \return \a true if the matrix is a strictly upper triangular matrix, \a false
+if not.
 //
-// This function checks if the given dense or sparse matrix is a strictly upper triangular matrix.
-// The matrix is considered to be strictly upper triangular if it is a square matrix of the form
+// This function checks if the given dense or sparse matrix is a strictly upper
+triangular matrix.
+// The matrix is considered to be strictly upper triangular if it is a square
+matrix of the form
 
                         \f[\left(\begin{array}{*{5}{c}}
                         0      & u_{0,1} & u_{0,2} & \cdots & u_{0,N} \\
@@ -510,31 +558,33 @@ inline bool isUniUpper( const Matrix<MT,SO>& m )
    if( isStrictlyUpper( A ) ) { ... }
    \endcode
 
-// Optionally, it is possible to switch between strict semantics (blaze::strict) and relaxed
+// Optionally, it is possible to switch between strict semantics (blaze::strict)
+and relaxed
 // semantics (blaze::relaxed):
 
    \code
    if( isStrictlyUpper<relaxed>( A ) ) { ... }
    \endcode
 
-// It is also possible to check if a matrix expression results in a strictly upper triangular
+// It is also possible to check if a matrix expression results in a strictly
+upper triangular
 // matrix:
 
    \code
    if( isStrictlyUpper( A * B ) ) { ... }
    \endcode
 
-// However, note that this might require the complete evaluation of the expression, including
+// However, note that this might require the complete evaluation of the
+expression, including
 // the generation of a temporary matrix.
 */
-template< typename MT  // Type of the matrix
-        , bool SO >    // Storage order
-inline bool isStrictlyUpper( const Matrix<MT,SO>& m )
-{
-   return isStrictlyUpper<relaxed>( ~m );
+template <typename MT // Type of the matrix
+          ,
+          bool SO> // Storage order
+inline bool isStrictlyUpper(const Matrix<MT, SO> &m) {
+  return isStrictlyUpper<relaxed>(~m);
 }
 //*************************************************************************************************
-
 
 //*************************************************************************************************
 /*!\brief Checks if the give matrix is diagonal.
@@ -543,8 +593,10 @@ inline bool isStrictlyUpper( const Matrix<MT,SO>& m )
 // \param m The matrix to be checked.
 // \return \a true if the matrix is diagonal, \a false if not.
 //
-// This function checks if the given dense or sparse matrix is diagonal, i.e. if the non-diagonal
-// elements are default elements. In case of integral or floating point data types, a diagonal
+// This function checks if the given dense or sparse matrix is diagonal, i.e. if
+the non-diagonal
+// elements are default elements. In case of integral or floating point data
+types, a diagonal
 // matrix has the form
 
                         \f[\left(\begin{array}{*{5}{c}}
@@ -555,7 +607,8 @@ inline bool isStrictlyUpper( const Matrix<MT,SO>& m )
                         0      & 0      & 0      & 0      & xx \\
                         \end{array}\right)\f]
 
-// \f$ 0 \times 0 \f$ or \f$ 1 \times 1 \f$ matrices are considered as trivially diagonal. The
+// \f$ 0 \times 0 \f$ or \f$ 1 \times 1 \f$ matrices are considered as trivially
+diagonal. The
 // following example demonstrates the use of the function:
 
    \code
@@ -564,30 +617,32 @@ inline bool isStrictlyUpper( const Matrix<MT,SO>& m )
    if( isDiagonal( A ) ) { ... }
    \endcode
 
-// Optionally, it is possible to switch between strict semantics (blaze::strict) and relaxed
+// Optionally, it is possible to switch between strict semantics (blaze::strict)
+and relaxed
 // semantics (blaze::relaxed):
 
    \code
    if( isDiagonal<relaxed>( A ) ) { ... }
    \endcode
 
-// It is also possible to check if a matrix expression results in a diagonal matrix:
+// It is also possible to check if a matrix expression results in a diagonal
+matrix:
 
    \code
    if( isDiagonal( A * B ) ) { ... }
    \endcode
 
-// However, note that this might require the complete evaluation of the expression, including
+// However, note that this might require the complete evaluation of the
+expression, including
 // the generation of a temporary matrix.
 */
-template< typename MT  // Type of the matrix
-        , bool SO >    // Storage order
-inline bool isDiagonal( const Matrix<MT,SO>& m )
-{
-   return isDiagonal<relaxed>( ~m );
+template <typename MT // Type of the matrix
+          ,
+          bool SO> // Storage order
+inline bool isDiagonal(const Matrix<MT, SO> &m) {
+  return isDiagonal<relaxed>(~m);
 }
 //*************************************************************************************************
-
 
 //*************************************************************************************************
 /*!\brief Checks if the give matrix is an identity matrix.
@@ -596,8 +651,10 @@ inline bool isDiagonal( const Matrix<MT,SO>& m )
 // \param m The matrix to be checked.
 // \return \a true if the matrix is an identity matrix, \a false if not.
 //
-// This function checks if the given dense or sparse matrix is an identity matrix, i.e. if the
-// diagonal elements are 1 and the non-diagonal elements are 0. In case of integral or floating
+// This function checks if the given dense or sparse matrix is an identity
+matrix, i.e. if the
+// diagonal elements are 1 and the non-diagonal elements are 0. In case of
+integral or floating
 // point data types, an identity matrix has the form
 
                         \f[\left(\begin{array}{*{5}{c}}
@@ -616,31 +673,32 @@ inline bool isDiagonal( const Matrix<MT,SO>& m )
    if( isIdentity( A ) ) { ... }
    \endcode
 
-// Optionally, it is possible to switch between strict semantics (blaze::strict) and relaxed
+// Optionally, it is possible to switch between strict semantics (blaze::strict)
+and relaxed
 // semantics (blaze::relaxed):
 
    \code
    if( isIdentity<relaxed>( A ) ) { ... }
    \endcode
 
-// It is also possible to check if a matrix expression results in an identity matrix:
+// It is also possible to check if a matrix expression results in an identity
+matrix:
 
    \code
    if( isIdentity( A * B ) ) { ... }
    \endcode
 
-// However, note that this might require the complete evaluation of the expression, including
+// However, note that this might require the complete evaluation of the
+expression, including
 // the generation of a temporary matrix.
 */
-template< typename MT  // Type of the matrix
-        , bool SO >    // Storage order
-inline bool isIdentity( const Matrix<MT,SO>& m )
-{
-   return isIdentity<relaxed>( ~m );
+template <typename MT // Type of the matrix
+          ,
+          bool SO> // Storage order
+inline bool isIdentity(const Matrix<MT, SO> &m) {
+  return isIdentity<relaxed>(~m);
 }
 //*************************************************************************************************
-
-
 
 //*************************************************************************************************
 /*!\brief Computes the trace of the given square matrix.
@@ -650,39 +708,39 @@ inline bool isIdentity( const Matrix<MT,SO>& m )
 // \return The trace of the matrix.
 // \exception std::invalid_argument Invalid input matrix for trace computation.
 //
-// This function computes the trace of the given square matrix, i.e. sums the elements on its
+// This function computes the trace of the given square matrix, i.e. sums the
+elements on its
 // diagonal:
 
-            \f[ trace(A) = a_{11} + a_{22} + ... + a_{nn} = \sum_{i=1}^{n} a_{ii} \f]
+            \f[ trace(A) = a_{11} + a_{22} + ... + a_{nn} = \sum_{i=1}^{n}
+a_{ii} \f]
 
-// In case the given matrix is not a square matrix a \a std::invalid_argument exception is thrown.
+// In case the given matrix is not a square matrix a \a std::invalid_argument
+exception is thrown.
 */
-template< typename MT  // Type of the matrix
-        , bool SO >    // Storage order
-inline auto trace( const Matrix<MT,SO>& m )
-{
-   using ET = ElementType_<MT>;
+template <typename MT // Type of the matrix
+          ,
+          bool SO> // Storage order
+inline auto trace(const Matrix<MT, SO> &m) {
+  using ET = ElementType_<MT>;
 
-   if( !isSquare( ~m ) ) {
-      BLAZE_THROW_INVALID_ARGUMENT( "Invalid input matrix for trace computation" );
-   }
+  if (!isSquare(~m)) {
+    BLAZE_THROW_INVALID_ARGUMENT("Invalid input matrix for trace computation");
+  }
 
-   if( (~m).rows() == 0UL ) {
-      return ET();
-   }
+  if ((~m).rows() == 0UL) {
+    return ET();
+  }
 
-   ET tmp( (~m)(0UL,0UL) );
+  ET tmp((~m)(0UL, 0UL));
 
-   for( size_t i=1UL; i<(~m).rows(); ++i ) {
-      tmp += (~m)(i,i);
-   }
+  for (size_t i = 1UL; i < (~m).rows(); ++i) {
+    tmp += (~m)(i, i);
+  }
 
-   return tmp;
+  return tmp;
 }
 //*************************************************************************************************
-
-
-
 
 //=================================================================================================
 //
@@ -693,11 +751,10 @@ inline auto trace( const Matrix<MT,SO>& m )
 //*************************************************************************************************
 /*!\name Matrix operators */
 //@{
-template< typename MT, bool SO >
-inline std::ostream& operator<<( std::ostream& os, const Matrix<MT,SO>& m );
+template <typename MT, bool SO>
+inline std::ostream &operator<<(std::ostream &os, const Matrix<MT, SO> &m);
 //@}
 //*************************************************************************************************
-
 
 //*************************************************************************************************
 /*!\brief Global output operator for dense and sparse matrices.
@@ -707,21 +764,21 @@ inline std::ostream& operator<<( std::ostream& os, const Matrix<MT,SO>& m );
 // \param m Reference to a constant matrix object.
 // \return Reference to the output stream.
 */
-template< typename MT  // Type of the matrix
-        , bool SO >    // Storage order
-inline std::ostream& operator<<( std::ostream& os, const Matrix<MT,SO>& m )
-{
-   CompositeType_<MT> tmp( ~m );
+template <typename MT // Type of the matrix
+          ,
+          bool SO> // Storage order
+inline std::ostream &operator<<(std::ostream &os, const Matrix<MT, SO> &m) {
+  CompositeType_<MT> tmp(~m);
 
-   for( size_t i=0UL; i<tmp.rows(); ++i ) {
-      os << "( ";
-      for( size_t j=0UL; j<tmp.columns(); ++j ) {
-         os << std::setw(12) << tmp(i,j) << " ";
-      }
-      os << ")\n";
-   }
+  for (size_t i = 0UL; i < tmp.rows(); ++i) {
+    os << "( ";
+    for (size_t j = 0UL; j < tmp.columns(); ++j) {
+      os << std::setw(12) << tmp(i, j) << " ";
+    }
+    os << ")\n";
+  }
 
-   return os;
+  return os;
 }
 //*************************************************************************************************
 

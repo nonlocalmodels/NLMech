@@ -10,7 +10,7 @@ add_custom_target(doc
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/docs
         COMMENT "Generating API documentation with Doxygen"
         VERBATIM)
-        
+
 add_custom_target(doc_develop
         COMMAND ${DOXYGEN_EXECUTABLE} ${doxyfile} conf_develop.doxy
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/docs

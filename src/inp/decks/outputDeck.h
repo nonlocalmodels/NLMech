@@ -6,8 +6,8 @@
 #ifndef OUTPUTDECK_H
 #define OUTPUTDECK_H
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace inp {
 

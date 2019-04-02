@@ -6,4 +6,4 @@
 #include "neighbor.h"
 #include "../inp/decks/neighborDeck.h"
 
-geometry::Neighbor::Neighbor(inp::NeighborDeck *deck){}
+geometry::Neighbor::Neighbor(inp::NeighborDeck *deck) {}

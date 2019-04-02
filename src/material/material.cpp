@@ -6,6 +6,6 @@
 #include "material.h"
 #include "../inp/decks/materialDeck.h"
 
-material::Material::Material(inp::MaterialDeck *deck){}
+material::Material::Material(inp::MaterialDeck *deck) {}
 
 bool material::Material::isStateActive() { return false; }

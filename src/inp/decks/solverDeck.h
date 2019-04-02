@@ -6,8 +6,8 @@
 #ifndef SOLVERDECK_H
 #define SOLVERDECK_H
 
+#include <iostream> // error handling
 #include <vector>
-#include <iostream>       // error handling
 
 namespace inp {
 

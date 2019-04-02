@@ -6,8 +6,8 @@
 #ifndef LOADINGDECK_H
 #define LOADINGDECK_H
 
+#include <iostream> // error handling
 #include <vector>
-#include <iostream>       // error handling
 
 namespace inp {
 

@@ -2,41 +2,44 @@
 //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
-#include <iostream>
 #include <cmath>
+#include <iostream>
 #include <yaml-cpp/yaml.h>
 
-#include "input.h"
 #include "decks/fractureDeck.h"
-#include "decks/geometryDeck.h"
 #include "decks/initialConditionDeck.h"
 #include "decks/interiorFlagsDeck.h"
 #include "decks/loadingDeck.h"
+#include "decks/massMatrixDeck.h"
 #include "decks/materialDeck.h"
+#include "decks/modelDeck.h"
 #include "decks/neighborDeck.h"
 #include "decks/outputDeck.h"
 #include "decks/policyDeck.h"
+#include "decks/quadratureDeck.h"
 #include "decks/solverDeck.h"
-#include "decks/modelDeck.h"
+#include "inp/decks/meshDeck.h"
+#include "input.h"
 
-static inline bool definitelyGreaterThan(const double& a, const double& b) {
-  return (a - b) > ((std::abs(a) < std::abs(b) ? std::abs(b) : std::abs(a)) *
-      1.0E-5);
+static inline bool definitelyGreaterThan(const double &a, const double &b) {
+  return (a - b) >
+         ((std::abs(a) < std::abs(b) ? std::abs(b) : std::abs(a)) * 1.0E-5);
 }
 
-inp::Input::Input(const std::string& filename)
+inp::Input::Input(const std::string &filename)
     : d_fractureDeck_p(nullptr), d_geometryDeck_p(nullptr),
       d_initialConditionDeck_p(nullptr), d_interiorFlagsDeck_p(nullptr),
       d_loadingDeck_p(nullptr), d_materialDeck_p(nullptr),
       d_neighborDeck_p(nullptr), d_outputDeck_p(nullptr),
-      d_policyDeck_p(nullptr), d_modelDeck_p(nullptr),
-      d_solverDeck_p(nullptr) {
+      d_policyDeck_p(nullptr), d_modelDeck_p(nullptr), d_solverDeck_p(nullptr) {
 
   d_inputFilename = filename;
 
   // follow the order of reading
   setModelDeck();
-  setGeometryDeck();
+  setMeshDeck();
+  setMassMatrixDeck();
+  setQuadratureDeck();
   setNeighborDeck();
   setFractureDeck();
   setInteriorFlagsDeck();
@@ -53,8 +56,6 @@ inp::Input::Input(const std::string& filename)
 //
 inp::FractureDeck *inp::Input::getFractureDeck() { return d_fractureDeck_p; }
 
-inp::GeometryDeck *inp::Input::getGeometryDeck() { return d_geometryDeck_p; }
-
 inp::InitialConditionDeck *inp::Input::getInitialConditionDeck() {
   return d_initialConditionDeck_p;
 }
@@ -65,7 +66,15 @@ inp::InteriorFlagsDeck *inp::Input::getInteriorFlagsDeck() {
 
 inp::LoadingDeck *inp::Input::getLoadingDeck() { return d_loadingDeck_p; }
 
+inp::MassMatrixDeck *inp::Input::getMassMatrixDeck() {
+  return d_massMatrixDeck_p;
+}
+
 inp::MaterialDeck *inp::Input::getMaterialDeck() { return d_materialDeck_p; }
+
+inp::MeshDeck *inp::Input::getMeshDeck() { return d_geometryDeck_p; }
+
+inp::ModelDeck *inp::Input::getModelDeck() { return d_modelDeck_p; }
 
 inp::NeighborDeck *inp::Input::getNeighborDeck() { return d_neighborDeck_p; }
 
@@ -73,7 +82,9 @@ inp::OutputDeck *inp::Input::getOutputDeck() { return d_outputDeck_p; }
 
 inp::PolicyDeck *inp::Input::getPolicyDeck() { return d_policyDeck_p; }
 
-inp::ModelDeck *inp::Input::getModelDeck() { return d_modelDeck_p; }
+inp::QuadratureDeck *inp::Input::getQuadratureDeck() {
+  return d_quadratureDeck_p;
+}
 
 inp::SolverDeck *inp::Input::getSolverDeck() { return d_solverDeck_p; }
 
@@ -99,13 +110,11 @@ void inp::Input::setModelDeck() {
   // read discretization info
   if (config["Model"]["Discretization_Type"]["Time"])
     d_modelDeck_p->d_timeDiscretization =
-        config["Model"]["Discretization_Type"]["Time"].as<
-            std::string>();
+        config["Model"]["Discretization_Type"]["Time"].as<std::string>();
 
   if (config["Model"]["Discretization_Type"]["Spatial"])
     d_modelDeck_p->d_spatialDiscretization =
-        config["Model"]["Discretization_Type"]["Spatial"].as<
-            std::string>();
+        config["Model"]["Discretization_Type"]["Spatial"].as<std::string>();
 
   if (d_modelDeck_p->d_timeDiscretization == "central_difference" or
       d_modelDeck_p->d_timeDiscretization == "velocity_verlet")
@@ -142,17 +151,16 @@ void inp::Input::setModelDeck() {
   if (config["Model"]["Time_Steps"])
     d_modelDeck_p->d_Nt = config["Model"]["Time_Steps"].as<int>();
 
-  if (std::abs(d_modelDeck_p->d_tFinal) < 1.0E-10 or d_modelDeck_p->d_Nt <=
-  0) {
-    std::cerr<<"Error: Check Final_Time and Time_Steps data.\n";
+  if (std::abs(d_modelDeck_p->d_tFinal) < 1.0E-10 or d_modelDeck_p->d_Nt <= 0) {
+    std::cerr << "Error: Check Final_Time and Time_Steps data.\n";
     exit(1);
   }
 
   d_modelDeck_p->d_dt = d_modelDeck_p->d_tFinal / d_modelDeck_p->d_Nt;
 } // setModelDeck
 
-void inp::Input::setGeometryDeck() {
-  d_geometryDeck_p = new inp::GeometryDeck();
+void inp::Input::setMeshDeck() {
+  d_geometryDeck_p = new inp::MeshDeck();
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   // read dimension
@@ -162,29 +170,39 @@ void inp::Input::setGeometryDeck() {
   // read spatial discretization type
   if (config["Model"]["Discretization_Type"]["Spatial"])
     d_geometryDeck_p->d_spatialDiscretization =
-        config["Model"]["Discretization_Type"]["Spatial"].as<
-            std::string>();
+        config["Model"]["Discretization_Type"]["Spatial"].as<std::string>();
 
   // read mesh filename
-  if (config["Geometry"]["File"])
-    d_geometryDeck_p->d_filename = config["Geometry"]["File"].as<std::string>();
+  if (config["Mesh"]["File"])
+    d_geometryDeck_p->d_filename = config["Mesh"]["File"].as<std::string>();
   else {
 
     std::cerr << "Error: Please specify mesh filename.\n";
     exit(1);
   }
+} // setMeshDeck
+
+void inp::Input::setMassMatrixDeck() {
+  d_massMatrixDeck_p = new inp::MassMatrixDeck();
+  YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   // read fem related parameters
-  if (config["Geometry"]["FEM_Info"]["Order_Quad_Int"])
-    d_geometryDeck_p->d_quadOrder =
-        config["Geometry"]["FEM_Info"]["Order_Quad_Int"].as<size_t>();
-  if (config["Geometry"]["FEM_Info"]["Order_Quad_Int_M_Matrix"])
-    d_geometryDeck_p->d_quadOrderM =
-        config["Geometry"]["FEM_Info"]["Order_Quad_Int_M_Matrix"].as<size_t>();
-  if (config["Geometry"]["FEM_Info"]["M_Matrix_Approx"])
-    d_geometryDeck_p->d_MApproxType =
-        config["Geometry"]["FEM_Info"]["M_Matrix_Approx"].as<std::string>();
-} // setGeometryDeck
+  if (config["Mesh"]["FEM_Info"]["M_Matrix_Approx"])
+    d_massMatrixDeck_p->d_MApproxType =
+        config["Mesh"]["FEM_Info"]["M_Matrix_Approx"].as<std::string>();
+}
+
+void inp::Input::setQuadratureDeck() {
+  d_quadratureDeck_p = new inp::QuadratureDeck();
+  YAML::Node config = YAML::LoadFile(d_inputFilename);
+
+  if (config["Mesh"]["FEM_Info"]["Order_Quad_Int"])
+    d_quadratureDeck_p->d_quadOrder =
+        config["Mesh"]["FEM_Info"]["Order_Quad_Int"].as<size_t>();
+  if (config["Mesh"]["FEM_Info"]["Order_Quad_Int_M_Matrix"])
+    d_quadratureDeck_p->d_quadOrderM =
+        config["Mesh"]["FEM_Info"]["Order_Quad_Int_M_Matrix"].as<size_t>();
+}
 
 void inp::Input::setNeighborDeck() {
   d_neighborDeck_p = new inp::NeighborDeck();
@@ -358,8 +376,7 @@ void inp::Input::setLoadingDeck() {
           bc.d_theta = e["Location"]["Angle"].as<double>();
 
           // perform check
-          double alpha =
-              std::atan((bc.d_y2 - bc.d_y1) / (bc.d_x2 - bc.d_x1));
+          double alpha = std::atan((bc.d_y2 - bc.d_y1) / (bc.d_x2 - bc.d_x1));
           if (definitelyGreaterThan(0.0, alpha))
             alpha = alpha + M_PI;
 
@@ -398,8 +415,8 @@ void inp::Input::setLoadingDeck() {
         else
           d_loadingDeck_p->d_fBCData.push_back(bc);
       } // loop sets
-    } // if tag exists
-  } // loop over tags
+    }   // if tag exists
+  }     // loop over tags
 } // setLoadingDeck
 
 void inp::Input::setMaterialDeck() {

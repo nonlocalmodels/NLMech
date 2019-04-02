@@ -6,15 +6,15 @@
 #ifndef NEIGHBOR_H
 #define NEIGHBOR_H
 
-#include <vector>
 #include <string>
+#include <vector>
 
 // forward declaration of neighbor deck
 namespace inp {
 struct NeighborDeck;
 }
 
-//!Collection of methods and database purely related to geometry
+//! Collection of methods and database purely related to geometry
 namespace geometry {
 
 /*! @brief Methods and database associated to the mesh */
@@ -34,10 +34,9 @@ private:
   /**@{*/
 
   /*! @brief Vector of initial (reference) coordinates of nodes */
-//  std::vector<double> d_nd;
+  //  std::vector<double> d_nd;
 
   /** @}*/
-
 };
 
 } // namespace geometry

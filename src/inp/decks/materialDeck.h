@@ -6,8 +6,8 @@
 #ifndef MATERIALDECK_H
 #define MATERIALDECK_H
 
-#include <vector>
 #include <cmath>
+#include <vector>
 
 namespace inp {
 
@@ -71,9 +71,7 @@ struct MatData {
    * @param nu Poisson's ratio
    * @return E Young's modulus
    */
-  double toE(double K, double nu) {
-    return K * (3.0 * (1 - 2.0 * nu) );
-  }
+  double toE(double K, double nu) { return K * (3.0 * (1 - 2.0 * nu)); }
 
   /*!
    * @brief Compute Bulk modulus K from Young's modulus K and Poisson's ratio nu
@@ -81,9 +79,7 @@ struct MatData {
    * @param nu Poisson's ratio
    * @return K Bulk modulus
    */
-  double toK(double E, double nu) {
-    return E / (3.0 * (1 - 2.0 * nu) );
-  }
+  double toK(double E, double nu) { return E / (3.0 * (1 - 2.0 * nu)); }
 
   /*!
    * @brief Compute Lam'e first parameter lambda from Young's modulus K and
@@ -93,7 +89,7 @@ struct MatData {
    * @return lambda Lam'e first parameter
    */
   double toLambdaE(double E, double nu) {
-    return E * nu / ( (1.0 + nu) * (1.0 - 2.0 * nu) );
+    return E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu));
   }
 
   /*!
@@ -103,9 +99,7 @@ struct MatData {
    * @param nu Poisson's ratio
    * @return lambda Lam'e first parameter
    */
-  double toLambdaK(double K, double nu) {
-    return 3.0 * K * nu / (1.0 + nu);
-  }
+  double toLambdaK(double K, double nu) { return 3.0 * K * nu / (1.0 + nu); }
 
   /*!
    * @brief Compute critical energy release rate Gc from critical
@@ -129,7 +123,7 @@ struct MatData {
    * @return KIc Critical stress-intensity factor
    */
   double toKIc(double Gc, double nu, double E) {
-    return std::sqrt( Gc * E / (1.0 - nu * nu) );
+    return std::sqrt(Gc * E / (1.0 - nu * nu));
   }
 
   /** @}*/

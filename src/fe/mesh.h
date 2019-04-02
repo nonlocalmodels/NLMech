@@ -3,31 +3,30 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef GEOMETRY_H
-#define GEOMETRY_H
+#ifndef MESH_H
+#define MESH_H
 
-#include <vector>
+#include "util/point.h" // definition of struct Point3
 #include <string>
-#include "../util/point.h"         // definition of struct Point3
-#include "../util/matrixBlaze.h"   // definition of SymMatrixFij
+#include <vector>
 
 // forward declaration of geometry deck
 namespace inp {
-struct GeometryDeck;
+struct MeshDeck;
 }
 
-//!Collection of methods and database purely related to geometry
-namespace geometry {
+//! Collection of methods and database purely related to geometry
+namespace fe {
 
 /*! @brief Methods and database associated to the mesh */
-class Geometry {
+class Mesh {
 
 public:
   /*!
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
    */
-  explicit Geometry(inp::GeometryDeck *deck);
+  explicit Mesh(inp::MeshDeck *deck);
 
   /**
    * \defgroup Accessor methods
@@ -68,12 +67,11 @@ public:
    * @brief Return the pointer to nodes data
    * @return Pointer to nodes data
    */
-  const std::vector<util::Point3>* getNodesP();
+  const std::vector<util::Point3> *getNodesP();
 
   /** @}*/
 
 private:
-
   /**
    * \defgroup Utility methods
    */
@@ -146,20 +144,23 @@ private:
    */
   /**@{*/
 
-  /*! @brief Geometry deck */
-  inp::GeometryDeck *d_geometryDeck_p;
+//  /*! @brief Mesh deck */
+//  inp::MeshDeck *d_meshDeck_p;
+
+  /*! @brief Dimension */
+  size_t d_dim;
+
+  /*! @brief Tag for spatial discretization.
+   * List of allowed values are: "", "finite_difference",
+   * "weak_finite_element", "nodal_finite_element", "truss_finite_element"
+   */
+  std::string d_spatialDiscretization;
+
+  /*! @brief Filename to read mesh data */
+  std::string d_filename;
 
   /*! @brief Number of dofs = Dimension times number of nodes */
   size_t d_numDofs;
-
-  /*! @brief Inverse of diagonal mass matrix stored in a vector */
-  std::vector<double> d_invMDiag;
-
-  /*! @brief Inverse of exact mass matrix stored in a Blaze matrix data type.
-   * We store data in float to reduce memory load. However if results appear
-   * to be not so accurate, this should be changed to double
-   */
-  util::SymMatrixFij d_invM;
 
   /*! @brief Map from global reduced id to default global id. Each free dof
    * has associated global id, which we refer to as "global reduced id",
@@ -178,9 +179,8 @@ private:
   std::pair<std::vector<double>, std::vector<double>> d_bbox;
 
   /** @}*/
-
 };
 
-} // namespace geometry
+} // namespace fe
 
-#endif // GEOMETRY_H
+#endif // MESH_H

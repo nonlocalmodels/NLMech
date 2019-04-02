@@ -5,36 +5,52 @@
 //
 //  Copyright (C) 2012-2017 Klaus Iglberger - All Rights Reserved
 //
-//  This file is part of the Blaze library. You can redistribute it and/or modify it under
-//  the terms of the New (Revised) BSD License. Redistribution and use in source and binary
-//  forms, with or without modification, are permitted provided that the following conditions
+//  This file is part of the Blaze library. You can redistribute it and/or
+modify it under
+//  the terms of the New (Revised) BSD License. Redistribution and use in source
+and binary
+//  forms, with or without modification, are permitted provided that the
+following conditions
 //  are met:
 //
-//  1. Redistributions of source code must retain the above copyright notice, this list of
+//  1. Redistributions of source code must retain the above copyright notice,
+this list of
 //     conditions and the following disclaimer.
-//  2. Redistributions in binary form must reproduce the above copyright notice, this list
-//     of conditions and the following disclaimer in the documentation and/or other materials
+//  2. Redistributions in binary form must reproduce the above copyright notice,
+this list
+//     of conditions and the following disclaimer in the documentation and/or
+other materials
 //     provided with the distribution.
-//  3. Neither the names of the Blaze development group nor the names of its contributors
-//     may be used to endorse or promote products derived from this software without specific
+//  3. Neither the names of the Blaze development group nor the names of its
+contributors
+//     may be used to endorse or promote products derived from this software
+without specific
 //     prior written permission.
 //
-//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
-//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT
-//  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
-//  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
-//  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-//  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-//  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+//  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY
+//  EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES
+//  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+NO EVENT
+//  SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+INDIRECT,
+//  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED
+//  TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR
+//  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+WHETHER IN
+//  CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN
+//  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
+OF SUCH
 //  DAMAGE.
 */
 //=================================================================================================
 
 #ifndef _BLAZE_TUTORIAL_H_
 #define _BLAZE_TUTORIAL_H_
-
 
 //=================================================================================================
 //
@@ -47,11 +63,16 @@
 //
 // \image html blaze300x150.jpg
 //
-// This is the API for the \b Blaze high performance C++ math library. It gives a complete
-// overview of the individual features and sublibraries of \b Blaze. To get a first impression
-// on \b Blaze, the short \ref getting_started tutorial is a good place to start. Afterwards,
-// the following long tutorial covers the most important aspects of the \b Blaze math library.
-// The tabs at the top of the page allow a direct access to the individual modules, namespaces,
+// This is the API for the \b Blaze high performance C++ math library. It gives
+a complete
+// overview of the individual features and sublibraries of \b Blaze. To get a
+first impression
+// on \b Blaze, the short \ref getting_started tutorial is a good place to
+start. Afterwards,
+// the following long tutorial covers the most important aspects of the \b Blaze
+math library.
+// The tabs at the top of the page allow a direct access to the individual
+modules, namespaces,
 // classes, and files of the \b Blaze library.\n\n
 //
 // \section table_of_content Table of Contents
@@ -146,37 +167,52 @@
 */
 //*************************************************************************************************
 
-
-//**Configuration and Installation*****************************************************************
+//**Configuration and
+//Installation*****************************************************************
 /*!\page configuration_and_installation Configuration and Installation
 //
-// Since \b Blaze is a header-only library, setting up the \b Blaze library on a particular system
-// is a fairly easy two step process. In the following, this two step process is explained in
+// Since \b Blaze is a header-only library, setting up the \b Blaze library on a
+particular system
+// is a fairly easy two step process. In the following, this two step process is
+explained in
 // detail, preceded only by a short summary of the requirements.
 //
 //
 // \n \section requirements Requirements
 // <hr>
 //
-// For maximum performance the \b Blaze library expects you to have a BLAS library installed
+// For maximum performance the \b Blaze library expects you to have a BLAS
+library installed
 // (<a href="http://software.intel.com/en-us/articles/intel-mkl/">Intel MKL</a>,
 // <a href="http://developer.amd.com/libraries/acml/">ACML</a>,
 // <a href="http://math-atlas.sourceforge.net">Atlas</a>,
-// <a href="http://www.tacc.utexas.edu/tacc-projects/gotoblas2">Goto</a>, ...). If you don't
-// have a BLAS library installed on your system, \b Blaze will still work and will not be reduced
-// in functionality, but performance may be limited. Thus it is strongly recommended to install a
+// <a href="http://www.tacc.utexas.edu/tacc-projects/gotoblas2">Goto</a>, ...).
+If you don't
+// have a BLAS library installed on your system, \b Blaze will still work and
+will not be reduced
+// in functionality, but performance may be limited. Thus it is strongly
+recommended to install a
 // BLAS library.
 //
-// Additionally, for computing the determinant of a dense matrix, for the decomposition of dense
-// matrices, for the dense matrix inversion, and for the computation of eigenvalues and singular
-// values \b Blaze requires <a href="https://en.wikipedia.org/wiki/LAPACK">LAPACK</a>. When either
-// of these features is used it is necessary to link the LAPACK library to the final executable.
-// If no LAPACK library is available the use of these features will result in a linker error.
+// Additionally, for computing the determinant of a dense matrix, for the
+decomposition of dense
+// matrices, for the dense matrix inversion, and for the computation of
+eigenvalues and singular
+// values \b Blaze requires <a
+href="https://en.wikipedia.org/wiki/LAPACK">LAPACK</a>. When either
+// of these features is used it is necessary to link the LAPACK library to the
+final executable.
+// If no LAPACK library is available the use of these features will result in a
+linker error.
 //
-// Furthermore, it is possible to use Boost threads to run numeric operations in parallel. In this
-// case the Boost library is required to be installed on your system. It is recommended to use the
-// newest Boost library available, but \b Blaze requires at minimum the Boost version 1.54.0. If
-// you don't have Boost installed on your system, you can download it for free from
+// Furthermore, it is possible to use Boost threads to run numeric operations in
+parallel. In this
+// case the Boost library is required to be installed on your system. It is
+recommended to use the
+// newest Boost library available, but \b Blaze requires at minimum the Boost
+version 1.54.0. If
+// you don't have Boost installed on your system, you can download it for free
+from
 // <a href="http://www.boost.org">www.boost.org</a>.
 //
 //
@@ -185,10 +221,14 @@
 //
 // \subsection step_1_cmake Installation via CMake
 //
-// The first step is the installation of the \b Blaze header files. The most convenient way
-// to do this is via <a href="https://cmake.org">CMake</a>. Linux and macOS users can use the
-// following two lines to copy the \b Blaze headers in the <tt>./blaze</tt> subdirectory to
-// the directory \c ${CMAKE_INSTALL_PREFIX}/include and the package configuration files to
+// The first step is the installation of the \b Blaze header files. The most
+convenient way
+// to do this is via <a href="https://cmake.org">CMake</a>. Linux and macOS
+users can use the
+// following two lines to copy the \b Blaze headers in the <tt>./blaze</tt>
+subdirectory to
+// the directory \c ${CMAKE_INSTALL_PREFIX}/include and the package
+configuration files to
 // \c ${CMAKE_INSTALL_PREFIX}/share/blaze/cmake.
 
    \code
@@ -196,7 +236,8 @@
    sudo make install
    \endcode
 
-// Windows users can do the same via the cmake-gui. Alternatively, it is possible to include
+// Windows users can do the same via the cmake-gui. Alternatively, it is
+possible to include
 // \b Blaze by adding the following lines in any \c CMakeLists.txt file:
 
    \code
@@ -210,29 +251,36 @@
 // \n \subsection step_1_vcpkg Installation via the VC++ Packaging Tool
 //
 // An alternate way to install \b Blaze for Windows users is Microsoft's
-// <a href="https://github.com/Microsoft/vcpkg">VC++ Packaging Tool (vcpkg)</a>. \b Blaze can
+// <a href="https://github.com/Microsoft/vcpkg">VC++ Packaging Tool (vcpkg)</a>.
+\b Blaze can
 // be installed via the command line:
 
    \code
    C:\src\vcpkg> .\vcpkg install blaze
    \endcode
 
-// The tool automatically downloads the latest \b Blaze release and copies the header files to
+// The tool automatically downloads the latest \b Blaze release and copies the
+header files to
 // the common include directory.
 //
 // \n \subsection step_1_installation_unix Manual Installation on Linux/macOS
 //
-// Since \b Blaze only consists of header files, the <tt>./blaze</tt> subdirectory can be simply
-// copied to a standard include directory (note that this requires root privileges):
+// Since \b Blaze only consists of header files, the <tt>./blaze</tt>
+subdirectory can be simply
+// copied to a standard include directory (note that this requires root
+privileges):
 
    \code
    cp -r ./blaze /usr/local/include
    \endcode
 
 // Alternatively, on Unix-based machines (which includes Linux and Mac OS X) the
-// \c CPLUS_INCLUDE_PATH environment variable can be set. The specified directory will be
-// searched after any directories specified on the command line with the option \c -I and
-// before the standard default directories (such as \c /usr/local/include and \c /usr/include).
+// \c CPLUS_INCLUDE_PATH environment variable can be set. The specified
+directory will be
+// searched after any directories specified on the command line with the option
+\c -I and
+// before the standard default directories (such as \c /usr/local/include and \c
+/usr/include).
 // Assuming a user named 'Jon', the environment variable can be set as follows:
 
    \code
@@ -240,8 +288,10 @@
    export CPLUS_INCLUDE_PATH
    \endcode
 
-// Last but not least, the <tt>./blaze</tt> subdirectory can be explicitly specified on the
-// command line. The following example demonstrates this by means of the GNU C++ compiler:
+// Last but not least, the <tt>./blaze</tt> subdirectory can be explicitly
+specified on the
+// command line. The following example demonstrates this by means of the GNU C++
+compiler:
 
    \code
    g++ -I/usr/home/jon/blaze -o BlazeTest BlazeTest.cpp
@@ -249,77 +299,111 @@
 
 // \n \subsection step_1_installation_windows Manual Installation on Windows
 //
-// Windows doesn't have a standard include directory. Therefore the \b Blaze header files can be
-// copied to any other directory or simply left in the default \b Blaze directory. However, the
-// chosen include directory has to be explicitly specified as include path. In Visual Studio,
-// this is done via the project property pages, configuration properties, C/C++, General settings.
+// Windows doesn't have a standard include directory. Therefore the \b Blaze
+header files can be
+// copied to any other directory or simply left in the default \b Blaze
+directory. However, the
+// chosen include directory has to be explicitly specified as include path. In
+Visual Studio,
+// this is done via the project property pages, configuration properties, C/C++,
+General settings.
 // Here the additional include directories can be specified.
 //
 //
 // \n \section step_2_configuration Step 2: Configuration
 // <hr>
 //
-// The second step is the configuration and customization of the \b Blaze library. Many aspects
-// of \b Blaze can be adapted to specific requirements, environments and architectures. The most
-// convenient way to configure \b Blaze is to modify the headers in the <tt>./blaze/config/</tt>
-// subdirectory by means of <a href="https://cmake.org">CMake</a>. Alternatively these header
-// files can be customized manually. In both cases, however, the files are modified. If this is
-// not an option it is possible to configure \b Blaze via the command line (see the tutorial
-// section \ref configuration_files or the documentation in the configuration files).
+// The second step is the configuration and customization of the \b Blaze
+library. Many aspects
+// of \b Blaze can be adapted to specific requirements, environments and
+architectures. The most
+// convenient way to configure \b Blaze is to modify the headers in the
+<tt>./blaze/config/</tt>
+// subdirectory by means of <a href="https://cmake.org">CMake</a>. Alternatively
+these header
+// files can be customized manually. In both cases, however, the files are
+modified. If this is
+// not an option it is possible to configure \b Blaze via the command line (see
+the tutorial
+// section \ref configuration_files or the documentation in the configuration
+files).
 //
-// Since the default settings are reasonable for most systems this step can also be skipped.
-// However, in order to achieve maximum performance a customization of at least the following
+// Since the default settings are reasonable for most systems this step can also
+be skipped.
+// However, in order to achieve maximum performance a customization of at least
+the following
 // configuration files is required:
 //
-//  - <b><tt>./blaze/config/BLAS.h</tt></b>: Via this configuration file \b Blaze can be enabled
-//    to use a third-party BLAS library for several basic linear algebra functions (such as for
-//    instance dense matrix multiplications). In case no BLAS library is used, all linear algebra
-//    functions use the default implementations of the \b Blaze library and therefore BLAS is not a
-//    requirement for the compilation process. However, please note that performance may be limited.
-//  - <b><tt>./blaze/config/CacheSize.h</tt></b>: This file contains the hardware specific cache
-//    settings. \b Blaze uses this information to optimize its cache usage. For maximum performance
-//    it is recommended to adapt these setting to a specific target architecture.
-//  - <b><tt>./blaze/config/Thresholds.h</tt></b>: This file contains all thresholds for the
-//    customization of the \b Blaze compute kernels. In order to tune the kernels for a specific
-//    architecture and to maximize performance it can be necessary to adjust the thresholds,
-//    especially for a parallel execution (see \ref shared_memory_parallelization).
+//  - <b><tt>./blaze/config/BLAS.h</tt></b>: Via this configuration file \b
+Blaze can be enabled
+//    to use a third-party BLAS library for several basic linear algebra
+functions (such as for
+//    instance dense matrix multiplications). In case no BLAS library is used,
+all linear algebra
+//    functions use the default implementations of the \b Blaze library and
+therefore BLAS is not a
+//    requirement for the compilation process. However, please note that
+performance may be limited.
+//  - <b><tt>./blaze/config/CacheSize.h</tt></b>: This file contains the
+hardware specific cache
+//    settings. \b Blaze uses this information to optimize its cache usage. For
+maximum performance
+//    it is recommended to adapt these setting to a specific target
+architecture.
+//  - <b><tt>./blaze/config/Thresholds.h</tt></b>: This file contains all
+thresholds for the
+//    customization of the \b Blaze compute kernels. In order to tune the
+kernels for a specific
+//    architecture and to maximize performance it can be necessary to adjust the
+thresholds,
+//    especially for a parallel execution (see \ref
+shared_memory_parallelization).
 //
-// For an overview of other customization options and more details, please see the section
+// For an overview of other customization options and more details, please see
+the section
 // \ref configuration_files.
 //
 // \n Next: \ref getting_started
 */
 //*************************************************************************************************
 
-
-//**Getting Started********************************************************************************
+//**Getting
+//Started********************************************************************************
 /*!\page getting_started Getting Started
 //
-// This short tutorial serves the purpose to give a quick overview of the way mathematical
-// expressions have to be formulated in \b Blaze. Starting with \ref vector_types, the following
+// This short tutorial serves the purpose to give a quick overview of the way
+mathematical
+// expressions have to be formulated in \b Blaze. Starting with \ref
+vector_types, the following
 // long tutorial covers the most important aspects of the \b Blaze math library.
 //
 //
 // \n \section getting_started_vector_example A First Example
 //
-// \b Blaze is written such that using mathematical expressions is as close to mathematical
-// textbooks as possible and therefore as intuitive as possible. In nearly all cases the seemingly
-// easiest solution is the right solution and most users experience no problems when trying to
-// use \b Blaze in the most natural way. The following example gives a first impression of the
+// \b Blaze is written such that using mathematical expressions is as close to
+mathematical
+// textbooks as possible and therefore as intuitive as possible. In nearly all
+cases the seemingly
+// easiest solution is the right solution and most users experience no problems
+when trying to
+// use \b Blaze in the most natural way. The following example gives a first
+impression of the
 // formulation of a vector addition in \b Blaze:
 
    \code
-   #include <iostream>
    #include <blaze/Math.h>
+   #include <iostream>
 
    using blaze::StaticVector;
    using blaze::DynamicVector;
 
-   // Instantiation of a static 3D column vector. The vector is directly initialized as
+   // Instantiation of a static 3D column vector. The vector is directly
+initialized as
    //   ( 4 -2  5 )
    StaticVector<int,3UL> a{ 4, -2, 5 };
 
-   // Instantiation of a dynamic 3D column vector. Via the subscript operator the values are set to
+   // Instantiation of a dynamic 3D column vector. Via the subscript operator
+the values are set to
    //   ( 2  5 -3 )
    DynamicVector<int> b( 3UL );
    b[0] = 2;
@@ -333,26 +417,36 @@
    std::cout << "c =\n" << c << "\n";
    \endcode
 
-// Note that the entire \b Blaze math library can be included via the \c blaze/Math.h header
-// file. Alternatively, the entire \b Blaze library, including both the math and the entire
-// utility module, can be included via the \c blaze/Blaze.h header file. Also note that all
+// Note that the entire \b Blaze math library can be included via the \c
+blaze/Math.h header
+// file. Alternatively, the entire \b Blaze library, including both the math and
+the entire
+// utility module, can be included via the \c blaze/Blaze.h header file. Also
+note that all
 // classes and functions of \b Blaze are contained in the blaze namespace.\n\n
 //
-// Assuming that this program resides in a source file called \c FirstExample.cpp, it can be
+// Assuming that this program resides in a source file called \c
+FirstExample.cpp, it can be
 // compiled for instance via the GNU C++ compiler:
 
    \code
    g++ -ansi -O3 -DNDEBUG -mavx -o FirstExample FirstExample.cpp
    \endcode
 
-// Note the definition of the \c NDEBUG preprocessor symbol. In order to achieve maximum
-// performance, it is necessary to compile the program in release mode, which deactivates
-// all debugging functionality inside \b Blaze. It is also strongly recommended to specify
-// the available architecture specific instruction set (as for instance the AVX instruction
-// set, which if available can be activated via the \c -mavx flag). This allows \b Blaze
+// Note the definition of the \c NDEBUG preprocessor symbol. In order to achieve
+maximum
+// performance, it is necessary to compile the program in release mode, which
+deactivates
+// all debugging functionality inside \b Blaze. It is also strongly recommended
+to specify
+// the available architecture specific instruction set (as for instance the AVX
+instruction
+// set, which if available can be activated via the \c -mavx flag). This allows
+\b Blaze
 // to optimize computations via vectorization.\n\n
 //
-// When running the resulting executable \c FirstExample, the output of the last line of
+// When running the resulting executable \c FirstExample, the output of the last
+line of
 // this small program is
 
    \code
@@ -374,7 +468,8 @@
    // Instantiating a dynamic 3D column vector
    DynamicVector<int> x{ 4, -1, 3 };
 
-   // Instantiating a dynamic 2x3 row-major matrix, preinitialized with 0. Via the function call
+   // Instantiating a dynamic 2x3 row-major matrix, preinitialized with 0. Via
+the function call
    // operator three values of the matrix are explicitly set to get the matrix
    //   ( 1  0  4 )
    //   ( 0 -2  0 )
@@ -389,7 +484,8 @@
    // Printing the resulting vector
    std::cout << "y =\n" << y << "\n";
 
-   // Instantiating a static column-major matrix. The matrix is directly initialized as
+   // Instantiating a static column-major matrix. The matrix is directly
+initialized as
    //   (  3 -1 )
    //   (  0  2 )
    //   ( -1  0 )
@@ -416,25 +512,33 @@
 
 // \n \section getting_started_complex_example A Complex Example
 //
-// The following example is much more sophisticated. It shows the implementation of the Conjugate
-// Gradient (CG) algorithm (http://en.wikipedia.org/wiki/Conjugate_gradient) by means of the
+// The following example is much more sophisticated. It shows the implementation
+of the Conjugate
+// Gradient (CG) algorithm (http://en.wikipedia.org/wiki/Conjugate_gradient) by
+means of the
 // \b Blaze library:
 //
 // \image html cg.jpg
 //
-// In this example it is not important to understand the CG algorithm itself, but to see the
-// advantage of the API of the \b Blaze library. In the \b Blaze implementation we will use a
-// sparse matrix/dense vector multiplication for a 2D Poisson equation using \f$ N \times N \f$
-// unknowns. It becomes apparent that the core of the algorithm is very close to the mathematical
-// formulation and therefore has huge advantages in terms of readability and maintainability,
-// while the performance of the code is close to the expected theoretical peak performance:
+// In this example it is not important to understand the CG algorithm itself,
+but to see the
+// advantage of the API of the \b Blaze library. In the \b Blaze implementation
+we will use a
+// sparse matrix/dense vector multiplication for a 2D Poisson equation using \f$
+N \times N \f$
+// unknowns. It becomes apparent that the core of the algorithm is very close to
+the mathematical
+// formulation and therefore has huge advantages in terms of readability and
+maintainability,
+// while the performance of the code is close to the expected theoretical peak
+performance:
 
    \code
    const size_t NN( N*N );
 
    blaze::CompressedMatrix<double,rowMajor> A( NN, NN );
-   blaze::DynamicVector<double,columnVector> x( NN, 1.0 ), b( NN, 0.0 ), r( NN ), p( NN ), Ap( NN );
-   double alpha, beta, delta;
+   blaze::DynamicVector<double,columnVector> x( NN, 1.0 ), b( NN, 0.0 ), r( NN
+), p( NN ), Ap( NN ); double alpha, beta, delta;
 
    // ... Initializing the sparse matrix A
 
@@ -456,16 +560,20 @@
    }
    \endcode
 
-// \n Hopefully this short tutorial gives a good first impression of how mathematical expressions
-// are formulated with \b Blaze. The following long tutorial, starting with \ref vector_types,
-// will cover all aspects of the \b Blaze math library, i.e. it will introduce all vector and
-// matrix types, all possible operations on vectors and matrices, and of course all possible
+// \n Hopefully this short tutorial gives a good first impression of how
+mathematical expressions
+// are formulated with \b Blaze. The following long tutorial, starting with \ref
+vector_types,
+// will cover all aspects of the \b Blaze math library, i.e. it will introduce
+all vector and
+// matrix types, all possible operations on vectors and matrices, and of course
+all possible
 // mathematical expressions.
 //
-// \n Previous: \ref configuration_and_installation &nbsp; &nbsp; Next: \ref vectors
+// \n Previous: \ref configuration_and_installation &nbsp; &nbsp; Next: \ref
+vectors
 */
 //*************************************************************************************************
-
 
 //**Vectors****************************************************************************************
 /*!\page vectors Vectors
@@ -476,9 +584,12 @@
 // \n \section vectors_general General Concepts
 // <hr>
 //
-// The \b Blaze library currently offers four dense vector types (\ref vector_types_static_vector,
-// \ref vector_types_dynamic_vector, \ref vector_types_hybrid_vector, and \ref vector_types_custom_vector)
-// and one sparse vector type (\ref vector_types_compressed_vector). All vectors can be specified
+// The \b Blaze library currently offers four dense vector types (\ref
+vector_types_static_vector,
+// \ref vector_types_dynamic_vector, \ref vector_types_hybrid_vector, and \ref
+vector_types_custom_vector)
+// and one sparse vector type (\ref vector_types_compressed_vector). All vectors
+can be specified
 // as either column vectors or row vectors:
 
    \code
@@ -525,9 +636,10 @@
    using blaze::rowVector;
    using blaze::columnVector;
 
-   StaticVector<int,6UL> a;            // Instantiation of a 6-dimensional static column vector
-   CompressedVector<int,rowVector> b;  // Instantiation of a compressed row vector
-   DynamicVector<int,columnVector> c;  // Instantiation of a dynamic column vector
+   StaticVector<int,6UL> a;            // Instantiation of a 6-dimensional
+static column vector CompressedVector<int,rowVector> b;  // Instantiation of a
+compressed row vector DynamicVector<int,columnVector> c;  // Instantiation of a
+dynamic column vector
 
    // ... Resizing and initialization
 
@@ -538,8 +650,8 @@
 */
 //*************************************************************************************************
 
-
-//**Vector Types***********************************************************************************
+//**Vector
+//Types***********************************************************************************
 /*!\page vector_types Vector Types
 //
 // \tableofcontents
@@ -548,14 +660,17 @@
 // \n \section vector_types_static_vector StaticVector
 // <hr>
 //
-// The blaze::StaticVector class template is the representation of a fixed size vector with
-// statically allocated elements of arbitrary type. It can be included via the header file
+// The blaze::StaticVector class template is the representation of a fixed size
+vector with
+// statically allocated elements of arbitrary type. It can be included via the
+header file
 
    \code
    #include <blaze/math/StaticVector.h>
    \endcode
 
-// The type of the elements, the number of elements, and the transpose flag of the vector can
+// The type of the elements, the number of elements, and the transpose flag of
+the vector can
 // be specified via the three template parameters:
 
    \code
@@ -563,14 +678,19 @@
    class StaticVector;
    \endcode
 
-//  - \c Type: specifies the type of the vector elements. StaticVector can be used with any
+//  - \c Type: specifies the type of the vector elements. StaticVector can be
+used with any
 //             non-cv-qualified, non-reference, non-pointer element type.
-//  - \c N   : specifies the total number of vector elements. It is expected that StaticVector is
+//  - \c N   : specifies the total number of vector elements. It is expected
+that StaticVector is
 //             only used for tiny and small vectors.
-//  - \c TF  : specifies whether the vector is a row vector (\c blaze::rowVector) or a column
-//             vector (\c blaze::columnVector). The default value is \c blaze::columnVector.
+//  - \c TF  : specifies whether the vector is a row vector (\c
+blaze::rowVector) or a column
+//             vector (\c blaze::columnVector). The default value is \c
+blaze::columnVector.
 //
-// The blaze::StaticVector is perfectly suited for small to medium vectors whose size is known at
+// The blaze::StaticVector is perfectly suited for small to medium vectors whose
+size is known at
 // compile time:
 
    \code
@@ -587,14 +707,17 @@
 // \n \section vector_types_dynamic_vector DynamicVector
 // <hr>
 //
-// The blaze::DynamicVector class template is the representation of an arbitrary sized vector
-// with dynamically allocated elements of arbitrary type. It can be included via the header file
+// The blaze::DynamicVector class template is the representation of an arbitrary
+sized vector
+// with dynamically allocated elements of arbitrary type. It can be included via
+the header file
 
    \code
    #include <blaze/math/DynamicVector.h>
    \endcode
 
-// The type of the elements and the transpose flag of the vector can be specified via the two
+// The type of the elements and the transpose flag of the vector can be
+specified via the two
 // template parameters:
 
    \code
@@ -602,12 +725,16 @@
    class DynamicVector;
    \endcode
 
-//  - \c Type: specifies the type of the vector elements. DynamicVector can be used with any
+//  - \c Type: specifies the type of the vector elements. DynamicVector can be
+used with any
 //             non-cv-qualified, non-reference, non-pointer element type.
-//  - \c TF  : specifies whether the vector is a row vector (\c blaze::rowVector) or a column
-//             vector (\c blaze::columnVector). The default value is \c blaze::columnVector.
+//  - \c TF  : specifies whether the vector is a row vector (\c
+blaze::rowVector) or a column
+//             vector (\c blaze::columnVector). The default value is \c
+blaze::columnVector.
 //
-// The blaze::DynamicVector is the default choice for all kinds of dense vectors and the best
+// The blaze::DynamicVector is the default choice for all kinds of dense vectors
+and the best
 // choice for medium to large vectors. Its size can be modified at runtime:
 
    \code
@@ -624,16 +751,20 @@
 // \n \section vector_types_hybrid_vector HybridVector
 // <hr>
 //
-// The blaze::HybridVector class template combines the advantages of the blaze::StaticVector and
-// the blaze::DynamicVector class templates. It represents a fixed size vector with statically
-// allocated elements, but still can be dynamically resized (within the bounds of the available
+// The blaze::HybridVector class template combines the advantages of the
+blaze::StaticVector and
+// the blaze::DynamicVector class templates. It represents a fixed size vector
+with statically
+// allocated elements, but still can be dynamically resized (within the bounds
+of the available
 // memory). It can be included via the header file
 
    \code
    #include <blaze/math/HybridVector.h>
    \endcode
 
-// The type of the elements, the number of elements, and the transpose flag of the vector can
+// The type of the elements, the number of elements, and the transpose flag of
+the vector can
 // be specified via the three template parameters:
 
    \code
@@ -641,61 +772,80 @@
    class HybridVector;
    \endcode
 
-//  - \c Type: specifies the type of the vector elements. HybridVector can be used with any
+//  - \c Type: specifies the type of the vector elements. HybridVector can be
+used with any
 //             non-cv-qualified, non-reference, non-pointer element type.
-//  - \c N   : specifies the maximum number of vector elements. It is expected that HybridVector
+//  - \c N   : specifies the maximum number of vector elements. It is expected
+that HybridVector
 //             is only used for tiny and small vectors.
-//  - \c TF  : specifies whether the vector is a row vector (\c blaze::rowVector) or a column
-//             vector (\c blaze::columnVector). The default value is \c blaze::columnVector.
+//  - \c TF  : specifies whether the vector is a row vector (\c
+blaze::rowVector) or a column
+//             vector (\c blaze::columnVector). The default value is \c
+blaze::columnVector.
 //
-// The blaze::HybridVector is a suitable choice for small to medium vectors, whose size is not
-// known at compile time or not fixed at runtime, but whose maximum size is known at compile
+// The blaze::HybridVector is a suitable choice for small to medium vectors,
+whose size is not
+// known at compile time or not fixed at runtime, but whose maximum size is
+known at compile
 // time:
 
    \code
-   // Definition of a 3-dimensional integral column vector with a maximum size of 6
-   blaze::HybridVector<int,6UL> a( 3UL );
+   // Definition of a 3-dimensional integral column vector with a maximum size
+of 6 blaze::HybridVector<int,6UL> a( 3UL );
 
-   // Definition of a 4-dimensional single precision column vector with a maximum size of 16
-   blaze::HybridVector<float,16UL,blaze::columnVector> b( 4UL );
+   // Definition of a 4-dimensional single precision column vector with a
+maximum size of 16 blaze::HybridVector<float,16UL,blaze::columnVector> b( 4UL );
 
-   // Definition of a double precision row vector with size 0 and a maximum size of 6
-   blaze::HybridVector<double,6UL,blaze::rowVector> c;
-   \endcode
+   // Definition of a double precision row vector with size 0 and a maximum size
+of 6 blaze::HybridVector<double,6UL,blaze::rowVector> c; \endcode
 
 // \n \section vector_types_custom_vector CustomVector
 // <hr>
 //
-// The blaze::CustomVector class template provides the functionality to represent an external
-// array of elements of arbitrary type and a fixed size as a native \b Blaze dense vector data
-// structure. Thus in contrast to all other dense vector types a custom vector does not perform
-// any kind of memory allocation by itself, but it is provided with an existing array of element
-// during construction. A custom vector can therefore be considered an alias to the existing
+// The blaze::CustomVector class template provides the functionality to
+represent an external
+// array of elements of arbitrary type and a fixed size as a native \b Blaze
+dense vector data
+// structure. Thus in contrast to all other dense vector types a custom vector
+does not perform
+// any kind of memory allocation by itself, but it is provided with an existing
+array of element
+// during construction. A custom vector can therefore be considered an alias to
+the existing
 // array. It can be included via the header file
 
    \code
    #include <blaze/math/CustomVector.h>
    \endcode
 
-// The type of the elements, the properties of the given array of elements and the transpose
-// flag of the vector can be specified via the following four template parameters:
+// The type of the elements, the properties of the given array of elements and
+the transpose
+// flag of the vector can be specified via the following four template
+parameters:
 
    \code
    template< typename Type, bool AF, bool PF, bool TF >
    class CustomVector;
    \endcode
 
-//  - Type: specifies the type of the vector elements. blaze::CustomVector can be used with
+//  - Type: specifies the type of the vector elements. blaze::CustomVector can
+be used with
 //          any non-cv-qualified, non-reference, non-pointer element type.
-//  - AF  : specifies whether the represented, external arrays are properly aligned with
+//  - AF  : specifies whether the represented, external arrays are properly
+aligned with
 //          respect to the available instruction set (SSE, AVX, ...) or not.
-//  - PF  : specified whether the represented, external arrays are properly padded with
+//  - PF  : specified whether the represented, external arrays are properly
+padded with
 //          respect to the available instruction set (SSE, AVX, ...) or not.
-//  - TF  : specifies whether the vector is a row vector (\c blaze::rowVector) or a column
-//          vector (\c blaze::columnVector). The default value is \c blaze::columnVector.
+//  - TF  : specifies whether the vector is a row vector (\c blaze::rowVector)
+or a column
+//          vector (\c blaze::columnVector). The default value is \c
+blaze::columnVector.
 //
-// The blaze::CustomVector is the right choice if any external array needs to be represented as
-// a \b Blaze dense vector data structure or if a custom memory allocation strategy needs to be
+// The blaze::CustomVector is the right choice if any external array needs to be
+represented as
+// a \b Blaze dense vector data structure or if a custom memory allocation
+strategy needs to be
 // realized:
 
    \code
@@ -705,27 +855,32 @@
    using blaze::padded;
    using blaze::unpadded;
 
-   // Definition of an unmanaged custom column vector for unaligned, unpadded integer arrays
-   using UnalignedUnpadded = CustomVector<int,unaligned,unpadded,columnVector>;
-   std::vector<int> vec( 7UL );
+   // Definition of an unmanaged custom column vector for unaligned, unpadded
+integer arrays using UnalignedUnpadded =
+CustomVector<int,unaligned,unpadded,columnVector>; std::vector<int> vec( 7UL );
    UnalignedUnpadded a( &vec[0], 7UL );
 
-   // Definition of a managed custom column vector for unaligned but padded 'float' arrays
-   using UnalignedPadded = CustomVector<float,unaligned,padded,columnVector>;
-   UnalignedPadded b( new float[16], 9UL, 16UL, blaze::ArrayDelete() );
+   // Definition of a managed custom column vector for unaligned but padded
+'float' arrays using UnalignedPadded =
+CustomVector<float,unaligned,padded,columnVector>; UnalignedPadded b( new
+float[16], 9UL, 16UL, blaze::ArrayDelete() );
 
-   // Definition of a managed custom row vector for aligned, unpadded 'double' arrays
-   using AlignedUnpadded = CustomVector<double,aligned,unpadded,rowVector>;
-   AlignedUnpadded c( blaze::allocate<double>( 7UL ), 7UL, blaze::Deallocate() );
+   // Definition of a managed custom row vector for aligned, unpadded 'double'
+arrays using AlignedUnpadded = CustomVector<double,aligned,unpadded,rowVector>;
+   AlignedUnpadded c( blaze::allocate<double>( 7UL ), 7UL, blaze::Deallocate()
+);
 
-   // Definition of a managed custom row vector for aligned, padded 'complex<double>' arrays
-   using AlignedPadded = CustomVector<complex<double>,aligned,padded,columnVector>;
-   AlignedPadded d( allocate< complex<double> >( 8UL ), 5UL, 8UL, blaze::Deallocate() );
-   \endcode
+   // Definition of a managed custom row vector for aligned, padded
+'complex<double>' arrays using AlignedPadded =
+CustomVector<complex<double>,aligned,padded,columnVector>; AlignedPadded d(
+allocate< complex<double> >( 8UL ), 5UL, 8UL, blaze::Deallocate() ); \endcode
 
-// In comparison with the remaining \b Blaze dense vector types blaze::CustomVector has several
-// special characteristics. All of these result from the fact that a custom vector is not
-// performing any kind of memory allocation, but instead is given an existing array of elements.
+// In comparison with the remaining \b Blaze dense vector types
+blaze::CustomVector has several
+// special characteristics. All of these result from the fact that a custom
+vector is not
+// performing any kind of memory allocation, but instead is given an existing
+array of elements.
 // The following sections discuss all of these characteristics:
 //
 //  -# <b>\ref vector_types_custom_vector_memory_management</b>
@@ -735,12 +890,16 @@
 //
 // \n \subsection vector_types_custom_vector_memory_management Memory Management
 //
-// The blaze::CustomVector class template acts as an adaptor for an existing array of elements. As
-// such it provides everything that is required to use the array just like a native \b Blaze dense
-// vector data structure. However, this flexibility comes with the price that the user of a custom
+// The blaze::CustomVector class template acts as an adaptor for an existing
+array of elements. As
+// such it provides everything that is required to use the array just like a
+native \b Blaze dense
+// vector data structure. However, this flexibility comes with the price that
+the user of a custom
 // vector is responsible for the resource management.
 //
-// The following examples give an impression of several possible types of custom vectors:
+// The following examples give an impression of several possible types of custom
+vectors:
 
    \code
    using blaze::CustomVector;
@@ -751,14 +910,18 @@
    using blaze::padded;
    using blaze::unpadded;
 
-   // Definition of a 3-dimensional custom vector with unaligned, unpadded and externally
-   // managed integer array. Note that the std::vector must be guaranteed to outlive the
+   // Definition of a 3-dimensional custom vector with unaligned, unpadded and
+externally
+   // managed integer array. Note that the std::vector must be guaranteed to
+outlive the
    // custom vector!
    std::vector<int> vec( 3UL );
    CustomVector<int,unaligned,unpadded> a( &vec[0], 3UL );
 
-   // Definition of a custom vector with size 3 and capacity 16 with aligned, padded and
-   // externally managed integer array. Note that the std::unique_ptr must be guaranteed
+   // Definition of a custom vector with size 3 and capacity 16 with aligned,
+padded and
+   // externally managed integer array. Note that the std::unique_ptr must be
+guaranteed
    // to outlive the custom vector!
    std::unique_ptr<int[],Deallocate> memory( allocate<int>( 16UL ) );
    CustomVector<int,aligned,padded> b( memory.get(), 3UL, 16UL );
@@ -776,31 +939,38 @@
    using CustomType = CustomVector<int,unaligned,unpadded>;
 
    std::vector<int> vec( 5UL, 10 );  // Vector of 5 integers of the value 10
-   CustomType a( &vec[0], 5UL );     // Represent the std::vector as Blaze dense vector
-   a[1] = 20;                        // Also modifies the std::vector
+   CustomType a( &vec[0], 5UL );     // Represent the std::vector as Blaze dense
+vector a[1] = 20;                        // Also modifies the std::vector
 
    CustomType b( a );  // Creating a copy of vector a
    b[2] = 20;          // Also affects vector a and the std::vector
    \endcode
 
-// It is important to note that a custom vector acts as a reference to the specified array. Thus
-// the result of the copy constructor is a new custom vector that is referencing and representing
+// It is important to note that a custom vector acts as a reference to the
+specified array. Thus
+// the result of the copy constructor is a new custom vector that is referencing
+and representing
 // the same array as the original custom vector.
 //
-// In contrast to copy construction, just as with references, copy assignment does not change
-// which array is referenced by the custom vector, but modifies the values of the array:
+// In contrast to copy construction, just as with references, copy assignment
+does not change
+// which array is referenced by the custom vector, but modifies the values of
+the array:
 
    \code
    std::vector<int> vec2( 5UL, 4 );  // Vector of 5 integers of the value 4
-   CustomType c( &vec2[0], 5UL );    // Represent the std::vector as Blaze dense vector
+   CustomType c( &vec2[0], 5UL );    // Represent the std::vector as Blaze dense
+vector
 
    a = c;  // Copy assignment: Set all values of vector a and b to 4.
    \endcode
 
 // \n \subsection vector_types_custom_vector_alignment Alignment
 //
-// In case the custom vector is specified as \c aligned the passed array must be guaranteed to
-// be aligned according to the requirements of the used instruction set (SSE, AVX, ...). For
+// In case the custom vector is specified as \c aligned the passed array must be
+guaranteed to
+// be aligned according to the requirements of the used instruction set (SSE,
+AVX, ...). For
 // instance, if AVX is active an array of integers must be 32-bit aligned:
 
    \code
@@ -816,13 +986,16 @@
    CustomVector<int,aligned,unpadded> a( memory.get(), 5UL );
    \endcode
 
-// In case the alignment requirements are violated, a \c std::invalid_argument exception is
+// In case the alignment requirements are violated, a \c std::invalid_argument
+exception is
 // thrown.
 //
 // \n \subsection vector_types_custom_vector_padding Padding
 //
-// Adding padding elements to the end of an array can have a significant impact on the performance.
-// For instance, assuming that AVX is available, then two aligned, padded, 3-dimensional vectors
+// Adding padding elements to the end of an array can have a significant impact
+on the performance.
+// For instance, assuming that AVX is available, then two aligned, padded,
+3-dimensional vectors
 // of double precision values can be added via a single SIMD addition operation:
 
    \code
@@ -848,7 +1021,8 @@
    c = a + b;  // AVX-based vector addition
    \endcode
 
-// In this example, maximum performance is possible. However, in case no padding elements are
+// In this example, maximum performance is possible. However, in case no padding
+elements are
 // inserted, a scalar addition has to be used:
 
    \code
@@ -874,35 +1048,48 @@
    c = a + b;  // Scalar vector addition
    \endcode
 
-// Note the different number of constructor parameters for unpadded and padded custom vectors:
-// In contrast to unpadded vectors, where during the construction only the size of the array
-// has to be specified, during the construction of a padded custom vector it is additionally
+// Note the different number of constructor parameters for unpadded and padded
+custom vectors:
+// In contrast to unpadded vectors, where during the construction only the size
+of the array
+// has to be specified, during the construction of a padded custom vector it is
+additionally
 // necessary to explicitly specify the capacity of the array.
 //
-// The number of padding elements is required to be sufficient with respect to the available
-// instruction set: In case of an aligned padded custom vector the added padding elements must
-// guarantee that the capacity is greater or equal than the size and a multiple of the SIMD vector
-// width. In case of unaligned padded vectors the number of padding elements can be greater or
-// equal the number of padding elements of an aligned padded custom vector. In case the padding
-// is insufficient with respect to the available instruction set, a \a std::invalid_argument
+// The number of padding elements is required to be sufficient with respect to
+the available
+// instruction set: In case of an aligned padded custom vector the added padding
+elements must
+// guarantee that the capacity is greater or equal than the size and a multiple
+of the SIMD vector
+// width. In case of unaligned padded vectors the number of padding elements can
+be greater or
+// equal the number of padding elements of an aligned padded custom vector. In
+case the padding
+// is insufficient with respect to the available instruction set, a \a
+std::invalid_argument
 // exception is thrown.
 //
-// Please also note that \b Blaze will zero initialize the padding elements in order to achieve
+// Please also note that \b Blaze will zero initialize the padding elements in
+order to achieve
 // maximum performance!
 //
 //
 // \n \section vector_types_compressed_vector CompressedVector
 // <hr>
 //
-// The blaze::CompressedVector class is the representation of an arbitrarily sized sparse
-// vector, which stores only non-zero elements of arbitrary type. It can be included via the
+// The blaze::CompressedVector class is the representation of an arbitrarily
+sized sparse
+// vector, which stores only non-zero elements of arbitrary type. It can be
+included via the
 // header file
 
    \code
    #include <blaze/math/CompressedVector.h>
    \endcode
 
-// The type of the elements and the transpose flag of the vector can be specified via the two
+// The type of the elements and the transpose flag of the vector can be
+specified via the two
 // template parameters:
 
    \code
@@ -910,19 +1097,24 @@
    class CompressedVector;
    \endcode
 
-//  - \c Type: specifies the type of the vector elements. CompressedVector can be used with any
+//  - \c Type: specifies the type of the vector elements. CompressedVector can
+be used with any
 //             non-cv-qualified, non-reference, non-pointer element type.
-//  - \c TF  : specifies whether the vector is a row vector (\c blaze::rowVector) or a column
-//             vector (\c blaze::columnVector). The default value is \c blaze::columnVector.
+//  - \c TF  : specifies whether the vector is a row vector (\c
+blaze::rowVector) or a column
+//             vector (\c blaze::columnVector). The default value is \c
+blaze::columnVector.
 //
-// The blaze::CompressedVector is the right choice for all kinds of sparse vectors:
+// The blaze::CompressedVector is the right choice for all kinds of sparse
+vectors:
 
    \code
    // Definition of a 3-dimensional integral column vector
    blaze::CompressedVector<int> a( 3UL );
 
-   // Definition of a 4-dimensional single precision column vector with capacity for 3 non-zero elements
-   blaze::CompressedVector<float,blaze::columnVector> b( 4UL, 3UL );
+   // Definition of a 4-dimensional single precision column vector with capacity
+for 3 non-zero elements blaze::CompressedVector<float,blaze::columnVector> b(
+4UL, 3UL );
 
    // Definition of a double precision row vector with size 0
    blaze::CompressedVector<double,blaze::rowVector> c;
@@ -932,8 +1124,8 @@
 */
 //*************************************************************************************************
 
-
-//**Vector Operations******************************************************************************
+//**Vector
+//Operations******************************************************************************
 /*!\page vector_operations Vector Operations
 //
 // \tableofcontents
@@ -942,14 +1134,20 @@
 // \n \section vector_operations_constructors Constructors
 // <hr>
 //
-// Instantiating and setting up a vector is very easy and intuitive. However, there are a few
+// Instantiating and setting up a vector is very easy and intuitive. However,
+there are a few
 // rules to take care of:
-//  - In case the last template parameter (the transpose flag) is omitted, the vector is per
+//  - In case the last template parameter (the transpose flag) is omitted, the
+vector is per
 //    default a column vector.
-//  - The elements of a \c StaticVector or \c HybridVector are default initialized (i.e. built-in
-//    data types are initialized to 0, class types are initialized via the default constructor).
-//  - Newly allocated elements of a \c DynamicVector or \c CompressedVector remain uninitialized
-//    if they are of built-in type and are default constructed if they are of class type.
+//  - The elements of a \c StaticVector or \c HybridVector are default
+initialized (i.e. built-in
+//    data types are initialized to 0, class types are initialized via the
+default constructor).
+//  - Newly allocated elements of a \c DynamicVector or \c CompressedVector
+remain uninitialized
+//    if they are of built-in type and are default constructed if they are of
+class type.
 //
 // \n \subsection vector_operations_default_construction Default Construction
 
@@ -962,60 +1160,86 @@
    // of StaticVectors is fixed via the second template parameter,
    // the initial size of a default constructed DynamicVector or
    // CompressedVector is 0.
-   StaticVector<int,2UL> v1;                // Instantiation of a 2D integer column vector.
-                                            // All elements are initialized to 0.
-   StaticVector<long,3UL,columnVector> v2;  // Instantiation of a 3D long integer column vector.
-                                            // Again, all elements are initialized to 0L.
-   DynamicVector<float> v3;                 // Instantiation of a dynamic single precision column
+   StaticVector<int,2UL> v1;                // Instantiation of a 2D integer
+column vector.
+                                            // All elements are initialized to
+0. StaticVector<long,3UL,columnVector> v2;  // Instantiation of a 3D long
+integer column vector.
+                                            // Again, all elements are
+initialized to 0L. DynamicVector<float> v3;                 // Instantiation of
+a dynamic single precision column
                                             // vector of size 0.
-   DynamicVector<double,rowVector> v4;      // Instantiation of a dynamic double precision row
+   DynamicVector<double,rowVector> v4;      // Instantiation of a dynamic double
+precision row
                                             // vector of size 0.
-   CompressedVector<int> v5;                // Instantiation of a compressed integer column
+   CompressedVector<int> v5;                // Instantiation of a compressed
+integer column
                                             // vector of size 0.
-   CompressedVector<double,rowVector> v6;   // Instantiation of a compressed double precision row
+   CompressedVector<double,rowVector> v6;   // Instantiation of a compressed
+double precision row
                                             // vector of size 0.
    \endcode
 
-// \n \subsection vector_operations_size_construction Construction with Specific Size
+// \n \subsection vector_operations_size_construction Construction with Specific
+Size
 //
-// The \c DynamicVector, \c HybridVector and \c CompressedVector classes offer a constructor that
-// allows to immediately give the vector the required size. Whereas both dense vectors (i.e.
-// \c DynamicVector and \c HybridVector) use this information to allocate memory for all vector
+// The \c DynamicVector, \c HybridVector and \c CompressedVector classes offer a
+constructor that
+// allows to immediately give the vector the required size. Whereas both dense
+vectors (i.e.
+// \c DynamicVector and \c HybridVector) use this information to allocate memory
+for all vector
 // elements, \c CompressedVector merely acquires the size but remains empty.
 
    \code
-   DynamicVector<int,columnVector> v7( 9UL );      // Instantiation of an integer dynamic column vector
-                                                   // of size 9. The elements are NOT initialized!
-   HybridVector< complex<float>, 5UL > v8( 2UL );  // Instantiation of a column vector with two single
-                                                   // precision complex values. The elements are
+   DynamicVector<int,columnVector> v7( 9UL );      // Instantiation of an
+integer dynamic column vector
+                                                   // of size 9. The elements
+are NOT initialized! HybridVector< complex<float>, 5UL > v8( 2UL );  //
+Instantiation of a column vector with two single
+                                                   // precision complex values.
+The elements are
                                                    // default constructed.
-   CompressedVector<int,rowVector> v9( 10UL );     // Instantiation of a compressed row vector with
-                                                   // size 10. Initially, the vector provides no
-                                                   // capacity for non-zero elements.
-   \endcode
+   CompressedVector<int,rowVector> v9( 10UL );     // Instantiation of a
+compressed row vector with
+                                                   // size 10. Initially, the
+vector provides no
+                                                   // capacity for non-zero
+elements. \endcode
 
-// \n \subsection vector_operations_initialization_constructors Initialization Constructors
+// \n \subsection vector_operations_initialization_constructors Initialization
+Constructors
 //
-// All dense vector classes offer a constructor that allows for a direct, homogeneous initialization
-// of all vector elements. In contrast, for sparse vectors the predicted number of non-zero elements
+// All dense vector classes offer a constructor that allows for a direct,
+homogeneous initialization
+// of all vector elements. In contrast, for sparse vectors the predicted number
+of non-zero elements
 // can be specified
 
    \code
-   StaticVector<int,3UL,rowVector> v10( 2 );            // Instantiation of a 3D integer row vector.
-                                                        // All elements are initialized to 2.
-   DynamicVector<float> v11( 3UL, 7.0F );               // Instantiation of a dynamic single precision
-                                                        // column vector of size 3. All elements are
+   StaticVector<int,3UL,rowVector> v10( 2 );            // Instantiation of a 3D
+integer row vector.
+                                                        // All elements are
+initialized to 2. DynamicVector<float> v11( 3UL, 7.0F );               //
+Instantiation of a dynamic single precision
+                                                        // column vector of
+size 3. All elements are
                                                         // set to 7.0F.
-   CompressedVector<float,rowVector> v12( 15UL, 3UL );  // Instantiation of a single precision column
-                                                        // vector of size 15, which provides enough
-                                                        // space for at least 3 non-zero elements.
-   \endcode
+   CompressedVector<float,rowVector> v12( 15UL, 3UL );  // Instantiation of a
+single precision column
+                                                        // vector of size 15,
+which provides enough
+                                                        // space for at least 3
+non-zero elements. \endcode
 
 // \n \subsection vector_operations_array_construction Array Construction
 //
-// Alternatively, all dense vector classes offer a constructor for an initialization with a dynamic
-// or static array. If the vector is initialized from a dynamic array, the constructor expects the
-// actual size of the array as first argument, the array as second argument. In case of a static
+// Alternatively, all dense vector classes offer a constructor for an
+initialization with a dynamic
+// or static array. If the vector is initialized from a dynamic array, the
+constructor expects the
+// actual size of the array as first argument, the array as second argument. In
+case of a static
 // array, the fixed size of the array is used:
 
    \code
@@ -1027,9 +1251,11 @@
    blaze::StaticVector<int,4UL> v14( array2 );
    \endcode
 
-// \n \subsection vector_operations_initializer_list_construction Initializer List Construction
+// \n \subsection vector_operations_initializer_list_construction Initializer
+List Construction
 //
-// In addition, all dense vector classes can be directly initialized by means of an initializer
+// In addition, all dense vector classes can be directly initialized by means of
+an initializer
 // list:
 
    \code
@@ -1038,38 +1264,48 @@
 
 // \n \subsection vector_operations_copy_construction Copy Construction
 //
-// All dense and sparse vectors can be created as the copy of any other dense or sparse vector
+// All dense and sparse vectors can be created as the copy of any other dense or
+sparse vector
 // with the same transpose flag (i.e. blaze::rowVector or blaze::columnVector).
 
    \code
-   StaticVector<int,9UL,columnVector> v16( v7 );  // Instantiation of the dense column vector v16
-                                                  // as copy of the dense column vector v7.
-   DynamicVector<int,rowVector> v17( v9 );        // Instantiation of the dense row vector v17 as
-                                                  // copy of the sparse row vector v9.
-   CompressedVector<int,columnVector> v18( v1 );  // Instantiation of the sparse column vector v18
-                                                  // as copy of the dense column vector v1.
-   CompressedVector<float,rowVector> v19( v12 );  // Instantiation of the sparse row vector v19 as
+   StaticVector<int,9UL,columnVector> v16( v7 );  // Instantiation of the dense
+column vector v16
+                                                  // as copy of the dense column
+vector v7. DynamicVector<int,rowVector> v17( v9 );        // Instantiation of
+the dense row vector v17 as
+                                                  // copy of the sparse row
+vector v9. CompressedVector<int,columnVector> v18( v1 );  // Instantiation of
+the sparse column vector v18
+                                                  // as copy of the dense column
+vector v1. CompressedVector<float,rowVector> v19( v12 );  // Instantiation of
+the sparse row vector v19 as
                                                   // copy of the row vector v12.
    \endcode
 
-// Note that it is not possible to create a \c StaticVector as a copy of a vector with a different
+// Note that it is not possible to create a \c StaticVector as a copy of a
+vector with a different
 // size:
 
    \code
-   StaticVector<int,5UL,columnVector> v23( v7 );  // Runtime error: Size does not match!
-   StaticVector<int,4UL,rowVector> v24( v10 );    // Compile time error: Size does not match!
-   \endcode
+   StaticVector<int,5UL,columnVector> v23( v7 );  // Runtime error: Size does
+not match! StaticVector<int,4UL,rowVector> v24( v10 );    // Compile time error:
+Size does not match! \endcode
 
 // \n \section vector_operations_assignment Assignment
 // <hr>
 //
 // There are several types of assignment to dense and sparse vectors:
-// \ref vector_operations_homogeneous_assignment, \ref vector_operations_array_assignment,
-// \ref vector_operations_copy_assignment, and \ref vector_operations_compound_assignment.
+// \ref vector_operations_homogeneous_assignment, \ref
+vector_operations_array_assignment,
+// \ref vector_operations_copy_assignment, and \ref
+vector_operations_compound_assignment.
 //
-// \n \subsection vector_operations_homogeneous_assignment Homogeneous Assignment
+// \n \subsection vector_operations_homogeneous_assignment Homogeneous
+Assignment
 //
-// Sometimes it may be necessary to assign the same value to all elements of a dense vector.
+// Sometimes it may be necessary to assign the same value to all elements of a
+dense vector.
 // For this purpose, the assignment operator can be used:
 
    \code
@@ -1098,9 +1334,11 @@
    v2 = array2;
    \endcode
 
-// \n \subsection vector_operations_initializer_list_assignment Initializer List Assignment
+// \n \subsection vector_operations_initializer_list_assignment Initializer List
+Assignment
 //
-// Alternatively, it is possible to directly assign an initializer list to a dense vector:
+// Alternatively, it is possible to directly assign an initializer list to a
+dense vector:
 
    \code
    blaze::StaticVector<float,2UL> v1;
@@ -1112,9 +1350,12 @@
 
 // \n \subsection vector_operations_copy_assignment Copy Assignment
 //
-// For all vector types it is generally possible to assign another vector with the same transpose
-// flag (i.e. blaze::columnVector or blaze::rowVector). Note that in case of \c StaticVectors, the
-// assigned vector is required to have the same size as the \c StaticVector since the size of a
+// For all vector types it is generally possible to assign another vector with
+the same transpose
+// flag (i.e. blaze::columnVector or blaze::rowVector). Note that in case of \c
+StaticVectors, the
+// assigned vector is required to have the same size as the \c StaticVector
+since the size of a
 // \c StaticVector cannot be adapted!
 
    \code
@@ -1126,17 +1367,20 @@
 
    // ... Initialization of the vectors
 
-   v1 = v2;  // OK: Assignment of a 3D dense column vector to another 3D dense column vector
-   v1 = v4;  // OK: Assignment of a 3D sparse column vector to a 3D dense column vector
-   v1 = v3;  // Runtime error: Cannot assign a 5D vector to a 3D static vector
-   v1 = v5;  // Compilation error: Cannot assign a row vector to a column vector
-   \endcode
+   v1 = v2;  // OK: Assignment of a 3D dense column vector to another 3D dense
+column vector v1 = v4;  // OK: Assignment of a 3D sparse column vector to a 3D
+dense column vector v1 = v3;  // Runtime error: Cannot assign a 5D vector to a
+3D static vector v1 = v5;  // Compilation error: Cannot assign a row vector to a
+column vector \endcode
 
 // \n \subsection vector_operations_compound_assignment Compound Assignment
 //
-// Next to plain assignment, it is also possible to use addition assignment, subtraction
-// assignment, and multiplication assignment. Note however, that in contrast to plain assignment
-// the size and the transpose flag of the vectors has be to equal in order to able to perform a
+// Next to plain assignment, it is also possible to use addition assignment,
+subtraction
+// assignment, and multiplication assignment. Note however, that in contrast to
+plain assignment
+// the size and the transpose flag of the vectors has be to equal in order to
+able to perform a
 // compound assignment.
 
    \code
@@ -1148,16 +1392,17 @@
 
    // ... Initialization of the vectors
 
-   v1 += v2;  // OK: Addition assignment between two column vectors of the same size
-   v1 += v3;  // Runtime error: No compound assignment between vectors of different size
-   v1 -= v4;  // Compilation error: No compound assignment between vectors of different transpose flag
-   v4 *= v5;  // OK: Multiplication assignment between two row vectors of the same size
-   \endcode
+   v1 += v2;  // OK: Addition assignment between two column vectors of the same
+size v1 += v3;  // Runtime error: No compound assignment between vectors of
+different size v1 -= v4;  // Compilation error: No compound assignment between
+vectors of different transpose flag v4 *= v5;  // OK: Multiplication assignment
+between two row vectors of the same size \endcode
 
 // \n \section vector_operations_element_access Element Access
 // <hr>
 //
-// The easiest and most intuitive way to access a dense or sparse vector is via the subscript
+// The easiest and most intuitive way to access a dense or sparse vector is via
+the subscript
 // operator. The indices to access a vector are zero-based:
 
    \code
@@ -1171,9 +1416,12 @@
    v2[4] = -1.4F;
    \endcode
 
-// Whereas using the subscript operator on a dense vector only accesses the already existing
-// element, accessing an element of a sparse vector via the subscript operator potentially
-// inserts the element into the vector and may therefore be more expensive. Consider the
+// Whereas using the subscript operator on a dense vector only accesses the
+already existing
+// element, accessing an element of a sparse vector via the subscript operator
+potentially
+// inserts the element into the vector and may therefore be more expensive.
+Consider the
 // following example:
 
    \code
@@ -1184,12 +1432,18 @@
    }
    \endcode
 
-// Although the compressed vector is only used for read access within the for loop, using the
-// subscript operator temporarily inserts 10 non-zero elements into the vector. Therefore, all
-// vectors (sparse as well as dense) offer an alternate way via the \c begin(), \c cbegin(),
-// \c end(), and \c cend() functions to traverse the currently contained elements by iterators.
-// In case of non-const vectors, \c begin() and \c end() return an \c Iterator, which allows a
-// manipulation of the non-zero value, in case of a constant vector or in case \c cbegin() or
+// Although the compressed vector is only used for read access within the for
+loop, using the
+// subscript operator temporarily inserts 10 non-zero elements into the vector.
+Therefore, all
+// vectors (sparse as well as dense) offer an alternate way via the \c begin(),
+\c cbegin(),
+// \c end(), and \c cend() functions to traverse the currently contained
+elements by iterators.
+// In case of non-const vectors, \c begin() and \c end() return an \c Iterator,
+which allows a
+// manipulation of the non-zero value, in case of a constant vector or in case
+\c cbegin() or
 // \c cend() are used a \c ConstIterator is returned:
 
    \code
@@ -1201,29 +1455,37 @@
 
    // Traversing the vector by Iterator
    for( CompressedVector<int>::Iterator it=v1.begin(); it!=v1.end(); ++it ) {
-      it->value() = ...;  // OK: Write access to the value of the non-zero element.
-      ... = it->value();  // OK: Read access to the value of the non-zero element.
-      it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
-      ... = it->index();  // OK: Read access to the index of the non-zero element.
+      it->value() = ...;  // OK: Write access to the value of the non-zero
+element.
+      ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
+      ... = it->index();  // OK: Read access to the index of the non-zero
+element.
    }
 
    // Traversing the vector by ConstIterator
-   for( CompressedVector<int>::ConstIterator it=v1.cbegin(); it!=v1.cend(); ++it ) {
-      it->value() = ...;  // Compilation error: Assignment to the value via a ConstIterator is invalid.
-      ... = it->value();  // OK: Read access to the value of the non-zero element.
-      it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
-      ... = it->index();  // OK: Read access to the index of the non-zero element.
+   for( CompressedVector<int>::ConstIterator it=v1.cbegin(); it!=v1.cend(); ++it
+) { it->value() = ...;  // Compilation error: Assignment to the value via a
+ConstIterator is invalid.
+      ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
+      ... = it->index();  // OK: Read access to the index of the non-zero
+element.
    }
    \endcode
 
-// Note that \c begin(), \c cbegin(), \c end(), and \c cend() are also available as free functions:
+// Note that \c begin(), \c cbegin(), \c end(), and \c cend() are also available
+as free functions:
 
    \code
    for( CompressedVector<int>::Iterator it=begin( v1 ); it!=end( v1 ); ++it ) {
       // ...
    }
 
-   for( CompressedVector<int>::ConstIterator it=cbegin( v1 ); it!=cend( v1 ); ++it ) {
+   for( CompressedVector<int>::ConstIterator it=cbegin( v1 ); it!=cend( v1 );
+++it ) {
       // ...
    }
    \endcode
@@ -1231,9 +1493,12 @@
 // \n \section vector_operations_element_insertion Element Insertion
 // <hr>
 //
-// In contrast to dense vectors, that store all elements independent of their value and that
-// offer direct access to all elements, spares vectors only store the non-zero elements contained
-// in the vector. Therefore it is necessary to explicitly add elements to the vector. The first
+// In contrast to dense vectors, that store all elements independent of their
+value and that
+// offer direct access to all elements, spares vectors only store the non-zero
+elements contained
+// in the vector. Therefore it is necessary to explicitly add elements to the
+vector. The first
 // option to add elements to a sparse vector is the subscript operator:
 
    \code
@@ -1243,10 +1508,13 @@
    v1[1] = 2;
    \endcode
 
-// In case the element at the given index is not yet contained in the vector, it is automatically
-// inserted. Otherwise the old value is replaced by the new value 2. The operator returns a
+// In case the element at the given index is not yet contained in the vector, it
+is automatically
+// inserted. Otherwise the old value is replaced by the new value 2. The
+operator returns a
 // reference to the sparse vector element.\n
-// An alternative is the \c set() function: In case the element is not yet contained in the vector
+// An alternative is the \c set() function: In case the element is not yet
+contained in the vector
 // the element is inserted, else the element's value is modified:
 
    \code
@@ -1254,23 +1522,32 @@
    v1.set( 3, 1 );
    \endcode
 
-// However, insertion of elements can be better controlled via the \c insert() function. In contrast
-// to the subscript operator and the \c set() function it emits an exception in case the element is
-// already contained in the vector. In order to check for this case, the \c find() function can be
+// However, insertion of elements can be better controlled via the \c insert()
+function. In contrast
+// to the subscript operator and the \c set() function it emits an exception in
+case the element is
+// already contained in the vector. In order to check for this case, the \c
+find() function can be
 // used:
 
    \code
-   // In case the element at index 4 is not yet contained in the matrix it is inserted
+   // In case the element at index 4 is not yet contained in the matrix it is
+inserted
    // with a value of 6.
    if( v1.find( 4 ) == v1.end() )
       v1.insert( 4, 6 );
    \endcode
 
-// Although the \c insert() function is very flexible, due to performance reasons it is not suited
-// for the setup of large sparse vectors. A very efficient, yet also very low-level way to fill
-// a sparse vector is the \c append() function. It requires the sparse vector to provide enough
-// capacity to insert a new element. Additionally, the index of the new element must be larger
-// than the index of the previous element. Violating these conditions results in undefined
+// Although the \c insert() function is very flexible, due to performance
+reasons it is not suited
+// for the setup of large sparse vectors. A very efficient, yet also very
+low-level way to fill
+// a sparse vector is the \c append() function. It requires the sparse vector to
+provide enough
+// capacity to insert a new element. Additionally, the index of the new element
+must be larger
+// than the index of the previous element. Violating these conditions results in
+undefined
 // behavior!
 
    \code
@@ -1280,25 +1557,28 @@
    // ...
    \endcode
 
-// \n \section vector_operations_non_modifying_operations Non-Modifying Operations
+// \n \section vector_operations_non_modifying_operations Non-Modifying
+Operations
 // <hr>
 //
 // \subsection vector_operations_size .size()
 //
-// Via the \c size() member function, the current size of a dense or sparse vector can be queried:
+// Via the \c size() member function, the current size of a dense or sparse
+vector can be queried:
 
    \code
    // Instantiating a dynamic vector with size 10
    blaze::DynamicVector<int> v1( 10UL );
    v1.size();  // Returns 10
 
-   // Instantiating a compressed vector with size 12 and capacity for 3 non-zero elements
-   blaze::CompressedVector<double> v2( 12UL, 3UL );
-   v2.size();  // Returns 12
-   \endcode
+   // Instantiating a compressed vector with size 12 and capacity for 3 non-zero
+elements blaze::CompressedVector<double> v2( 12UL, 3UL ); v2.size();  // Returns
+12 \endcode
 
-// Alternatively, the free function \c size() can be used to query to current size of a vector.
-// In contrast to the member function, the free function can also be used to query the size of
+// Alternatively, the free function \c size() can be used to query to current
+size of a vector.
+// In contrast to the member function, the free function can also be used to
+query the size of
 // vector expressions:
 
    \code
@@ -1311,24 +1591,30 @@
 
 // \n \subsection vector_operations_capacity .capacity()
 //
-// Via the \c capacity() (member) function the internal capacity of a dense or sparse vector
-// can be queried. Note that the capacity of a vector doesn't have to be equal to the size
-// of a vector. In case of a dense vector the capacity will always be greater or equal than
-// the size of the vector, in case of a sparse vector the capacity may even be less than
+// Via the \c capacity() (member) function the internal capacity of a dense or
+sparse vector
+// can be queried. Note that the capacity of a vector doesn't have to be equal
+to the size
+// of a vector. In case of a dense vector the capacity will always be greater or
+equal than
+// the size of the vector, in case of a sparse vector the capacity may even be
+less than
 // the size.
 
    \code
    v1.capacity();   // Returns at least 10
    \endcode
 
-// For symmetry reasons, there is also a free function /c capacity() available that can be used
+// For symmetry reasons, there is also a free function /c capacity() available
+that can be used
 // to query the capacity:
 
    \code
-   capacity( v1 );  // Returns at least 10, i.e. has the same effect as the member function
-   \endcode
+   capacity( v1 );  // Returns at least 10, i.e. has the same effect as the
+member function \endcode
 
-// Note, however, that it is not possible to query the capacity of a vector expression:
+// Note, however, that it is not possible to query the capacity of a vector
+expression:
 
    \code
    capacity( A * v1 );  // Compilation error!
@@ -1336,34 +1622,41 @@
 
 // \n \subsection vector_operations_nonzeros .nonZeros()
 //
-// For both dense and sparse vectors the number of non-zero elements can be determined via the
-// \c nonZeros() member function. Sparse vectors directly return their number of non-zero
-// elements, dense vectors traverse their elements and count the number of non-zero elements.
+// For both dense and sparse vectors the number of non-zero elements can be
+determined via the
+// \c nonZeros() member function. Sparse vectors directly return their number of
+non-zero
+// elements, dense vectors traverse their elements and count the number of
+non-zero elements.
 
    \code
-   v1.nonZeros();  // Returns the number of non-zero elements in the dense vector
-   v2.nonZeros();  // Returns the number of non-zero elements in the sparse vector
-   \endcode
+   v1.nonZeros();  // Returns the number of non-zero elements in the dense
+vector v2.nonZeros();  // Returns the number of non-zero elements in the sparse
+vector \endcode
 
-// There is also a free function \c nonZeros() available to query the current number of non-zero
+// There is also a free function \c nonZeros() available to query the current
+number of non-zero
 // elements:
 
    \code
-   nonZeros( v1 );  // Returns the number of non-zero elements in the dense vector
-   nonZeros( v2 );  // Returns the number of non-zero elements in the sparse vector
-   \endcode
+   nonZeros( v1 );  // Returns the number of non-zero elements in the dense
+vector nonZeros( v2 );  // Returns the number of non-zero elements in the sparse
+vector \endcode
 
-// The free \c nonZeros() function can also be used to query the number of non-zero elements in
-// a vector expression. However, the result is not the exact number of non-zero elements, but
+// The free \c nonZeros() function can also be used to query the number of
+non-zero elements in
+// a vector expression. However, the result is not the exact number of non-zero
+elements, but
 // may be a rough estimation:
 
    \code
-   nonZeros( A * v1 );  // Estimates the number of non-zero elements in the vector expression
-   \endcode
+   nonZeros( A * v1 );  // Estimates the number of non-zero elements in the
+vector expression \endcode
 
 // \n \subsection vector_operations_isnan isnan()
 //
-// The \c isnan() function provides the means to check a dense or sparse vector for non-a-number
+// The \c isnan() function provides the means to check a dense or sparse vector
+for non-a-number
 // elements:
 
    \code
@@ -1378,15 +1671,19 @@
    if( isnan( a ) ) { ... }
    \endcode
 
-// If at least one element of the vector is not-a-number, the function returns \c true, otherwise
-// it returns \c false. Please note that this function only works for vectors with floating point
-// elements. The attempt to use it for a vector with a non-floating point element type results in
+// If at least one element of the vector is not-a-number, the function returns
+\c true, otherwise
+// it returns \c false. Please note that this function only works for vectors
+with floating point
+// elements. The attempt to use it for a vector with a non-floating point
+element type results in
 // a compile time error.
 //
 //
 // \n \subsection vector_operations_isdefault isDefault()
 //
-// The \c isDefault() function returns whether the given dense or sparse vector is in default state:
+// The \c isDefault() function returns whether the given dense or sparse vector
+is in default state:
 
    \code
    blaze::HybridVector<int,20UL> a;
@@ -1394,18 +1691,25 @@
    if( isDefault( a ) ) { ... }
    \endcode
 
-// A vector is in default state if it appears to just have been default constructed. All resizable
-// vectors (\c HybridVector, \c DynamicVector, or \c CompressedVector) and \c CustomVector are
-// in default state if its size is equal to zero. A non-resizable vector (\c StaticVector, all
-// subvectors, rows, and columns) is in default state if all its elements are in default state.
-// For instance, in case the vector is instantiated for a built-in integral or floating point data
-// type, the function returns \c true in case all vector elements are 0 and \c false in case any
+// A vector is in default state if it appears to just have been default
+constructed. All resizable
+// vectors (\c HybridVector, \c DynamicVector, or \c CompressedVector) and \c
+CustomVector are
+// in default state if its size is equal to zero. A non-resizable vector (\c
+StaticVector, all
+// subvectors, rows, and columns) is in default state if all its elements are in
+default state.
+// For instance, in case the vector is instantiated for a built-in integral or
+floating point data
+// type, the function returns \c true in case all vector elements are 0 and \c
+false in case any
 // vector element is not 0.
 //
 //
 // \n \subsection vector_operations_isUniform isUniform()
 //
-// In order to check if all vector elements are identical, the \c isUniform function can be used:
+// In order to check if all vector elements are identical, the \c isUniform
+function can be used:
 
    \code
    blaze::DynamicVector<int> a;
@@ -1413,44 +1717,51 @@
    if( isUniform( a ) ) { ... }
    \endcode
 
-// Note that in case of sparse vectors also the zero elements are also taken into account!
+// Note that in case of sparse vectors also the zero elements are also taken
+into account!
 //
 //
 // \n \subsection vector_operations_length length() / sqrLength()
 //
-// In order to calculate the length (magnitude) of a dense or sparse vector, both the \c length()
+// In order to calculate the length (magnitude) of a dense or sparse vector,
+both the \c length()
 // and \c sqrLength() function can be used:
 
    \code
    blaze::StaticVector<float,3UL,rowVector> v{ -1.2F, 2.7F, -2.3F };
 
-   const float len    = length   ( v );  // Computes the current length of the vector
-   const float sqrlen = sqrLength( v );  // Computes the square length of the vector
-   \endcode
+   const float len    = length   ( v );  // Computes the current length of the
+vector const float sqrlen = sqrLength( v );  // Computes the square length of
+the vector \endcode
 
-// Note that both functions can only be used for vectors with built-in or complex element type!
+// Note that both functions can only be used for vectors with built-in or
+complex element type!
 //
 //
 // \n \subsection vector_operations_vector_trans trans()
 //
-// As already mentioned, vectors can either be column vectors (blaze::columnVector) or row vectors
-// (blaze::rowVector). A column vector cannot be assigned to a row vector and vice versa. However,
+// As already mentioned, vectors can either be column vectors
+(blaze::columnVector) or row vectors
+// (blaze::rowVector). A column vector cannot be assigned to a row vector and
+vice versa. However,
 // vectors can be transposed via the \c trans() function:
 
    \code
    blaze::DynamicVector<int,columnVector> v1( 4UL );
    blaze::CompressedVector<int,rowVector> v2( 4UL );
 
-   v1 = v2;            // Compilation error: Cannot assign a row vector to a column vector
-   v1 = trans( v2 );   // OK: Transposing the row vector to a column vector and assigning it
+   v1 = v2;            // Compilation error: Cannot assign a row vector to a
+column vector v1 = trans( v2 );   // OK: Transposing the row vector to a column
+vector and assigning it
                        //     to the column vector v1
-   v2 = trans( v1 );   // OK: Transposing the column vector v1 and assigning it to the row vector v2
-   v1 += trans( v2 );  // OK: Addition assignment of two column vectors
-   \endcode
+   v2 = trans( v1 );   // OK: Transposing the column vector v1 and assigning it
+to the row vector v2 v1 += trans( v2 );  // OK: Addition assignment of two
+column vectors \endcode
 
 // \n \subsection vector_operations_ctrans ctrans()
 //
-// It is also possible to compute the conjugate transpose of a vector. This operation is available
+// It is also possible to compute the conjugate transpose of a vector. This
+operation is available
 // via the \c ctrans() function:
 
    \code
@@ -1460,7 +1771,8 @@
    v1 = ctrans( v2 );  // Compute the conjugate transpose vector
    \endcode
 
-// Note that the \c ctrans() function has the same effect as manually applying the \c conj() and
+// Note that the \c ctrans() function has the same effect as manually applying
+the \c conj() and
 // \c trans() function in any order:
 
    \code
@@ -1470,9 +1782,12 @@
 
 // \n \subsection vector_operations_evaluate eval() / evaluate()
 //
-// The \c evaluate() function forces an evaluation of the given vector expression and enables
-// an automatic deduction of the correct result type of an operation. The following code example
-// demonstrates its intended use for the multiplication of a dense and a sparse vector:
+// The \c evaluate() function forces an evaluation of the given vector
+expression and enables
+// an automatic deduction of the correct result type of an operation. The
+following code example
+// demonstrates its intended use for the multiplication of a dense and a sparse
+vector:
 
    \code
    using blaze::DynamicVector;
@@ -1485,12 +1800,18 @@
    auto c = evaluate( a * b );
    \endcode
 
-// In this scenario, the \c evaluate() function assists in deducing the exact result type of
-// the operation via the \c auto keyword. Please note that if \c evaluate() is used in this
-// way, no temporary vector is created and no copy operation is performed. Instead, the result
-// is directly written to the target vector due to the return value optimization (RVO). However,
-// if \c evaluate() is used in combination with an explicit target type, a temporary will be
-// created and a copy operation will be performed if the used type differs from the type
+// In this scenario, the \c evaluate() function assists in deducing the exact
+result type of
+// the operation via the \c auto keyword. Please note that if \c evaluate() is
+used in this
+// way, no temporary vector is created and no copy operation is performed.
+Instead, the result
+// is directly written to the target vector due to the return value optimization
+(RVO). However,
+// if \c evaluate() is used in combination with an explicit target type, a
+temporary will be
+// created and a copy operation will be performed if the used type differs from
+the type
 // returned from the function:
 
    \code
@@ -1499,9 +1820,12 @@
    d = evaluate( a * b );                // Temporary & copy operation
    \endcode
 
-// Sometimes it might be desirable to explicitly evaluate a sub-expression within a larger
-// expression. However, please note that \c evaluate() is not intended to be used for this
-// purpose. This task is more elegantly and efficiently handled by the \c eval() function:
+// Sometimes it might be desirable to explicitly evaluate a sub-expression
+within a larger
+// expression. However, please note that \c evaluate() is not intended to be
+used for this
+// purpose. This task is more elegantly and efficiently handled by the \c eval()
+function:
 
    \code
    blaze::DynamicVector<double> a, b, c, d;
@@ -1510,8 +1834,10 @@
    d = a + eval( b * c );      // No creation of a temporary vector
    \endcode
 
-// In contrast to the \c evaluate() function, \c eval() can take the complete expression
-// into account and therefore can guarantee the most efficient way to evaluate it (see also
+// In contrast to the \c evaluate() function, \c eval() can take the complete
+expression
+// into account and therefore can guarantee the most efficient way to evaluate
+it (see also
 // \ref intra_statement_optimization).
 //
 //
@@ -1520,8 +1846,10 @@
 //
 // \subsection vector_operations_resize_reserve .resize() / .reserve()
 //
-// The size of a \c StaticVector is fixed by the second template parameter and a \c CustomVector
-// cannot be resized. In contrast, the size of \c DynamicVectors, \c HybridVectors as well as
+// The size of a \c StaticVector is fixed by the second template parameter and a
+\c CustomVector
+// cannot be resized. In contrast, the size of \c DynamicVectors, \c
+HybridVectors as well as
 // \c CompressedVectors can be changed via the \c resize() function:
 
    \code
@@ -1533,28 +1861,35 @@
    v2[1] = -2;
    v2[3] = 11;
 
-   // Adapting the size of the dynamic and compressed vectors. The (optional) second parameter
-   // specifies whether the existing elements should be preserved. Per default, the existing
+   // Adapting the size of the dynamic and compressed vectors. The (optional)
+second parameter
+   // specifies whether the existing elements should be preserved. Per default,
+the existing
    // elements are preserved.
-   v1.resize( 5UL );         // Resizing vector v1 to 5 elements. Elements of built-in type remain
-                             // uninitialized, elements of class type are default constructed.
-   v1.resize( 3UL, false );  // Resizing vector v1 to 3 elements. The old elements are lost, the
+   v1.resize( 5UL );         // Resizing vector v1 to 5 elements. Elements of
+built-in type remain
+                             // uninitialized, elements of class type are
+default constructed. v1.resize( 3UL, false );  // Resizing vector v1 to 3
+elements. The old elements are lost, the
                              // new elements are NOT initialized!
-   v2.resize( 8UL, true );   // Resizing vector v2 to 8 elements. The old elements are preserved.
-   v2.resize( 5UL, false );  // Resizing vector v2 to 5 elements. The old elements are lost.
-   \endcode
+   v2.resize( 8UL, true );   // Resizing vector v2 to 8 elements. The old
+elements are preserved. v2.resize( 5UL, false );  // Resizing vector v2 to 5
+elements. The old elements are lost. \endcode
 
-// Note that resizing a vector invalidates all existing views (see e.g. \ref views_subvectors)
+// Note that resizing a vector invalidates all existing views (see e.g. \ref
+views_subvectors)
 // on the vector:
 
    \code
-   blaze::DynamicVector<int,rowVector> v1( 10UL );  // Creating a dynamic vector of size 10
-   auto sv = subvector( v1, 2UL, 5UL );             // Creating a view on the range [2..6]
-   v1.resize( 6UL );                                // Resizing the vector invalidates the view
-   \endcode
+   blaze::DynamicVector<int,rowVector> v1( 10UL );  // Creating a dynamic vector
+of size 10 auto sv = subvector( v1, 2UL, 5UL );             // Creating a view
+on the range [2..6] v1.resize( 6UL );                                // Resizing
+the vector invalidates the view \endcode
 
-// When the internal capacity of a vector is no longer sufficient, the allocation of a larger
-// junk of memory is triggered. In order to avoid frequent reallocations, the \c reserve()
+// When the internal capacity of a vector is no longer sufficient, the
+allocation of a larger
+// junk of memory is triggered. In order to avoid frequent reallocations, the \c
+reserve()
 // function can be used up front to set the internal capacity:
 
    \code
@@ -1564,58 +1899,67 @@
    v1.capacity();  // Returns at least 100
    \endcode
 
-// Note that the size of the vector remains unchanged, but only the internal capacity is set
+// Note that the size of the vector remains unchanged, but only the internal
+capacity is set
 // according to the specified value!
 //
 // \n \subsection vector_operations_shrinkToFit .shrinkToFit()
 //
-// The internal capacity of vectors with dynamic memory is preserved in order to minimize the
-// number of reallocations. For that reason, the \c resize() and \c reserve() functions can lead
-// to memory overhead. The \c shrinkToFit() member function can be used to minimize the internal
+// The internal capacity of vectors with dynamic memory is preserved in order to
+minimize the
+// number of reallocations. For that reason, the \c resize() and \c reserve()
+functions can lead
+// to memory overhead. The \c shrinkToFit() member function can be used to
+minimize the internal
 // capacity:
 
    \code
    blaze::DynamicVector<int> v1( 1000UL );  // Create a vector of 1000 integers
-   v1.resize( 10UL );                       // Resize to 10, but the capacity is preserved
-   v1.shrinkToFit();                        // Remove the unused capacity
+   v1.resize( 10UL );                       // Resize to 10, but the capacity is
+preserved v1.shrinkToFit();                        // Remove the unused capacity
    \endcode
 
-// Please note that due to padding the capacity might not be reduced exactly to \c size(). Please
-// also note that in case a reallocation occurs, all iterators (including \c end() iterators), all
+// Please note that due to padding the capacity might not be reduced exactly to
+\c size(). Please
+// also note that in case a reallocation occurs, all iterators (including \c
+end() iterators), all
 // pointers and references to elements of the vector are invalidated.
 //
 // \subsection vector_operations_reset_clear reset() / clear()
 //
-// In order to reset all elements of a vector, the \c reset() function can be used:
+// In order to reset all elements of a vector, the \c reset() function can be
+used:
 
    \code
-   // Setup of a single precision column vector, whose elements are initialized with 2.0F.
-   blaze::DynamicVector<float> v1( 3UL, 2.0F );
+   // Setup of a single precision column vector, whose elements are initialized
+with 2.0F. blaze::DynamicVector<float> v1( 3UL, 2.0F );
 
-   // Resetting all elements to 0.0F. Only the elements are reset, the size of the vector is unchanged.
-   reset( v1 );  // Resetting all elements
-   v1.size();    // Returns 3: size and capacity remain unchanged
-   \endcode
+   // Resetting all elements to 0.0F. Only the elements are reset, the size of
+the vector is unchanged. reset( v1 );  // Resetting all elements v1.size(); //
+Returns 3: size and capacity remain unchanged \endcode
 
-// In order to return a vector to its default state (i.e. the state of a default constructed
+// In order to return a vector to its default state (i.e. the state of a default
+constructed
 // vector), the \c clear() function can be used:
 
    \code
-   // Setup of a single precision column vector, whose elements are initialized with -1.0F.
-   blaze::DynamicVector<float> v1( 5, -1.0F );
+   // Setup of a single precision column vector, whose elements are initialized
+with -1.0F. blaze::DynamicVector<float> v1( 5, -1.0F );
 
    // Resetting the entire vector.
    clear( v1 );  // Resetting the entire vector
    v1.size();    // Returns 0: size is reset, but capacity remains unchanged
    \endcode
 
-// Note that resetting or clearing both dense and sparse vectors does not change the capacity
+// Note that resetting or clearing both dense and sparse vectors does not change
+the capacity
 // of the vectors.
 //
 //
 // \n \subsection vector_operations_swap swap()
 //
-// Via the \c swap() function it is possible to completely swap the contents of two vectors of
+// Via the \c swap() function it is possible to completely swap the contents of
+two vectors of
 // the same type:
 
    \code
@@ -1630,8 +1974,10 @@
 //
 // \subsection vector_operations_normalize normalize()
 //
-// The \c normalize() function can be used to scale any non-zero vector to a length of 1. In
-// case the vector does not contain a single non-zero element (i.e. is a zero vector), the
+// The \c normalize() function can be used to scale any non-zero vector to a
+length of 1. In
+// case the vector does not contain a single non-zero element (i.e. is a zero
+vector), the
 // \c normalize() function returns a zero vector.
 
    \code
@@ -1644,14 +1990,17 @@
    length( v1 );          // Returns 1 (or 0 in case of a zero vector)
    \endcode
 
-// Note that the \c normalize() function only works for floating point vectors. The attempt to
+// Note that the \c normalize() function only works for floating point vectors.
+The attempt to
 // use it for an integral vector results in a compile time error.
 //
 //
 // \n \subsection vector_operations_min_max min() / max()
 //
-// The \c min() and \c max() functions can be used for a single vector or multiple vectors. If
-// passed a single vector, the functions return the smallest and largest element of the given
+// The \c min() and \c max() functions can be used for a single vector or
+multiple vectors. If
+// passed a single vector, the functions return the smallest and largest element
+of the given
 // dense or sparse vector, respectively:
 
    \code
@@ -1661,9 +2010,12 @@
    max( a );  // Returns 7
    \endcode
 
-// In case the vector currently has a size of 0, both functions return 0. Additionally, in case
-// a given sparse vector is not completely filled, the zero elements are taken into account. For
-// example, the following compressed vector has only two non-zero elements. However, the minimum
+// In case the vector currently has a size of 0, both functions return 0.
+Additionally, in case
+// a given sparse vector is not completely filled, the zero elements are taken
+into account. For
+// example, the following compressed vector has only two non-zero elements.
+However, the minimum
 // of this vector is 0:
 
    \code
@@ -1674,7 +2026,8 @@
    min( b );  // Returns 0
    \endcode
 
-// If passed two or more dense vectors, the \c min() and \c max() functions compute the
+// If passed two or more dense vectors, the \c min() and \c max() functions
+compute the
 // componentwise minimum or maximum of the given vectors, respectively:
 
    \code
@@ -1685,13 +2038,16 @@
    max( a, c, d );  // Results in the vector ( -5, 3,  7,  4 )
    \endcode
 
-// Please note that sparse vectors can only be used in the unary \c min() and \c max() functions.
-// Also note that all forms of the \c min() and \c max() functions can be used to compute the
+// Please note that sparse vectors can only be used in the unary \c min() and \c
+max() functions.
+// Also note that all forms of the \c min() and \c max() functions can be used
+to compute the
 // smallest and largest element of a vector expression:
 
    \code
-   min( a + b + c );  // Returns -9, i.e. the smallest value of the resulting vector
-   max( a - b - c );  // Returns 11, i.e. the largest value of the resulting vector
+   min( a + b + c );  // Returns -9, i.e. the smallest value of the resulting
+vector max( a - b - c );  // Returns 11, i.e. the largest value of the resulting
+vector
 
    min( a + c, c - d );  // Results in ( -10 -2 -7 0 )
    max( a - c, c + d );  // Results in ( 0 4 14 6 )
@@ -1699,7 +2055,8 @@
 
 // \n \subsection vector_operators_abs abs()
 //
-// The \c abs() function can be used to compute the absolute values of each element of a vector.
+// The \c abs() function can be used to compute the absolute values of each
+element of a vector.
 // For instance, the following computation
 
    \code
@@ -1715,9 +2072,11 @@
                           3 \\
                           \end{array}\right)\f$
 
-// \n \subsection vector_operations_rounding_functions floor() / ceil() / trunc() / round()
+// \n \subsection vector_operations_rounding_functions floor() / ceil() /
+trunc() / round()
 //
-// The \c floor(), \c ceil(), \c trunc(), and \c round() functions can be used to round down/up
+// The \c floor(), \c ceil(), \c trunc(), and \c round() functions can be used
+to round down/up
 // each element of a vector, respectively:
 
    \code
@@ -1731,7 +2090,8 @@
 
 // \n \subsection vector_operators_conj conj()
 //
-// The \c conj() function can be applied on a dense or sparse vector to compute the complex
+// The \c conj() function can be applied on a dense or sparse vector to compute
+the complex
 // conjugate of each element of the vector:
 
    \code
@@ -1751,7 +2111,8 @@
    b = conj( a );
    \endcode
 
-// Additionally, vectors can be conjugated in-place via the \c conjugate() function:
+// Additionally, vectors can be conjugated in-place via the \c conjugate()
+function:
 
    \code
    blaze::DynamicVector<cplx> c( 5UL );
@@ -1762,7 +2123,8 @@
 
 // \n \subsection vector_operators_real real()
 //
-// The \c real() function can be used on a dense or sparse vector to extract the real part of
+// The \c real() function can be used on a dense or sparse vector to extract the
+real part of
 // each element of the vector:
 
    \code
@@ -1784,7 +2146,8 @@
 
 // \n \subsection vector_operators_imag imag()
 //
-// The \c imag() function can be used on a dense or sparse vector to extract the imaginary part
+// The \c imag() function can be used on a dense or sparse vector to extract the
+imaginary part
 // of each element of the vector:
 
    \code
@@ -1806,7 +2169,8 @@
 
 // \n \subsection vector_operations_sqrt sqrt() / invsqrt()
 //
-// Via the \c sqrt() and \c invsqrt() functions the (inverse) square root of each element of a
+// Via the \c sqrt() and \c invsqrt() functions the (inverse) square root of
+each element of a
 // vector can be computed:
 
    \code
@@ -1816,12 +2180,14 @@
    c = invsqrt( a );  // Computes the inverse square root of each element
    \endcode
 
-// Note that in case of sparse vectors only the non-zero elements are taken into account!
+// Note that in case of sparse vectors only the non-zero elements are taken into
+account!
 //
 //
 // \n \subsection vector_operations_cbrt cbrt() / invcbrt()
 //
-// The \c cbrt() and \c invcbrt() functions can be used to compute the the (inverse) cubic root
+// The \c cbrt() and \c invcbrt() functions can be used to compute the the
+(inverse) cubic root
 // of each element of a vector:
 
    \code
@@ -1831,12 +2197,14 @@
    c = invcbrt( a );  // Computes the inverse cubic root of each element
    \endcode
 
-// Note that in case of sparse vectors only the non-zero elements are taken into account!
+// Note that in case of sparse vectors only the non-zero elements are taken into
+account!
 //
 //
 // \n \subsection vector_operations_clamp clamp()
 //
-// The \c clamp() function can be used to restrict all elements of a vector to a specific range:
+// The \c clamp() function can be used to restrict all elements of a vector to a
+specific range:
 
    \code
    blaze::DynamicVector<double> a, b
@@ -1844,12 +2212,14 @@
    b = clamp( a, -1.0, 1.0 );  // Restrict all elements to the range [-1..1]
    \endcode
 
-// Note that in case of sparse vectors only the non-zero elements are taken into account!
+// Note that in case of sparse vectors only the non-zero elements are taken into
+account!
 //
 //
 // \n \subsection vector_operations_pow pow()
 //
-// The \c pow() function can be used to compute the exponential value of each element of a vector:
+// The \c pow() function can be used to compute the exponential value of each
+element of a vector:
 
    \code
    blaze::StaticVector<double,3UL> a, b;
@@ -1859,7 +2229,8 @@
 
 // \n \subsection vector_operations_exp exp() / exp2() / exp10()
 //
-// \c exp(), \c exp2() and \c exp10() compute the base e/2/10 exponential of each element of a
+// \c exp(), \c exp2() and \c exp10() compute the base e/2/10 exponential of
+each element of a
 // vector, respectively:
 
    \code
@@ -1870,12 +2241,14 @@
    b = exp10( a );  // Computes the base 10 exponential of each element
    \endcode
 
-// Note that in case of sparse vectors only the non-zero elements are taken into account!
+// Note that in case of sparse vectors only the non-zero elements are taken into
+account!
 //
 //
 // \n \subsection vector_operations_log log() / log2() / log10()
 //
-// The \c log(), \c log2() and \c log10() functions can be used to compute the natural, binary
+// The \c log(), \c log2() and \c log10() functions can be used to compute the
+natural, binary
 // and common logarithm of each element of a vector:
 
    \code
@@ -1886,9 +2259,11 @@
    b = log10( a );  // Computes the common logarithm of each element
    \endcode
 
-// \n \subsection vector_operations_trigonometric_functions sin() / cos() / tan() / asin() / acos() / atan()
+// \n \subsection vector_operations_trigonometric_functions sin() / cos() /
+tan() / asin() / acos() / atan()
 //
-// The following trigonometric functions are available for both dense and sparse vectors:
+// The following trigonometric functions are available for both dense and sparse
+vectors:
 
    \code
    blaze::DynamicVector<double> a, b;
@@ -1902,31 +2277,37 @@
    b = atan( a );  // Computes the inverse tangent of each element of the vector
    \endcode
 
-// Note that in case of sparse vectors only the non-zero elements are taken into account!
+// Note that in case of sparse vectors only the non-zero elements are taken into
+account!
 //
 //
-// \n \subsection vector_operations_hyperbolic_functions sinh() / cosh() / tanh() / asinh() / acosh() / atanh()
+// \n \subsection vector_operations_hyperbolic_functions sinh() / cosh() /
+tanh() / asinh() / acosh() / atanh()
 //
-// The following hyperbolic functions are available for both dense and sparse vectors:
+// The following hyperbolic functions are available for both dense and sparse
+vectors:
 
    \code
    blaze::DynamicVector<double> a, b;
 
    b = sinh( a );  // Computes the hyperbolic sine of each element of the vector
-   b = cosh( a );  // Computes the hyperbolic cosine of each element of the vector
-   b = tanh( a );  // Computes the hyperbolic tangent of each element of the vector
+   b = cosh( a );  // Computes the hyperbolic cosine of each element of the
+vector b = tanh( a );  // Computes the hyperbolic tangent of each element of the
+vector
 
-   b = asinh( a );  // Computes the inverse hyperbolic sine of each element of the vector
-   b = acosh( a );  // Computes the inverse hyperbolic cosine of each element of the vector
-   b = atanh( a );  // Computes the inverse hyperbolic tangent of each element of the vector
-   \endcode
+   b = asinh( a );  // Computes the inverse hyperbolic sine of each element of
+the vector b = acosh( a );  // Computes the inverse hyperbolic cosine of each
+element of the vector b = atanh( a );  // Computes the inverse hyperbolic
+tangent of each element of the vector \endcode
 
-// Note that in case of sparse vectors only the non-zero elements are taken into account!
+// Note that in case of sparse vectors only the non-zero elements are taken into
+account!
 //
 //
 // \n \subsection vector_operations_erf erf() / erfc()
 //
-// The \c erf() and \c erfc() functions compute the (complementary) error function of each
+// The \c erf() and \c erfc() functions compute the (complementary) error
+function of each
 // element of a vector:
 
    \code
@@ -1936,14 +2317,18 @@
    b = erfc( a );  // Computes the complementary error function of each element
    \endcode
 
-// Note that in case of sparse vectors only the non-zero elements are taken into account!
+// Note that in case of sparse vectors only the non-zero elements are taken into
+account!
 //
 //
 // \n \subsection vector_operations_map map() / forEach()
 //
-// Via the unary and binary \c map() functions it is possible to execute componentwise custom
-// operations on vectors. The unary \c map() function can be used to apply a custom operation
-// on each element of a dense or sparse vector. For instance, the following example demonstrates
+// Via the unary and binary \c map() functions it is possible to execute
+componentwise custom
+// operations on vectors. The unary \c map() function can be used to apply a
+custom operation
+// on each element of a dense or sparse vector. For instance, the following
+example demonstrates
 // a custom square root computation via a lambda:
 
    \code
@@ -1952,8 +2337,10 @@
    b = map( a, []( double d ) { return std::sqrt( d ); } );
    \endcode
 
-// The binary \c map() function can be used to apply an operation pairwise to the elements of
-// two dense vectors. The following example demonstrates the merging of two vectors of double
+// The binary \c map() function can be used to apply an operation pairwise to
+the elements of
+// two dense vectors. The following example demonstrates the merging of two
+vectors of double
 // precision values into a vector of double precision complex numbers:
 
    \code
@@ -1967,24 +2354,30 @@
    //    ( (-4.2, -1.4) )
    //    ( ( 1.0,  2.9) )
    //    ( ( 0.6, -3.4) )
-   cplx = map( real, imag, []( double r, double i ){ return complex( r, i ); } );
-   \endcode
+   cplx = map( real, imag, []( double r, double i ){ return complex( r, i ); }
+); \endcode
 
-// Although the computation can be parallelized it is not vectorized and thus cannot perform at
-// peak performance. However, it is also possible to create vectorized custom operations. See
-// \ref custom_operations for a detailed overview of the possibilities of custom operations.
+// Although the computation can be parallelized it is not vectorized and thus
+cannot perform at
+// peak performance. However, it is also possible to create vectorized custom
+operations. See
+// \ref custom_operations for a detailed overview of the possibilities of custom
+operations.
 //
-// Please note that unary custom operations on vectors have been introduced in \b Blaze 3.0 in
-// form of the \c forEach() function. With the introduction of binary custom functions, the
-// \c forEach() function has been renamed to \c map(). The \c forEach() function can still be
-// used (even for binary custom operations), but the function might be deprecated in future
+// Please note that unary custom operations on vectors have been introduced in
+\b Blaze 3.0 in
+// form of the \c forEach() function. With the introduction of binary custom
+functions, the
+// \c forEach() function has been renamed to \c map(). The \c forEach() function
+can still be
+// used (even for binary custom operations), but the function might be
+deprecated in future
 // releases of \b Blaze.
 //
 //
 // \n Previous: \ref vector_types &nbsp; &nbsp; Next: \ref matrices
 */
 //*************************************************************************************************
-
 
 //**Matrices***************************************************************************************
 /*!\page matrices Matrices
@@ -1995,9 +2388,12 @@
 // \n \section matrices_general General Concepts
 // <hr>
 //
-// The \b Blaze library currently offers four dense matrix types (\ref matrix_types_static_matrix,
-// \ref matrix_types_dynamic_matrix, \ref matrix_types_hybrid_matrix, and \ref matrix_types_custom_matrix)
-// and one sparse matrix type (\ref matrix_types_compressed_matrix). All matrices can either be
+// The \b Blaze library currently offers four dense matrix types (\ref
+matrix_types_static_matrix,
+// \ref matrix_types_dynamic_matrix, \ref matrix_types_hybrid_matrix, and \ref
+matrix_types_custom_matrix)
+// and one sparse matrix type (\ref matrix_types_compressed_matrix). All
+matrices can either be
 // stored as row-major matrices or column-major matrices:
 
    \code
@@ -2048,9 +2444,10 @@
    using blaze::rowMajor;
    using blaze::columnMajor;
 
-   StaticMatrix<double,6UL,20UL> A;      // Instantiation of a 6x20 row-major static matrix
-   CompressedMatrix<double,rowMajor> B;  // Instantiation of a row-major compressed matrix
-   DynamicMatrix<double,columnMajor> C;  // Instantiation of a column-major dynamic matrix
+   StaticMatrix<double,6UL,20UL> A;      // Instantiation of a 6x20 row-major
+static matrix CompressedMatrix<double,rowMajor> B;  // Instantiation of a
+row-major compressed matrix DynamicMatrix<double,columnMajor> C;  //
+Instantiation of a column-major dynamic matrix
 
    // ... Resizing and initialization
 
@@ -2061,8 +2458,8 @@
 */
 //*************************************************************************************************
 
-
-//**Matrix Types***********************************************************************************
+//**Matrix
+//Types***********************************************************************************
 /*!\page matrix_types Matrix Types
 //
 // \tableofcontents
@@ -2071,14 +2468,17 @@
 // \n \section matrix_types_static_matrix StaticMatrix
 // <hr>
 //
-// The blaze::StaticMatrix class template is the representation of a fixed size matrix with
-// statically allocated elements of arbitrary type. It can be included via the header file
+// The blaze::StaticMatrix class template is the representation of a fixed size
+matrix with
+// statically allocated elements of arbitrary type. It can be included via the
+header file
 
    \code
    #include <blaze/math/StaticMatrix.h>
    \endcode
 
-// The type of the elements, the number of rows and columns, and the storage order of the matrix
+// The type of the elements, the number of rows and columns, and the storage
+order of the matrix
 // can be specified via the four template parameters:
 
    \code
@@ -2086,15 +2486,19 @@
    class StaticMatrix;
    \endcode
 
-//  - \c Type: specifies the type of the matrix elements. StaticMatrix can be used with any
+//  - \c Type: specifies the type of the matrix elements. StaticMatrix can be
+used with any
 //             non-cv-qualified, non-reference element type.
 //  - \c M   : specifies the total number of rows of the matrix.
-//  - \c N   : specifies the total number of columns of the matrix. Note that it is expected
+//  - \c N   : specifies the total number of columns of the matrix. Note that it
+is expected
 //             that StaticMatrix is only used for tiny and small matrices.
-//  - \c SO  : specifies the storage order (blaze::rowMajor, blaze::columnMajor) of the matrix.
+//  - \c SO  : specifies the storage order (blaze::rowMajor, blaze::columnMajor)
+of the matrix.
 //             The default value is blaze::rowMajor.
 //
-// The blaze::StaticMatrix is perfectly suited for small to medium matrices whose dimensions are
+// The blaze::StaticMatrix is perfectly suited for small to medium matrices
+whose dimensions are
 // known at compile time:
 
    \code
@@ -2111,15 +2515,18 @@
 // \n \section matrix_types_dynamic_matrix DynamicMatrix
 // <hr>
 //
-// The blaze::DynamicMatrix class template is the representation of an arbitrary sized matrix
-// with \f$ M \cdot N \f$ dynamically allocated elements of arbitrary type. It can be included
+// The blaze::DynamicMatrix class template is the representation of an arbitrary
+sized matrix
+// with \f$ M \cdot N \f$ dynamically allocated elements of arbitrary type. It
+can be included
 // via the header file
 
    \code
    #include <blaze/math/DynamicMatrix.h>
    \endcode
 
-// The type of the elements and the storage order of the matrix can be specified via the two
+// The type of the elements and the storage order of the matrix can be specified
+via the two
 // template parameters:
 
    \code
@@ -2127,13 +2534,17 @@
    class DynamicMatrix;
    \endcode
 
-//  - \c Type: specifies the type of the matrix elements. DynamicMatrix can be used with any
+//  - \c Type: specifies the type of the matrix elements. DynamicMatrix can be
+used with any
 //             non-cv-qualified, non-reference element type.
-//  - \c SO  : specifies the storage order (blaze::rowMajor, blaze::columnMajor) of the matrix.
+//  - \c SO  : specifies the storage order (blaze::rowMajor, blaze::columnMajor)
+of the matrix.
 //             The default value is blaze::rowMajor.
 //
-// The blaze::DynamicMatrix is the default choice for all kinds of dense matrices and the best
-// choice for medium to large matrices. The number of rows and columns can be modified at runtime:
+// The blaze::DynamicMatrix is the default choice for all kinds of dense
+matrices and the best
+// choice for medium to large matrices. The number of rows and columns can be
+modified at runtime:
 
    \code
    // Definition of a 3x4 integral row-major matrix
@@ -2142,25 +2553,30 @@
    // Definition of a 4x6 single precision row-major matrix
    blaze::DynamicMatrix<float,blaze::rowMajor> B( 4UL, 6UL );
 
-   // Definition of a double precision column-major matrix with 0 rows and columns
-   blaze::DynamicMatrix<double,blaze::columnMajor> C;
-   \endcode
+   // Definition of a double precision column-major matrix with 0 rows and
+columns blaze::DynamicMatrix<double,blaze::columnMajor> C; \endcode
 
 // \n \section matrix_types_hybrid_matrix HybridMatrix
 // <hr>
 //
-// The HybridMatrix class template combines the flexibility of a dynamically sized matrix with
-// the efficiency and performance of a fixed size matrix. It is implemented as a crossing between
-// the blaze::StaticMatrix and the blaze::DynamicMatrix class templates: Similar to the static
-// matrix it uses static stack memory instead of dynamically allocated memory and similar to the
-// dynamic matrix it can be resized (within the extend of the static memory). It can be included
+// The HybridMatrix class template combines the flexibility of a dynamically
+sized matrix with
+// the efficiency and performance of a fixed size matrix. It is implemented as a
+crossing between
+// the blaze::StaticMatrix and the blaze::DynamicMatrix class templates: Similar
+to the static
+// matrix it uses static stack memory instead of dynamically allocated memory
+and similar to the
+// dynamic matrix it can be resized (within the extend of the static memory). It
+can be included
 // via the header file
 
    \code
    #include <blaze/math/HybridMatrix.h>
    \endcode
 
-// The type of the elements, the maximum number of rows and columns and the storage order of the
+// The type of the elements, the maximum number of rows and columns and the
+storage order of the
 // matrix can be specified via the four template parameters:
 
    \code
@@ -2168,44 +2584,56 @@
    class HybridMatrix;
    \endcode
 
-//  - Type: specifies the type of the matrix elements. HybridMatrix can be used with any
+//  - Type: specifies the type of the matrix elements. HybridMatrix can be used
+with any
 //          non-cv-qualified, non-reference, non-pointer element type.
 //  - M   : specifies the maximum number of rows of the matrix.
-//  - N   : specifies the maximum number of columns of the matrix. Note that it is expected
+//  - N   : specifies the maximum number of columns of the matrix. Note that it
+is expected
 //          that HybridMatrix is only used for tiny and small matrices.
-//  - SO  : specifies the storage order (blaze::rowMajor, blaze::columnMajor) of the matrix.
+//  - SO  : specifies the storage order (blaze::rowMajor, blaze::columnMajor) of
+the matrix.
 //          The default value is blaze::rowMajor.
 //
-// The blaze::HybridMatrix is a suitable choice for small to medium matrices, whose dimensions
-// are not known at compile time or not fixed at runtime, but whose maximum dimensions are known
+// The blaze::HybridMatrix is a suitable choice for small to medium matrices,
+whose dimensions
+// are not known at compile time or not fixed at runtime, but whose maximum
+dimensions are known
 // at compile time:
 
    \code
-   // Definition of a 3x4 integral row-major matrix with maximum dimensions of 6x8
-   blaze::HybridMatrix<int,6UL,8UL> A( 3UL, 4UL );
+   // Definition of a 3x4 integral row-major matrix with maximum dimensions of
+6x8 blaze::HybridMatrix<int,6UL,8UL> A( 3UL, 4UL );
 
-   // Definition of a 4x6 single precision row-major matrix with maximum dimensions of 12x16
-   blaze::HybridMatrix<float,12UL,16UL,blaze::rowMajor> B( 4UL, 6UL );
+   // Definition of a 4x6 single precision row-major matrix with maximum
+dimensions of 12x16 blaze::HybridMatrix<float,12UL,16UL,blaze::rowMajor> B( 4UL,
+6UL );
 
-   // Definition of a 0x0 double precision column-major matrix and maximum dimensions of 6x6
-   blaze::HybridMatrix<double,6UL,6UL,blaze::columnMajor> C;
+   // Definition of a 0x0 double precision column-major matrix and maximum
+dimensions of 6x6 blaze::HybridMatrix<double,6UL,6UL,blaze::columnMajor> C;
    \endcode
 
 // \n \section matrix_types_custom_matrix CustomMatrix
 // <hr>
 //
-// The blaze::CustomMatrix class template provides the functionality to represent an external
-// array of elements of arbitrary type and a fixed size as a native \b Blaze dense matrix data
-// structure. Thus in contrast to all other dense matrix types a custom matrix does not perform
-// any kind of memory allocation by itself, but it is provided with an existing array of element
-// during construction. A custom matrix can therefore be considered an alias to the existing
+// The blaze::CustomMatrix class template provides the functionality to
+represent an external
+// array of elements of arbitrary type and a fixed size as a native \b Blaze
+dense matrix data
+// structure. Thus in contrast to all other dense matrix types a custom matrix
+does not perform
+// any kind of memory allocation by itself, but it is provided with an existing
+array of element
+// during construction. A custom matrix can therefore be considered an alias to
+the existing
 // array. It can be included via the header file
 
    \code
    #include <blaze/math/CustomMatrix.h>
    \endcode
 
-// The type of the elements, the properties of the given array of elements and the storage order
+// The type of the elements, the properties of the given array of elements and
+the storage order
 // of the matrix can be specified via the following four template parameters:
 
    \code
@@ -2213,17 +2641,23 @@
    class CustomMatrix;
    \endcode
 
-//  - Type: specifies the type of the matrix elements. blaze::CustomMatrix can be used with
+//  - Type: specifies the type of the matrix elements. blaze::CustomMatrix can
+be used with
 //          any non-cv-qualified, non-reference, non-pointer element type.
-//  - AF  : specifies whether the represented, external arrays are properly aligned with
+//  - AF  : specifies whether the represented, external arrays are properly
+aligned with
 //          respect to the available instruction set (SSE, AVX, ...) or not.
-//  - PF  : specified whether the represented, external arrays are properly padded with
+//  - PF  : specified whether the represented, external arrays are properly
+padded with
 //          respect to the available instruction set (SSE, AVX, ...) or not.
-//  - SO  : specifies the storage order (blaze::rowMajor, blaze::columnMajor) of the matrix.
+//  - SO  : specifies the storage order (blaze::rowMajor, blaze::columnMajor) of
+the matrix.
 //          The default value is blaze::rowMajor.
 //
-// The blaze::CustomMatrix is the right choice if any external array needs to be represented as
-// a \b Blaze dense matrix data structure or if a custom memory allocation strategy needs to be
+// The blaze::CustomMatrix is the right choice if any external array needs to be
+represented as
+// a \b Blaze dense matrix data structure or if a custom memory allocation
+strategy needs to be
 // realized:
 
    \code
@@ -2233,27 +2667,32 @@
    using blaze::padded;
    using blaze::unpadded;
 
-   // Definition of an unmanaged 3x4 custom matrix for unaligned, unpadded integer arrays
-   using UnalignedUnpadded = CustomMatrix<int,unaligned,unpadded,rowMajor>;
-   std::vector<int> vec( 12UL )
+   // Definition of an unmanaged 3x4 custom matrix for unaligned, unpadded
+integer arrays using UnalignedUnpadded =
+CustomMatrix<int,unaligned,unpadded,rowMajor>; std::vector<int> vec( 12UL )
    UnalignedUnpadded A( &vec[0], 3UL, 4UL );
 
-   // Definition of a managed 5x6 custom matrix for unaligned but padded 'float' arrays
-   using UnalignedPadded = CustomMatrix<float,unaligned,padded,columnMajor>;
+   // Definition of a managed 5x6 custom matrix for unaligned but padded 'float'
+arrays using UnalignedPadded = CustomMatrix<float,unaligned,padded,columnMajor>;
    UnalignedPadded B( new float[40], 5UL, 6UL, 8UL, blaze::ArrayDelete() );
 
-   // Definition of a managed 12x13 custom matrix for aligned, unpadded 'double' arrays
-   using AlignedUnpadded = CustomMatrix<double,aligned,unpadded,rowMajor>;
-   AlignedUnpadded C( blaze::allocate<double>( 192UL ), 12UL, 13UL, 16UL, blaze::Deallocate );
+   // Definition of a managed 12x13 custom matrix for aligned, unpadded 'double'
+arrays using AlignedUnpadded = CustomMatrix<double,aligned,unpadded,rowMajor>;
+   AlignedUnpadded C( blaze::allocate<double>( 192UL ), 12UL, 13UL, 16UL,
+blaze::Deallocate );
 
-   // Definition of a 7x14 custom matrix for aligned, padded 'complex<double>' arrays
-   using AlignedPadded = CustomMatrix<complex<double>,aligned,padded,columnMajor>;
-   AlignedPadded D( blaze::allocate<double>( 112UL ), 7UL, 14UL, 16UL, blaze::Deallocate() );
+   // Definition of a 7x14 custom matrix for aligned, padded 'complex<double>'
+arrays using AlignedPadded =
+CustomMatrix<complex<double>,aligned,padded,columnMajor>; AlignedPadded D(
+blaze::allocate<double>( 112UL ), 7UL, 14UL, 16UL, blaze::Deallocate() );
    \endcode
 
-// In comparison with the remaining \b Blaze dense matrix types blaze::CustomMatrix has several
-// special characteristics. All of these result from the fact that a custom matrix is not
-// performing any kind of memory allocation, but instead is given an existing array of elements.
+// In comparison with the remaining \b Blaze dense matrix types
+blaze::CustomMatrix has several
+// special characteristics. All of these result from the fact that a custom
+matrix is not
+// performing any kind of memory allocation, but instead is given an existing
+array of elements.
 // The following sections discuss all of these characteristics:
 //
 //  -# <b>\ref matrix_types_custom_matrix_memory_management</b>
@@ -2263,12 +2702,16 @@
 //
 // \n \subsection matrix_types_custom_matrix_memory_management Memory Management
 //
-// The blaze::CustomMatrix class template acts as an adaptor for an existing array of elements. As
-// such it provides everything that is required to use the array just like a native \b Blaze dense
-// matrix data structure. However, this flexibility comes with the price that the user of a custom
+// The blaze::CustomMatrix class template acts as an adaptor for an existing
+array of elements. As
+// such it provides everything that is required to use the array just like a
+native \b Blaze dense
+// matrix data structure. However, this flexibility comes with the price that
+the user of a custom
 // matrix is responsible for the resource management.
 //
-// The following examples give an impression of several possible types of custom matrices:
+// The following examples give an impression of several possible types of custom
+matrices:
 
    \code
    using blaze::CustomMatrix;
@@ -2279,14 +2722,18 @@
    using blaze::padded;
    using blaze::unpadded;
 
-   // Definition of a 3x4 custom row-major matrix with unaligned, unpadded and externally
-   // managed integer array. Note that the std::vector must be guaranteed to outlive the
+   // Definition of a 3x4 custom row-major matrix with unaligned, unpadded and
+externally
+   // managed integer array. Note that the std::vector must be guaranteed to
+outlive the
    // custom matrix!
    std::vector<int> vec( 12UL );
    CustomMatrix<int,unaligned,unpadded> A( &vec[0], 3UL, 4UL );
 
-   // Definition of a custom 8x12 matrix for an aligned and padded integer array of
-   // capacity 128 (including 8 padding elements per row). Note that the std::unique_ptr
+   // Definition of a custom 8x12 matrix for an aligned and padded integer array
+of
+   // capacity 128 (including 8 padding elements per row). Note that the
+std::unique_ptr
    // must be guaranteed to outlive the custom matrix!
    std::unique_ptr<int[],Deallocate> memory( allocate<int>( 128UL ) );
    CustomMatrix<int,aligned,padded> B( memory.get(), 8UL, 12UL, 16UL );
@@ -2304,35 +2751,47 @@
    using CustomType = CustomMatrix<int,unaligned,unpadded>;
 
    std::vector<int> vec( 6UL, 10 );    // Vector of 6 integers of the value 10
-   CustomType A( &vec[0], 2UL, 3UL );  // Represent the std::vector as Blaze dense matrix
-   a[1] = 20;                          // Also modifies the std::vector
+   CustomType A( &vec[0], 2UL, 3UL );  // Represent the std::vector as Blaze
+dense matrix a[1] = 20;                          // Also modifies the
+std::vector
 
    CustomType B( a );  // Creating a copy of vector a
    b[2] = 20;          // Also affects matrix A and the std::vector
    \endcode
 
-// It is important to note that a custom matrix acts as a reference to the specified array. Thus
-// the result of the copy constructor is a new custom matrix that is referencing and representing
+// It is important to note that a custom matrix acts as a reference to the
+specified array. Thus
+// the result of the copy constructor is a new custom matrix that is referencing
+and representing
 // the same array as the original custom matrix.
 //
-// In contrast to copy construction, just as with references, copy assignment does not change
-// which array is referenced by the custom matrices, but modifies the values of the array:
+// In contrast to copy construction, just as with references, copy assignment
+does not change
+// which array is referenced by the custom matrices, but modifies the values of
+the array:
 
    \code
    std::vector<int> vec2( 6UL, 4 );     // Vector of 6 integers of the value 4
-   CustomType C( &vec2[0], 2UL, 3UL );  // Represent the std::vector as Blaze dense matrix
+   CustomType C( &vec2[0], 2UL, 3UL );  // Represent the std::vector as Blaze
+dense matrix
 
    A = C;  // Copy assignment: Set all values of matrix A and B to 4.
    \endcode
 
 // \n \subsection matrix_types_custom_matrix_alignment Alignment
 //
-// In case the custom matrix is specified as \c aligned the passed array must adhere to some
-// alignment restrictions based on the alignment requirements of the used data type and the
-// used instruction set (SSE, AVX, ...). The restriction applies to the first element of each
-// row/column: In case of a row-major matrix the first element of each row must be properly
-// aligned, in case of a column-major matrix the first element of each column must be properly
-// aligned. For instance, if a row-major matrix is used and AVX is active the first element of
+// In case the custom matrix is specified as \c aligned the passed array must
+adhere to some
+// alignment restrictions based on the alignment requirements of the used data
+type and the
+// used instruction set (SSE, AVX, ...). The restriction applies to the first
+element of each
+// row/column: In case of a row-major matrix the first element of each row must
+be properly
+// aligned, in case of a column-major matrix the first element of each column
+must be properly
+// aligned. For instance, if a row-major matrix is used and AVX is active the
+first element of
 // each row must be 32-bit aligned:
 
    \code
@@ -2349,15 +2808,20 @@
    CustomMatrix<int,aligned,padded,rowMajor> A( memory.get(), 5UL, 6UL, 8UL );
    \endcode
 
-// In the example, the row-major matrix has six columns. However, since with AVX eight integer
-// values are loaded together the matrix is padded with two additional elements. This guarantees
-// that the first element of each row is 32-bit aligned. In case the alignment requirements are
+// In the example, the row-major matrix has six columns. However, since with AVX
+eight integer
+// values are loaded together the matrix is padded with two additional elements.
+This guarantees
+// that the first element of each row is 32-bit aligned. In case the alignment
+requirements are
 // violated, a \c std::invalid_argument exception is thrown.
 //
 // \n \subsection matrix_types_custom_matrix_padding Padding
 //
-// Adding padding elements to the end of each row/column can have a significant impact on the
-// performance. For instance, assuming that AVX is available, then two aligned, padded, 3x3 double
+// Adding padding elements to the end of each row/column can have a significant
+impact on the
+// performance. For instance, assuming that AVX is available, then two aligned,
+padded, 3x3 double
 // precision matrices can be added via three SIMD addition operations:
 
    \code
@@ -2373,17 +2837,17 @@
    std::unique_ptr<int[],Deallocate> memory2( allocate<double>( 12UL ) );
    std::unique_ptr<int[],Deallocate> memory3( allocate<double>( 12UL ) );
 
-   // Creating padded custom 3x3 matrix with an additional padding element in each row
-   CustomType A( memory1.get(), 3UL, 3UL, 4UL );
-   CustomType B( memory2.get(), 3UL, 3UL, 4UL );
-   CustomType C( memory3.get(), 3UL, 3UL, 4UL );
+   // Creating padded custom 3x3 matrix with an additional padding element in
+each row CustomType A( memory1.get(), 3UL, 3UL, 4UL ); CustomType B(
+memory2.get(), 3UL, 3UL, 4UL ); CustomType C( memory3.get(), 3UL, 3UL, 4UL );
 
    // ... Initialization
 
    C = A + B;  // AVX-based matrix addition
    \endcode
 
-// In this example, maximum performance is possible. However, in case no padding elements are
+// In this example, maximum performance is possible. However, in case no padding
+elements are
 // inserted a scalar addition has to be used:
 
    \code
@@ -2409,17 +2873,27 @@
    C = A + B;  // Scalar matrix addition
    \endcode
 
-// Note that the construction of padded and unpadded aligned matrices looks identical. However,
-// in case of padded matrices, \b Blaze will zero initialize the padding element and use them
-// in all computations in order to achieve maximum performance. In case of an unpadded matrix
-// \b Blaze will ignore the elements with the downside that it is not possible to load a complete
-// row to an AVX register, which makes it necessary to fall back to a scalar addition.
+// Note that the construction of padded and unpadded aligned matrices looks
+identical. However,
+// in case of padded matrices, \b Blaze will zero initialize the padding element
+and use them
+// in all computations in order to achieve maximum performance. In case of an
+unpadded matrix
+// \b Blaze will ignore the elements with the downside that it is not possible
+to load a complete
+// row to an AVX register, which makes it necessary to fall back to a scalar
+addition.
 //
-// The number of padding elements is required to be sufficient with respect to the available
-// instruction set: In case of an aligned padded custom matrix the added padding elements must
-// guarantee that the total number of elements in each row/column is a multiple of the SIMD
-// vector width. In case of an unaligned padded matrix the number of padding elements can be
-// greater or equal the number of padding elements of an aligned padded custom matrix. In case
+// The number of padding elements is required to be sufficient with respect to
+the available
+// instruction set: In case of an aligned padded custom matrix the added padding
+elements must
+// guarantee that the total number of elements in each row/column is a multiple
+of the SIMD
+// vector width. In case of an unaligned padded matrix the number of padding
+elements can be
+// greater or equal the number of padding elements of an aligned padded custom
+matrix. In case
 // the padding is insufficient with respect to the available instruction set, a
 // \c std::invalid_argument exception is thrown.
 //
@@ -2427,15 +2901,18 @@
 // \n \section matrix_types_compressed_matrix CompressedMatrix
 // <hr>
 //
-// The blaze::CompressedMatrix class template is the representation of an arbitrary sized sparse
-// matrix with \f$ M \cdot N \f$ dynamically allocated elements of arbitrary type. It can be
+// The blaze::CompressedMatrix class template is the representation of an
+arbitrary sized sparse
+// matrix with \f$ M \cdot N \f$ dynamically allocated elements of arbitrary
+type. It can be
 // included via the header file
 
    \code
    #include <blaze/math/CompressedMatrix.h>
    \endcode
 
-// The type of the elements and the storage order of the matrix can be specified via the two
+// The type of the elements and the storage order of the matrix can be specified
+via the two
 // template parameters:
 
    \code
@@ -2443,12 +2920,15 @@
    class CompressedMatrix;
    \endcode
 
-//  - \c Type: specifies the type of the matrix elements. CompressedMatrix can be used with
+//  - \c Type: specifies the type of the matrix elements. CompressedMatrix can
+be used with
 //             any non-cv-qualified, non-reference, non-pointer element type.
-//  - \c SO  : specifies the storage order (blaze::rowMajor, blaze::columnMajor) of the matrix.
+//  - \c SO  : specifies the storage order (blaze::rowMajor, blaze::columnMajor)
+of the matrix.
 //             The default value is blaze::rowMajor.
 //
-// The blaze::CompressedMatrix is the right choice for all kinds of sparse matrices:
+// The blaze::CompressedMatrix is the right choice for all kinds of sparse
+matrices:
 
    \code
    // Definition of a 3x4 integral row-major matrix
@@ -2457,22 +2937,24 @@
    // Definition of a 4x6 single precision row-major matrix
    blaze::CompressedMatrix<float,blaze::rowMajor> B( 4UL, 6UL );
 
-   // Definition of a double precision column-major matrix with 0 rows and columns
-   blaze::CompressedMatrix<double,blaze::columnMajor> C;
-   \endcode
+   // Definition of a double precision column-major matrix with 0 rows and
+columns blaze::CompressedMatrix<double,blaze::columnMajor> C; \endcode
 
 // \n \section matrix_types_identity_matrix IdentityMatrix
 // <hr>
 //
-// The blaze::IdentityMatrix class template is the representation of an immutable, arbitrary
-// sized identity matrix with \f$ N \cdot N \f$ elements of arbitrary type. It can be included
+// The blaze::IdentityMatrix class template is the representation of an
+immutable, arbitrary
+// sized identity matrix with \f$ N \cdot N \f$ elements of arbitrary type. It
+can be included
 // via the header file
 
    \code
    #include <blaze/math/IdentityMatrix.h>
    \endcode
 
-// The type of the elements and the storage order of the matrix can be specified via the two
+// The type of the elements and the storage order of the matrix can be specified
+via the two
 // template parameters:
 
    \code
@@ -2480,12 +2962,15 @@
    class IdentityMatrix;
    \endcode
 
-//  - Type: specifies the type of the matrix elements. IdentityMatrix can be used with any
+//  - Type: specifies the type of the matrix elements. IdentityMatrix can be
+used with any
 //          non-cv-qualified, non-reference, non-pointer element type.
-//  - SO  : specifies the storage order (blaze::rowMajor, blaze::columnMajor) of the matrix.
+//  - SO  : specifies the storage order (blaze::rowMajor, blaze::columnMajor) of
+the matrix.
 //          The default value is blaze::rowMajor.
 //
-// The blaze::IdentityMatrix is the perfect choice to represent an identity matrix:
+// The blaze::IdentityMatrix is the perfect choice to represent an identity
+matrix:
 
    \code
    // Definition of a 3x3 integral row-major identity matrix
@@ -2494,16 +2979,15 @@
    // Definition of a 6x6 single precision row-major identity matrix
    blaze::IdentityMatrix<float,blaze::rowMajor> B( 6UL );
 
-   // Definition of a double precision column-major identity matrix with 0 rows and columns
-   blaze::IdentityMatrix<double,blaze::columnMajor> C;
-   \endcode
+   // Definition of a double precision column-major identity matrix with 0 rows
+and columns blaze::IdentityMatrix<double,blaze::columnMajor> C; \endcode
 
 // \n Previous: \ref matrices &nbsp; &nbsp; Next: \ref matrix_operations
 */
 //*************************************************************************************************
 
-
-//**Matrix Operations******************************************************************************
+//**Matrix
+//Operations******************************************************************************
 /*!\page matrix_operations Matrix Operations
 //
 // \tableofcontents
@@ -2512,14 +2996,20 @@
 // \n \section matrix_operations_constructors Constructors
 // <hr>
 //
-// Matrices are just as easy and intuitive to create as vectors. Still, there are a few rules
+// Matrices are just as easy and intuitive to create as vectors. Still, there
+are a few rules
 // to be aware of:
-//  - In case the last template parameter (the storage order) is omitted, the matrix is per
+//  - In case the last template parameter (the storage order) is omitted, the
+matrix is per
 //    default stored in row-major order.
-//  - The elements of a \c StaticMatrix or \c HybridMatrix are default initialized (i.e. built-in
-//    data types are initialized to 0, class types are initialized via the default constructor).
-//  - Newly allocated elements of a \c DynamicMatrix or \c CompressedMatrix remain uninitialized
-//    if they are of built-in type and are default constructed if they are of class type.
+//  - The elements of a \c StaticMatrix or \c HybridMatrix are default
+initialized (i.e. built-in
+//    data types are initialized to 0, class types are initialized via the
+default constructor).
+//  - Newly allocated elements of a \c DynamicMatrix or \c CompressedMatrix
+remain uninitialized
+//    if they are of built-in type and are default constructed if they are of
+class type.
 //
 // \n \subsection matrix_operations_default_construction Default Construction
 
@@ -2532,58 +3022,82 @@
    // a StaticMatrix is fixed via the second and third template
    // parameter, the initial size of a constructed DynamicMatrix
    // or CompressedMatrix is 0.
-   StaticMatrix<int,2UL,2UL> M1;             // Instantiation of a 2x2 integer row-major
-                                             // matrix. All elements are initialized to 0.
-   DynamicMatrix<float> M2;                  // Instantiation of a single precision dynamic
-                                             // row-major matrix with 0 rows and 0 columns.
-   DynamicMatrix<double,columnMajor> M3;     // Instantiation of a double precision dynamic
-                                             // column-major matrix with 0 rows and 0 columns.
-   CompressedMatrix<int> M4;                 // Instantiation of a compressed integer
+   StaticMatrix<int,2UL,2UL> M1;             // Instantiation of a 2x2 integer
+row-major
+                                             // matrix. All elements are
+initialized to 0. DynamicMatrix<float> M2;                  // Instantiation of
+a single precision dynamic
+                                             // row-major matrix with 0 rows and
+0 columns. DynamicMatrix<double,columnMajor> M3;     // Instantiation of a
+double precision dynamic
+                                             // column-major matrix with 0 rows
+and 0 columns. CompressedMatrix<int> M4;                 // Instantiation of a
+compressed integer
                                              // row-major matrix of size 0x0.
-   CompressedMatrix<double,columnMajor> M5;  // Instantiation of a compressed double precision
+   CompressedMatrix<double,columnMajor> M5;  // Instantiation of a compressed
+double precision
                                              // column-major matrix of size 0x0.
    \endcode
 
-// \n \subsection matrix_operations_size_construction Construction with Specific Size
+// \n \subsection matrix_operations_size_construction Construction with Specific
+Size
 //
-// The \c DynamicMatrix, \c HybridMatrix, and \c CompressedMatrix classes offer a constructor
-// that allows to immediately give the matrices a specific number of rows and columns:
+// The \c DynamicMatrix, \c HybridMatrix, and \c CompressedMatrix classes offer
+a constructor
+// that allows to immediately give the matrices a specific number of rows and
+columns:
 
    \code
-   DynamicMatrix<int> M6( 5UL, 4UL );                   // Instantiation of a 5x4 dynamic row-major
-                                                        // matrix. The elements are not initialized.
-   HybridMatrix<double,5UL,9UL> M7( 3UL, 7UL );         // Instantiation of a 3x7 hybrid row-major
-                                                        // matrix. The elements are not initialized.
-   CompressedMatrix<float,columnMajor> M8( 8UL, 6UL );  // Instantiation of an empty 8x6 compressed
+   DynamicMatrix<int> M6( 5UL, 4UL );                   // Instantiation of a
+5x4 dynamic row-major
+                                                        // matrix. The elements
+are not initialized. HybridMatrix<double,5UL,9UL> M7( 3UL, 7UL );         //
+Instantiation of a 3x7 hybrid row-major
+                                                        // matrix. The elements
+are not initialized. CompressedMatrix<float,columnMajor> M8( 8UL, 6UL );  //
+Instantiation of an empty 8x6 compressed
                                                         // column-major matrix.
    \endcode
 
-// Note that dense matrices (in this case \c DynamicMatrix and \c HybridMatrix) immediately
-// allocate enough capacity for all matrix elements. Sparse matrices on the other hand (in this
-// example \c CompressedMatrix) merely acquire the size, but don't necessarily allocate memory.
+// Note that dense matrices (in this case \c DynamicMatrix and \c HybridMatrix)
+immediately
+// allocate enough capacity for all matrix elements. Sparse matrices on the
+other hand (in this
+// example \c CompressedMatrix) merely acquire the size, but don't necessarily
+allocate memory.
 //
 //
-// \n \subsection matrix_operations_initialization_constructors Initialization Constructors
+// \n \subsection matrix_operations_initialization_constructors Initialization
+Constructors
 //
-// All dense matrix classes offer a constructor for a direct, homogeneous initialization of all
-// matrix elements. In contrast, for sparse matrices the predicted number of non-zero elements
+// All dense matrix classes offer a constructor for a direct, homogeneous
+initialization of all
+// matrix elements. In contrast, for sparse matrices the predicted number of
+non-zero elements
 // can be specified.
 
    \code
-   StaticMatrix<int,4UL,3UL,columnMajor> M9( 7 );  // Instantiation of a 4x3 integer column-major
-                                                   // matrix. All elements are initialized to 7.
-   DynamicMatrix<float> M10( 2UL, 5UL, 2.0F );     // Instantiation of a 2x5 single precision row-major
-                                                   // matrix. All elements are initialized to 2.0F.
-   CompressedMatrix<int> M11( 3UL, 4UL, 4 );       // Instantiation of a 3x4 integer row-major
-                                                   // matrix with capacity for 4 non-zero elements.
-   \endcode
+   StaticMatrix<int,4UL,3UL,columnMajor> M9( 7 );  // Instantiation of a 4x3
+integer column-major
+                                                   // matrix. All elements are
+initialized to 7. DynamicMatrix<float> M10( 2UL, 5UL, 2.0F );     //
+Instantiation of a 2x5 single precision row-major
+                                                   // matrix. All elements are
+initialized to 2.0F. CompressedMatrix<int> M11( 3UL, 4UL, 4 );       //
+Instantiation of a 3x4 integer row-major
+                                                   // matrix with capacity for 4
+non-zero elements. \endcode
 
 // \n \subsection matrix_operations_array_construction Array Construction
 //
-// Alternatively, all dense matrix classes offer a constructor for an initialization with a
-// dynamic or static array. If the matrix is initialized from a dynamic array, the constructor
-// expects the dimensions of values provided by the array as first and second argument, the
-// array as third argument. In case of a static array, the fixed size of the array is used:
+// Alternatively, all dense matrix classes offer a constructor for an
+initialization with a
+// dynamic or static array. If the matrix is initialized from a dynamic array,
+the constructor
+// expects the dimensions of values provided by the array as first and second
+argument, the
+// array as third argument. In case of a static array, the fixed size of the
+array is used:
 
    \code
    const std::unique_ptr<double[]> array1( new double[6] );
@@ -2596,7 +3110,8 @@
 
 // \n \subsection matrix_operations_initializer_list_construction
 //
-// In addition, all dense matrix classes can be directly initialized by means of an initializer
+// In addition, all dense matrix classes can be directly initialized by means of
+an initializer
 // list:
 
    \code
@@ -2607,26 +3122,34 @@
 
 // \n \subsection matrix_operations_copy_construction Copy Construction
 //
-// All dense and sparse matrices can be created as a copy of another dense or sparse matrix.
+// All dense and sparse matrices can be created as a copy of another dense or
+sparse matrix.
 
    \code
-   StaticMatrix<int,5UL,4UL,rowMajor> M15( M6 );    // Instantiation of the dense row-major matrix M15
-                                                    // as copy of the dense row-major matrix M6.
-   DynamicMatrix<float,columnMajor> M16( M8 );      // Instantiation of the dense column-major matrix M16
-                                                    // as copy of the sparse column-major matrix M8.
-   CompressedMatrix<double,columnMajor> M17( M7 );  // Instantiation of the compressed column-major matrix
-                                                    // M17 as copy of the dense row-major matrix M7.
-   CompressedMatrix<float,rowMajor> M18( M8 );      // Instantiation of the compressed row-major matrix
-                                                    // M18 as copy of the compressed column-major matrix M8.
-   \endcode
+   StaticMatrix<int,5UL,4UL,rowMajor> M15( M6 );    // Instantiation of the
+dense row-major matrix M15
+                                                    // as copy of the dense
+row-major matrix M6. DynamicMatrix<float,columnMajor> M16( M8 );      //
+Instantiation of the dense column-major matrix M16
+                                                    // as copy of the sparse
+column-major matrix M8. CompressedMatrix<double,columnMajor> M17( M7 );  //
+Instantiation of the compressed column-major matrix
+                                                    // M17 as copy of the dense
+row-major matrix M7. CompressedMatrix<float,rowMajor> M18( M8 );      //
+Instantiation of the compressed row-major matrix
+                                                    // M18 as copy of the
+compressed column-major matrix M8. \endcode
 
-// Note that it is not possible to create a \c StaticMatrix as a copy of a matrix with a different
+// Note that it is not possible to create a \c StaticMatrix as a copy of a
+matrix with a different
 // number of rows and/or columns:
 
    \code
-   StaticMatrix<int,4UL,5UL,rowMajor> M19( M6 );     // Runtime error: Number of rows and columns
+   StaticMatrix<int,4UL,5UL,rowMajor> M19( M6 );     // Runtime error: Number of
+rows and columns
                                                      // does not match!
-   StaticMatrix<int,4UL,4UL,columnMajor> M20( M9 );  // Compile time error: Number of columns does
+   StaticMatrix<int,4UL,4UL,columnMajor> M20( M9 );  // Compile time error:
+Number of columns does
                                                      // not match!
    \endcode
 
@@ -2634,13 +3157,17 @@
 // <hr>
 //
 // There are several types of assignment to dense and sparse matrices:
-// \ref matrix_operations_homogeneous_assignment, \ref matrix_operations_array_assignment,
-// \ref matrix_operations_copy_assignment, and \ref matrix_operations_compound_assignment.
+// \ref matrix_operations_homogeneous_assignment, \ref
+matrix_operations_array_assignment,
+// \ref matrix_operations_copy_assignment, and \ref
+matrix_operations_compound_assignment.
 //
 //
-// \n \subsection matrix_operations_homogeneous_assignment Homogeneous Assignment
+// \n \subsection matrix_operations_homogeneous_assignment Homogeneous
+Assignment
 //
-// It is possible to assign the same value to all elements of a dense matrix. All dense matrix
+// It is possible to assign the same value to all elements of a dense matrix.
+All dense matrix
 // classes provide an according assignment operator:
 
    \code
@@ -2671,7 +3198,8 @@
    M3 = array2;
    \endcode
 
-// Note that the dimensions of the static array have to match the size of a \c StaticMatrix,
+// Note that the dimensions of the static array have to match the size of a \c
+StaticMatrix,
 // whereas a \c DynamicMatrix is resized according to the array dimensions:
 
                           \f$ M3 = \left(\begin{array}{*{2}{c}}
@@ -2680,9 +3208,11 @@
                            4.8 &  0.6 \\
                           \end{array}\right)\f$
 
-// \n \subsection matrix_operations_initializer_list_assignment Initializer List Assignment
+// \n \subsection matrix_operations_initializer_list_assignment Initializer List
+Assignment
 //
-// Alternatively, it is possible to directly assign an initializer list to a dense matrix:
+// Alternatively, it is possible to directly assign an initializer list to a
+dense matrix:
 
    \code
    blaze::DynamicMatrix<double> M;
@@ -2691,8 +3221,10 @@
 
 // \n \subsection matrix_operations_copy_assignment Copy Assignment
 //
-// All kinds of matrices can be assigned to each other. The only restriction is that since a
-// \c StaticMatrix cannot change its size, the assigned matrix must match both in the number of
+// All kinds of matrices can be assigned to each other. The only restriction is
+that since a
+// \c StaticMatrix cannot change its size, the assigned matrix must match both
+in the number of
 // rows and in the number of columns.
 
    \code
@@ -2704,17 +3236,20 @@
 
    // ... Initialization of the matrices
 
-   M1 = M2;  // OK: Assignment of a 3x2 dense row-major matrix to another 3x2 dense row-major matrix
-   M1 = M4;  // OK: Assignment of a 3x2 sparse row-major matrix to a 3x2 dense row-major matrix
-   M1 = M3;  // Runtime error: Cannot assign a 5x2 matrix to a 3x2 static matrix
-   M1 = M5;  // OK: Assignment of a 3x2 sparse column-major matrix to a 3x2 dense row-major matrix
-   \endcode
+   M1 = M2;  // OK: Assignment of a 3x2 dense row-major matrix to another 3x2
+dense row-major matrix M1 = M4;  // OK: Assignment of a 3x2 sparse row-major
+matrix to a 3x2 dense row-major matrix M1 = M3;  // Runtime error: Cannot assign
+a 5x2 matrix to a 3x2 static matrix M1 = M5;  // OK: Assignment of a 3x2 sparse
+column-major matrix to a 3x2 dense row-major matrix \endcode
 
 // \n \subsection matrix_operations_compound_assignment Compound Assignment
 //
-// Compound assignment is also available for matrices: addition assignment, subtraction assignment,
-// and multiplication assignment. In contrast to plain assignment, however, the number of rows
-// and columns of the two operands have to match according to the arithmetic operation.
+// Compound assignment is also available for matrices: addition assignment,
+subtraction assignment,
+// and multiplication assignment. In contrast to plain assignment, however, the
+number of rows
+// and columns of the two operands have to match according to the arithmetic
+operation.
 
    \code
    blaze::StaticMatrix<int,2UL,3UL,rowMajor>    M1;
@@ -2726,14 +3261,15 @@
 
    // ... Initialization of the matrices
 
-   M1 += M2;  // OK: Addition assignment between two row-major matrices of the same dimensions
-   M1 -= M3;  // OK: Subtraction assignment between between a row-major and a column-major matrix
-   M1 += M4;  // Runtime error: No compound assignment between matrices of different size
-   M1 -= M5;  // Compilation error: No compound assignment between matrices of different size
-   M2 *= M6;  // OK: Multiplication assignment between two row-major matrices
-   \endcode
+   M1 += M2;  // OK: Addition assignment between two row-major matrices of the
+same dimensions M1 -= M3;  // OK: Subtraction assignment between between a
+row-major and a column-major matrix M1 += M4;  // Runtime error: No compound
+assignment between matrices of different size M1 -= M5;  // Compilation error:
+No compound assignment between matrices of different size M2 *= M6;  // OK:
+Multiplication assignment between two row-major matrices \endcode
 
-// Note that the multiplication assignment potentially changes the number of columns of the
+// Note that the multiplication assignment potentially changes the number of
+columns of the
 // target matrix:
 
                           \f$\left(\begin{array}{*{3}{c}}
@@ -2750,14 +3286,16 @@
                           3 & 6 \\
                           \end{array}\right)\f$
 
-// Since a \c StaticMatrix cannot change its size, only a square StaticMatrix can be used in a
+// Since a \c StaticMatrix cannot change its size, only a square StaticMatrix
+can be used in a
 // multiplication assignment with other square matrices of the same dimensions.
 //
 //
 // \n \section matrix_operations_element_access Element Access
 // <hr>
 //
-// The easiest way to access a specific dense or sparse matrix element is via the function call
+// The easiest way to access a specific dense or sparse matrix element is via
+the function call
 // operator. The indices to access a matrix are zero-based:
 
    \code
@@ -2771,11 +3309,16 @@
    M2(1,1) = -6.3;
    \endcode
 
-// Since dense matrices allocate enough memory for all contained elements, using the function
-// call operator on a dense matrix directly returns a reference to the accessed value. In case
-// of a sparse matrix, if the accessed value is currently not contained in the matrix, the
-// value is inserted into the matrix prior to returning a reference to the value, which can
-// be much more expensive than the direct access to a dense matrix. Consider the following
+// Since dense matrices allocate enough memory for all contained elements, using
+the function
+// call operator on a dense matrix directly returns a reference to the accessed
+value. In case
+// of a sparse matrix, if the accessed value is currently not contained in the
+matrix, the
+// value is inserted into the matrix prior to returning a reference to the
+value, which can
+// be much more expensive than the direct access to a dense matrix. Consider the
+following
 // example:
 
    \code
@@ -2788,14 +3331,22 @@
    }
    \endcode
 
-// Although the compressed matrix is only used for read access within the for loop, using the
-// function call operator temporarily inserts 16 non-zero elements into the matrix. Therefore,
-// all matrices (sparse as well as dense) offer an alternate way via the \c begin(), \c cbegin(),
-// \c end() and \c cend() functions to traverse all contained elements by iterator. Note that
-// it is not possible to traverse all elements of the matrix, but that it is only possible to
-// traverse elements in a row/column-wise fashion. In case of a non-const matrix, \c begin() and
-// \c end() return an \c Iterator, which allows a manipulation of the non-zero value, in case of
-// a constant matrix or in case \c cbegin() or \c cend() are used a \c ConstIterator is returned:
+// Although the compressed matrix is only used for read access within the for
+loop, using the
+// function call operator temporarily inserts 16 non-zero elements into the
+matrix. Therefore,
+// all matrices (sparse as well as dense) offer an alternate way via the \c
+begin(), \c cbegin(),
+// \c end() and \c cend() functions to traverse all contained elements by
+iterator. Note that
+// it is not possible to traverse all elements of the matrix, but that it is
+only possible to
+// traverse elements in a row/column-wise fashion. In case of a non-const
+matrix, \c begin() and
+// \c end() return an \c Iterator, which allows a manipulation of the non-zero
+value, in case of
+// a constant matrix or in case \c cbegin() or \c cend() are used a \c
+ConstIterator is returned:
 
    \code
    using blaze::CompressedMatrix;
@@ -2804,36 +3355,45 @@
 
    // Traversing the matrix by Iterator
    for( size_t i=0UL; i<A.rows(); ++i ) {
-      for( CompressedMatrix<int,rowMajor>::Iterator it=A.begin(i); it!=A.end(i); ++it ) {
-         it->value() = ...;  // OK: Write access to the value of the non-zero element.
-         ... = it->value();  // OK: Read access to the value of the non-zero element.
-         it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
-         ... = it->index();  // OK: Read access to the index of the non-zero element.
+      for( CompressedMatrix<int,rowMajor>::Iterator it=A.begin(i); it!=A.end(i);
+++it ) { it->value() = ...;  // OK: Write access to the value of the non-zero
+element.
+         ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
+         ... = it->index();  // OK: Read access to the index of the non-zero
+element.
       }
    }
 
    // Traversing the matrix by ConstIterator
    for( size_t i=0UL; i<A.rows(); ++i ) {
-      for( CompressedMatrix<int,rowMajor>::ConstIterator it=A.cbegin(i); it!=A.cend(i); ++it ) {
-         it->value() = ...;  // Compilation error: Assignment to the value via a ConstIterator is invalid.
-         ... = it->value();  // OK: Read access to the value of the non-zero element.
-         it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
-         ... = it->index();  // OK: Read access to the index of the non-zero element.
+      for( CompressedMatrix<int,rowMajor>::ConstIterator it=A.cbegin(i);
+it!=A.cend(i); ++it ) { it->value() = ...;  // Compilation error: Assignment to
+the value via a ConstIterator is invalid.
+         ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
+         ... = it->index();  // OK: Read access to the index of the non-zero
+element.
       }
    }
    \endcode
 
-// Note that \c begin(), \c cbegin(), \c end(), and \c cend() are also available as free functions:
+// Note that \c begin(), \c cbegin(), \c end(), and \c cend() are also available
+as free functions:
 
    \code
    for( size_t i=0UL; i<A.rows(); ++i ) {
-      for( CompressedMatrix<int,rowMajor>::Iterator it=begin( A, i ); it!=end( A, i ); ++it ) {
+      for( CompressedMatrix<int,rowMajor>::Iterator it=begin( A, i ); it!=end(
+A, i ); ++it ) {
          // ...
       }
    }
 
    for( size_t i=0UL; i<A.rows(); ++i ) {
-      for( CompressedMatrix<int,rowMajor>::ConstIterator it=cbegin( A, i ); it!=cend( A, i ); ++it ) {
+      for( CompressedMatrix<int,rowMajor>::ConstIterator it=cbegin( A, i );
+it!=cend( A, i ); ++it ) {
          // ...
       }
    }
@@ -2842,9 +3402,12 @@
 // \n \section matrix_operations_element_insertion Element Insertion
 // <hr>
 //
-// Whereas a dense matrix always provides enough capacity to store all matrix elements, a sparse
-// matrix only stores the non-zero elements. Therefore it is necessary to explicitly add elements
-// to the matrix. The first possibility to add elements to a sparse matrix is the function call
+// Whereas a dense matrix always provides enough capacity to store all matrix
+elements, a sparse
+// matrix only stores the non-zero elements. Therefore it is necessary to
+explicitly add elements
+// to the matrix. The first possibility to add elements to a sparse matrix is
+the function call
 // operator:
 
    \code
@@ -2854,10 +3417,13 @@
    M1(1,2) = 9;
    \endcode
 
-// In case the element at the given position is not yet contained in the sparse matrix, it is
-// automatically inserted. Otherwise the old value is replaced by the new value 2. The operator
+// In case the element at the given position is not yet contained in the sparse
+matrix, it is
+// automatically inserted. Otherwise the old value is replaced by the new
+value 2. The operator
 // returns a reference to the sparse vector element.\n
-// An alternative is the \c set() function: In case the element is not yet contained in the matrix
+// An alternative is the \c set() function: In case the element is not yet
+contained in the matrix
 // the element is inserted, else the element's value is modified:
 
    \code
@@ -2865,33 +3431,44 @@
    M1.set( 2, 0, 1 );
    \endcode
 
-// However, insertion of elements can be better controlled via the \c insert() function. In
-// contrast to the function call operator and the \c set() function it emits an exception in case
-// the element is already contained in the matrix. In order to check for this case, the \c find()
+// However, insertion of elements can be better controlled via the \c insert()
+function. In
+// contrast to the function call operator and the \c set() function it emits an
+exception in case
+// the element is already contained in the matrix. In order to check for this
+case, the \c find()
 // function can be used:
 
    \code
-   // In case the element at position (2,3) is not yet contained in the matrix it is inserted
+   // In case the element at position (2,3) is not yet contained in the matrix
+it is inserted
    // with a value of 4.
    if( M1.find( 2, 3 ) == M1.end( 2 ) )
       M1.insert( 2, 3, 4 );
    \endcode
 
-// Although the \c insert() function is very flexible, due to performance reasons it is not
-// suited for the setup of large sparse matrices. A very efficient, yet also very low-level
-// way to fill a sparse matrix is the \c append() function. It requires the sparse matrix to
-// provide enough capacity to insert a new element in the specified row/column. Additionally,
-// the index of the new element must be larger than the index of the previous element in the
+// Although the \c insert() function is very flexible, due to performance
+reasons it is not
+// suited for the setup of large sparse matrices. A very efficient, yet also
+very low-level
+// way to fill a sparse matrix is the \c append() function. It requires the
+sparse matrix to
+// provide enough capacity to insert a new element in the specified row/column.
+Additionally,
+// the index of the new element must be larger than the index of the previous
+element in the
 // same row/column. Violating these conditions results in undefined behavior!
 
    \code
-   M1.reserve( 0, 3 );     // Reserving space for three non-zero elements in row 0
-   M1.append( 0, 1,  2 );  // Appending the element 2 in row 0 at column index 1
-   M1.append( 0, 2, -4 );  // Appending the element -4 in row 0 at column index 2
+   M1.reserve( 0, 3 );     // Reserving space for three non-zero elements in row
+0 M1.append( 0, 1,  2 );  // Appending the element 2 in row 0 at column index 1
+   M1.append( 0, 2, -4 );  // Appending the element -4 in row 0 at column index
+2
    // ...
    \endcode
 
-// The most efficient way to fill a sparse matrix with elements, however, is a combination of
+// The most efficient way to fill a sparse matrix with elements, however, is a
+combination of
 // \c reserve(), \c append(), and the \c finalize() function:
 
    \code
@@ -2911,18 +3488,22 @@
    M1.finalize( 2 );      // Finalizing row 2
    \endcode
 
-// \note The \c finalize() function has to be explicitly called for each row or column, even
+// \note The \c finalize() function has to be explicitly called for each row or
+column, even
 // for empty ones!
-// \note Although \c append() does not allocate new memory, it still invalidates all iterators
+// \note Although \c append() does not allocate new memory, it still invalidates
+all iterators
 // returned by the \c end() functions!
 //
 //
-// \n \section matrix_operations_non_modifying_operations Non-Modifying Operations
+// \n \section matrix_operations_non_modifying_operations Non-Modifying
+Operations
 // <hr>
 //
 // \subsection matrix_operations_rows .rows()
 //
-// The current number of rows of a matrix can be acquired via the \c rows() member function:
+// The current number of rows of a matrix can be acquired via the \c rows()
+member function:
 
    \code
    // Instantiating a dynamic matrix with 10 rows and 8 columns
@@ -2934,20 +3515,23 @@
    M2.rows();  // Returns 8
    \endcode
 
-// Alternatively, the free functions \c rows() can be used to query the current number of rows of
-// a matrix. In contrast to the member function, the free function can also be used to query the
+// Alternatively, the free functions \c rows() can be used to query the current
+number of rows of
+// a matrix. In contrast to the member function, the free function can also be
+used to query the
 // number of rows of a matrix expression:
 
    \code
    rows( M1 );  // Returns 10, i.e. has the same effect as the member function
    rows( M2 );  // Returns 8, i.e. has the same effect as the member function
 
-   rows( M1 * M2 );  // Returns 10, i.e. the number of rows of the resulting matrix
-   \endcode
+   rows( M1 * M2 );  // Returns 10, i.e. the number of rows of the resulting
+matrix \endcode
 
 // \n \subsection matrix_operations_columns .columns()
 //
-// The current number of columns of a matrix can be acquired via the \c columns() member function:
+// The current number of columns of a matrix can be acquired via the \c
+columns() member function:
 
    \code
    // Instantiating a dynamic matrix with 6 rows and 8 columns
@@ -2959,22 +3543,27 @@
    M2.columns();   // Returns 7
    \endcode
 
-// There is also a free function \c columns() available, which can also be used to query the number
+// There is also a free function \c columns() available, which can also be used
+to query the number
 // of columns of a matrix expression:
 
    \code
    columns( M1 );  // Returns 8, i.e. has the same effect as the member function
    columns( M2 );  // Returns 7, i.e. has the same effect as the member function
 
-   columns( M1 * M2 );  // Returns 7, i.e. the number of columns of the resulting matrix
-   \endcode
+   columns( M1 * M2 );  // Returns 7, i.e. the number of columns of the
+resulting matrix \endcode
 
 // \n \subsection matrix_operations_capacity .capacity()
 //
-// The \c capacity() member function returns the internal capacity of a dense or sparse matrix.
-// Note that the capacity of a matrix doesn't have to be equal to the size of a matrix. In case of
-// a dense matrix the capacity will always be greater or equal than the total number of elements
-// of the matrix. In case of a sparse matrix, the capacity will usually be much less than the
+// The \c capacity() member function returns the internal capacity of a dense or
+sparse matrix.
+// Note that the capacity of a matrix doesn't have to be equal to the size of a
+matrix. In case of
+// a dense matrix the capacity will always be greater or equal than the total
+number of elements
+// of the matrix. In case of a sparse matrix, the capacity will usually be much
+less than the
 // total number of elements.
 
    \code
@@ -2984,24 +3573,33 @@
    M2.capacity();  // Returns at least 28
    \endcode
 
-// There is also a free function \c capacity() available to query the capacity. However, please
-// note that this function cannot be used to query the capacity of a matrix expression:
+// There is also a free function \c capacity() available to query the capacity.
+However, please
+// note that this function cannot be used to query the capacity of a matrix
+expression:
 
    \code
-   capacity( M1 );  // Returns at least 35, i.e. has the same effect as the member function
-   capacity( M2 );  // Returns at least 28, i.e. has the same effect as the member function
+   capacity( M1 );  // Returns at least 35, i.e. has the same effect as the
+member function capacity( M2 );  // Returns at least 28, i.e. has the same
+effect as the member function
 
    capacity( M1 * M2 );  // Compilation error!
    \endcode
 
 // \n \subsection matrix_operations_nonzeros .nonZeros()
 //
-// For both dense and sparse matrices the current number of non-zero elements can be queried
-// via the \c nonZeros() member function. In case of matrices there are two flavors of the
-// \c nonZeros() function: One returns the total number of non-zero elements in the matrix,
-// the second returns the number of non-zero elements in a specific row (in case of a row-major
-// matrix) or column (in case of a column-major matrix). Sparse matrices directly return their
-// number of non-zero elements, dense matrices traverse their elements and count the number of
+// For both dense and sparse matrices the current number of non-zero elements
+can be queried
+// via the \c nonZeros() member function. In case of matrices there are two
+flavors of the
+// \c nonZeros() function: One returns the total number of non-zero elements in
+the matrix,
+// the second returns the number of non-zero elements in a specific row (in case
+of a row-major
+// matrix) or column (in case of a column-major matrix). Sparse matrices
+directly return their
+// number of non-zero elements, dense matrices traverse their elements and count
+the number of
 // non-zero elements.
 
    \code
@@ -3009,21 +3607,23 @@
 
    // ... Initializing the dense matrix
 
-   M1.nonZeros();     // Returns the total number of non-zero elements in the dense matrix
-   M1.nonZeros( 2 );  // Returns the number of non-zero elements in row 2
-   \endcode
+   M1.nonZeros();     // Returns the total number of non-zero elements in the
+dense matrix M1.nonZeros( 2 );  // Returns the number of non-zero elements in
+row 2 \endcode
 
    \code
    blaze::CompressedMatrix<double,columnMajor> M2( 4UL, 7UL );
 
    // ... Initializing the sparse matrix
 
-   M2.nonZeros();     // Returns the total number of non-zero elements in the sparse matrix
-   M2.nonZeros( 3 );  // Returns the number of non-zero elements in column 3
-   \endcode
+   M2.nonZeros();     // Returns the total number of non-zero elements in the
+sparse matrix M2.nonZeros( 3 );  // Returns the number of non-zero elements in
+column 3 \endcode
 
-// The free \c nonZeros() function can also be used to query the number of non-zero elements in a
-// matrix expression. However, the result is not the exact number of non-zero elements, but may be
+// The free \c nonZeros() function can also be used to query the number of
+non-zero elements in a
+// matrix expression. However, the result is not the exact number of non-zero
+elements, but may be
 // a rough estimation:
 
    \code
@@ -3033,12 +3633,13 @@
    nonZeros( M2 );     // Has the same effect as the member function
    nonZeros( M2, 3 );  // Has the same effect as the member function
 
-   nonZeros( M1 * M2 );  // Estimates the number of non-zero elements in the matrix expression
-   \endcode
+   nonZeros( M1 * M2 );  // Estimates the number of non-zero elements in the
+matrix expression \endcode
 
 // \n \subsection matrix_operations_isnan isnan()
 //
-// The \c isnan() function provides the means to check a dense or sparse matrix for non-a-number
+// The \c isnan() function provides the means to check a dense or sparse matrix
+for non-a-number
 // elements:
 
    \code
@@ -3053,15 +3654,19 @@
    if( isnan( A ) ) { ... }
    \endcode
 
-// If at least one element of the matrix is not-a-number, the function returns \c true, otherwise
-// it returns \c false. Please note that this function only works for matrices with floating point
-// elements. The attempt to use it for a matrix with a non-floating point element type results in
+// If at least one element of the matrix is not-a-number, the function returns
+\c true, otherwise
+// it returns \c false. Please note that this function only works for matrices
+with floating point
+// elements. The attempt to use it for a matrix with a non-floating point
+element type results in
 // a compile time error.
 //
 //
 // \n \subsection matrix_operations_isdefault isDefault()
 //
-// The \c isDefault() function returns whether the given dense or sparse matrix is in default state:
+// The \c isDefault() function returns whether the given dense or sparse matrix
+is in default state:
 
    \code
    blaze::HybridMatrix<int,5UL,4UL> A;
@@ -3069,18 +3674,25 @@
    if( isDefault( A ) ) { ... }
    \endcode
 
-// A matrix is in default state if it appears to just have been default constructed. All resizable
-// matrices (\c HybridMatrix, \c DynamicMatrix, or \c CompressedMatrix) and \c CustomMatrix are in
-// default state if its size is equal to zero. A non-resizable matrix (\c StaticMatrix and all
-// submatrices) is in default state if all its elements are in default state. For instance, in case
-// the matrix is instantiated for a built-in integral or floating point data type, the function
-// returns \c true in case all matrix elements are 0 and \c false in case any matrix element is
+// A matrix is in default state if it appears to just have been default
+constructed. All resizable
+// matrices (\c HybridMatrix, \c DynamicMatrix, or \c CompressedMatrix) and \c
+CustomMatrix are in
+// default state if its size is equal to zero. A non-resizable matrix (\c
+StaticMatrix and all
+// submatrices) is in default state if all its elements are in default state.
+For instance, in case
+// the matrix is instantiated for a built-in integral or floating point data
+type, the function
+// returns \c true in case all matrix elements are 0 and \c false in case any
+matrix element is
 // not 0.
 //
 //
 // \n \subsection matrix_operations_isSquare isSquare()
 //
-// Whether a dense or sparse matrix is a square matrix (i.e. if the number of rows is equal to the
+// Whether a dense or sparse matrix is a square matrix (i.e. if the number of
+rows is equal to the
 // number of columns) can be checked via the \c isSquare() function:
 
    \code
@@ -3091,7 +3703,8 @@
 
 // \n \subsection matrix_operations_issymmetric isSymmetric()
 //
-// Via the \c isSymmetric() function it is possible to check whether a dense or sparse matrix
+// Via the \c isSymmetric() function it is possible to check whether a dense or
+sparse matrix
 // is symmetric:
 
    \code
@@ -3105,7 +3718,8 @@
 //
 // \n \subsection matrix_operations_isUniform isUniform()
 //
-// In order to check if all matrix elements are identical, the \c isUniform function can be used:
+// In order to check if all matrix elements are identical, the \c isUniform
+function can be used:
 
    \code
    blaze::DynamicMatrix<int> A;
@@ -3113,12 +3727,14 @@
    if( isUniform( A ) ) { ... }
    \endcode
 
-// Note that in case of a sparse matrix also the zero elements are also taken into account!
+// Note that in case of a sparse matrix also the zero elements are also taken
+into account!
 //
 //
 // \n \subsection matrix_operations_islower isLower()
 //
-// Via the \c isLower() function it is possible to check whether a dense or sparse matrix is
+// Via the \c isLower() function it is possible to check whether a dense or
+sparse matrix is
 // lower triangular:
 
    \code
@@ -3132,7 +3748,8 @@
 //
 // \n \subsection matrix_operations_isunilower isUniLower()
 //
-// Via the \c isUniLower() function it is possible to check whether a dense or sparse matrix is
+// Via the \c isUniLower() function it is possible to check whether a dense or
+sparse matrix is
 // lower unitriangular:
 
    \code
@@ -3146,7 +3763,8 @@
 //
 // \n \subsection matrix_operations_isstrictlylower isStrictlyLower()
 //
-// Via the \c isStrictlyLower() function it is possible to check whether a dense or sparse matrix
+// Via the \c isStrictlyLower() function it is possible to check whether a dense
+or sparse matrix
 // is strictly lower triangular:
 
    \code
@@ -3155,12 +3773,14 @@
    if( isStrictlyLower( A ) ) { ... }
    \endcode
 
-// Note that non-square matrices are never considered to be strictly lower triangular!
+// Note that non-square matrices are never considered to be strictly lower
+triangular!
 //
 //
 // \n \subsection matrix_operations_isUpper isUpper()
 //
-// Via the \c isUpper() function it is possible to check whether a dense or sparse matrix is
+// Via the \c isUpper() function it is possible to check whether a dense or
+sparse matrix is
 // upper triangular:
 
    \code
@@ -3174,7 +3794,8 @@
 //
 // \n \subsection matrix_operations_isuniupper isUniUpper()
 //
-// Via the \c isUniUpper() function it is possible to check whether a dense or sparse matrix is
+// Via the \c isUniUpper() function it is possible to check whether a dense or
+sparse matrix is
 // upper unitriangular:
 
    \code
@@ -3188,7 +3809,8 @@
 //
 // \n \subsection matrix_operations_isstrictlyupper isStrictlyUpper()
 //
-// Via the \c isStrictlyUpper() function it is possible to check whether a dense or sparse matrix
+// Via the \c isStrictlyUpper() function it is possible to check whether a dense
+or sparse matrix
 // is strictly upper triangular:
 
    \code
@@ -3197,13 +3819,16 @@
    if( isStrictlyUpper( A ) ) { ... }
    \endcode
 
-// Note that non-square matrices are never considered to be strictly upper triangular!
+// Note that non-square matrices are never considered to be strictly upper
+triangular!
 //
 //
 // \n \subsection matrix_operations_isdiagonal isDiagonal()
 //
-// The \c isDiagonal() function checks if the given dense or sparse matrix is a diagonal matrix,
-// i.e. if it has only elements on its diagonal and if the non-diagonal elements are default
+// The \c isDiagonal() function checks if the given dense or sparse matrix is a
+diagonal matrix,
+// i.e. if it has only elements on its diagonal and if the non-diagonal elements
+are default
 // elements:
 
    \code
@@ -3217,7 +3842,8 @@
 //
 // \n \subsection matrix_operations_isidentity isIdentity()
 //
-// The \c isIdentity() function checks if the given dense or sparse matrix is an identity matrix,
+// The \c isIdentity() function checks if the given dense or sparse matrix is an
+identity matrix,
 // i.e. if all diagonal elements are 1 and all non-diagonal elements are 0:
 
    \code
@@ -3231,7 +3857,8 @@
 //
 // \n \subsection matrix_operations_matrix_determinant det()
 //
-// The determinant of a square dense matrix can be computed by means of the \c det() function:
+// The determinant of a square dense matrix can be computed by means of the \c
+det() function:
 
    \code
    blaze::DynamicMatrix<double,blaze::rowMajor> A;
@@ -3239,21 +3866,28 @@
    double d = det( A );  // Compute the determinant of A
    \endcode
 
-// In case the given dense matrix is not a square matrix, a \c std::invalid_argument exception is
+// In case the given dense matrix is not a square matrix, a \c
+std::invalid_argument exception is
 // thrown.
 //
-// \note The \c det() function can only be used for dense matrices with \c float, \c double,
-// \c complex<float> or \c complex<double> element type. The attempt to call the function with
-// matrices of any other element type or with a sparse matrix results in a compile time error!
+// \note The \c det() function can only be used for dense matrices with \c
+float, \c double,
+// \c complex<float> or \c complex<double> element type. The attempt to call the
+function with
+// matrices of any other element type or with a sparse matrix results in a
+compile time error!
 //
-// \note The function is depending on LAPACK kernels. Thus the function can only be used if the
-// fitting LAPACK library is available and linked to the executable. Otherwise a linker error
+// \note The function is depending on LAPACK kernels. Thus the function can only
+be used if the
+// fitting LAPACK library is available and linked to the executable. Otherwise a
+linker error
 // will be created.
 //
 //
 // \n \subsection matrix_operations_matrix_trans trans()
 //
-// Matrices can be transposed via the \c trans() function. Row-major matrices are transposed into
+// Matrices can be transposed via the \c trans() function. Row-major matrices
+are transposed into
 // a column-major matrix and vice versa:
 
    \code
@@ -3261,13 +3895,14 @@
    blaze::CompressedMatrix<int,columnMajor> M2( 3UL, 7UL );
 
    M1 = M2;            // Assigning a column-major matrix to a row-major matrix
-   M1 = trans( M2 );   // Assigning the transpose of M2 (i.e. a row-major matrix) to M1
-   M1 += trans( M2 );  // Addition assignment of two row-major matrices
-   \endcode
+   M1 = trans( M2 );   // Assigning the transpose of M2 (i.e. a row-major
+matrix) to M1 M1 += trans( M2 );  // Addition assignment of two row-major
+matrices \endcode
 
 // \n \subsection matrix_operations_ctrans ctrans()
 //
-// The conjugate transpose of a dense or sparse matrix (also called adjoint matrix, Hermitian
+// The conjugate transpose of a dense or sparse matrix (also called adjoint
+matrix, Hermitian
 // conjugate, or transjugate) can be computed via the \c ctrans() function:
 
    \code
@@ -3277,7 +3912,8 @@
    M1 = ctrans( M2 );  // Compute the conjugate transpose matrix
    \endcode
 
-// Note that the \c ctrans() function has the same effect as manually applying the \c conj() and
+// Note that the \c ctrans() function has the same effect as manually applying
+the \c conj() and
 // \c trans() function in any order:
 
    \code
@@ -3287,9 +3923,12 @@
 
 // \n \subsection matrix_operations_matrix_evaluate eval() / evaluate()
 //
-// The \c evaluate() function forces an evaluation of the given matrix expression and enables
-// an automatic deduction of the correct result type of an operation. The following code example
-// demonstrates its intended use for the multiplication of a lower and a strictly lower dense
+// The \c evaluate() function forces an evaluation of the given matrix
+expression and enables
+// an automatic deduction of the correct result type of an operation. The
+following code example
+// demonstrates its intended use for the multiplication of a lower and a
+strictly lower dense
 // matrix:
 
    \code
@@ -3304,24 +3943,33 @@
    auto C = evaluate( A * B );
    \endcode
 
-// In this scenario, the \c evaluate() function assists in deducing the exact result type of
-// the operation via the \c auto keyword. Please note that if \c evaluate() is used in this
-// way, no temporary matrix is created and no copy operation is performed. Instead, the result
-// is directly written to the target matrix due to the return value optimization (RVO). However,
-// if \c evaluate() is used in combination with an explicit target type, a temporary will be
-// created and a copy operation will be performed if the used type differs from the type
+// In this scenario, the \c evaluate() function assists in deducing the exact
+result type of
+// the operation via the \c auto keyword. Please note that if \c evaluate() is
+used in this
+// way, no temporary matrix is created and no copy operation is performed.
+Instead, the result
+// is directly written to the target matrix due to the return value optimization
+(RVO). However,
+// if \c evaluate() is used in combination with an explicit target type, a
+temporary will be
+// created and a copy operation will be performed if the used type differs from
+the type
 // returned from the function:
 
    \code
-   StrictlyLowerMatrix< DynamicMatrix<double> > D( A * B );  // No temporary & no copy operation
-   LowerMatrix< DynamicMatrix<double> > E( A * B );          // Temporary & copy operation
-   DynamicMatrix<double> F( A * B );                         // Temporary & copy operation
-   D = evaluate( A * B );                                    // Temporary & copy operation
-   \endcode
+   StrictlyLowerMatrix< DynamicMatrix<double> > D( A * B );  // No temporary &
+no copy operation LowerMatrix< DynamicMatrix<double> > E( A * B );          //
+Temporary & copy operation DynamicMatrix<double> F( A * B ); // Temporary & copy
+operation D = evaluate( A * B );                                    // Temporary
+& copy operation \endcode
 
-// Sometimes it might be desirable to explicitly evaluate a sub-expression within a larger
-// expression. However, please note that \c evaluate() is not intended to be used for this
-// purpose. This task is more elegantly and efficiently handled by the \c eval() function:
+// Sometimes it might be desirable to explicitly evaluate a sub-expression
+within a larger
+// expression. However, please note that \c evaluate() is not intended to be
+used for this
+// purpose. This task is more elegantly and efficiently handled by the \c eval()
+function:
 
    \code
    blaze::DynamicMatrix<double> A, B, C, D;
@@ -3330,8 +3978,10 @@
    D = A + eval( B * C );      // No creation of a temporary matrix
    \endcode
 
-// In contrast to the \c evaluate() function, \c eval() can take the complete expression
-// into account and therefore can guarantee the most efficient way to evaluate it (see also
+// In contrast to the \c evaluate() function, \c eval() can take the complete
+expression
+// into account and therefore can guarantee the most efficient way to evaluate
+it (see also
 // \ref intra_statement_optimization).
 //
 //
@@ -3340,9 +3990,12 @@
 //
 // \subsection matrix_operations_resize_reserve .resize() / .reserve()
 //
-// The dimensions of a \c StaticMatrix are fixed at compile time by the second and third template
-// parameter and a \c CustomMatrix cannot be resized. In contrast, the number or rows and columns
-// of \c DynamicMatrix, \c HybridMatrix, and \c CompressedMatrix can be changed at runtime:
+// The dimensions of a \c StaticMatrix are fixed at compile time by the second
+and third template
+// parameter and a \c CustomMatrix cannot be resized. In contrast, the number or
+rows and columns
+// of \c DynamicMatrix, \c HybridMatrix, and \c CompressedMatrix can be changed
+at runtime:
 
    \code
    using blaze::DynamicMatrix;
@@ -3351,29 +4004,37 @@
    DynamicMatrix<int,rowMajor> M1;
    CompressedMatrix<int,columnMajor> M2( 3UL, 2UL );
 
-   // Adapting the number of rows and columns via the resize() function. The (optional)
-   // third parameter specifies whether the existing elements should be preserved. Per
+   // Adapting the number of rows and columns via the resize() function. The
+(optional)
+   // third parameter specifies whether the existing elements should be
+preserved. Per
    // default, the existing elements are preserved.
-   M1.resize( 2UL, 2UL );         // Resizing matrix M1 to 2x2 elements. Elements of built-in type
-                                  // remain uninitialized, elements of class type are default
+   M1.resize( 2UL, 2UL );         // Resizing matrix M1 to 2x2 elements.
+Elements of built-in type
+                                  // remain uninitialized, elements of class
+type are default
                                   // constructed.
-   M1.resize( 3UL, 1UL, false );  // Resizing M1 to 3x1 elements. The old elements are lost, the
+   M1.resize( 3UL, 1UL, false );  // Resizing M1 to 3x1 elements. The old
+elements are lost, the
                                   // new elements are NOT initialized!
-   M2.resize( 5UL, 7UL, true );   // Resizing M2 to 5x7 elements. The old elements are preserved.
-   M2.resize( 3UL, 2UL, false );  // Resizing M2 to 3x2 elements. The old elements are lost.
-   \endcode
+   M2.resize( 5UL, 7UL, true );   // Resizing M2 to 5x7 elements. The old
+elements are preserved. M2.resize( 3UL, 2UL, false );  // Resizing M2 to 3x2
+elements. The old elements are lost. \endcode
 
-// Note that resizing a matrix invalidates all existing views (see e.g. \ref views_submatrices)
+// Note that resizing a matrix invalidates all existing views (see e.g. \ref
+views_submatrices)
 // on the matrix:
 
    \code
-   blaze::DynamicMatrix<int,rowMajor> M1( 10UL, 20UL );  // Creating a 10x20 matrix
-   auto row8 = row( M1, 8UL );  // Creating a view on the 8th row of the matrix
-   M1.resize( 6UL, 20UL );      // Resizing the matrix invalidates the view
+   blaze::DynamicMatrix<int,rowMajor> M1( 10UL, 20UL );  // Creating a 10x20
+matrix auto row8 = row( M1, 8UL );  // Creating a view on the 8th row of the
+matrix M1.resize( 6UL, 20UL );      // Resizing the matrix invalidates the view
    \endcode
 
-// When the internal capacity of a matrix is no longer sufficient, the allocation of a larger
-// junk of memory is triggered. In order to avoid frequent reallocations, the \c reserve()
+// When the internal capacity of a matrix is no longer sufficient, the
+allocation of a larger
+// junk of memory is triggered. In order to avoid frequent reallocations, the \c
+reserve()
 // function can be used up front to set the internal capacity:
 
    \code
@@ -3383,40 +4044,48 @@
    M1.capacity();  // Returns at least 100
    \endcode
 
-// Additionally it is possible to reserve memory in a specific row (for a row-major matrix) or
+// Additionally it is possible to reserve memory in a specific row (for a
+row-major matrix) or
 // column (for a column-major matrix):
 
    \code
    blaze::CompressedMatrix<int> M1( 4UL, 6UL );
-   M1.reserve( 1, 4 );  // Reserving enough space for four non-zero elements in row 1
-   \endcode
+   M1.reserve( 1, 4 );  // Reserving enough space for four non-zero elements in
+row 1 \endcode
 
 // \n \subsection matrix_operations_shrinkToFit .shrinkToFit()
 //
-// The internal capacity of matrices with dynamic memory is preserved in order to minimize the
-// number of reallocations. For that reason, the \c resize() and \c reserve() functions can lead
-// to memory overhead. The \c shrinkToFit() member function can be used to minimize the internal
+// The internal capacity of matrices with dynamic memory is preserved in order
+to minimize the
+// number of reallocations. For that reason, the \c resize() and \c reserve()
+functions can lead
+// to memory overhead. The \c shrinkToFit() member function can be used to
+minimize the internal
 // capacity:
 
    \code
-   blaze::DynamicMatrix<int> M1( 100UL, 100UL );  // Create a 100x100 integer matrix
-   M1.resize( 10UL, 10UL );                       // Resize to 10x10, but the capacity is preserved
-   M1.shrinkToFit();                              // Remove the unused capacity
-   \endcode
+   blaze::DynamicMatrix<int> M1( 100UL, 100UL );  // Create a 100x100 integer
+matrix M1.resize( 10UL, 10UL );                       // Resize to 10x10, but
+the capacity is preserved M1.shrinkToFit();                              //
+Remove the unused capacity \endcode
 
-// Please note that due to padding the capacity might not be reduced exactly to \c rows() times
-// \c columns(). Please also note that in case a reallocation occurs, all iterators (including
-// \c end() iterators), all pointers and references to elements of this matrix are invalidated.
+// Please note that due to padding the capacity might not be reduced exactly to
+\c rows() times
+// \c columns(). Please also note that in case a reallocation occurs, all
+iterators (including
+// \c end() iterators), all pointers and references to elements of this matrix
+are invalidated.
 //
 //
 // \subsection matrix_operations_reset_clear reset() / clear
 //
-// In order to reset all elements of a dense or sparse matrix, the \c reset() function can be
+// In order to reset all elements of a dense or sparse matrix, the \c reset()
+function can be
 // used. The number of rows and columns of the matrix are preserved:
 
    \code
-   // Setting up a single precision row-major matrix, whose elements are initialized with 2.0F.
-   blaze::DynamicMatrix<float> M1( 4UL, 5UL, 2.0F );
+   // Setting up a single precision row-major matrix, whose elements are
+initialized with 2.0F. blaze::DynamicMatrix<float> M1( 4UL, 5UL, 2.0F );
 
    // Resetting all elements to 0.0F.
    reset( M1 );  // Resetting all elements
@@ -3426,22 +4095,25 @@
 // Alternatively, only a single row or column of the matrix can be resetted:
 
    \code
-   blaze::DynamicMatrix<int,blaze::rowMajor>    M1( 7UL, 6UL, 5 );  // Setup of a row-major matrix
-   blaze::DynamicMatrix<int,blaze::columnMajor> M2( 4UL, 5UL, 4 );  // Setup of a column-major matrix
+   blaze::DynamicMatrix<int,blaze::rowMajor>    M1( 7UL, 6UL, 5 );  // Setup of
+a row-major matrix blaze::DynamicMatrix<int,blaze::columnMajor> M2( 4UL, 5UL, 4
+);  // Setup of a column-major matrix
 
    reset( M1, 2UL );  // Resetting the 2nd row of the row-major matrix
    reset( M2, 3UL );  // Resetting the 3rd column of the column-major matrix
    \endcode
 
-// In order to reset a row of a column-major matrix or a column of a row-major matrix, use a
+// In order to reset a row of a column-major matrix or a column of a row-major
+matrix, use a
 // row or column view (see \ref views_rows and views_colums).
 //
-// In order to return a matrix to its default state (i.e. the state of a default constructed
+// In order to return a matrix to its default state (i.e. the state of a default
+constructed
 // matrix), the \c clear() function can be used:
 
    \code
-   // Setting up a single precision row-major matrix, whose elements are initialized with 2.0F.
-   blaze::DynamicMatrix<float> M1( 4UL, 5UL, 2.0F );
+   // Setting up a single precision row-major matrix, whose elements are
+initialized with 2.0F. blaze::DynamicMatrix<float> M1( 4UL, 5UL, 2.0F );
 
    // Resetting all elements to 0.0F.
    clear( M1 );  // Resetting the entire matrix
@@ -3450,7 +4122,8 @@
 
 // \n \subsection matrix_operations_matrix_transpose transpose()
 //
-// In addition to the non-modifying \c trans() function, matrices can be transposed in-place via
+// In addition to the non-modifying \c trans() function, matrices can be
+transposed in-place via
 // the \c transpose() function:
 
    \code
@@ -3464,13 +4137,16 @@
 //
 //  - ... the given matrix has a fixed size and is non-square;
 //  - ... the given matrix is a triangular matrix;
-//  - ... the given submatrix affects the restricted parts of a triangular matrix;
-//  - ... the given submatrix would cause non-deterministic results in a symmetric/Hermitian matrix.
+//  - ... the given submatrix affects the restricted parts of a triangular
+matrix;
+//  - ... the given submatrix would cause non-deterministic results in a
+symmetric/Hermitian matrix.
 //
 //
 // \n \subsection matrix_operations_ctranspose ctranspose()
 //
-// The \c ctranspose() function can be used to perform an in-place conjugate transpose operation:
+// The \c ctranspose() function can be used to perform an in-place conjugate
+transpose operation:
 
    \code
    blaze::DynamicMatrix<int,rowMajor> M( 5UL, 2UL );
@@ -3483,13 +4159,16 @@
 //
 //  - ... the given matrix has a fixed size and is non-square;
 //  - ... the given matrix is a triangular matrix;
-//  - ... the given submatrix affects the restricted parts of a triangular matrix;
-//  - ... the given submatrix would cause non-deterministic results in a symmetric/Hermitian matrix.
+//  - ... the given submatrix affects the restricted parts of a triangular
+matrix;
+//  - ... the given submatrix would cause non-deterministic results in a
+symmetric/Hermitian matrix.
 //
 //
 // \n \subsection matrix_operations_swap swap()
 //
-// Via the \c \c swap() function it is possible to completely swap the contents of two matrices
+// Via the \c \c swap() function it is possible to completely swap the contents
+of two matrices
 // of the same type:
 
    \code
@@ -3504,7 +4183,8 @@
 //
 // \subsection matrix_operations_min_max min() / max()
 //
-// The \c min() and the \c max() functions return the smallest and largest element of the given
+// The \c min() and the \c max() functions return the smallest and largest
+element of the given
 // dense or sparse matrix, respectively:
 
    \code
@@ -3522,9 +4202,12 @@
    max( B );  // Returns 2
    \endcode
 
-// In case the matrix currently has 0 rows or 0 columns, both functions return 0. Additionally, in
-// case a given sparse matrix is not completely filled, the zero elements are taken into account.
-// For example: the following compressed matrix has only 2 non-zero elements. However, the minimum
+// In case the matrix currently has 0 rows or 0 columns, both functions return
+0. Additionally, in
+// case a given sparse matrix is not completely filled, the zero elements are
+taken into account.
+// For example: the following compressed matrix has only 2 non-zero elements.
+However, the minimum
 // of this matrix is 0:
 
    \code
@@ -3535,17 +4218,19 @@
    min( C );  // Returns 0
    \endcode
 
-// Also note that the \c min() and \c max() functions can be used to compute the smallest and
+// Also note that the \c min() and \c max() functions can be used to compute the
+smallest and
 // largest element of a matrix expression:
 
    \code
-   min( A + B + C );  // Returns -9, i.e. the smallest value of the resulting matrix
-   max( A - B - C );  // Returns 11, i.e. the largest value of the resulting matrix
-   \endcode
+   min( A + B + C );  // Returns -9, i.e. the smallest value of the resulting
+matrix max( A - B - C );  // Returns 11, i.e. the largest value of the resulting
+matrix \endcode
 
 // \n \subsection matrix_operators_trace trace()
 //
-// The \c trace() function sums the diagonal elements of a square dense or sparse matrix:
+// The \c trace() function sums the diagonal elements of a square dense or
+sparse matrix:
 
    \code
    blaze::StaticMatrix<int,3UL,3UL> A{ { -1,  2, -3 }
@@ -3555,13 +4240,15 @@
    trace( A );  // Returns the sum of the diagonal elements, i.e. -15
    \endcode
 
-// In case the given matrix is not a square matrix, a \c std::invalid_argument exception is
+// In case the given matrix is not a square matrix, a \c std::invalid_argument
+exception is
 // thrown.
 //
 //
 // \n \subsection matrix_operators_abs abs()
 //
-// The \c abs() function can be used to compute the absolute values of each element of a matrix.
+// The \c abs() function can be used to compute the absolute values of each
+element of a matrix.
 // For instance, the following computation
 
    \code
@@ -3577,9 +4264,11 @@
                           4 & 5 & 6 \\
                           \end{array}\right)\f$
 
-// \n \subsection matrix_operators_rounding_functions floor() / ceil() / trunc() / round()
+// \n \subsection matrix_operators_rounding_functions floor() / ceil() / trunc()
+/ round()
 //
-// The \c floor(), \c ceil(), \c trunc(), and \c round() functions can be used to round down/up
+// The \c floor(), \c ceil(), \c trunc(), and \c round() functions can be used
+to round down/up
 // each element of a matrix, respectively:
 
    \code
@@ -3593,7 +4282,8 @@
 
 // \n \subsection matrix_operators_conj conj()
 //
-// The \c conj() function can be applied on a dense or sparse matrix to compute the complex
+// The \c conj() function can be applied on a dense or sparse matrix to compute
+the complex
 // conjugate of each element of the matrix:
 
    \code
@@ -3614,7 +4304,8 @@
    B = conj( A );
    \endcode
 
-// Additionally, matrices can be conjugated in-place via the \c conjugate() function:
+// Additionally, matrices can be conjugated in-place via the \c conjugate()
+function:
 
    \code
    blaze::DynamicMatrix<cplx> C( 5UL, 2UL );
@@ -3625,7 +4316,8 @@
 
 // \n \subsection matrix_operators_real real()
 //
-// The \c real() function can be used on a dense or sparse matrix to extract the real part of
+// The \c real() function can be used on a dense or sparse matrix to extract the
+real part of
 // each element of the matrix:
 
    \code
@@ -3648,7 +4340,8 @@
 
 // \n \subsection matrix_operators_imag imag()
 //
-// The \c imag() function can be used on a dense or sparse matrix to extract the imaginary part
+// The \c imag() function can be used on a dense or sparse matrix to extract the
+imaginary part
 // of each element of the matrix:
 
    \code
@@ -3671,7 +4364,8 @@
 
 // \n \subsection matrix_operators_sqrt sqrt() / invsqrt()
 //
-// Via the \c sqrt() and \c invsqrt() functions the (inverse) square root of each element of a
+// Via the \c sqrt() and \c invsqrt() functions the (inverse) square root of
+each element of a
 // matrix can be computed:
 
    \code
@@ -3681,12 +4375,14 @@
    C = invsqrt( A );  // Computes the inverse square root of each element
    \endcode
 
-// Note that in case of sparse matrices only the non-zero elements are taken into account!
+// Note that in case of sparse matrices only the non-zero elements are taken
+into account!
 //
 //
 // \n \subsection matrix_operators_cbrt cbrt() / invcbrt()
 //
-// The \c cbrt() and \c invcbrt() functions can be used to compute the the (inverse) cubic root
+// The \c cbrt() and \c invcbrt() functions can be used to compute the the
+(inverse) cubic root
 // of each element of a matrix:
 
    \code
@@ -3696,12 +4392,14 @@
    C = invcbrt( A );  // Computes the inverse cubic root of each element
    \endcode
 
-// Note that in case of sparse matrices only the non-zero elements are taken into account!
+// Note that in case of sparse matrices only the non-zero elements are taken
+into account!
 //
 //
 // \n \subsection matrix_operators_clamp clamp()
 //
-// The \c clamp() function can be used to restrict all elements of a matrix to a specific range:
+// The \c clamp() function can be used to restrict all elements of a matrix to a
+specific range:
 
    \code
    blaze::DynamicMatrix<double> A, B;
@@ -3709,12 +4407,14 @@
    B = clamp( A, -1.0, 1.0 );  // Restrict all elements to the range [-1..1]
    \endcode
 
-// Note that in case of sparse matrices only the non-zero elements are taken into account!
+// Note that in case of sparse matrices only the non-zero elements are taken
+into account!
 //
 //
 // \n \subsection matrix_operators_pow pow()
 //
-// The \c pow() function can be used to compute the exponential value of each element of a matrix:
+// The \c pow() function can be used to compute the exponential value of each
+element of a matrix:
 
    \code
    blaze::StaticMatrix<double,3UL,3UL> A, B;
@@ -3724,7 +4424,8 @@
 
 // \n \subsection matrix_operators_exp exp()
 //
-// \c exp(), \c exp2() and \c exp10() compute the base e/2/10 exponential of each element of a
+// \c exp(), \c exp2() and \c exp10() compute the base e/2/10 exponential of
+each element of a
 // matrix, respectively:
 
    \code
@@ -3735,12 +4436,14 @@
    B = exp10( A );  // Computes the base 10 exponential of each element
    \endcode
 
-// Note that in case of sparse matrices only the non-zero elements are taken into account!
+// Note that in case of sparse matrices only the non-zero elements are taken
+into account!
 //
 //
 // \n \subsection matrix_operators_log log() / log2() / log10()
 //
-// The \c log(), \c log2() and \c log10() functions can be used to compute the natural, binary
+// The \c log(), \c log2() and \c log10() functions can be used to compute the
+natural, binary
 // and common logarithm of each element of a matrix:
 
    \code
@@ -3751,9 +4454,11 @@
    B = log10( A );  // Computes the common logarithm of each element
    \endcode
 
-// \n \subsection matrix_operators_trigonometric_functions sin() / cos() / tan() / asin() / acos() / atan()
+// \n \subsection matrix_operators_trigonometric_functions sin() / cos() / tan()
+/ asin() / acos() / atan()
 //
-// The following trigonometric functions are available for both dense and sparse matrices:
+// The following trigonometric functions are available for both dense and sparse
+matrices:
 
    \code
    blaze::DynamicMatrix<double> A, B;
@@ -3767,28 +4472,33 @@
    B = atan( A );  // Computes the inverse tangent of each element of the matrix
    \endcode
 
-// Note that in case of sparse matrices only the non-zero elements are taken into account!
+// Note that in case of sparse matrices only the non-zero elements are taken
+into account!
 //
 //
-// \n \subsection matrix_operators_hyperbolic_functions sinh() / cosh() / tanh() / asinh() / acosh() / atanh()
+// \n \subsection matrix_operators_hyperbolic_functions sinh() / cosh() / tanh()
+/ asinh() / acosh() / atanh()
 //
-// The following hyperbolic functions are available for both dense and sparse matrices:
+// The following hyperbolic functions are available for both dense and sparse
+matrices:
 
    \code
    blaze::DynamicMatrix<double> A, B;
 
    B = sinh( A );  // Computes the hyperbolic sine of each element of the matrix
-   B = cosh( A );  // Computes the hyperbolic cosine of each element of the matrix
-   B = tanh( A );  // Computes the hyperbolic tangent of each element of the matrix
+   B = cosh( A );  // Computes the hyperbolic cosine of each element of the
+matrix B = tanh( A );  // Computes the hyperbolic tangent of each element of the
+matrix
 
-   B = asinh( A );  // Computes the inverse hyperbolic sine of each element of the matrix
-   B = acosh( A );  // Computes the inverse hyperbolic cosine of each element of the matrix
-   B = atanh( A );  // Computes the inverse hyperbolic tangent of each element of the matrix
-   \endcode
+   B = asinh( A );  // Computes the inverse hyperbolic sine of each element of
+the matrix B = acosh( A );  // Computes the inverse hyperbolic cosine of each
+element of the matrix B = atanh( A );  // Computes the inverse hyperbolic
+tangent of each element of the matrix \endcode
 
 // \n \subsection matrix_operators_erf erf() / erfc()
 //
-// The \c erf() and \c erfc() functions compute the (complementary) error function of each
+// The \c erf() and \c erfc() functions compute the (complementary) error
+function of each
 // element of a matrix:
 
    \code
@@ -3798,14 +4508,18 @@
    B = erfc( A );  // Computes the complementary error function of each element
    \endcode
 
-// Note that in case of sparse matrices only the non-zero elements are taken into account!
+// Note that in case of sparse matrices only the non-zero elements are taken
+into account!
 //
 //
 // \n \subsection matrix_operations_map map() / forEach()
 //
-// Via the unary and binary \c map() functions it is possible to execute componentwise custom
-// operations on matrices. The unary \c map() function can be used to apply a custom operation
-// on each element of a dense or sparse matrix. For instance, the following example demonstrates
+// Via the unary and binary \c map() functions it is possible to execute
+componentwise custom
+// operations on matrices. The unary \c map() function can be used to apply a
+custom operation
+// on each element of a dense or sparse matrix. For instance, the following
+example demonstrates
 // a custom square root computation via a lambda:
 
    \code
@@ -3814,8 +4528,10 @@
    B = map( A, []( double d ) { return std::sqrt( d ); } );
    \endcode
 
-// The binary \c map() function can be used to apply an operation pairwise to the elements of
-// two dense matrices. The following example demonstrates the merging of two matrices of double
+// The binary \c map() function can be used to apply an operation pairwise to
+the elements of
+// two dense matrices. The following example demonstrates the merging of two
+matrices of double
 // precision values into a matrix of double precision complex numbers:
 
    \code
@@ -3827,17 +4543,24 @@
    // Creating the matrix
    //    ( (-2.1,  0.3) (-4.2, -1.4) )
    //    ( ( 1.0,  2.9) ( 0.6, -3.4) )
-   cplx = map( real, imag, []( double r, double i ){ return complex( r, i ); } );
-   \endcode
+   cplx = map( real, imag, []( double r, double i ){ return complex( r, i ); }
+); \endcode
 
-// Although the computation can be parallelized it is not vectorized and thus cannot perform at
-// peak performance. However, it is also possible to create vectorized custom operations. See
-// \ref custom_operations for a detailed overview of the possibilities of custom operations.
+// Although the computation can be parallelized it is not vectorized and thus
+cannot perform at
+// peak performance. However, it is also possible to create vectorized custom
+operations. See
+// \ref custom_operations for a detailed overview of the possibilities of custom
+operations.
 //
-// Please note that unary custom operations on vectors have been introduced in \b Blaze 3.0 in
-// form of the \c forEach() function. With the introduction of binary custom functions, the
-// \c forEach() function has been renamed to \c map(). The \c forEach() function can still be
-// used (even for binary custom operations), but the function might be deprecated in future
+// Please note that unary custom operations on vectors have been introduced in
+\b Blaze 3.0 in
+// form of the \c forEach() function. With the introduction of binary custom
+functions, the
+// \c forEach() function has been renamed to \c map(). The \c forEach() function
+can still be
+// used (even for binary custom operations), but the function might be
+deprecated in future
 // releases of \b Blaze.
 //
 //
@@ -3846,7 +4569,8 @@
 //
 // \subsection matrix_operations_declsym declsym()
 //
-// The \c declsym() operation can be used to explicitly declare any matrix or matrix expression
+// The \c declsym() operation can be used to explicitly declare any matrix or
+matrix expression
 // as symmetric:
 
    \code
@@ -3856,8 +4580,10 @@
    B = declsym( A );
    \endcode
 
-// Any matrix or matrix expression that has been declared as symmetric via \c declsym() will
-// gain all the benefits of a symmetric matrix, which range from reduced runtime checking to
+// Any matrix or matrix expression that has been declared as symmetric via \c
+declsym() will
+// gain all the benefits of a symmetric matrix, which range from reduced runtime
+checking to
 // a considerable speed-up in computations:
 
    \code
@@ -3868,23 +4594,29 @@
    SymmetricMatrix< DynamicMatrix<double> > S;
    // ... Resizing and initialization
 
-   isSymmetric( declsym( A ) );  // Will always return true without runtime effort
+   isSymmetric( declsym( A ) );  // Will always return true without runtime
+effort
 
    S = declsym( A );  // Omit any runtime check for symmetry
 
-   C = declsym( A * B );  // Declare the result of the matrix multiplication as symmetric,
+   C = declsym( A * B );  // Declare the result of the matrix multiplication as
+symmetric,
                           // i.e. perform an optimized matrix multiplication
    \endcode
 
-// \warning The \c declsym() operation has the semantics of a cast: The caller is completely
-// responsible and the system trusts the given information. Declaring a non-symmetric matrix or
-// matrix expression as symmetric via the \c declsym() operation leads to undefined behavior
+// \warning The \c declsym() operation has the semantics of a cast: The caller
+is completely
+// responsible and the system trusts the given information. Declaring a
+non-symmetric matrix or
+// matrix expression as symmetric via the \c declsym() operation leads to
+undefined behavior
 // (which can be violated invariants or wrong computation results)!
 //
 //
 // \n \subsection matrix_operations_declherm declherm()
 //
-// The \c declherm() operation can be used to explicitly declare any matrix or matrix expression
+// The \c declherm() operation can be used to explicitly declare any matrix or
+matrix expression
 // as Hermitian:
 
    \code
@@ -3894,8 +4626,10 @@
    B = declherm( A );
    \endcode
 
-// Any matrix or matrix expression that has been declared as Hermitian via \c declherm() will
-// gain all the benefits of an Hermitian matrix, which range from reduced runtime checking to
+// Any matrix or matrix expression that has been declared as Hermitian via \c
+declherm() will
+// gain all the benefits of an Hermitian matrix, which range from reduced
+runtime checking to
 // a considerable speed-up in computations:
 
    \code
@@ -3906,23 +4640,29 @@
    HermitianMatrix< DynamicMatrix<double> > S;
    // ... Resizing and initialization
 
-   isHermitian( declherm( A ) );  // Will always return true without runtime effort
+   isHermitian( declherm( A ) );  // Will always return true without runtime
+effort
 
    S = declherm( A );  // Omit any runtime check for Hermitian symmetry
 
-   C = declherm( A * B );  // Declare the result of the matrix multiplication as Hermitian,
+   C = declherm( A * B );  // Declare the result of the matrix multiplication as
+Hermitian,
                            // i.e. perform an optimized matrix multiplication
    \endcode
 
-// \warning The \c declherm() operation has the semantics of a cast: The caller is completely
-// responsible and the system trusts the given information. Declaring a non-Hermitian matrix or
-// matrix expression as Hermitian via the \c declherm() operation leads to undefined behavior
+// \warning The \c declherm() operation has the semantics of a cast: The caller
+is completely
+// responsible and the system trusts the given information. Declaring a
+non-Hermitian matrix or
+// matrix expression as Hermitian via the \c declherm() operation leads to
+undefined behavior
 // (which can be violated invariants or wrong computation results)!
 //
 //
 // \n \subsection matrix_operations_decllow decllow()
 //
-// The \c decllow() operation can be used to explicitly declare any matrix or matrix expression
+// The \c decllow() operation can be used to explicitly declare any matrix or
+matrix expression
 // as lower triangular:
 
    \code
@@ -3932,8 +4672,10 @@
    B = decllow( A );
    \endcode
 
-// Any matrix or matrix expression that has been declared as lower triangular via \c decllow()
-// will gain all the benefits of a lower triangular matrix, which range from reduced runtime
+// Any matrix or matrix expression that has been declared as lower triangular
+via \c decllow()
+// will gain all the benefits of a lower triangular matrix, which range from
+reduced runtime
 // checking to a considerable speed-up in computations:
 
    \code
@@ -3948,19 +4690,24 @@
 
    L = decllow( A );  // Omit any runtime check for A being a lower matrix
 
-   C = decllow( A * B );  // Declare the result of the matrix multiplication as lower triangular,
+   C = decllow( A * B );  // Declare the result of the matrix multiplication as
+lower triangular,
                           // i.e. perform an optimized matrix multiplication
    \endcode
 
-// \warning The \c decllow() operation has the semantics of a cast: The caller is completely
-// responsible and the system trusts the given information. Declaring a non-lower matrix or
-// matrix expression as lower triangular via the \c decllow() operation leads to undefined
+// \warning The \c decllow() operation has the semantics of a cast: The caller
+is completely
+// responsible and the system trusts the given information. Declaring a
+non-lower matrix or
+// matrix expression as lower triangular via the \c decllow() operation leads to
+undefined
 // behavior (which can be violated invariants or wrong computation results)!
 //
 //
 // \n \subsection matrix_operations_declupp declupp()
 //
-// The \c declupp() operation can be used to explicitly declare any matrix or matrix expression
+// The \c declupp() operation can be used to explicitly declare any matrix or
+matrix expression
 // as upper triangular:
 
    \code
@@ -3970,8 +4717,10 @@
    B = declupp( A );
    \endcode
 
-// Any matrix or matrix expression that has been declared as upper triangular via \c declupp()
-// will gain all the benefits of a upper triangular matrix, which range from reduced runtime
+// Any matrix or matrix expression that has been declared as upper triangular
+via \c declupp()
+// will gain all the benefits of a upper triangular matrix, which range from
+reduced runtime
 // checking to a considerable speed-up in computations:
 
    \code
@@ -3986,19 +4735,24 @@
 
    U = declupp( A );  // Omit any runtime check for A being a upper matrix
 
-   C = declupp( A * B );  // Declare the result of the matrix multiplication as upper triangular,
+   C = declupp( A * B );  // Declare the result of the matrix multiplication as
+upper triangular,
                           // i.e. perform an optimized matrix multiplication
    \endcode
 
-// \warning The \c declupp() operation has the semantics of a cast: The caller is completely
-// responsible and the system trusts the given information. Declaring a non-upper matrix or
-// matrix expression as upper triangular via the \c declupp() operation leads to undefined
+// \warning The \c declupp() operation has the semantics of a cast: The caller
+is completely
+// responsible and the system trusts the given information. Declaring a
+non-upper matrix or
+// matrix expression as upper triangular via the \c declupp() operation leads to
+undefined
 // behavior (which can be violated invariants or wrong computation results)!
 //
 //
 // \n \subsection matrix_operations_decldiag decldiag()
 //
-// The \c decldiag() operation can be used to explicitly declare any matrix or matrix expression
+// The \c decldiag() operation can be used to explicitly declare any matrix or
+matrix expression
 // as diagonal:
 
    \code
@@ -4008,8 +4762,10 @@
    B = decldiag( A );
    \endcode
 
-// Any matrix or matrix expression that has been declared as diagonal via \c decldiag() will
-// gain all the benefits of a diagonal matrix, which range from reduced runtime checking to
+// Any matrix or matrix expression that has been declared as diagonal via \c
+decldiag() will
+// gain all the benefits of a diagonal matrix, which range from reduced runtime
+checking to
 // a considerable speed-up in computations:
 
    \code
@@ -4020,23 +4776,29 @@
    DiagonalMatrix< DynamicMatrix<double> > D;
    // ... Resizing and initialization
 
-   isDiagonal( decldiag( A ) );  // Will always return true without runtime effort
+   isDiagonal( decldiag( A ) );  // Will always return true without runtime
+effort
 
    D = decldiag( A );  // Omit any runtime check for A being a diagonal matrix
 
-   C = decldiag( A * B );  // Declare the result of the matrix multiplication as diagonal,
+   C = decldiag( A * B );  // Declare the result of the matrix multiplication as
+diagonal,
                            // i.e. perform an optimized matrix multiplication
    \endcode
 
-// \warning The \c decldiag() operation has the semantics of a cast: The caller is completely
-// responsible and the system trusts the given information. Declaring a non-diagonal matrix
-// or matrix expression as diagonal via the \c decldiag() operation leads to undefined
+// \warning The \c decldiag() operation has the semantics of a cast: The caller
+is completely
+// responsible and the system trusts the given information. Declaring a
+non-diagonal matrix
+// or matrix expression as diagonal via the \c decldiag() operation leads to
+undefined
 // behavior (which can be violated invariants or wrong computation results)!
 //
 //
 // \n \subsection matrix_operations_declid declid()
 //
-// The \c declid() operation can be used to explicitly declare any matrix or matrix expression
+// The \c declid() operation can be used to explicitly declare any matrix or
+matrix expression
 // as identity matrix:
 
    \code
@@ -4046,8 +4808,10 @@
    B = declid( A );
    \endcode
 
-// Any matrix or matrix expression that has been declared as identity matrix via \c declid() will
-// gain all the benefits of an identity matrix, which range from reduced runtime checking to a
+// Any matrix or matrix expression that has been declared as identity matrix via
+\c declid() will
+// gain all the benefits of an identity matrix, which range from reduced runtime
+checking to a
 // considerable speed-up in computations:
 
    \code
@@ -4062,20 +4826,25 @@
 
    D = declid( A );  // Omit any runtime check for A being a diagonal matrix
 
-   C = declid( A ) * B;  // Declare the left operand of the matrix multiplication as an
-                         // identity matrix, i.e. perform an optimized matrix multiplication
-   \endcode
+   C = declid( A ) * B;  // Declare the left operand of the matrix
+multiplication as an
+                         // identity matrix, i.e. perform an optimized matrix
+multiplication \endcode
 
-// \warning The \c declid() operation has the semantics of a cast: The caller is completely
-// responsible and the system trusts the given information. Declaring a non-identity matrix
-// or matrix expression as identity matrix via the \c declid() operation leads to undefined
+// \warning The \c declid() operation has the semantics of a cast: The caller is
+completely
+// responsible and the system trusts the given information. Declaring a
+non-identity matrix
+// or matrix expression as identity matrix via the \c declid() operation leads
+to undefined
 // behavior (which can be violated invariants or wrong computation results)!
 //
 //
 // \n \section matrix_operations_matrix_inversion Matrix Inversion
 // <hr>
 //
-// The inverse of a square dense matrix can be computed via the \c inv() function:
+// The inverse of a square dense matrix can be computed via the \c inv()
+function:
 
    \code
    blaze::DynamicMatrix<float,blaze::rowMajor> A, B;
@@ -4083,7 +4852,8 @@
    B = inv( A );  // Compute the inverse of A
    \endcode
 
-// Alternatively, an in-place inversion of a dense matrix can be performed via the \c invert()
+// Alternatively, an in-place inversion of a dense matrix can be performed via
+the \c invert()
 // function:
 
    \code
@@ -4092,16 +4862,25 @@
    invert( A );  // In-place matrix inversion
    \endcode
 
-// Both the \c inv() and the \c invert() functions will automatically select the most suited matrix
-// inversion algorithm depending on the size and type of the given matrix. For small matrices of
-// up to 6x6, both functions use manually optimized kernels for maximum performance. For matrices
-// larger than 6x6 the inversion is performed by means of the most suited matrix decomposition
-// method: In case of a general matrix the LU decomposition is used, for symmetric matrices the
-// LDLT decomposition is applied, for Hermitian matrices the LDLH decomposition is performed, and
-// for triangular matrices the inverse is computed via a forward or back substitution.
+// Both the \c inv() and the \c invert() functions will automatically select the
+most suited matrix
+// inversion algorithm depending on the size and type of the given matrix. For
+small matrices of
+// up to 6x6, both functions use manually optimized kernels for maximum
+performance. For matrices
+// larger than 6x6 the inversion is performed by means of the most suited matrix
+decomposition
+// method: In case of a general matrix the LU decomposition is used, for
+symmetric matrices the
+// LDLT decomposition is applied, for Hermitian matrices the LDLH decomposition
+is performed, and
+// for triangular matrices the inverse is computed via a forward or back
+substitution.
 //
-// In case the type of the matrix does not provide additional compile time information about its
-// structure (symmetric, lower, upper, diagonal, ...), the information can be provided manually
+// In case the type of the matrix does not provide additional compile time
+information about its
+// structure (symmetric, lower, upper, diagonal, ...), the information can be
+provided manually
 // when calling the \c invert() function:
 
    \code
@@ -4118,13 +4897,14 @@
    invert<asSymmetric>( A );  // In-place inversion of a symmetric matrix
    invert<asHermitian>( A );  // In-place inversion of a Hermitian matrix
    invert<asLower>    ( A );  // In-place inversion of a lower triangular matrix
-   invert<asUniLower> ( A );  // In-place inversion of a lower unitriangular matrix
-   invert<asUpper>    ( A );  // In-place inversion of a upper triangular matrix
-   invert<asUniUpper> ( A );  // In-place inversion of a upper unitriangular matrix
-   invert<asDiagonal> ( A );  // In-place inversion of a diagonal matrix
+   invert<asUniLower> ( A );  // In-place inversion of a lower unitriangular
+matrix invert<asUpper>    ( A );  // In-place inversion of a upper triangular
+matrix invert<asUniUpper> ( A );  // In-place inversion of a upper unitriangular
+matrix invert<asDiagonal> ( A );  // In-place inversion of a diagonal matrix
    \endcode
 
-// Alternatively, via the \c invert() function it is possible to explicitly specify the inversion
+// Alternatively, via the \c invert() function it is possible to explicitly
+specify the inversion
 // algorithm:
 
    \code
@@ -4136,67 +4916,88 @@
    // In-place inversion of a general matrix by means of an LU decomposition
    invert<byLU>( A );
 
-   // In-place inversion of a symmetric indefinite matrix by means of a Bunch-Kaufman decomposition
-   invert<byLDLT>( A );
+   // In-place inversion of a symmetric indefinite matrix by means of a
+Bunch-Kaufman decomposition invert<byLDLT>( A );
 
-   // In-place inversion of a Hermitian indefinite matrix by means of a Bunch-Kaufman decomposition
-   invert<byLDLH>( A );
+   // In-place inversion of a Hermitian indefinite matrix by means of a
+Bunch-Kaufman decomposition invert<byLDLH>( A );
 
-   // In-place inversion of a positive definite matrix by means of a Cholesky decomposition
-   invert<byLLH>( A );
-   \endcode
+   // In-place inversion of a positive definite matrix by means of a Cholesky
+decomposition invert<byLLH>( A ); \endcode
 
-// Whereas the inversion by means of an LU decomposition works for every general square matrix,
-// the inversion by LDLT only works for symmetric indefinite matrices, the inversion by LDLH is
-// restricted to Hermitian indefinite matrices and the Cholesky decomposition (LLH) only works
-// for Hermitian positive definite matrices. Please note that it is in the responsibility of the
-// function caller to guarantee that the selected algorithm is suited for the given matrix. In
-// case this precondition is violated the result can be wrong and might not represent the inverse
+// Whereas the inversion by means of an LU decomposition works for every general
+square matrix,
+// the inversion by LDLT only works for symmetric indefinite matrices, the
+inversion by LDLH is
+// restricted to Hermitian indefinite matrices and the Cholesky decomposition
+(LLH) only works
+// for Hermitian positive definite matrices. Please note that it is in the
+responsibility of the
+// function caller to guarantee that the selected algorithm is suited for the
+given matrix. In
+// case this precondition is violated the result can be wrong and might not
+represent the inverse
 // of the given matrix!
 //
-// For both the \c inv() and \c invert() function the matrix inversion fails if ...
+// For both the \c inv() and \c invert() function the matrix inversion fails if
+...
 //
 //  - ... the given matrix is not a square matrix;
 //  - ... the given matrix is singular and not invertible.
 //
-// In all failure cases either a compilation error is created if the failure can be predicted at
+// In all failure cases either a compilation error is created if the failure can
+be predicted at
 // compile time or a \c std::invalid_argument exception is thrown.
 //
-// \note The matrix inversion can only be used for dense matrices with \c float, \c double,
-// \c complex<float> or \c complex<double> element type. The attempt to call the function with
-// matrices of any other element type or with a sparse matrix results in a compile time error!
+// \note The matrix inversion can only be used for dense matrices with \c float,
+\c double,
+// \c complex<float> or \c complex<double> element type. The attempt to call the
+function with
+// matrices of any other element type or with a sparse matrix results in a
+compile time error!
 //
-// \note The functions invert the dense matrix by means of LAPACK kernels. Thus the functions can
-// only be used if a fitting LAPACK library is available and linked to the executable. Otherwise
+// \note The functions invert the dense matrix by means of LAPACK kernels. Thus
+the functions can
+// only be used if a fitting LAPACK library is available and linked to the
+executable. Otherwise
 // a linker error will be created.
 //
-// \note It is not possible to use any kind of view on the expression object returned by the
-// \c inv() function. Also, it is not possible to access individual elements via the function call
+// \note It is not possible to use any kind of view on the expression object
+returned by the
+// \c inv() function. Also, it is not possible to access individual elements via
+the function call
 // operator on the expression object:
 
    \code
-   row( inv( A ), 2UL );  // Compilation error: Views cannot be used on an inv() expression!
-   inv( A )(1,2);         // Compilation error: It is not possible to access individual elements!
-   \endcode
+   row( inv( A ), 2UL );  // Compilation error: Views cannot be used on an inv()
+expression! inv( A )(1,2);         // Compilation error: It is not possible to
+access individual elements! \endcode
 
-// \note The inversion functions do not provide any exception safety guarantee, i.e. in case an
+// \note The inversion functions do not provide any exception safety guarantee,
+i.e. in case an
 // exception is thrown the matrix may already have been modified.
 //
 //
 // \n \section matrix_operations_decomposition Matrix Decomposition
 // <hr>
 //
-// \note All decomposition functions can only be used for dense matrices with \c float, \c double,
-// \c complex<float> or \c complex<double> element type. The attempt to call the function with
-// matrices of any other element type or with a sparse matrix results in a compile time error!
+// \note All decomposition functions can only be used for dense matrices with \c
+float, \c double,
+// \c complex<float> or \c complex<double> element type. The attempt to call the
+function with
+// matrices of any other element type or with a sparse matrix results in a
+compile time error!
 //
-// \note The functions decompose a dense matrix by means of LAPACK kernels. Thus the functions can
-// only be used if a fitting LAPACK library is available and linked to the executable. Otherwise
+// \note The functions decompose a dense matrix by means of LAPACK kernels. Thus
+the functions can
+// only be used if a fitting LAPACK library is available and linked to the
+executable. Otherwise
 // a linker error will be created.
 //
 // \subsection matrix_operations_decomposition_lu LU Decomposition
 //
-// The LU decomposition of a dense matrix can be computed via the \c lu() function:
+// The LU decomposition of a dense matrix can be computed via the \c lu()
+function:
 
    \code
    blaze::DynamicMatrix<double,blaze::rowMajor> A;
@@ -4220,14 +5021,20 @@
    assert( A == P * L * U );
    \endcode
 
-// The function works for both \c rowMajor and \c columnMajor matrices. Note, however, that the
-// three matrices \c A, \c L and \c U are required to have the same storage order. Also, please
-// note that the way the permutation matrix \c P needs to be applied differs between row-major and
-// column-major matrices, since the algorithm uses column interchanges for row-major matrices and
+// The function works for both \c rowMajor and \c columnMajor matrices. Note,
+however, that the
+// three matrices \c A, \c L and \c U are required to have the same storage
+order. Also, please
+// note that the way the permutation matrix \c P needs to be applied differs
+between row-major and
+// column-major matrices, since the algorithm uses column interchanges for
+row-major matrices and
 // row interchanges for column-major matrices.
 //
-// Furthermore, \c lu() can be used with adaptors. For instance, the following example demonstrates
-// the LU decomposition of a symmetric matrix into a lower and upper triangular matrix:
+// Furthermore, \c lu() can be used with adaptors. For instance, the following
+example demonstrates
+// the LU decomposition of a symmetric matrix into a lower and upper triangular
+matrix:
 
    \code
    blaze::SymmetricMatrix< blaze::DynamicMatrix<double,blaze::columnMajor> > A;
@@ -4242,7 +5049,8 @@
 
 // \n \subsection matrix_operations_decomposition_llh Cholesky Decomposition
 //
-// The Cholesky (LLH) decomposition of a dense matrix can be computed via the \c llh() function:
+// The Cholesky (LLH) decomposition of a dense matrix can be computed via the \c
+llh() function:
 
    \code
    blaze::DynamicMatrix<double,blaze::rowMajor> A;
@@ -4255,10 +5063,12 @@
    assert( A == L * ctrans( L ) );
    \endcode
 
-// The function works for both \c rowMajor and \c columnMajor matrices and the two matrices \c A
+// The function works for both \c rowMajor and \c columnMajor matrices and the
+two matrices \c A
 // and \c L can have any storage order.
 //
-// Furthermore, \c llh() can be used with adaptors. For instance, the following example demonstrates
+// Furthermore, \c llh() can be used with adaptors. For instance, the following
+example demonstrates
 // the LLH decomposition of a symmetric matrix into a lower triangular matrix:
 
    \code
@@ -4272,7 +5082,8 @@
 
 // \n \subsection matrix_operations_decomposition_qr QR Decomposition
 //
-// The QR decomposition of a dense matrix can be computed via the \c qr() function:
+// The QR decomposition of a dense matrix can be computed via the \c qr()
+function:
 
    \code
    blaze::DynamicMatrix<double,blaze::rowMajor> A;
@@ -4286,11 +5097,14 @@
    assert( A == Q * R );
    \endcode
 
-// The function works for both \c rowMajor and \c columnMajor matrices and the three matrices
+// The function works for both \c rowMajor and \c columnMajor matrices and the
+three matrices
 // \c A, \c Q and \c R can have any storage order.
 //
-// Furthermore, \c qr() can be used with adaptors. For instance, the following example demonstrates
-// the QR decomposition of a symmetric matrix into a general matrix and an upper triangular matrix:
+// Furthermore, \c qr() can be used with adaptors. For instance, the following
+example demonstrates
+// the QR decomposition of a symmetric matrix into a general matrix and an upper
+triangular matrix:
 
    \code
    blaze::SymmetricMatrix< blaze::DynamicMatrix<double,blaze::columnMajor> > A;
@@ -4304,7 +5118,8 @@
 
 // \n \subsection matrix_operations_decomposition_rq RQ Decomposition
 //
-// Similar to the QR decomposition, the RQ decomposition of a dense matrix can be computed via
+// Similar to the QR decomposition, the RQ decomposition of a dense matrix can
+be computed via
 // the \c rq() function:
 
    \code
@@ -4319,26 +5134,31 @@
    assert( A == R * Q );
    \endcode
 
-// The function works for both \c rowMajor and \c columnMajor matrices and the three matrices
+// The function works for both \c rowMajor and \c columnMajor matrices and the
+three matrices
 // \c A, \c R and \c Q can have any storage order.
 //
-// Also the \c rq() function can be used in combination with matrix adaptors. For instance, the
-// following example demonstrates the RQ decomposition of an Hermitian matrix into a general
+// Also the \c rq() function can be used in combination with matrix adaptors.
+For instance, the
+// following example demonstrates the RQ decomposition of an Hermitian matrix
+into a general
 // matrix and an upper triangular matrix:
 
    \code
-   blaze::HermitianMatrix< blaze::DynamicMatrix<complex<double>,blaze::columnMajor> > A;
+   blaze::HermitianMatrix<
+blaze::DynamicMatrix<complex<double>,blaze::columnMajor> > A;
    // ... Resizing and initialization
 
-   blaze::UpperMatrix< blaze::DynamicMatrix<complex<double>,blaze::columnMajor> > R;
-   blaze::DynamicMatrix<complex<double>,blaze::rowMajor> Q;
+   blaze::UpperMatrix< blaze::DynamicMatrix<complex<double>,blaze::columnMajor>
+> R; blaze::DynamicMatrix<complex<double>,blaze::rowMajor> Q;
 
    rq( A, R, Q );  // RQ decomposition of A
    \endcode
 
 // \n \subsection matrix_operations_decomposition_ql QL Decomposition
 //
-// The QL decomposition of a dense matrix can be computed via the \c ql() function:
+// The QL decomposition of a dense matrix can be computed via the \c ql()
+function:
 
    \code
    blaze::DynamicMatrix<double,blaze::rowMajor> A;
@@ -4352,11 +5172,14 @@
    assert( A == Q * L );
    \endcode
 
-// The function works for both \c rowMajor and \c columnMajor matrices and the three matrices
+// The function works for both \c rowMajor and \c columnMajor matrices and the
+three matrices
 // \c A, \c Q and \c L can have any storage order.
 //
-// Also the \c ql() function can be used in combination with matrix adaptors. For instance, the
-// following example demonstrates the QL decomposition of a symmetric matrix into a general
+// Also the \c ql() function can be used in combination with matrix adaptors.
+For instance, the
+// following example demonstrates the QL decomposition of a symmetric matrix
+into a general
 // matrix and a lower triangular matrix:
 
    \code
@@ -4371,7 +5194,8 @@
 
 // \n \subsection matrix_operations_decomposition_lq LQ Decomposition
 //
-// The LQ decomposition of a dense matrix can be computed via the \c lq() function:
+// The LQ decomposition of a dense matrix can be computed via the \c lq()
+function:
 
    \code
    blaze::DynamicMatrix<double,blaze::rowMajor> A;
@@ -4385,18 +5209,22 @@
    assert( A == L * Q );
    \endcode
 
-// The function works for both \c rowMajor and \c columnMajor matrices and the three matrices
+// The function works for both \c rowMajor and \c columnMajor matrices and the
+three matrices
 // \c A, \c L and \c Q can have any storage order.
 //
-// Furthermore, \c lq() can be used with adaptors. For instance, the following example demonstrates
-// the LQ decomposition of an Hermitian matrix into a lower triangular matrix and a general matrix:
+// Furthermore, \c lq() can be used with adaptors. For instance, the following
+example demonstrates
+// the LQ decomposition of an Hermitian matrix into a lower triangular matrix
+and a general matrix:
 
    \code
-   blaze::HermitianMatrix< blaze::DynamicMatrix<complex<double>,blaze::columnMajor> > A;
+   blaze::HermitianMatrix<
+blaze::DynamicMatrix<complex<double>,blaze::columnMajor> > A;
    // ... Resizing and initialization
 
-   blaze::LowerMatrix< blaze::DynamicMatrix<complex<double>,blaze::columnMajor> > L;
-   blaze::DynamicMatrix<complex<double>,blaze::rowMajor> Q;
+   blaze::LowerMatrix< blaze::DynamicMatrix<complex<double>,blaze::columnMajor>
+> L; blaze::DynamicMatrix<complex<double>,blaze::rowMajor> Q;
 
    lq( A, L, Q );  // LQ decomposition of A
    \endcode
@@ -4404,7 +5232,8 @@
 // \n \section matrix_operations_eigenvalues Eigenvalues/Eigenvectors
 // <hr>
 //
-// The eigenvalues and eigenvectors of a dense matrix can be computed via the \c eigen() functions:
+// The eigenvalues and eigenvectors of a dense matrix can be computed via the \c
+eigen() functions:
 
    \code
    namespace blaze {
@@ -4412,34 +5241,51 @@
    template< typename MT, bool SO, typename VT, bool TF >
    void eigen( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w );
 
-   template< typename MT1, bool SO1, typename VT, bool TF, typename MT2, bool SO2 >
-   void eigen( const DenseMatrix<MT1,SO1>& A, DenseVector<VT,TF>& w, DenseMatrix<MT2,SO2>& V );
+   template< typename MT1, bool SO1, typename VT, bool TF, typename MT2, bool
+SO2 > void eigen( const DenseMatrix<MT1,SO1>& A, DenseVector<VT,TF>& w,
+DenseMatrix<MT2,SO2>& V );
 
    } // namespace blaze
    \endcode
 
-// The first function computes only the eigenvalues of the given \a n-by-\a n matrix, the second
-// function additionally computes the eigenvectors. The eigenvalues are returned in the given vector
-// \a w and the eigenvectors are returned in the given matrix \a V, which are both resized to the
+// The first function computes only the eigenvalues of the given \a n-by-\a n
+matrix, the second
+// function additionally computes the eigenvectors. The eigenvalues are returned
+in the given vector
+// \a w and the eigenvectors are returned in the given matrix \a V, which are
+both resized to the
 // correct dimensions (if possible and necessary).
 //
-// Depending on the given matrix type, the resulting eigenvalues are either of floating point
-// or complex type: In case the given matrix is either a compile time symmetric matrix with
-// floating point elements or an Hermitian matrix with complex elements, the resulting eigenvalues
-// will be of floating point type and therefore the elements of the given eigenvalue vector are
-// expected to be of floating point type. In all other cases they are expected to be of complex
-// type. Please note that for complex eigenvalues no order of eigenvalues can be assumed, except
-// that complex conjugate pairs of eigenvalues appear consecutively with the eigenvalue having
+// Depending on the given matrix type, the resulting eigenvalues are either of
+floating point
+// or complex type: In case the given matrix is either a compile time symmetric
+matrix with
+// floating point elements or an Hermitian matrix with complex elements, the
+resulting eigenvalues
+// will be of floating point type and therefore the elements of the given
+eigenvalue vector are
+// expected to be of floating point type. In all other cases they are expected
+to be of complex
+// type. Please note that for complex eigenvalues no order of eigenvalues can be
+assumed, except
+// that complex conjugate pairs of eigenvalues appear consecutively with the
+eigenvalue having
 // the positive imaginary part first.
 //
-// In case \a A is a row-major matrix, the left eigenvectors are returned in the rows of \a V,
-// in case \a A is a column-major matrix, the right eigenvectors are returned in the columns of
-// \a V. In case the given matrix is a compile time symmetric matrix with floating point elements,
-// the resulting eigenvectors will be of floating point type and therefore the elements of the
-// given eigenvector matrix are expected to be of floating point type. In all other cases they
+// In case \a A is a row-major matrix, the left eigenvectors are returned in the
+rows of \a V,
+// in case \a A is a column-major matrix, the right eigenvectors are returned in
+the columns of
+// \a V. In case the given matrix is a compile time symmetric matrix with
+floating point elements,
+// the resulting eigenvectors will be of floating point type and therefore the
+elements of the
+// given eigenvector matrix are expected to be of floating point type. In all
+other cases they
 // are expected to be of complex type.
 //
-// The following examples give an impression of the computation of eigenvalues and eigenvectors
+// The following examples give an impression of the computation of eigenvalues
+and eigenvectors
 // for a general, a symmetric, and an Hermitian matrix:
 
    \code
@@ -4451,8 +5297,9 @@
    DynamicMatrix<double,rowMajor> A( 5UL, 5UL );  // The general matrix A
    // ... Initialization
 
-   DynamicVector<complex<double>,columnVector> w( 5UL );   // The vector for the complex eigenvalues
-   DynamicMatrix<complex<double>,rowMajor> V( 5UL, 5UL );  // The matrix for the left eigenvectors
+   DynamicVector<complex<double>,columnVector> w( 5UL );   // The vector for the
+complex eigenvalues DynamicMatrix<complex<double>,rowMajor> V( 5UL, 5UL );  //
+The matrix for the left eigenvectors
 
    eigen( A, w, V );
    \endcode
@@ -4464,11 +5311,13 @@
    using blaze::rowMajor;
    using blaze::columnVector;
 
-   SymmetricMatrix< DynamicMatrix<double,rowMajor> > A( 5UL, 5UL );  // The symmetric matrix A
+   SymmetricMatrix< DynamicMatrix<double,rowMajor> > A( 5UL, 5UL );  // The
+symmetric matrix A
    // ... Initialization
 
-   DynamicVector<double,columnVector> w( 5UL );       // The vector for the real eigenvalues
-   DynamicMatrix<double,rowMajor>     V( 5UL, 5UL );  // The matrix for the left eigenvectors
+   DynamicVector<double,columnVector> w( 5UL );       // The vector for the real
+eigenvalues DynamicMatrix<double,rowMajor>     V( 5UL, 5UL );  // The matrix for
+the left eigenvectors
 
    eigen( A, w, V );
    \endcode
@@ -4480,11 +5329,13 @@
    using blaze::rowMajor;
    using blaze::columnVector;
 
-   HermitianMatrix< DynamicMatrix<complex<double>,rowMajor> > A( 5UL, 5UL );  // The Hermitian matrix A
+   HermitianMatrix< DynamicMatrix<complex<double>,rowMajor> > A( 5UL, 5UL );  //
+The Hermitian matrix A
    // ... Initialization
 
-   DynamicVector<double,columnVector>      w( 5UL );       // The vector for the real eigenvalues
-   DynamicMatrix<complex<double>,rowMajor> V( 5UL, 5UL );  // The matrix for the left eigenvectors
+   DynamicVector<double,columnVector>      w( 5UL );       // The vector for the
+real eigenvalues DynamicMatrix<complex<double>,rowMajor> V( 5UL, 5UL );  // The
+matrix for the left eigenvectors
 
    eigen( A, w, V );
    \endcode
@@ -4492,25 +5343,33 @@
 // The functions fail if ...
 //
 //  - ... the given matrix \a A is not a square matrix;
-//  - ... the given vector \a w is a fixed size vector and the size doesn't match;
-//  - ... the given matrix \a V is a fixed size matrix and the dimensions don't match;
+//  - ... the given vector \a w is a fixed size vector and the size doesn't
+match;
+//  - ... the given matrix \a V is a fixed size matrix and the dimensions don't
+match;
 //  - ... the eigenvalue computation fails.
 //
 // In all failure cases an exception is thrown.
 //
-// \note All \c eigen() functions can only be used for dense matrices with \c float, \c double,
-// \c complex<float> or \c complex<double> element type. The attempt to call the function with
-// matrices of any other element type or with a sparse matrix results in a compile time error!
+// \note All \c eigen() functions can only be used for dense matrices with \c
+float, \c double,
+// \c complex<float> or \c complex<double> element type. The attempt to call the
+function with
+// matrices of any other element type or with a sparse matrix results in a
+compile time error!
 //
-// \note The functions compute the eigenvalues and/or eigenvectors of a dense matrix by means of
-// LAPACK kernels. Thus the functions can only be used if a fitting LAPACK library is available
+// \note The functions compute the eigenvalues and/or eigenvectors of a dense
+matrix by means of
+// LAPACK kernels. Thus the functions can only be used if a fitting LAPACK
+library is available
 // and linked to the executable. Otherwise a linker error will be created.
 //
 //
 // \n \section matrix_operations_singularvalues Singular Values/Singular Vectors
 // <hr>
 //
-// The singular value decomposition (SVD) of a dense matrix can be computed via the \c svd()
+// The singular value decomposition (SVD) of a dense matrix can be computed via
+the \c svd()
 // functions:
 
    \code
@@ -4519,51 +5378,80 @@
    template< typename MT, bool SO, typename VT, bool TF >
    void svd( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& s );
 
-   template< typename MT1, bool SO, typename VT, bool TF, typename MT2, typename MT3 >
-   void svd( const DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U, DenseVector<VT,TF>& s, DenseMatrix<MT3,SO>& V );
+   template< typename MT1, bool SO, typename VT, bool TF, typename MT2, typename
+MT3 > void svd( const DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U,
+DenseVector<VT,TF>& s, DenseMatrix<MT3,SO>& V );
 
    template< typename MT, bool SO, typename VT, bool TF, typename ST >
-   size_t svd( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& s, ST low, ST upp );
+   size_t svd( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& s, ST low, ST
+upp );
 
-   template< typename MT1, bool SO, typename VT, bool TF, typename MT2, typename MT3, typename ST >
-   size_t svd( const DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U, DenseVector<VT,TF>& s, DenseMatrix<MT3,SO>& V, ST low, ST upp );
+   template< typename MT1, bool SO, typename VT, bool TF, typename MT2, typename
+MT3, typename ST > size_t svd( const DenseMatrix<MT1,SO>& A,
+DenseMatrix<MT2,SO>& U, DenseVector<VT,TF>& s, DenseMatrix<MT3,SO>& V, ST low,
+ST upp );
 
    } // namespace blaze
    \endcode
 
-// The first and third function compute only singular values of the given general \a m-by-\a n
-// matrix, the second and fourth function additionally compute singular vectors. The resulting
-// singular values are returned in the given vector \a s, the left singular vectors are returned
-// in the given matrix \a U, and the right singular vectors are returned in the matrix \a V. \a s,
-// \a U, and \a V are resized to the correct dimensions (if possible and necessary).
+// The first and third function compute only singular values of the given
+general \a m-by-\a n
+// matrix, the second and fourth function additionally compute singular vectors.
+The resulting
+// singular values are returned in the given vector \a s, the left singular
+vectors are returned
+// in the given matrix \a U, and the right singular vectors are returned in the
+matrix \a V. \a s,
+// \a U, and \a V are resized to the correct dimensions (if possible and
+necessary).
 //
-// The third and fourth function allow for the specification of a subset of singular values and/or
-// vectors. The number of singular values and vectors to be computed is specified by the lower
-// bound \a low and the upper bound \a upp, which either form an integral or a floating point
+// The third and fourth function allow for the specification of a subset of
+singular values and/or
+// vectors. The number of singular values and vectors to be computed is
+specified by the lower
+// bound \a low and the upper bound \a upp, which either form an integral or a
+floating point
 // range.
 //
-// In case \a low and \a upp form are of integral type, the function computes all singular values
-// in the index range \f$[low..upp]\f$. The \a num resulting real and non-negative singular values
-// are stored in descending order in the given vector \a s, which is either resized (if possible)
-// or expected to be a \a num-dimensional vector. The resulting left singular vectors are stored
-// in the given matrix \a U, which is either resized (if possible) or expected to be a
-// \a m-by-\a num matrix. The resulting right singular vectors are stored in the given matrix \a V,
-// which is either resized (if possible) or expected to be a \a num-by-\a n matrix.
+// In case \a low and \a upp form are of integral type, the function computes
+all singular values
+// in the index range \f$[low..upp]\f$. The \a num resulting real and
+non-negative singular values
+// are stored in descending order in the given vector \a s, which is either
+resized (if possible)
+// or expected to be a \a num-dimensional vector. The resulting left singular
+vectors are stored
+// in the given matrix \a U, which is either resized (if possible) or expected
+to be a
+// \a m-by-\a num matrix. The resulting right singular vectors are stored in the
+given matrix \a V,
+// which is either resized (if possible) or expected to be a \a num-by-\a n
+matrix.
 //
-// In case \a low and \a upp are of floating point type, the function computes all singular values
-// in the half-open interval \f$(low..upp]\f$. The resulting real and non-negative singular values
-// are stored in descending order in the given vector \a s, which is either resized (if possible)
-// or expected to be a min(\a m,\a n)-dimensional vector. The resulting left singular vectors are
-// stored in the given matrix \a U, which is either resized (if possible) or expected to be a
-// \a m-by-min(\a m,\a n) matrix. The resulting right singular vectors are stored in the given
-// matrix \a V, which is either resized (if possible) or expected to be a min(\a m,\a n)-by-\a n
+// In case \a low and \a upp are of floating point type, the function computes
+all singular values
+// in the half-open interval \f$(low..upp]\f$. The resulting real and
+non-negative singular values
+// are stored in descending order in the given vector \a s, which is either
+resized (if possible)
+// or expected to be a min(\a m,\a n)-dimensional vector. The resulting left
+singular vectors are
+// stored in the given matrix \a U, which is either resized (if possible) or
+expected to be a
+// \a m-by-min(\a m,\a n) matrix. The resulting right singular vectors are
+stored in the given
+// matrix \a V, which is either resized (if possible) or expected to be a min(\a
+m,\a n)-by-\a n
 // matrix.
 //
 // The functions fail if ...
 //
-//  - ... the given matrix \a U is a fixed size matrix and the dimensions don't match;
-//  - ... the given vector \a s is a fixed size vector and the size doesn't match;
-//  - ... the given matrix \a V is a fixed size matrix and the dimensions don't match;
+//  - ... the given matrix \a U is a fixed size matrix and the dimensions don't
+match;
+//  - ... the given vector \a s is a fixed size vector and the size doesn't
+match;
+//  - ... the given matrix \a V is a fixed size matrix and the dimensions don't
+match;
 //  - ... the given scalar values don't form a proper range;
 //  - ... the singular value decomposition fails.
 //
@@ -4580,9 +5468,10 @@
    DynamicMatrix<double,rowMajor>  A( 5UL, 8UL );  // The general matrix A
    // ... Initialization
 
-   DynamicMatrix<double,rowMajor>     U;  // The matrix for the left singular vectors
-   DynamicVector<double,columnVector> s;  // The vector for the singular values
-   DynamicMatrix<double,rowMajor>     V;  // The matrix for the right singular vectors
+   DynamicMatrix<double,rowMajor>     U;  // The matrix for the left singular
+vectors DynamicVector<double,columnVector> s;  // The vector for the singular
+values DynamicMatrix<double,rowMajor>     V;  // The matrix for the right
+singular vectors
 
    svd( A, U, s, V );
    \endcode
@@ -4593,29 +5482,36 @@
    using blaze::rowMajor;
    using blaze::columnVector;
 
-   DynamicMatrix<complex<double>,rowMajor>  A( 5UL, 8UL );  // The general matrix A
+   DynamicMatrix<complex<double>,rowMajor>  A( 5UL, 8UL );  // The general
+matrix A
    // ... Initialization
 
-   DynamicMatrix<complex<double>,rowMajor> U;  // The matrix for the left singular vectors
-   DynamicVector<double,columnVector>      s;  // The vector for the singular values
-   DynamicMatrix<complex<double>,rowMajor> V;  // The matrix for the right singular vectors
+   DynamicMatrix<complex<double>,rowMajor> U;  // The matrix for the left
+singular vectors DynamicVector<double,columnVector>      s;  // The vector for
+the singular values DynamicMatrix<complex<double>,rowMajor> V;  // The matrix
+for the right singular vectors
 
    svd( A, U, s, V, 0, 2 );
    \endcode
 
-// \note All \c svd() functions can only be used for dense matrices with \c float, \c double,
-// \c complex<float> or \c complex<double> element type. The attempt to call the function with
-// matrices of any other element type or with a sparse matrix results in a compile time error!
+// \note All \c svd() functions can only be used for dense matrices with \c
+float, \c double,
+// \c complex<float> or \c complex<double> element type. The attempt to call the
+function with
+// matrices of any other element type or with a sparse matrix results in a
+compile time error!
 //
-// \note The functions compute the singular values and/or singular vectors of a dense matrix by
-// means of LAPACK kernels. Thus the functions can only be used if a fitting LAPACK library is
-// available and linked to the executable. Otherwise a linker error will be created.
+// \note The functions compute the singular values and/or singular vectors of a
+dense matrix by
+// means of LAPACK kernels. Thus the functions can only be used if a fitting
+LAPACK library is
+// available and linked to the executable. Otherwise a linker error will be
+created.
 //
 //
 // \n Previous: \ref matrix_types &nbsp; &nbsp; Next: \ref adaptors
 */
 //*************************************************************************************************
-
 
 //**Adaptors***************************************************************************************
 /*!\page adaptors Adaptors
@@ -4626,9 +5522,12 @@
 // \section adaptors_general General Concepts
 // <hr>
 //
-// Adaptors act as wrappers around the general \ref matrix_types. They adapt the interface of the
-// matrices such that certain invariants are preserved. Due to this adaptors can provide a compile
-// time guarantee of certain properties, which can be exploited for optimized performance.
+// Adaptors act as wrappers around the general \ref matrix_types. They adapt the
+interface of the
+// matrices such that certain invariants are preserved. Due to this adaptors can
+provide a compile
+// time guarantee of certain properties, which can be exploited for optimized
+performance.
 //
 // The \b Blaze library provides a total of 9 different adaptors:
 //
@@ -4641,14 +5540,16 @@
 //             <ul>
 //                <li> \ref adaptors_triangular_matrices_lowermatrix </li>
 //                <li> \ref adaptors_triangular_matrices_unilowermatrix </li>
-//                <li> \ref adaptors_triangular_matrices_strictlylowermatrix </li>
+//                <li> \ref adaptors_triangular_matrices_strictlylowermatrix
+</li>
 //             </ul>
 //          </li>
 //          <li> \ref adaptors_triangular_matrices "Upper Triangular Matrices"
 //             <ul>
 //                <li> \ref adaptors_triangular_matrices_uppermatrix </li>
 //                <li> \ref adaptors_triangular_matrices_uniuppermatrix </li>
-//                <li> \ref adaptors_triangular_matrices_strictlyuppermatrix </li>
+//                <li> \ref adaptors_triangular_matrices_strictlyuppermatrix
+</li>
 //             </ul>
 //          </li>
 //          <li> \ref adaptors_triangular_matrices "Diagonal Matrices"
@@ -4660,14 +5561,17 @@
 //    </li>
 // </ul>
 //
-// In combination with the general matrix types, \b Blaze provides a total of 40 different matrix
-// types that make it possible to exactly adapt the type of matrix to every specific problem.
+// In combination with the general matrix types, \b Blaze provides a total of 40
+different matrix
+// types that make it possible to exactly adapt the type of matrix to every
+specific problem.
 //
 //
 // \n \section adaptors_examples Examples
 // <hr>
 //
-// The following code examples give an impression on the use of adaptors. The first example shows
+// The following code examples give an impression on the use of adaptors. The
+first example shows
 // the multiplication between two lower matrices:
 
    \code
@@ -4685,13 +5589,18 @@
    C = A * B;
    \endcode
 
-// When multiplying two matrices, at least one of which is triangular, \b Blaze can exploit the
-// fact that either the lower or upper part of the matrix contains only default elements and
-// restrict the algorithm to the non-zero elements. Thus the adaptor provides a significant
-// performance advantage in comparison to a general matrix multiplication, especially for large
+// When multiplying two matrices, at least one of which is triangular, \b Blaze
+can exploit the
+// fact that either the lower or upper part of the matrix contains only default
+elements and
+// restrict the algorithm to the non-zero elements. Thus the adaptor provides a
+significant
+// performance advantage in comparison to a general matrix multiplication,
+especially for large
 // matrices.
 //
-// The second example shows the \c SymmetricMatrix adaptor in a row-major dense matrix/sparse
+// The second example shows the \c SymmetricMatrix adaptor in a row-major dense
+matrix/sparse
 // vector multiplication:
 
    \code
@@ -4710,10 +5619,14 @@
    y = A * x;
    \endcode
 
-// In this example it is not intuitively apparent that using a row-major matrix is not the best
-// possible choice in terms of performance since the computation cannot be vectorized. Choosing
-// a column-major matrix instead, however, would enable a vectorized computation. Therefore
-// \b Blaze exploits the fact that \c A is symmetric, selects the best suited storage order and
+// In this example it is not intuitively apparent that using a row-major matrix
+is not the best
+// possible choice in terms of performance since the computation cannot be
+vectorized. Choosing
+// a column-major matrix instead, however, would enable a vectorized
+computation. Therefore
+// \b Blaze exploits the fact that \c A is symmetric, selects the best suited
+storage order and
 // evaluates the multiplication as
 
    \code
@@ -4722,12 +5635,13 @@
 
 // which significantly increases the performance.
 //
-// \n Previous: \ref matrix_operations &nbsp; &nbsp; Next: \ref adaptors_symmetric_matrices
+// \n Previous: \ref matrix_operations &nbsp; &nbsp; Next: \ref
+adaptors_symmetric_matrices
 */
 //*************************************************************************************************
 
-
-//**Symmetric Matrices*****************************************************************************
+//**Symmetric
+//Matrices*****************************************************************************
 /*!\page adaptors_symmetric_matrices Symmetric Matrices
 //
 // \tableofcontents
@@ -4736,22 +5650,32 @@
 // \n \section adaptors_symmetric_matrices_general Symmetric Matrices
 // <hr>
 //
-// In contrast to general matrices, which have no restriction in their number of rows and columns
-// and whose elements can have any value, symmetric matrices provide the compile time guarantee
-// to be square matrices with pair-wise identical values. Mathematically, this means that a
-// symmetric matrix is always equal to its transpose (\f$ A = A^T \f$) and that all non-diagonal
-// values have an identical counterpart (\f$ a_{ij} == a_{ji} \f$). This symmetry property can
-// be exploited to provide higher efficiency and/or lower memory consumption. Within the \b Blaze
-// library, symmetric matrices are realized by the \ref adaptors_symmetric_matrices_symmetricmatrix
+// In contrast to general matrices, which have no restriction in their number of
+rows and columns
+// and whose elements can have any value, symmetric matrices provide the compile
+time guarantee
+// to be square matrices with pair-wise identical values. Mathematically, this
+means that a
+// symmetric matrix is always equal to its transpose (\f$ A = A^T \f$) and that
+all non-diagonal
+// values have an identical counterpart (\f$ a_{ij} == a_{ji} \f$). This
+symmetry property can
+// be exploited to provide higher efficiency and/or lower memory consumption.
+Within the \b Blaze
+// library, symmetric matrices are realized by the \ref
+adaptors_symmetric_matrices_symmetricmatrix
 // class template.
 //
 //
 // \n \section adaptors_symmetric_matrices_symmetricmatrix SymmetricMatrix
 // <hr>
 //
-// The SymmetricMatrix class template is an adapter for existing dense and sparse matrix types.
-// It inherits the properties and the interface of the given matrix type \c MT and extends it
-// by enforcing the additional invariant of symmetry (i.e. the matrix is always equal to its
+// The SymmetricMatrix class template is an adapter for existing dense and
+sparse matrix types.
+// It inherits the properties and the interface of the given matrix type \c MT
+and extends it
+// by enforcing the additional invariant of symmetry (i.e. the matrix is always
+equal to its
 // transpose \f$ A = A^T \f$). It can be included via the header file
 
    \code
@@ -4765,12 +5689,17 @@
    class SymmetricMatrix;
    \endcode
 
-// \c MT specifies the type of the matrix to be adapted. SymmetricMatrix can be used with any
-// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse matrix type. Note
-// that the given matrix type must be either resizable (as for instance blaze::HybridMatrix or
-// blaze::DynamicMatrix) or must be square at compile time (as for instance blaze::StaticMatrix).
+// \c MT specifies the type of the matrix to be adapted. SymmetricMatrix can be
+used with any
+// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse
+matrix type. Note
+// that the given matrix type must be either resizable (as for instance
+blaze::HybridMatrix or
+// blaze::DynamicMatrix) or must be square at compile time (as for instance
+blaze::StaticMatrix).
 //
-// The following examples give an impression of several possible symmetric matrices:
+// The following examples give an impression of several possible symmetric
+matrices:
 
    \code
    using blaze::unaligned;
@@ -4781,51 +5710,65 @@
    // Definition of a 3x3 row-major dense symmetric matrix with static memory
    blaze::SymmetricMatrix< blaze::StaticMatrix<int,3UL,3UL,rowMajor> > A;
 
-   // Definition of a resizable column-major dense symmetric matrix based on HybridMatrix
-   blaze::SymmetricMatrix< blaze::HybridMatrix<float,4UL,4UL,columnMajor> B;
+   // Definition of a resizable column-major dense symmetric matrix based on
+HybridMatrix blaze::SymmetricMatrix<
+blaze::HybridMatrix<float,4UL,4UL,columnMajor> B;
 
-   // Definition of a resizable row-major dense symmetric matrix based on DynamicMatrix
-   blaze::SymmetricMatrix< blaze::DynamicMatrix<double,rowMajor> > C;
+   // Definition of a resizable row-major dense symmetric matrix based on
+DynamicMatrix blaze::SymmetricMatrix< blaze::DynamicMatrix<double,rowMajor> > C;
 
-   // Definition of a fixed size row-major dense symmetric matrix based on CustomMatrix
-   blaze::SymmetricMatrix< blaze::CustomMatrix<double,unaligned,unpadded,rowMajor> > D;
+   // Definition of a fixed size row-major dense symmetric matrix based on
+CustomMatrix blaze::SymmetricMatrix<
+blaze::CustomMatrix<double,unaligned,unpadded,rowMajor> > D;
 
    // Definition of a compressed row-major single precision symmetric matrix
    blaze::SymmetricMatrix< blaze::CompressedMatrix<float,blaze::rowMajor> > E;
    \endcode
 
-// The storage order of a symmetric matrix is depending on the storage order of the adapted matrix
-// type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e. is specified as
-// blaze::rowMajor), the symmetric matrix will also be a row-major matrix. Otherwise, if the
-// adapted matrix is column-major (i.e. is specified as blaze::columnMajor), the symmetric matrix
+// The storage order of a symmetric matrix is depending on the storage order of
+the adapted matrix
+// type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e.
+is specified as
+// blaze::rowMajor), the symmetric matrix will also be a row-major matrix.
+Otherwise, if the
+// adapted matrix is column-major (i.e. is specified as blaze::columnMajor), the
+symmetric matrix
 // will also be a column-major matrix.
 //
 //
-// \n \section adaptors_symmetric_matrices_special_properties Special Properties of Symmetric Matrices
+// \n \section adaptors_symmetric_matrices_special_properties Special Properties
+of Symmetric Matrices
 // <hr>
 //
-// A symmetric matrix is used exactly like a matrix of the underlying, adapted matrix type \c MT.
-// It also provides (nearly) the same interface as the underlying matrix type. However, there are
+// A symmetric matrix is used exactly like a matrix of the underlying, adapted
+matrix type \c MT.
+// It also provides (nearly) the same interface as the underlying matrix type.
+However, there are
 // some important exceptions resulting from the symmetry constraint:
 //
 //  -# <b>\ref adaptors_symmetric_matrices_square</b>
 //  -# <b>\ref adaptors_symmetric_matrices_symmetry</b>
 //  -# <b>\ref adaptors_symmetric_matrices_initialization</b>
 //
-// \n \subsection adaptors_symmetric_matrices_square Symmetric Matrices Must Always be Square!
+// \n \subsection adaptors_symmetric_matrices_square Symmetric Matrices Must
+Always be Square!
 //
-// In case a resizable matrix is used (as for instance blaze::HybridMatrix, blaze::DynamicMatrix,
-// or blaze::CompressedMatrix), this means that the according constructors, the \c resize() and
-// the \c extend() functions only expect a single parameter, which specifies both the number of
-// rows and columns, instead of two (one for the number of rows and one for the number of columns):
+// In case a resizable matrix is used (as for instance blaze::HybridMatrix,
+blaze::DynamicMatrix,
+// or blaze::CompressedMatrix), this means that the according constructors, the
+\c resize() and
+// the \c extend() functions only expect a single parameter, which specifies
+both the number of
+// rows and columns, instead of two (one for the number of rows and one for the
+number of columns):
 
    \code
    using blaze::DynamicMatrix;
    using blaze::SymmetricMatrix;
    using blaze::rowMajor;
 
-   // Default constructed, default initialized, row-major 3x3 symmetric dynamic matrix
-   SymmetricMatrix< DynamicMatrix<double,rowMajor> > A( 3 );
+   // Default constructed, default initialized, row-major 3x3 symmetric dynamic
+matrix SymmetricMatrix< DynamicMatrix<double,rowMajor> > A( 3 );
 
    // Resizing the matrix to 5x5
    A.resize( 5 );
@@ -4834,7 +5777,8 @@
    A.extend( 2 );
    \endcode
 
-// In case a matrix with a fixed size is used (as for instance blaze::StaticMatrix), the number
+// In case a matrix with a fixed size is used (as for instance
+blaze::StaticMatrix), the number
 // of rows and number of columns must be specified equally:
 
    \code
@@ -4849,10 +5793,13 @@
    SymmetricMatrix< StaticMatrix<int,3UL,4UL,columnMajor> > B;
    \endcode
 
-// \n \subsection adaptors_symmetric_matrices_symmetry The Symmetric Property is Always Enforced!
+// \n \subsection adaptors_symmetric_matrices_symmetry The Symmetric Property is
+Always Enforced!
 //
-// This means that modifying the element \f$ a_{ij} \f$ of a symmetric matrix also modifies its
-// counterpart element \f$ a_{ji} \f$. Also, it is only possible to assign matrices that are
+// This means that modifying the element \f$ a_{ij} \f$ of a symmetric matrix
+also modifies its
+// counterpart element \f$ a_{ji} \f$. Also, it is only possible to assign
+matrices that are
 // symmetric themselves:
 
    \code
@@ -4895,11 +5842,16 @@
    C = D;  // Throws an exception; symmetric invariant would be violated!
    \endcode
 
-// The same restriction also applies to the \c append() function for sparse matrices: Appending
-// the element \f$ a_{ij} \f$ additionally inserts the element \f$ a_{ji} \f$ into the matrix.
-// Despite the additional insertion, the \c append() function still provides the most efficient
-// way to set up a symmetric sparse matrix. In order to achieve the maximum efficiency, the
-// capacity of the individual rows/columns of the matrix should to be specifically prepared with
+// The same restriction also applies to the \c append() function for sparse
+matrices: Appending
+// the element \f$ a_{ij} \f$ additionally inserts the element \f$ a_{ji} \f$
+into the matrix.
+// Despite the additional insertion, the \c append() function still provides the
+most efficient
+// way to set up a symmetric sparse matrix. In order to achieve the maximum
+efficiency, the
+// capacity of the individual rows/columns of the matrix should to be
+specifically prepared with
 // \c reserve() calls:
 
    \code
@@ -4918,14 +5870,16 @@
    A.reserve( 5 );         // Reserving enough space for 5 non-zero elements
    A.reserve( 0, 2 );      // Reserving two non-zero elements in the first row
    A.reserve( 1, 2 );      // Reserving two non-zero elements in the second row
-   A.reserve( 2, 1 );      // Reserving a single non-zero element in the third row
-   A.append( 0, 1, 1.0 );  // Appending the value 1 at position (0,1) and (1,0)
+   A.reserve( 2, 1 );      // Reserving a single non-zero element in the third
+row A.append( 0, 1, 1.0 );  // Appending the value 1 at position (0,1) and (1,0)
    A.append( 1, 1, 2.0 );  // Appending the value 2 at position (1,1)
    A.append( 2, 0, 3.0 );  // Appending the value 3 at position (2,0) and (0,2)
    \endcode
 
-// The symmetry property is also enforced for symmetric custom matrices: In case the given array
-// of elements does not represent a symmetric matrix, a \c std::invalid_argument exception is
+// The symmetry property is also enforced for symmetric custom matrices: In case
+the given array
+// of elements does not represent a symmetric matrix, a \c std::invalid_argument
+exception is
 // thrown:
 
    \code
@@ -4935,7 +5889,8 @@
    using blaze::unpadded;
    using blaze::rowMajor;
 
-   using CustomSymmetric = SymmetricMatrix< CustomMatrix<double,unaligned,unpadded,rowMajor> >;
+   using CustomSymmetric = SymmetricMatrix<
+CustomMatrix<double,unaligned,unpadded,rowMajor> >;
 
    // Creating a 3x3 symmetric custom matrix from a properly initialized array
    double array[9] = { 1.0, 2.0, 4.0,
@@ -4943,13 +5898,16 @@
                        4.0, 5.0, 6.0 };
    CustomSymmetric A( array, 3UL );  // OK
 
-   // Attempt to create a second 3x3 symmetric custom matrix from an uninitialized array
-   CustomSymmetric B( new double[9UL], 3UL, blaze::ArrayDelete() );  // Throws an exception
-   \endcode
+   // Attempt to create a second 3x3 symmetric custom matrix from an
+uninitialized array CustomSymmetric B( new double[9UL], 3UL,
+blaze::ArrayDelete() );  // Throws an exception \endcode
 
-// Finally, the symmetry property is enforced for views (rows, columns, submatrices, ...) on the
-// symmetric matrix. The following example demonstrates that modifying the elements of an entire
-// row of the symmetric matrix also affects the counterpart elements in the according column of
+// Finally, the symmetry property is enforced for views (rows, columns,
+submatrices, ...) on the
+// symmetric matrix. The following example demonstrates that modifying the
+elements of an entire
+// row of the symmetric matrix also affects the counterpart elements in the
+according column of
 // the matrix:
 
    \code
@@ -4980,10 +5938,14 @@
    row( A, 1 ) = 0;
    \endcode
 
-// The next example demonstrates the (compound) assignment to submatrices of symmetric matrices.
-// Since the modification of element \f$ a_{ij} \f$ of a symmetric matrix also modifies the
-// element \f$ a_{ji} \f$, the matrix to be assigned must be structured such that the symmetry
-// of the symmetric matrix is preserved. Otherwise a \c std::invalid_argument exception is
+// The next example demonstrates the (compound) assignment to submatrices of
+symmetric matrices.
+// Since the modification of element \f$ a_{ij} \f$ of a symmetric matrix also
+modifies the
+// element \f$ a_{ji} \f$, the matrix to be assigned must be structured such
+that the symmetry
+// of the symmetric matrix is preserved. Otherwise a \c std::invalid_argument
+exception is
 // thrown:
 
    \code
@@ -5001,7 +5963,8 @@
    //
    DynamicMatrix<int> B{ { 1, 2 }, { 3, 4 }, { 5, 6 } };
 
-   // OK: Assigning B to a submatrix of A1 such that the symmetry can be preserved
+   // OK: Assigning B to a submatrix of A1 such that the symmetry can be
+preserved
    //
    //        ( 0 0 1 2 )
    //   A1 = ( 0 0 3 4 )
@@ -5010,7 +5973,8 @@
    //
    submatrix( A1, 0UL, 2UL, 3UL, 2UL ) = B;  // OK
 
-   // Error: Assigning B to a submatrix of A2 such that the symmetry cannot be preserved!
+   // Error: Assigning B to a submatrix of A2 such that the symmetry cannot be
+preserved!
    //   The elements marked with X cannot be assigned unambiguously!
    //
    //        ( 0 1 2 0 )
@@ -5021,10 +5985,13 @@
    submatrix( A2, 0UL, 1UL, 3UL, 2UL ) = B;  // Assignment throws an exception!
    \endcode
 
-// \n \subsection adaptors_symmetric_matrices_initialization The Elements of a Dense Symmetric Matrix are Always Default Initialized!
+// \n \subsection adaptors_symmetric_matrices_initialization The Elements of a
+Dense Symmetric Matrix are Always Default Initialized!
 //
-// Although this results in a small loss of efficiency (especially in case all default values are
-// overridden afterwards), this property is important since otherwise the symmetric property of
+// Although this results in a small loss of efficiency (especially in case all
+default values are
+// overridden afterwards), this property is important since otherwise the
+symmetric property of
 // dense symmetric matrices could not be guaranteed:
 
    \code
@@ -5038,12 +6005,16 @@
    SymmetricMatrix< DynamicMatrix<int,rowMajor> > B( 5 );
    \endcode
 
-// \n \section adaptors_symmetric_matrices_arithmetic_operations Arithmetic Operations
+// \n \section adaptors_symmetric_matrices_arithmetic_operations Arithmetic
+Operations
 // <hr>
 //
-// A SymmetricMatrix matrix can participate in numerical operations in any way any other dense
-// or sparse matrix can participate. It can also be combined with any other dense or sparse vector
-// or matrix. The following code example gives an impression of the use of SymmetricMatrix within
+// A SymmetricMatrix matrix can participate in numerical operations in any way
+any other dense
+// or sparse matrix can participate. It can also be combined with any other
+dense or sparse vector
+// or matrix. The following code example gives an impression of the use of
+SymmetricMatrix within
 // arithmetic operations:
 
    \code
@@ -5064,9 +6035,11 @@
    SymmetricMatrix< HybridMatrix<float,3UL,3UL,rowMajor> > E;
    SymmetricMatrix< StaticMatrix<float,3UL,3UL,columnMajor> > F;
 
-   E = A + B;     // Matrix addition and assignment to a row-major symmetric matrix (includes runtime check)
-   F = C - D;     // Matrix subtraction and assignment to a column-major symmetric matrix (only compile time check)
-   F = A * D;     // Matrix multiplication between a dense and a sparse matrix (includes runtime check)
+   E = A + B;     // Matrix addition and assignment to a row-major symmetric
+matrix (includes runtime check) F = C - D;     // Matrix subtraction and
+assignment to a column-major symmetric matrix (only compile time check) F = A *
+D;     // Matrix multiplication between a dense and a sparse matrix (includes
+runtime check)
 
    C *= 2.0;      // In-place scaling of matrix C
    E  = 2.0 * B;  // Scaling of matrix B (includes runtime check)
@@ -5077,11 +6050,14 @@
    F *= A * D;    // Multiplication assignment (includes runtime check)
    \endcode
 
-// Note that it is possible to assign any kind of matrix to a symmetric matrix. In case the matrix
-// to be assigned is not symmetric at compile time, a runtime check is performed.
+// Note that it is possible to assign any kind of matrix to a symmetric matrix.
+In case the matrix
+// to be assigned is not symmetric at compile time, a runtime check is
+performed.
 //
 //
-// \n \section adaptors_symmetric_matrices_block_matrices Symmetric Block Matrices
+// \n \section adaptors_symmetric_matrices_block_matrices Symmetric Block
+Matrices
 // <hr>
 //
 // It is also possible to use symmetric block matrices:
@@ -5095,8 +6071,10 @@
    SymmetricMatrix< CompressedMatrix< StaticMatrix<int,3UL,3UL> > > A( 3 );
    \endcode
 
-// Also in this case, the SymmetricMatrix class template enforces the invariant of symmetry and
-// guarantees that a modifications of element \f$ a_{ij} \f$ of the adapted matrix is also
+// Also in this case, the SymmetricMatrix class template enforces the invariant
+of symmetry and
+// guarantees that a modifications of element \f$ a_{ij} \f$ of the adapted
+matrix is also
 // applied to element \f$ a_{ji} \f$:
 
    \code
@@ -5109,24 +6087,35 @@
    A(2,4)(1,1) = -5;
    \endcode
 
-// For more information on block matrices, see the tutorial on \ref block_vectors_and_matrices.
+// For more information on block matrices, see the tutorial on \ref
+block_vectors_and_matrices.
 //
 //
-// \n \section adaptors_symmetric_matrices_performance Performance Considerations
+// \n \section adaptors_symmetric_matrices_performance Performance
+Considerations
 // <hr>
 //
-// When the symmetric property of a matrix is known beforehands using the SymmetricMatrix adaptor
-// instead of a general matrix can be a considerable performance advantage. The \b Blaze library
-// tries to exploit the properties of symmetric matrices whenever possible. However, there are
-// also situations when using a symmetric matrix introduces some overhead. The following examples
-// demonstrate several situations where symmetric matrices can positively or negatively impact
+// When the symmetric property of a matrix is known beforehands using the
+SymmetricMatrix adaptor
+// instead of a general matrix can be a considerable performance advantage. The
+\b Blaze library
+// tries to exploit the properties of symmetric matrices whenever possible.
+However, there are
+// also situations when using a symmetric matrix introduces some overhead. The
+following examples
+// demonstrate several situations where symmetric matrices can positively or
+negatively impact
 // performance.
 //
-// \n \subsection adaptors_symmetric_matrices_matrix_matrix_multiplication Positive Impact: Matrix/Matrix Multiplication
+// \n \subsection adaptors_symmetric_matrices_matrix_matrix_multiplication
+Positive Impact: Matrix/Matrix Multiplication
 //
-// When multiplying two matrices, at least one of which is symmetric, \b Blaze can exploit the fact
-// that \f$ A = A^T \f$ and choose the fastest and most suited combination of storage orders for the
-// multiplication. The following example demonstrates this by means of a dense matrix/sparse matrix
+// When multiplying two matrices, at least one of which is symmetric, \b Blaze
+can exploit the fact
+// that \f$ A = A^T \f$ and choose the fastest and most suited combination of
+storage orders for the
+// multiplication. The following example demonstrates this by means of a dense
+matrix/sparse matrix
 // multiplication:
 
    \code
@@ -5144,18 +6133,22 @@
    C = A * B;
    \endcode
 
-// Intuitively, the chosen combination of a row-major and a column-major matrix is the most suited
+// Intuitively, the chosen combination of a row-major and a column-major matrix
+is the most suited
 // for maximum performance. However, \b Blaze evaluates the multiplication as
 
    \code
    C = A * trans( B );
    \endcode
 
-// which significantly increases the performance since in contrast to the original formulation the
-// optimized form can be vectorized. Therefore, in the context of matrix multiplications, using the
+// which significantly increases the performance since in contrast to the
+original formulation the
+// optimized form can be vectorized. Therefore, in the context of matrix
+multiplications, using the
 // SymmetricMatrix adapter is obviously an advantage.
 //
-// \n \subsection adaptors_symmetric_matrices_matrix_vector_multiplication Positive Impact: Matrix/Vector Multiplication
+// \n \subsection adaptors_symmetric_matrices_matrix_vector_multiplication
+Positive Impact: Matrix/Vector Multiplication
 //
 // A similar optimization is possible in case of matrix/vector multiplications:
 
@@ -5175,10 +6168,14 @@
    y = A * x;
    \endcode
 
-// In this example it is not intuitively apparent that using a row-major matrix is not the best
-// possible choice in terms of performance since the computation cannot be vectorized. Choosing
-// a column-major matrix instead, however, would enable a vectorized computation. Therefore
-// \b Blaze exploits the fact that \c A is symmetric, selects the best suited storage order and
+// In this example it is not intuitively apparent that using a row-major matrix
+is not the best
+// possible choice in terms of performance since the computation cannot be
+vectorized. Choosing
+// a column-major matrix instead, however, would enable a vectorized
+computation. Therefore
+// \b Blaze exploits the fact that \c A is symmetric, selects the best suited
+storage order and
 // evaluates the multiplication as
 
    \code
@@ -5187,9 +6184,11 @@
 
 // which also significantly increases the performance.
 //
-// \n \subsection adaptors_symmetric_matrices_views Positive Impact: Row/Column Views on Column/Row-Major Matrices
+// \n \subsection adaptors_symmetric_matrices_views Positive Impact: Row/Column
+Views on Column/Row-Major Matrices
 //
-// Another example is the optimization of a row view on a column-major symmetric matrix:
+// Another example is the optimization of a row view on a column-major symmetric
+matrix:
 
    \code
    using blaze::DynamicMatrix;
@@ -5200,18 +6199,27 @@
    auto row5 = row( A, 5UL );
    \endcode
 
-// Usually, a row view on a column-major matrix results in a considerable performance decrease in
-// comparison to a row view on a row-major matrix due to the non-contiguous storage of the matrix
-// elements. However, in case of symmetric matrices, \b Blaze instead uses the according column of
-// the matrix, which provides the same performance as if the matrix would be row-major. Note that
-// this also works for column views on row-major matrices, where \b Blaze can use the according
+// Usually, a row view on a column-major matrix results in a considerable
+performance decrease in
+// comparison to a row view on a row-major matrix due to the non-contiguous
+storage of the matrix
+// elements. However, in case of symmetric matrices, \b Blaze instead uses the
+according column of
+// the matrix, which provides the same performance as if the matrix would be
+row-major. Note that
+// this also works for column views on row-major matrices, where \b Blaze can
+use the according
 // row instead of a column in order to provide maximum performance.
 //
-// \n \subsection adaptors_symmetric_matrices_assignment Negative Impact: Assignment of a General Matrix
+// \n \subsection adaptors_symmetric_matrices_assignment Negative Impact:
+Assignment of a General Matrix
 //
-// In contrast to using a symmetric matrix on the right-hand side of an assignment (i.e. for read
-// access), which introduces absolutely no performance penalty, using a symmetric matrix on the
-// left-hand side of an assignment (i.e. for write access) may introduce additional overhead when
+// In contrast to using a symmetric matrix on the right-hand side of an
+assignment (i.e. for read
+// access), which introduces absolutely no performance penalty, using a
+symmetric matrix on the
+// left-hand side of an assignment (i.e. for write access) may introduce
+additional overhead when
 // it is assigned a general matrix, which is not symmetric at compile time:
 
    \code
@@ -5222,32 +6230,40 @@
    DynamicMatrix<double> B;
 
    B = A;  // Only read-access to the symmetric matrix; no performance penalty
-   C = A;  // Assignment of a symmetric matrix to another symmetric matrix; no runtime overhead
-   C = B;  // Assignment of a general matrix to a symmetric matrix; some runtime overhead
-   \endcode
+   C = A;  // Assignment of a symmetric matrix to another symmetric matrix; no
+runtime overhead C = B;  // Assignment of a general matrix to a symmetric
+matrix; some runtime overhead \endcode
 
-// When assigning a general, potentially not symmetric matrix to a symmetric matrix it is necessary
-// to check whether the matrix is symmetric at runtime in order to guarantee the symmetry property
-// of the symmetric matrix. In case it turns out to be symmetric, it is assigned as efficiently as
-// possible, if it is not, an exception is thrown. In order to prevent this runtime overhead it is
-// therefore generally advisable to assign symmetric matrices to other symmetric matrices.\n
-// In this context it is especially noteworthy that in contrast to additions and subtractions the
-// multiplication of two symmetric matrices does not necessarily result in another symmetric matrix:
+// When assigning a general, potentially not symmetric matrix to a symmetric
+matrix it is necessary
+// to check whether the matrix is symmetric at runtime in order to guarantee the
+symmetry property
+// of the symmetric matrix. In case it turns out to be symmetric, it is assigned
+as efficiently as
+// possible, if it is not, an exception is thrown. In order to prevent this
+runtime overhead it is
+// therefore generally advisable to assign symmetric matrices to other symmetric
+matrices.\n
+// In this context it is especially noteworthy that in contrast to additions and
+subtractions the
+// multiplication of two symmetric matrices does not necessarily result in
+another symmetric matrix:
 
    \code
    SymmetricMatrix< DynamicMatrix<double> > A, B, C;
 
    C = A + B;  // Results in a symmetric matrix; no runtime overhead
    C = A - B;  // Results in a symmetric matrix; no runtime overhead
-   C = A * B;  // Is not guaranteed to result in a symmetric matrix; some runtime overhead
-   \endcode
+   C = A * B;  // Is not guaranteed to result in a symmetric matrix; some
+runtime overhead \endcode
 
-// \n Previous: \ref adaptors &nbsp; &nbsp; Next: \ref adaptors_hermitian_matrices
+// \n Previous: \ref adaptors &nbsp; &nbsp; Next: \ref
+adaptors_hermitian_matrices
 */
 //*************************************************************************************************
 
-
-//**Hermitian Matrices*****************************************************************************
+//**Hermitian
+//Matrices*****************************************************************************
 /*!\page adaptors_hermitian_matrices Hermitian Matrices
 //
 // \tableofcontents
@@ -5256,22 +6272,32 @@
 // \n \section adaptors_hermitian_matrices_general Hermitian Matrices
 // <hr>
 //
-// In addition to symmetric matrices, \b Blaze also provides an adaptor for Hermitian matrices.
-// Hermitian matrices provide the compile time guarantee to be square matrices with pair-wise
-// conjugate complex values. Mathematically, this means that an Hermitian matrix is always equal
-// to its conjugate transpose (\f$ A = \overline{A^T} \f$) and that all non-diagonal values have
-// a complex conjugate counterpart (\f$ a_{ij} == \overline{a_{ji}} \f$). Within the \b Blaze
-// library, Hermitian matrices are realized by the \ref adaptors_hermitian_matrices_hermitianmatrix
+// In addition to symmetric matrices, \b Blaze also provides an adaptor for
+Hermitian matrices.
+// Hermitian matrices provide the compile time guarantee to be square matrices
+with pair-wise
+// conjugate complex values. Mathematically, this means that an Hermitian matrix
+is always equal
+// to its conjugate transpose (\f$ A = \overline{A^T} \f$) and that all
+non-diagonal values have
+// a complex conjugate counterpart (\f$ a_{ij} == \overline{a_{ji}} \f$). Within
+the \b Blaze
+// library, Hermitian matrices are realized by the \ref
+adaptors_hermitian_matrices_hermitianmatrix
 // class template.
 //
 //
 // \n \section adaptors_hermitian_matrices_hermitianmatrix HermitianMatrix
 // <hr>
 //
-// The HermitianMatrix class template is an adapter for existing dense and sparse matrix types.
-// It inherits the properties and the interface of the given matrix type \c MT and extends it by
-// enforcing the additional invariant of Hermitian symmetry (i.e. the matrix is always equal to
-// its conjugate transpose \f$ A = \overline{A^T} \f$). It can be included via the header file
+// The HermitianMatrix class template is an adapter for existing dense and
+sparse matrix types.
+// It inherits the properties and the interface of the given matrix type \c MT
+and extends it by
+// enforcing the additional invariant of Hermitian symmetry (i.e. the matrix is
+always equal to
+// its conjugate transpose \f$ A = \overline{A^T} \f$). It can be included via
+the header file
 
    \code
    #include <blaze/math/HermitianMatrix.h>
@@ -5284,14 +6310,20 @@
    class HermitianMatrix;
    \endcode
 
-// \c MT specifies the type of the matrix to be adapted. HermitianMatrix can be used with any
-// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse matrix type. Also,
-// the given matrix type must have numeric element types (i.e. all integral types except \c bool,
-// floating point and complex types). Note that the given matrix type must be either resizable (as
-// for instance blaze::HybridMatrix or blaze::DynamicMatrix) or must be square at compile time (as
+// \c MT specifies the type of the matrix to be adapted. HermitianMatrix can be
+used with any
+// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse
+matrix type. Also,
+// the given matrix type must have numeric element types (i.e. all integral
+types except \c bool,
+// floating point and complex types). Note that the given matrix type must be
+either resizable (as
+// for instance blaze::HybridMatrix or blaze::DynamicMatrix) or must be square
+at compile time (as
 // for instance blaze::StaticMatrix).
 //
-// The following examples give an impression of several possible Hermitian matrices:
+// The following examples give an impression of several possible Hermitian
+matrices:
 
    \code
    using blaze::unaligned;
@@ -5302,89 +6334,118 @@
    // Definition of a 3x3 row-major dense Hermitian matrix with static memory
    blaze::HermitianMatrix< blaze::StaticMatrix<int,3UL,3UL,rowMajor> > A;
 
-   // Definition of a resizable column-major dense Hermitian matrix based on HybridMatrix
-   blaze::HermitianMatrix< blaze::HybridMatrix<float,4UL,4UL,columnMajor> B;
+   // Definition of a resizable column-major dense Hermitian matrix based on
+HybridMatrix blaze::HermitianMatrix<
+blaze::HybridMatrix<float,4UL,4UL,columnMajor> B;
 
-   // Definition of a resizable row-major dense Hermitian matrix based on DynamicMatrix
-   blaze::HermitianMatrix< blaze::DynamicMatrix<std::complex<double>,rowMajor> > C;
+   // Definition of a resizable row-major dense Hermitian matrix based on
+DynamicMatrix blaze::HermitianMatrix<
+blaze::DynamicMatrix<std::complex<double>,rowMajor> > C;
 
-   // Definition of a fixed size row-major dense Hermitian matrix based on CustomMatrix
-   blaze::HermitianMatrix< blaze::CustomMatrix<double,unaligned,unpadded,rowMajor> > D;
+   // Definition of a fixed size row-major dense Hermitian matrix based on
+CustomMatrix blaze::HermitianMatrix<
+blaze::CustomMatrix<double,unaligned,unpadded,rowMajor> > D;
 
-   // Definition of a compressed row-major single precision complex Hermitian matrix
-   blaze::HermitianMatrix< blaze::CompressedMatrix<std::complex<float>,rowMajor> > E;
-   \endcode
+   // Definition of a compressed row-major single precision complex Hermitian
+matrix blaze::HermitianMatrix<
+blaze::CompressedMatrix<std::complex<float>,rowMajor> > E; \endcode
 
-// The storage order of a Hermitian matrix is depending on the storage order of the adapted matrix
-// type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e. is specified as
-// blaze::rowMajor), the Hermitian matrix will also be a row-major matrix. Otherwise, if the
-// adapted matrix is column-major (i.e. is specified as blaze::columnMajor), the Hermitian matrix
+// The storage order of a Hermitian matrix is depending on the storage order of
+the adapted matrix
+// type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e.
+is specified as
+// blaze::rowMajor), the Hermitian matrix will also be a row-major matrix.
+Otherwise, if the
+// adapted matrix is column-major (i.e. is specified as blaze::columnMajor), the
+Hermitian matrix
 // will also be a column-major matrix.
 //
 //
-// \n \section adaptors_hermitian_matrices_vs_symmetric_matrices Hermitian Matrices vs. Symmetric Matrices
+// \n \section adaptors_hermitian_matrices_vs_symmetric_matrices Hermitian
+Matrices vs. Symmetric Matrices
 //
-// The blaze::HermitianMatrix adaptor and the blaze::SymmetricMatrix adaptor share several traits.
-// However, there are a couple of differences, both from a mathematical point of view as well as
+// The blaze::HermitianMatrix adaptor and the blaze::SymmetricMatrix adaptor
+share several traits.
+// However, there are a couple of differences, both from a mathematical point of
+view as well as
 // from an implementation point of view.
 //
-// From a mathematical point of view, a matrix is called symmetric when it is equal to its
-// transpose (\f$ A = A^T \f$) and it is called Hermitian when it is equal to its conjugate
-// transpose (\f$ A = \overline{A^T} \f$). For matrices of real values, however, these two
-// conditions coincide, which means that symmetric matrices of real values are also Hermitian
+// From a mathematical point of view, a matrix is called symmetric when it is
+equal to its
+// transpose (\f$ A = A^T \f$) and it is called Hermitian when it is equal to
+its conjugate
+// transpose (\f$ A = \overline{A^T} \f$). For matrices of real values, however,
+these two
+// conditions coincide, which means that symmetric matrices of real values are
+also Hermitian
 // and Hermitian matrices of real values are also symmetric.
 //
-// From an implementation point of view, \b Blaze restricts Hermitian matrices to numeric data
-// types (i.e. all integral types except \c bool, floating point and complex types), whereas
-// symmetric matrices can also be block matrices (i.e. can have vector or matrix elements).
-// For built-in element types, the HermitianMatrix adaptor behaves exactly like the according
-// SymmetricMatrix implementation. For complex element types, however, the Hermitian property
+// From an implementation point of view, \b Blaze restricts Hermitian matrices
+to numeric data
+// types (i.e. all integral types except \c bool, floating point and complex
+types), whereas
+// symmetric matrices can also be block matrices (i.e. can have vector or matrix
+elements).
+// For built-in element types, the HermitianMatrix adaptor behaves exactly like
+the according
+// SymmetricMatrix implementation. For complex element types, however, the
+Hermitian property
 // is enforced (see also \ref adaptors_hermitian_matrices_hermitian).
 
-	\code
-	using blaze::DynamicMatrix;
-	using blaze::DynamicVector;
-	using blaze::HermitianMatrix;
-	using blaze::SymmetricMatrix;
+        \code
+        using blaze::DynamicMatrix;
+        using blaze::DynamicVector;
+        using blaze::HermitianMatrix;
+        using blaze::SymmetricMatrix;
 
-	// The following two matrices provide an identical experience (including performance)
-	HermitianMatrix< DynamicMatrix<double> > A;  // Both Hermitian and symmetric
-	SymmetricMatrix< DynamicMatrix<double> > B;  // Both Hermitian and symmetric
+        // The following two matrices provide an identical experience (including
+performance) HermitianMatrix< DynamicMatrix<double> > A;  // Both Hermitian and
+symmetric SymmetricMatrix< DynamicMatrix<double> > B;  // Both Hermitian and
+symmetric
 
-	// The following two matrices will behave differently
-	HermitianMatrix< DynamicMatrix< complex<double> > > C;  // Only Hermitian
-	SymmetricMatrix< DynamicMatrix< complex<double> > > D;  // Only symmetric
+        // The following two matrices will behave differently
+        HermitianMatrix< DynamicMatrix< complex<double> > > C;  // Only
+Hermitian SymmetricMatrix< DynamicMatrix< complex<double> > > D;  // Only
+symmetric
 
-	// Hermitian block matrices are not allowed
-	HermitianMatrix< DynamicMatrix< DynamicVector<double> > > E;  // Compilation error!
-	SymmetricMatrix< DynamicMatrix< DynamicVector<double> > > F;  // Symmetric block matrix
-	\endcode
+        // Hermitian block matrices are not allowed
+        HermitianMatrix< DynamicMatrix< DynamicVector<double> > > E;  //
+Compilation error! SymmetricMatrix< DynamicMatrix< DynamicVector<double> > > F;
+// Symmetric block matrix \endcode
 
-// \n \section adaptors_hermitian_matrices_special_properties Special Properties of Hermitian Matrices
+// \n \section adaptors_hermitian_matrices_special_properties Special Properties
+of Hermitian Matrices
 // <hr>
 //
-// A Hermitian matrix is used exactly like a matrix of the underlying, adapted matrix type \c MT.
-// It also provides (nearly) the same interface as the underlying matrix type. However, there are
+// A Hermitian matrix is used exactly like a matrix of the underlying, adapted
+matrix type \c MT.
+// It also provides (nearly) the same interface as the underlying matrix type.
+However, there are
 // some important exceptions resulting from the Hermitian symmetry constraint:
 //
 //  -# <b>\ref adaptors_hermitian_matrices_square</b>
 //  -# <b>\ref adaptors_hermitian_matrices_hermitian</b>
 //  -# <b>\ref adaptors_hermitian_matrices_initialization</b>
 //
-// \n \subsection adaptors_hermitian_matrices_square Hermitian Matrices Must Always be Square!
+// \n \subsection adaptors_hermitian_matrices_square Hermitian Matrices Must
+Always be Square!
 //
-// In case a resizable matrix is used (as for instance blaze::HybridMatrix, blaze::DynamicMatrix,
-// or blaze::CompressedMatrix), this means that the according constructors, the \c resize() and
-// the \c extend() functions only expect a single parameter, which specifies both the number of
-// rows and columns, instead of two (one for the number of rows and one for the number of columns):
+// In case a resizable matrix is used (as for instance blaze::HybridMatrix,
+blaze::DynamicMatrix,
+// or blaze::CompressedMatrix), this means that the according constructors, the
+\c resize() and
+// the \c extend() functions only expect a single parameter, which specifies
+both the number of
+// rows and columns, instead of two (one for the number of rows and one for the
+number of columns):
 
    \code
    using blaze::DynamicMatrix;
    using blaze::HermitianMatrix;
    using blaze::rowMajor;
 
-   // Default constructed, default initialized, row-major 3x3 Hermitian dynamic matrix
-   HermitianMatrix< DynamicMatrix<std::complex<double>,rowMajor> > A( 3 );
+   // Default constructed, default initialized, row-major 3x3 Hermitian dynamic
+matrix HermitianMatrix< DynamicMatrix<std::complex<double>,rowMajor> > A( 3 );
 
    // Resizing the matrix to 5x5
    A.resize( 5 );
@@ -5393,7 +6454,8 @@
    A.extend( 2 );
    \endcode
 
-// In case a matrix with a fixed size is used (as for instance blaze::StaticMatrix), the number
+// In case a matrix with a fixed size is used (as for instance
+blaze::StaticMatrix), the number
 // of rows and number of columns must be specified equally:
 
    \code
@@ -5408,15 +6470,20 @@
    HermitianMatrix< StaticMatrix<std::complex<float>,3UL,4UL,columnMajor> > B;
    \endcode
 
-// \n \subsection adaptors_hermitian_matrices_hermitian The Hermitian Property is Always Enforced!
+// \n \subsection adaptors_hermitian_matrices_hermitian The Hermitian Property
+is Always Enforced!
 //
-// This means that the following properties of a Hermitian matrix are always guaranteed:
+// This means that the following properties of a Hermitian matrix are always
+guaranteed:
 //
 //  - The diagonal elements are real numbers, i.e. the imaginary part is zero
-//  - Element \f$ a_{ij} \f$ is always the complex conjugate of element \f$ a_{ji} \f$
+//  - Element \f$ a_{ij} \f$ is always the complex conjugate of element \f$
+a_{ji} \f$
 //
-// Thus modifying the element \f$ a_{ij} \f$ of a Hermitian matrix also modifies its
-// counterpart element \f$ a_{ji} \f$. Also, it is only possible to assign matrices that
+// Thus modifying the element \f$ a_{ij} \f$ of a Hermitian matrix also modifies
+its
+// counterpart element \f$ a_{ji} \f$. Also, it is only possible to assign
+matrices that
 // are Hermitian themselves:
 
    \code
@@ -5426,66 +6493,74 @@
    using blaze::HermitianMatrix;
    using blaze::rowMajor;
 
-	using cplx = std::complex<double>;
+        using cplx = std::complex<double>;
 
    // Default constructed, row-major 3x3 Hermitian compressed matrix
    HermitianMatrix< CompressedMatrix<cplx,rowMajor> > A( 3 );
 
    // Initializing the matrix via the function call operator
-	//
-	//  ( (1, 0) (0,0) (2,1) )
-	//  ( (0, 0) (0,0) (0,0) )
-	//  ( (2,-1) (0,0) (0,0) )
+        //
+        //  ( (1, 0) (0,0) (2,1) )
+        //  ( (0, 0) (0,0) (0,0) )
+        //  ( (2,-1) (0,0) (0,0) )
    //
    A(0,0) = cplx( 1.0, 0.0 );  // Initialization of the diagonal element (0,0)
    A(0,2) = cplx( 2.0, 1.0 );  // Initialization of the elements (0,2) and (2,0)
 
    // Inserting three more elements via the insert() function
-	//
-	//  ( (1,-3) (0,0) (2, 1) )
-	//  ( (0, 0) (2,0) (4,-2) )
-	//  ( (2,-1) (4,2) (0, 0) )
+        //
+        //  ( (1,-3) (0,0) (2, 1) )
+        //  ( (0, 0) (2,0) (4,-2) )
+        //  ( (2,-1) (4,2) (0, 0) )
    //
    A.insert( 1, 1, cplx( 2.0,  0.0 ) );  // Inserting the diagonal element (1,1)
-   A.insert( 1, 2, cplx( 4.0, -2.0 ) );  // Inserting the elements (1,2) and (2,1)
+   A.insert( 1, 2, cplx( 4.0, -2.0 ) );  // Inserting the elements (1,2) and
+(2,1)
 
    // Access via a non-const iterator
-	//
-	//  ( (1,-3) (8,1) (2, 1) )
-	//  ( (8,-1) (2,0) (4,-2) )
-	//  ( (2,-1) (4,2) (0, 0) )
+        //
+        //  ( (1,-3) (8,1) (2, 1) )
+        //  ( (8,-1) (2,0) (4,-2) )
+        //  ( (2,-1) (4,2) (0, 0) )
    //
    *A.begin(1UL) = cplx( 8.0, -1.0 );  // Modifies both elements (1,0) and (0,1)
 
    // Erasing elements via the erase() function
-	//
-	//  ( (0, 0) (8,1) (0, 0) )
-	//  ( (8,-1) (2,0) (4,-2) )
-	//  ( (0, 0) (4,2) (0, 0) )
+        //
+        //  ( (0, 0) (8,1) (0, 0) )
+        //  ( (8,-1) (2,0) (4,-2) )
+        //  ( (0, 0) (4,2) (0, 0) )
    //
    A.erase( 0, 0 );  // Erasing the diagonal element (0,0)
    A.erase( 0, 2 );  // Erasing the elements (0,2) and (2,0)
 
    // Construction from a Hermitian dense matrix
-   StaticMatrix<cplx,3UL,3UL> B{ { cplx(  3.0,  0.0 ), cplx(  8.0, 2.0 ), cplx( -2.0,  2.0 ) },
-                                 { cplx(  8.0,  1.0 ), cplx(  0.0, 0.0 ), cplx( -1.0, -1.0 ) },
-                                 { cplx( -2.0, -2.0 ), cplx( -1.0, 1.0 ), cplx(  4.0,  0.0 ) } };
+   StaticMatrix<cplx,3UL,3UL> B{ { cplx(  3.0,  0.0 ), cplx(  8.0, 2.0 ), cplx(
+-2.0,  2.0 ) }, { cplx(  8.0,  1.0 ), cplx(  0.0, 0.0 ), cplx( -1.0, -1.0 ) },
+                                 { cplx( -2.0, -2.0 ), cplx( -1.0, 1.0 ),
+cplx(  4.0,  0.0 ) } };
 
    HermitianMatrix< DynamicMatrix<double,rowMajor> > C( B );  // OK
 
    // Assignment of a non-Hermitian dense matrix
-	StaticMatrix<cplx,3UL,3UL> D{ { cplx(  3.0, 0.0 ), cplx(  7.0, 2.0 ), cplx( 3.0, 2.0 ) },
-                                 { cplx(  8.0, 1.0 ), cplx(  0.0, 0.0 ), cplx( 6.0, 4.0 ) },
-                                 { cplx( -2.0, 2.0 ), cplx( -1.0, 1.0 ), cplx( 4.0, 0.0 ) } };
+        StaticMatrix<cplx,3UL,3UL> D{ { cplx(  3.0, 0.0 ), cplx(  7.0, 2.0 ),
+cplx( 3.0, 2.0 ) }, { cplx(  8.0, 1.0 ), cplx(  0.0, 0.0 ), cplx( 6.0, 4.0 ) },
+                                 { cplx( -2.0, 2.0 ), cplx( -1.0, 1.0 ),
+cplx( 4.0, 0.0 ) } };
 
    C = D;  // Throws an exception; Hermitian invariant would be violated!
    \endcode
 
-// The same restriction also applies to the \c append() function for sparse matrices: Appending
-// the element \f$ a_{ij} \f$ additionally inserts the element \f$ a_{ji} \f$ into the matrix.
-// Despite the additional insertion, the \c append() function still provides the most efficient
-// way to set up a Hermitian sparse matrix. In order to achieve the maximum efficiency, the
-// capacity of the individual rows/columns of the matrix should to be specifically prepared with
+// The same restriction also applies to the \c append() function for sparse
+matrices: Appending
+// the element \f$ a_{ij} \f$ additionally inserts the element \f$ a_{ji} \f$
+into the matrix.
+// Despite the additional insertion, the \c append() function still provides the
+most efficient
+// way to set up a Hermitian sparse matrix. In order to achieve the maximum
+efficiency, the
+// capacity of the individual rows/columns of the matrix should to be
+specifically prepared with
 // \c reserve() calls:
 
    \code
@@ -5493,7 +6568,7 @@
    using blaze::HermitianMatrix;
    using blaze::rowMajor;
 
-	using cplx = std::complex<double>;
+        using cplx = std::complex<double>;
 
    // Setup of the Hermitian matrix
    //
@@ -5506,15 +6581,18 @@
    A.reserve( 5 );         // Reserving enough space for 5 non-zero elements
    A.reserve( 0, 2 );      // Reserving two non-zero elements in the first row
    A.reserve( 1, 2 );      // Reserving two non-zero elements in the second row
-   A.reserve( 2, 1 );      // Reserving a single non-zero element in the third row
+   A.reserve( 2, 1 );      // Reserving a single non-zero element in the third
+row
 
-   A.append( 0, 1, cplx( 1.0, 2.0 ) );  // Appending an element at position (0,1) and (1,0)
-   A.append( 1, 1, cplx( 2.0, 0.0 ) );  // Appending an element at position (1,1)
-   A.append( 2, 0, cplx( 3.0, 4.0 ) );  // Appending an element at position (2,0) and (0,2)
-   \endcode
+   A.append( 0, 1, cplx( 1.0, 2.0 ) );  // Appending an element at position
+(0,1) and (1,0) A.append( 1, 1, cplx( 2.0, 0.0 ) );  // Appending an element at
+position (1,1) A.append( 2, 0, cplx( 3.0, 4.0 ) );  // Appending an element at
+position (2,0) and (0,2) \endcode
 
-// The Hermitian property is also enforced for Hermitian custom matrices: In case the given array
-// of elements does not represent a Hermitian matrix, a \c std::invalid_argument exception is
+// The Hermitian property is also enforced for Hermitian custom matrices: In
+case the given array
+// of elements does not represent a Hermitian matrix, a \c std::invalid_argument
+exception is
 // thrown:
 
    \code
@@ -5524,7 +6602,8 @@
    using blaze::unpadded;
    using blaze::rowMajor;
 
-   using CustomHermitian = HermitianMatrix< CustomMatrix<double,unaligned,unpadded,rowMajor> >;
+   using CustomHermitian = HermitianMatrix<
+CustomMatrix<double,unaligned,unpadded,rowMajor> >;
 
    // Creating a 3x3 Hermitian custom matrix from a properly initialized array
    double array[9] = { 1.0, 2.0, 4.0,
@@ -5532,20 +6611,23 @@
                        4.0, 5.0, 6.0 };
    CustomHermitian A( array, 3UL );  // OK
 
-   // Attempt to create a second 3x3 Hermitian custom matrix from an uninitialized array
-   CustomHermitian B( new double[9UL], 3UL, blaze::ArrayDelete() );  // Throws an exception
-   \endcode
+   // Attempt to create a second 3x3 Hermitian custom matrix from an
+uninitialized array CustomHermitian B( new double[9UL], 3UL,
+blaze::ArrayDelete() );  // Throws an exception \endcode
 
-// Finally, the Hermitian property is enforced for views (rows, columns, submatrices, ...) on the
-// Hermitian matrix. The following example demonstrates that modifying the elements of an entire
-// row of the Hermitian matrix also affects the counterpart elements in the according column of
+// Finally, the Hermitian property is enforced for views (rows, columns,
+submatrices, ...) on the
+// Hermitian matrix. The following example demonstrates that modifying the
+elements of an entire
+// row of the Hermitian matrix also affects the counterpart elements in the
+according column of
 // the matrix:
 
    \code
    using blaze::DynamicMatrix;
    using blaze::HermtianMatrix;
 
-	using cplx = std::complex<double>;
+        using cplx = std::complex<double>;
 
    // Setup of the Hermitian matrix
    //
@@ -5571,16 +6653,20 @@
    row( A, 1 ) = cplx( 0.0, 0.0 );
    \endcode
 
-// The next example demonstrates the (compound) assignment to submatrices of Hermitian matrices.
-// Since the modification of element \f$ a_{ij} \f$ of a Hermitian matrix also modifies the
-// element \f$ a_{ji} \f$, the matrix to be assigned must be structured such that the Hermitian
-// symmetry of the matrix is preserved. Otherwise a \c std::invalid_argument exception is thrown:
+// The next example demonstrates the (compound) assignment to submatrices of
+Hermitian matrices.
+// Since the modification of element \f$ a_{ij} \f$ of a Hermitian matrix also
+modifies the
+// element \f$ a_{ji} \f$, the matrix to be assigned must be structured such
+that the Hermitian
+// symmetry of the matrix is preserved. Otherwise a \c std::invalid_argument
+exception is thrown:
 
    \code
    using blaze::DynamicMatrix;
    using blaze::HermitianMatrix;
 
-	std::complex<double>  cplx;
+        std::complex<double>  cplx;
 
    // Setup of two default 4x4 Hermitian matrices
    HermitianMatrix< DynamicMatrix<cplx> > A1( 4 ), A2( 4 );
@@ -5599,7 +6685,8 @@
    B(2,1) = cplx( 5.0,  0.0 );
    B(2,2) = cplx( 6.0,  7.0 );
 
-   // OK: Assigning B to a submatrix of A1 such that the Hermitian property is preserved
+   // OK: Assigning B to a submatrix of A1 such that the Hermitian property is
+preserved
    //
    //        ( (0, 0) (0, 0) (1,-1) (2, 5) )
    //   A1 = ( (0, 0) (0, 0) (3, 0) (4,-6) )
@@ -5608,7 +6695,8 @@
    //
    submatrix( A1, 0UL, 2UL, 3UL, 2UL ) = B;  // OK
 
-   // Error: Assigning B to a submatrix of A2 such that the Hermitian property isn't preserved!
+   // Error: Assigning B to a submatrix of A2 such that the Hermitian property
+isn't preserved!
    //   The elements marked with X cannot be assigned unambiguously!
    //
    //        ( (0, 0) (1,-1) (2,5) (0,0) )
@@ -5619,10 +6707,13 @@
    submatrix( A2, 0UL, 1UL, 3UL, 2UL ) = B;  // Assignment throws an exception!
    \endcode
 
-// \n \subsection adaptors_hermitian_matrices_initialization The Elements of a Dense Hermitian Matrix are Always Default Initialized!
+// \n \subsection adaptors_hermitian_matrices_initialization The Elements of a
+Dense Hermitian Matrix are Always Default Initialized!
 //
-// Although this results in a small loss of efficiency (especially in case all default values are
-// overridden afterwards), this property is important since otherwise the Hermitian property of
+// Although this results in a small loss of efficiency (especially in case all
+default values are
+// overridden afterwards), this property is important since otherwise the
+Hermitian property of
 // dense Hermitian matrices could not be guaranteed:
 
    \code
@@ -5636,12 +6727,16 @@
    HermitianMatrix< DynamicMatrix<int,rowMajor> > B( 5 );
    \endcode
 
-// \n \section adaptors_hermitian_matrices_arithmetic_operations Arithmetic Operations
+// \n \section adaptors_hermitian_matrices_arithmetic_operations Arithmetic
+Operations
 // <hr>
 //
-// A HermitianMatrix can be used within all numerical operations in any way any other dense or
-// sparse matrix can be used. It can also be combined with any other dense or sparse vector or
-// matrix. The following code example gives an impression of the use of HermitianMatrix within
+// A HermitianMatrix can be used within all numerical operations in any way any
+other dense or
+// sparse matrix can be used. It can also be combined with any other dense or
+sparse vector or
+// matrix. The following code example gives an impression of the use of
+HermitianMatrix within
 // arithmetic operations:
 
    \code
@@ -5653,7 +6748,7 @@
    using blaze::rowMajor;
    using blaze::columnMajor;
 
-	using cplx = complex<float>;
+        using cplx = complex<float>;
 
    DynamicMatrix<cplx,rowMajor> A( 3, 3 );
    CompressedMatrix<cplx,rowMajor> B( 3, 3 );
@@ -5664,9 +6759,11 @@
    HermitianMatrix< HybridMatrix<cplx,3UL,3UL,rowMajor> > E;
    HermitianMatrix< StaticMatrix<cplx,3UL,3UL,columnMajor> > F;
 
-   E = A + B;     // Matrix addition and assignment to a row-major Hermitian matrix (includes runtime check)
-   F = C - D;     // Matrix subtraction and assignment to a column-major Hermitian matrix (only compile time check)
-   F = A * D;     // Matrix multiplication between a dense and a sparse matrix (includes runtime check)
+   E = A + B;     // Matrix addition and assignment to a row-major Hermitian
+matrix (includes runtime check) F = C - D;     // Matrix subtraction and
+assignment to a column-major Hermitian matrix (only compile time check) F = A *
+D;     // Matrix multiplication between a dense and a sparse matrix (includes
+runtime check)
 
    C *= 2.0;      // In-place scaling of matrix C
    E  = 2.0 * B;  // Scaling of matrix B (includes runtime check)
@@ -5677,26 +6774,39 @@
    F *= A * D;    // Multiplication assignment (includes runtime check)
    \endcode
 
-// Note that it is possible to assign any kind of matrix to a Hermitian matrix. In case the matrix
-// to be assigned is not Hermitian at compile time, a runtime check is performed.
+// Note that it is possible to assign any kind of matrix to a Hermitian matrix.
+In case the matrix
+// to be assigned is not Hermitian at compile time, a runtime check is
+performed.
 //
 //
-// \n \section adaptors_hermitian_matrices_performance Performance Considerations
+// \n \section adaptors_hermitian_matrices_performance Performance
+Considerations
 // <hr>
 //
-// When the Hermitian property of a matrix is known beforehands using the HermitianMatrix adaptor
-// instead of a general matrix can be a considerable performance advantage. This is particularly
-// true in case the Hermitian matrix is also symmetric (i.e. has built-in element types). The
-// \b Blaze library tries to exploit the properties of Hermitian (symmetric) matrices whenever
-// possible. However, there are also situations when using a Hermitian matrix introduces some
-// overhead. The following examples demonstrate several situations where Hermitian matrices can
+// When the Hermitian property of a matrix is known beforehands using the
+HermitianMatrix adaptor
+// instead of a general matrix can be a considerable performance advantage. This
+is particularly
+// true in case the Hermitian matrix is also symmetric (i.e. has built-in
+element types). The
+// \b Blaze library tries to exploit the properties of Hermitian (symmetric)
+matrices whenever
+// possible. However, there are also situations when using a Hermitian matrix
+introduces some
+// overhead. The following examples demonstrate several situations where
+Hermitian matrices can
 // positively or negatively impact performance.
 //
-// \n \subsection adaptors_hermitian_matrices_matrix_matrix_multiplication Positive Impact: Matrix/Matrix Multiplication
+// \n \subsection adaptors_hermitian_matrices_matrix_matrix_multiplication
+Positive Impact: Matrix/Matrix Multiplication
 //
-// When multiplying two matrices, at least one of which is symmetric, \b Blaze can exploit the fact
-// that \f$ A = A^T \f$ and choose the fastest and most suited combination of storage orders for the
-// multiplication. The following example demonstrates this by means of a dense matrix/sparse matrix
+// When multiplying two matrices, at least one of which is symmetric, \b Blaze
+can exploit the fact
+// that \f$ A = A^T \f$ and choose the fastest and most suited combination of
+storage orders for the
+// multiplication. The following example demonstrates this by means of a dense
+matrix/sparse matrix
 // multiplication:
 
    \code
@@ -5705,27 +6815,31 @@
    using blaze::rowMajor;
    using blaze::columnMajor;
 
-   HermitianMatrix< DynamicMatrix<double,rowMajor> > A;        // Both Hermitian and symmetric
-   HermitianMatrix< CompressedMatrix<double,columnMajor> > B;  // Both Hermitian and symmetric
-   DynamicMatrix<double,columnMajor> C;
+   HermitianMatrix< DynamicMatrix<double,rowMajor> > A;        // Both Hermitian
+and symmetric HermitianMatrix< CompressedMatrix<double,columnMajor> > B;  //
+Both Hermitian and symmetric DynamicMatrix<double,columnMajor> C;
 
    // ... Resizing and initialization
 
    C = A * B;
    \endcode
 
-// Intuitively, the chosen combination of a row-major and a column-major matrix is the most suited
+// Intuitively, the chosen combination of a row-major and a column-major matrix
+is the most suited
 // for maximum performance. However, \b Blaze evaluates the multiplication as
 
    \code
    C = A * trans( B );
    \endcode
 
-// which significantly increases the performance since in contrast to the original formulation the
-// optimized form can be vectorized. Therefore, in the context of matrix multiplications, using a
+// which significantly increases the performance since in contrast to the
+original formulation the
+// optimized form can be vectorized. Therefore, in the context of matrix
+multiplications, using a
 // symmetric matrix is obviously an advantage.
 //
-// \n \subsection adaptors_hermitian_matrices_matrix_vector_multiplication Positive Impact: Matrix/Vector Multiplication
+// \n \subsection adaptors_hermitian_matrices_matrix_vector_multiplication
+Positive Impact: Matrix/Vector Multiplication
 //
 // A similar optimization is possible in case of matrix/vector multiplications:
 
@@ -5733,12 +6847,12 @@
    using blaze::DynamicMatrix;
    using blaze::DynamicVector;
    using blaze::CompressedVector;
-	using blaze::HermitianMatrix;
+        using blaze::HermitianMatrix;
    using blaze::rowMajor;
    using blaze::columnVector;
 
-   HermitianMatrix< DynamicMatrix<double,rowMajor> > A;  // Hermitian and symmetric
-   CompressedVector<double,columnVector> x;
+   HermitianMatrix< DynamicMatrix<double,rowMajor> > A;  // Hermitian and
+symmetric CompressedVector<double,columnVector> x;
    DynamicVector<double,columnVector> y;
 
    // ... Resizing and initialization
@@ -5746,10 +6860,14 @@
    y = A * x;
    \endcode
 
-// In this example it is not intuitively apparent that using a row-major matrix is not the best
-// possible choice in terms of performance since the computation cannot be vectorized. Choosing
-// a column-major matrix instead, however, would enable a vectorized computation. Therefore
-// \b Blaze exploits the fact that \c A is symmetric, selects the best suited storage order and
+// In this example it is not intuitively apparent that using a row-major matrix
+is not the best
+// possible choice in terms of performance since the computation cannot be
+vectorized. Choosing
+// a column-major matrix instead, however, would enable a vectorized
+computation. Therefore
+// \b Blaze exploits the fact that \c A is symmetric, selects the best suited
+storage order and
 // evaluates the multiplication as
 
    \code
@@ -5758,31 +6876,41 @@
 
 // which also significantly increases the performance.
 //
-// \n \subsection adaptors_hermitian_matrices_views Positive Impact: Row/Column Views on Column/Row-Major Matrices
+// \n \subsection adaptors_hermitian_matrices_views Positive Impact: Row/Column
+Views on Column/Row-Major Matrices
 //
-// Another example is the optimization of a row view on a column-major symmetric matrix:
+// Another example is the optimization of a row view on a column-major symmetric
+matrix:
 
    \code
    using blaze::DynamicMatrix;
    using blaze::HermitianMatrix;
    using blaze::columnMajor;
 
-   HermitianMatrix< DynamicMatrix<double,columnMajor> > A( 10UL );  // Both Hermitian and symmetric
-   auto row5 = row( A, 5UL );
-   \endcode
+   HermitianMatrix< DynamicMatrix<double,columnMajor> > A( 10UL );  // Both
+Hermitian and symmetric auto row5 = row( A, 5UL ); \endcode
 
-// Usually, a row view on a column-major matrix results in a considerable performance decrease in
-// comparison to a row view on a row-major matrix due to the non-contiguous storage of the matrix
-// elements. However, in case of symmetric matrices, \b Blaze instead uses the according column of
-// the matrix, which provides the same performance as if the matrix would be row-major. Note that
-// this also works for column views on row-major matrices, where \b Blaze can use the according
+// Usually, a row view on a column-major matrix results in a considerable
+performance decrease in
+// comparison to a row view on a row-major matrix due to the non-contiguous
+storage of the matrix
+// elements. However, in case of symmetric matrices, \b Blaze instead uses the
+according column of
+// the matrix, which provides the same performance as if the matrix would be
+row-major. Note that
+// this also works for column views on row-major matrices, where \b Blaze can
+use the according
 // row instead of a column in order to provide maximum performance.
 //
-// \n \subsection adaptors_hermitian_matrices_assignment Negative Impact: Assignment of a General Matrix
+// \n \subsection adaptors_hermitian_matrices_assignment Negative Impact:
+Assignment of a General Matrix
 //
-// In contrast to using a Hermitian matrix on the right-hand side of an assignment (i.e. for read
-// access), which introduces absolutely no performance penalty, using a Hermitian matrix on the
-// left-hand side of an assignment (i.e. for write access) may introduce additional overhead when
+// In contrast to using a Hermitian matrix on the right-hand side of an
+assignment (i.e. for read
+// access), which introduces absolutely no performance penalty, using a
+Hermitian matrix on the
+// left-hand side of an assignment (i.e. for write access) may introduce
+additional overhead when
 // it is assigned a general matrix, which is not Hermitian at compile time:
 
    \code
@@ -5793,32 +6921,40 @@
    DynamicMatrix<double> B;
 
    B = A;  // Only read-access to the Hermitian matrix; no performance penalty
-   C = A;  // Assignment of a Hermitian matrix to another Hermitian matrix; no runtime overhead
-   C = B;  // Assignment of a general matrix to a Hermitian matrix; some runtime overhead
-   \endcode
+   C = A;  // Assignment of a Hermitian matrix to another Hermitian matrix; no
+runtime overhead C = B;  // Assignment of a general matrix to a Hermitian
+matrix; some runtime overhead \endcode
 
-// When assigning a general, potentially not Hermitian matrix to a Hermitian matrix it is necessary
-// to check whether the matrix is Hermitian at runtime in order to guarantee the Hermitian property
-// of the Hermitian matrix. In case it turns out to be Hermitian, it is assigned as efficiently as
-// possible, if it is not, an exception is thrown. In order to prevent this runtime overhead it is
-// therefore generally advisable to assign Hermitian matrices to other Hermitian matrices.\n
-// In this context it is especially noteworthy that in contrast to additions and subtractions the
-// multiplication of two Hermitian matrices does not necessarily result in another Hermitian matrix:
+// When assigning a general, potentially not Hermitian matrix to a Hermitian
+matrix it is necessary
+// to check whether the matrix is Hermitian at runtime in order to guarantee the
+Hermitian property
+// of the Hermitian matrix. In case it turns out to be Hermitian, it is assigned
+as efficiently as
+// possible, if it is not, an exception is thrown. In order to prevent this
+runtime overhead it is
+// therefore generally advisable to assign Hermitian matrices to other Hermitian
+matrices.\n
+// In this context it is especially noteworthy that in contrast to additions and
+subtractions the
+// multiplication of two Hermitian matrices does not necessarily result in
+another Hermitian matrix:
 
    \code
    HermitianMatrix< DynamicMatrix<double> > A, B, C;
 
    C = A + B;  // Results in a Hermitian matrix; no runtime overhead
    C = A - B;  // Results in a Hermitian matrix; no runtime overhead
-   C = A * B;  // Is not guaranteed to result in a Hermitian matrix; some runtime overhead
-   \endcode
+   C = A * B;  // Is not guaranteed to result in a Hermitian matrix; some
+runtime overhead \endcode
 
-// \n Previous: \ref adaptors_symmetric_matrices &nbsp; &nbsp; Next: \ref adaptors_triangular_matrices
+// \n Previous: \ref adaptors_symmetric_matrices &nbsp; &nbsp; Next: \ref
+adaptors_triangular_matrices
 */
 //*************************************************************************************************
 
-
-//**Triangular Matrices****************************************************************************
+//**Triangular
+//Matrices****************************************************************************
 /*!\page adaptors_triangular_matrices Triangular Matrices
 //
 // \tableofcontents
@@ -5827,14 +6963,22 @@
 // \n \section adaptors_triangular_matrices_general Triangular Matrices
 // <hr>
 //
-// Triangular matrices come in three flavors: Lower triangular matrices provide the compile time
-// guarantee to be square matrices and that the upper part of the matrix contains only default
-// elements that cannot be modified. Upper triangular matrices on the other hand provide the
-// compile time guarantee to be square and that the lower part of the matrix contains only fixed
-// default elements. Finally, diagonal matrices provide the compile time guarantee to be square
-// and that both the lower and upper part of the matrix contain only immutable default elements.
-// These properties can be exploited to gain higher performance and/or to save memory. Within the
-// \b Blaze library, several kinds of lower and upper triangular and diagonal matrices are realized
+// Triangular matrices come in three flavors: Lower triangular matrices provide
+the compile time
+// guarantee to be square matrices and that the upper part of the matrix
+contains only default
+// elements that cannot be modified. Upper triangular matrices on the other hand
+provide the
+// compile time guarantee to be square and that the lower part of the matrix
+contains only fixed
+// default elements. Finally, diagonal matrices provide the compile time
+guarantee to be square
+// and that both the lower and upper part of the matrix contain only immutable
+default elements.
+// These properties can be exploited to gain higher performance and/or to save
+memory. Within the
+// \b Blaze library, several kinds of lower and upper triangular and diagonal
+matrices are realized
 // by the following class templates:
 //
 // Lower triangular matrices:
@@ -5854,9 +6998,12 @@
 // \n \section adaptors_triangular_matrices_lowermatrix LowerMatrix
 // <hr>
 //
-// The blaze::LowerMatrix class template is an adapter for existing dense and sparse matrix types.
-// It inherits the properties and the interface of the given matrix type \c MT and extends it by
-// enforcing the additional invariant that all matrix elements above the diagonal are 0 (lower
+// The blaze::LowerMatrix class template is an adapter for existing dense and
+sparse matrix types.
+// It inherits the properties and the interface of the given matrix type \c MT
+and extends it by
+// enforcing the additional invariant that all matrix elements above the
+diagonal are 0 (lower
 // triangular matrix):
 
                         \f[\left(\begin{array}{*{5}{c}}
@@ -5873,17 +7020,22 @@
    #include <blaze/math/LowerMatrix.h>
    \endcode
 
-// The type of the adapted matrix can be specified via the first template parameter:
+// The type of the adapted matrix can be specified via the first template
+parameter:
 
    \code
    template< typename MT >
    class LowerMatrix;
    \endcode
 
-// \c MT specifies the type of the matrix to be adapted. blaze::LowerMatrix can be used with any
-// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse matrix type. Note
-// that the given matrix type must be either resizable (as for instance blaze::HybridMatrix or
-// blaze::DynamicMatrix) or must be square at compile time (as for instance blaze::StaticMatrix).
+// \c MT specifies the type of the matrix to be adapted. blaze::LowerMatrix can
+be used with any
+// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse
+matrix type. Note
+// that the given matrix type must be either resizable (as for instance
+blaze::HybridMatrix or
+// blaze::DynamicMatrix) or must be square at compile time (as for instance
+blaze::StaticMatrix).
 //
 // The following examples give an impression of several possible lower matrices:
 
@@ -5896,32 +7048,41 @@
    // Definition of a 3x3 row-major dense lower matrix with static memory
    blaze::LowerMatrix< blaze::StaticMatrix<int,3UL,3UL,rowMajor> > A;
 
-   // Definition of a resizable column-major dense lower matrix based on HybridMatrix
-   blaze::LowerMatrix< blaze::HybridMatrix<float,4UL,4UL,columnMajor> B;
+   // Definition of a resizable column-major dense lower matrix based on
+HybridMatrix blaze::LowerMatrix< blaze::HybridMatrix<float,4UL,4UL,columnMajor>
+B;
 
-   // Definition of a resizable row-major dense lower matrix based on DynamicMatrix
-   blaze::LowerMatrix< blaze::DynamicMatrix<double,rowMajor> > C;
+   // Definition of a resizable row-major dense lower matrix based on
+DynamicMatrix blaze::LowerMatrix< blaze::DynamicMatrix<double,rowMajor> > C;
 
-   // Definition of a fixed size row-major dense lower matrix based on CustomMatrix
-   blaze::LowerMatrix< blaze::CustomMatrix<double,unaligned,unpadded,rowMajor> > D;
+   // Definition of a fixed size row-major dense lower matrix based on
+CustomMatrix blaze::LowerMatrix<
+blaze::CustomMatrix<double,unaligned,unpadded,rowMajor> > D;
 
    // Definition of a compressed row-major single precision lower matrix
    blaze::LowerMatrix< blaze::CompressedMatrix<float,rowMajor> > E;
    \endcode
 
-// The storage order of a lower matrix is depending on the storage order of the adapted matrix
-// type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e. is specified
-// as blaze::rowMajor), the lower matrix will also be a row-major matrix. Otherwise, if the
-// adapted matrix is column-major (i.e. is specified as blaze::columnMajor), the lower matrix
+// The storage order of a lower matrix is depending on the storage order of the
+adapted matrix
+// type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e.
+is specified
+// as blaze::rowMajor), the lower matrix will also be a row-major matrix.
+Otherwise, if the
+// adapted matrix is column-major (i.e. is specified as blaze::columnMajor), the
+lower matrix
 // will also be a column-major matrix.
 //
 //
 // \n \section adaptors_triangular_matrices_unilowermatrix UniLowerMatrix
 // <hr>
 //
-// The blaze::UniLowerMatrix class template is an adapter for existing dense and sparse matrix
-// types. It inherits the properties and the interface of the given matrix type \c MT and extends
-// it by enforcing the additional invariant that all diagonal matrix elements are 1 and all matrix
+// The blaze::UniLowerMatrix class template is an adapter for existing dense and
+sparse matrix
+// types. It inherits the properties and the interface of the given matrix type
+\c MT and extends
+// it by enforcing the additional invariant that all diagonal matrix elements
+are 1 and all matrix
 // elements above the diagonal are 0 (lower unitriangular matrix):
 
                         \f[\left(\begin{array}{*{5}{c}}
@@ -5938,49 +7099,66 @@
    #include <blaze/math/UniLowerMatrix.h>
    \endcode
 
-// The type of the adapted matrix can be specified via the first template parameter:
+// The type of the adapted matrix can be specified via the first template
+parameter:
 
    \code
    template< typename MT >
    class UniLowerMatrix;
    \endcode
 
-// \c MT specifies the type of the matrix to be adapted. blaze::UniLowerMatrix can be used with any
-// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse matrix type. Also,
-// the given matrix type must have numeric element types (i.e. all integral types except \c bool,
-// floating point and complex types). Note that the given matrix type must be either resizable (as
-// for instance blaze::HybridMatrix or blaze::DynamicMatrix) or must be square at compile time (as
+// \c MT specifies the type of the matrix to be adapted. blaze::UniLowerMatrix
+can be used with any
+// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse
+matrix type. Also,
+// the given matrix type must have numeric element types (i.e. all integral
+types except \c bool,
+// floating point and complex types). Note that the given matrix type must be
+either resizable (as
+// for instance blaze::HybridMatrix or blaze::DynamicMatrix) or must be square
+at compile time (as
 // for instance blaze::StaticMatrix).
 //
-// The following examples give an impression of several possible lower unitriangular matrices:
+// The following examples give an impression of several possible lower
+unitriangular matrices:
 
    \code
    // Definition of a 3x3 row-major dense unilower matrix with static memory
    blaze::UniLowerMatrix< blaze::StaticMatrix<int,3UL,3UL,blaze::rowMajor> > A;
 
-   // Definition of a resizable column-major dense unilower matrix based on HybridMatrix
-   blaze::UniLowerMatrix< blaze::HybridMatrix<float,4UL,4UL,blaze::columnMajor> B;
+   // Definition of a resizable column-major dense unilower matrix based on
+HybridMatrix blaze::UniLowerMatrix<
+blaze::HybridMatrix<float,4UL,4UL,blaze::columnMajor> B;
 
-   // Definition of a resizable row-major dense unilower matrix based on DynamicMatrix
-   blaze::UniLowerMatrix< blaze::DynamicMatrix<double,blaze::rowMajor> > C;
+   // Definition of a resizable row-major dense unilower matrix based on
+DynamicMatrix blaze::UniLowerMatrix<
+blaze::DynamicMatrix<double,blaze::rowMajor> > C;
 
    // Definition of a compressed row-major single precision unilower matrix
    blaze::UniLowerMatrix< blaze::CompressedMatrix<float,blaze::rowMajor> > D;
    \endcode
 
-// The storage order of a lower unitriangular matrix is depending on the storage order of the
-// adapted matrix type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e.
-// is specified as blaze::rowMajor), the unilower matrix will also be a row-major matrix.
-// Otherwise if the adapted matrix is column-major (i.e. is specified as blaze::columnMajor),
+// The storage order of a lower unitriangular matrix is depending on the storage
+order of the
+// adapted matrix type \c MT. In case the adapted matrix is stored in a row-wise
+fashion (i.e.
+// is specified as blaze::rowMajor), the unilower matrix will also be a
+row-major matrix.
+// Otherwise if the adapted matrix is column-major (i.e. is specified as
+blaze::columnMajor),
 // the unilower matrix will also be a column-major matrix.
 //
 //
-// \n \section adaptors_triangular_matrices_strictlylowermatrix StrictlyLowerMatrix
+// \n \section adaptors_triangular_matrices_strictlylowermatrix
+StrictlyLowerMatrix
 // <hr>
 //
-// The blaze::StrictlyLowerMatrix class template is an adapter for existing dense and sparse matrix
-// types. It inherits the properties and the interface of the given matrix type \c MT and extends
-// it by enforcing the additional invariant that all diagonal matrix elements and all matrix
+// The blaze::StrictlyLowerMatrix class template is an adapter for existing
+dense and sparse matrix
+// types. It inherits the properties and the interface of the given matrix type
+\c MT and extends
+// it by enforcing the additional invariant that all diagonal matrix elements
+and all matrix
 // elements above the diagonal are 0 (strictly lower triangular matrix):
 
                         \f[\left(\begin{array}{*{5}{c}}
@@ -5997,48 +7175,64 @@
    #include <blaze/math/StrictlyLowerMatrix.h>
    \endcode
 
-// The type of the adapted matrix can be specified via the first template parameter:
+// The type of the adapted matrix can be specified via the first template
+parameter:
 
    \code
    template< typename MT >
    class StrictlyLowerMatrix;
    \endcode
 
-// \c MT specifies the type of the matrix to be adapted. blaze::StrictlyLowerMatrix can be used
-// with any non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse matrix
-// type. Note that the given matrix type must be either resizable (as for instance
-// blaze::HybridMatrix or blaze::DynamicMatrix) or must be square at compile time (as for instance
+// \c MT specifies the type of the matrix to be adapted.
+blaze::StrictlyLowerMatrix can be used
+// with any non-cv-qualified, non-reference, non-pointer, non-expression dense
+or sparse matrix
+// type. Note that the given matrix type must be either resizable (as for
+instance
+// blaze::HybridMatrix or blaze::DynamicMatrix) or must be square at compile
+time (as for instance
 // blaze::StaticMatrix).
 //
-// The following examples give an impression of several possible strictly lower triangular matrices:
+// The following examples give an impression of several possible strictly lower
+triangular matrices:
 
    \code
-   // Definition of a 3x3 row-major dense strictly lower matrix with static memory
-   blaze::StrictlyLowerMatrix< blaze::StaticMatrix<int,3UL,3UL,blaze::rowMajor> > A;
+   // Definition of a 3x3 row-major dense strictly lower matrix with static
+memory blaze::StrictlyLowerMatrix<
+blaze::StaticMatrix<int,3UL,3UL,blaze::rowMajor> > A;
 
-   // Definition of a resizable column-major dense strictly lower matrix based on HybridMatrix
-   blaze::StrictlyLowerMatrix< blaze::HybridMatrix<float,4UL,4UL,blaze::columnMajor> B;
+   // Definition of a resizable column-major dense strictly lower matrix based
+on HybridMatrix blaze::StrictlyLowerMatrix<
+blaze::HybridMatrix<float,4UL,4UL,blaze::columnMajor> B;
 
-   // Definition of a resizable row-major dense strictly lower matrix based on DynamicMatrix
-   blaze::StrictlyLowerMatrix< blaze::DynamicMatrix<double,blaze::rowMajor> > C;
+   // Definition of a resizable row-major dense strictly lower matrix based on
+DynamicMatrix blaze::StrictlyLowerMatrix<
+blaze::DynamicMatrix<double,blaze::rowMajor> > C;
 
-   // Definition of a compressed row-major single precision strictly lower matrix
-   blaze::StrictlyLowerMatrix< blaze::CompressedMatrix<float,blaze::rowMajor> > D;
-   \endcode
+   // Definition of a compressed row-major single precision strictly lower
+matrix blaze::StrictlyLowerMatrix<
+blaze::CompressedMatrix<float,blaze::rowMajor> > D; \endcode
 
-// The storage order of a strictly lower triangular matrix is depending on the storage order of
-// the adapted matrix type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e.
-// is specified as blaze::rowMajor), the strictly lower matrix will also be a row-major matrix.
-// Otherwise if the adapted matrix is column-major (i.e. is specified as blaze::columnMajor),
+// The storage order of a strictly lower triangular matrix is depending on the
+storage order of
+// the adapted matrix type \c MT. In case the adapted matrix is stored in a
+row-wise fashion (i.e.
+// is specified as blaze::rowMajor), the strictly lower matrix will also be a
+row-major matrix.
+// Otherwise if the adapted matrix is column-major (i.e. is specified as
+blaze::columnMajor),
 // the strictly lower matrix will also be a column-major matrix.
 //
 //
 // \n \section adaptors_triangular_matrices_uppermatrix UpperMatrix
 // <hr>
 //
-// The blaze::UpperMatrix class template is an adapter for existing dense and sparse matrix types.
-// It inherits the properties and the interface of the given matrix type \c MT and extends it by
-// enforcing the additional invariant that all matrix elements below the diagonal are 0 (upper
+// The blaze::UpperMatrix class template is an adapter for existing dense and
+sparse matrix types.
+// It inherits the properties and the interface of the given matrix type \c MT
+and extends it by
+// enforcing the additional invariant that all matrix elements below the
+diagonal are 0 (upper
 // triangular matrix):
 
                         \f[\left(\begin{array}{*{5}{c}}
@@ -6055,17 +7249,22 @@
    #include <blaze/math/UpperMatrix.h>
    \endcode
 
-// The type of the adapted matrix can be specified via the first template parameter:
+// The type of the adapted matrix can be specified via the first template
+parameter:
 
    \code
    template< typename MT >
    class UpperMatrix;
    \endcode
 
-// \c MT specifies the type of the matrix to be adapted. blaze::UpperMatrix can be used with any
-// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse matrix type. Note
-// that the given matrix type must be either resizable (as for instance blaze::HybridMatrix or
-// blaze::DynamicMatrix) or must be square at compile time (as for instance blaze::StaticMatrix).
+// \c MT specifies the type of the matrix to be adapted. blaze::UpperMatrix can
+be used with any
+// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse
+matrix type. Note
+// that the given matrix type must be either resizable (as for instance
+blaze::HybridMatrix or
+// blaze::DynamicMatrix) or must be square at compile time (as for instance
+blaze::StaticMatrix).
 //
 // The following examples give an impression of several possible upper matrices:
 
@@ -6073,29 +7272,38 @@
    // Definition of a 3x3 row-major dense upper matrix with static memory
    blaze::UpperMatrix< blaze::StaticMatrix<int,3UL,3UL,blaze::rowMajor> > A;
 
-   // Definition of a resizable column-major dense upper matrix based on HybridMatrix
-   blaze::UpperMatrix< blaze::HybridMatrix<float,4UL,4UL,blaze::columnMajor> B;
+   // Definition of a resizable column-major dense upper matrix based on
+HybridMatrix blaze::UpperMatrix<
+blaze::HybridMatrix<float,4UL,4UL,blaze::columnMajor> B;
 
-   // Definition of a resizable row-major dense upper matrix based on DynamicMatrix
-   blaze::UpperMatrix< blaze::DynamicMatrix<double,blaze::rowMajor> > C;
+   // Definition of a resizable row-major dense upper matrix based on
+DynamicMatrix blaze::UpperMatrix< blaze::DynamicMatrix<double,blaze::rowMajor> >
+C;
 
    // Definition of a compressed row-major single precision upper matrix
    blaze::UpperMatrix< blaze::CompressedMatrix<float,blaze::rowMajor> > D;
    \endcode
 
-// The storage order of an upper matrix is depending on the storage order of the adapted matrix
-// type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e. is specified
-// as blaze::rowMajor), the upper matrix will also be a row-major matrix. Otherwise, if the
-// adapted matrix is column-major (i.e. is specified as blaze::columnMajor), the upper matrix
+// The storage order of an upper matrix is depending on the storage order of the
+adapted matrix
+// type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e.
+is specified
+// as blaze::rowMajor), the upper matrix will also be a row-major matrix.
+Otherwise, if the
+// adapted matrix is column-major (i.e. is specified as blaze::columnMajor), the
+upper matrix
 // will also be a column-major matrix.
 //
 //
 // \n \section adaptors_triangular_matrices_uniuppermatrix UniUpperMatrix
 // <hr>
 //
-// The blaze::UniUpperMatrix class template is an adapter for existing dense and sparse matrix
-// types. It inherits the properties and the interface of the given matrix type \c MT and extends
-// it by enforcing the additional invariant that all diagonal matrix elements are 1 and all matrix
+// The blaze::UniUpperMatrix class template is an adapter for existing dense and
+sparse matrix
+// types. It inherits the properties and the interface of the given matrix type
+\c MT and extends
+// it by enforcing the additional invariant that all diagonal matrix elements
+are 1 and all matrix
 // elements below the diagonal are 0 (upper unitriangular matrix):
 
                         \f[\left(\begin{array}{*{5}{c}}
@@ -6112,49 +7320,66 @@
    #include <blaze/math/UniUpperMatrix.h>
    \endcode
 
-// The type of the adapted matrix can be specified via the first template parameter:
+// The type of the adapted matrix can be specified via the first template
+parameter:
 
    \code
    template< typename MT >
    class UniUpperMatrix;
    \endcode
 
-// \c MT specifies the type of the matrix to be adapted. blaze::UniUpperMatrix can be used with any
-// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse matrix type. Also,
-// the given matrix type must have numeric element types (i.e. all integral types except \c bool,
-// floating point and complex types). Note that the given matrix type must be either resizable (as
-// for instance blaze::HybridMatrix or blaze::DynamicMatrix) or must be square at compile time (as
+// \c MT specifies the type of the matrix to be adapted. blaze::UniUpperMatrix
+can be used with any
+// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse
+matrix type. Also,
+// the given matrix type must have numeric element types (i.e. all integral
+types except \c bool,
+// floating point and complex types). Note that the given matrix type must be
+either resizable (as
+// for instance blaze::HybridMatrix or blaze::DynamicMatrix) or must be square
+at compile time (as
 // for instance blaze::StaticMatrix).
 //
-// The following examples give an impression of several possible upper unitriangular matrices:
+// The following examples give an impression of several possible upper
+unitriangular matrices:
 
    \code
    // Definition of a 3x3 row-major dense uniupper matrix with static memory
    blaze::UniUpperMatrix< blaze::StaticMatrix<int,3UL,3UL,blaze::rowMajor> > A;
 
-   // Definition of a resizable column-major dense uniupper matrix based on HybridMatrix
-   blaze::UniUpperMatrix< blaze::HybridMatrix<float,4UL,4UL,blaze::columnMajor> B;
+   // Definition of a resizable column-major dense uniupper matrix based on
+HybridMatrix blaze::UniUpperMatrix<
+blaze::HybridMatrix<float,4UL,4UL,blaze::columnMajor> B;
 
-   // Definition of a resizable row-major dense uniupper matrix based on DynamicMatrix
-   blaze::UniUpperMatrix< blaze::DynamicMatrix<double,blaze::rowMajor> > C;
+   // Definition of a resizable row-major dense uniupper matrix based on
+DynamicMatrix blaze::UniUpperMatrix<
+blaze::DynamicMatrix<double,blaze::rowMajor> > C;
 
    // Definition of a compressed row-major single precision uniupper matrix
    blaze::UniUpperMatrix< blaze::CompressedMatrix<float,blaze::rowMajor> > D;
    \endcode
 
-// The storage order of an upper unitriangular matrix is depending on the storage order of the
-// adapted matrix type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e.
-// is specified as blaze::rowMajor), the uniupper matrix will also be a row-major matrix.
-// Otherwise, if the adapted matrix is column-major (i.e. is specified as blaze::columnMajor),
+// The storage order of an upper unitriangular matrix is depending on the
+storage order of the
+// adapted matrix type \c MT. In case the adapted matrix is stored in a row-wise
+fashion (i.e.
+// is specified as blaze::rowMajor), the uniupper matrix will also be a
+row-major matrix.
+// Otherwise, if the adapted matrix is column-major (i.e. is specified as
+blaze::columnMajor),
 // the uniupper matrix will also be a column-major matrix.
 //
 //
-// \n \section adaptors_triangular_matrices_strictlyuppermatrix StrictlyUpperMatrix
+// \n \section adaptors_triangular_matrices_strictlyuppermatrix
+StrictlyUpperMatrix
 // <hr>
 //
-// The blaze::StrictlyUpperMatrix class template is an adapter for existing dense and sparse matrix
-// types. It inherits the properties and the interface of the given matrix type \c MT and extends
-// it by enforcing the additional invariant that all diagonal matrix elements and all matrix
+// The blaze::StrictlyUpperMatrix class template is an adapter for existing
+dense and sparse matrix
+// types. It inherits the properties and the interface of the given matrix type
+\c MT and extends
+// it by enforcing the additional invariant that all diagonal matrix elements
+and all matrix
 // elements below the diagonal are 0 (strictly upper triangular matrix):
 
                         \f[\left(\begin{array}{*{5}{c}}
@@ -6171,48 +7396,64 @@
    #include <blaze/math/StrictlyUpperMatrix.h>
    \endcode
 
-// The type of the adapted matrix can be specified via the first template parameter:
+// The type of the adapted matrix can be specified via the first template
+parameter:
 
    \code
    template< typename MT >
    class StrictlyUpperMatrix;
    \endcode
 
-// \c MT specifies the type of the matrix to be adapted. blaze::StrictlyUpperMatrix can be used
-// with any non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse matrix
-// type. Note that the given matrix type must be either resizable (as for instance
-// blaze::HybridMatrix or blaze::DynamicMatrix) or must be square at compile time (as for instance
+// \c MT specifies the type of the matrix to be adapted.
+blaze::StrictlyUpperMatrix can be used
+// with any non-cv-qualified, non-reference, non-pointer, non-expression dense
+or sparse matrix
+// type. Note that the given matrix type must be either resizable (as for
+instance
+// blaze::HybridMatrix or blaze::DynamicMatrix) or must be square at compile
+time (as for instance
 // blaze::StaticMatrix).
 //
-// The following examples give an impression of several possible strictly upper triangular matrices:
+// The following examples give an impression of several possible strictly upper
+triangular matrices:
 
    \code
-   // Definition of a 3x3 row-major dense strictly upper matrix with static memory
-   blaze::StrictlyUpperMatrix< blaze::StaticMatrix<int,3UL,3UL,blaze::rowMajor> > A;
+   // Definition of a 3x3 row-major dense strictly upper matrix with static
+memory blaze::StrictlyUpperMatrix<
+blaze::StaticMatrix<int,3UL,3UL,blaze::rowMajor> > A;
 
-   // Definition of a resizable column-major dense strictly upper matrix based on HybridMatrix
-   blaze::StrictlyUpperMatrix< blaze::HybridMatrix<float,4UL,4UL,blaze::columnMajor> B;
+   // Definition of a resizable column-major dense strictly upper matrix based
+on HybridMatrix blaze::StrictlyUpperMatrix<
+blaze::HybridMatrix<float,4UL,4UL,blaze::columnMajor> B;
 
-   // Definition of a resizable row-major dense strictly upper matrix based on DynamicMatrix
-   blaze::StrictlyUpperMatrix< blaze::DynamicMatrix<double,blaze::rowMajor> > C;
+   // Definition of a resizable row-major dense strictly upper matrix based on
+DynamicMatrix blaze::StrictlyUpperMatrix<
+blaze::DynamicMatrix<double,blaze::rowMajor> > C;
 
-   // Definition of a compressed row-major single precision strictly upper matrix
-   blaze::StrictlyUpperMatrix< blaze::CompressedMatrix<float,blaze::rowMajor> > D;
-   \endcode
+   // Definition of a compressed row-major single precision strictly upper
+matrix blaze::StrictlyUpperMatrix<
+blaze::CompressedMatrix<float,blaze::rowMajor> > D; \endcode
 
-// The storage order of a strictly upper triangular matrix is depending on the storage order of
-// the adapted matrix type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e.
-// is specified as blaze::rowMajor), the strictly upper matrix will also be a row-major matrix.
-// Otherwise, if the adapted matrix is column-major (i.e. is specified as blaze::columnMajor),
+// The storage order of a strictly upper triangular matrix is depending on the
+storage order of
+// the adapted matrix type \c MT. In case the adapted matrix is stored in a
+row-wise fashion (i.e.
+// is specified as blaze::rowMajor), the strictly upper matrix will also be a
+row-major matrix.
+// Otherwise, if the adapted matrix is column-major (i.e. is specified as
+blaze::columnMajor),
 // the strictly upper matrix will also be a column-major matrix.
 //
 //
 // \n \section adaptors_triangular_matrices_diagonalmatrix DiagonalMatrix
 // <hr>
 //
-// The blaze::DiagonalMatrix class template is an adapter for existing dense and sparse matrix
-// types. It inherits the properties and the interface of the given matrix type \c MT and extends
-// it by enforcing the additional invariant that all matrix elements above and below the diagonal
+// The blaze::DiagonalMatrix class template is an adapter for existing dense and
+sparse matrix
+// types. It inherits the properties and the interface of the given matrix type
+\c MT and extends
+// it by enforcing the additional invariant that all matrix elements above and
+below the diagonal
 // are 0 (diagonal matrix):
 
                         \f[\left(\begin{array}{*{5}{c}}
@@ -6229,46 +7470,61 @@
    #include <blaze/math/DiagonalMatrix.h>
    \endcode
 
-// The type of the adapted matrix can be specified via the first template parameter:
+// The type of the adapted matrix can be specified via the first template
+parameter:
 
    \code
    template< typename MT >
    class DiagonalMatrix;
    \endcode
 
-// \c MT specifies the type of the matrix to be adapted. blaze::DiagonalMatrix can be used with any
-// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse matrix type. Note
-// that the given matrix type must be either resizable (as for instance blaze::HybridMatrix or
-// blaze::DynamicMatrix) or must be square at compile time (as for instance blaze::StaticMatrix).
+// \c MT specifies the type of the matrix to be adapted. blaze::DiagonalMatrix
+can be used with any
+// non-cv-qualified, non-reference, non-pointer, non-expression dense or sparse
+matrix type. Note
+// that the given matrix type must be either resizable (as for instance
+blaze::HybridMatrix or
+// blaze::DynamicMatrix) or must be square at compile time (as for instance
+blaze::StaticMatrix).
 //
-// The following examples give an impression of several possible diagonal matrices:
+// The following examples give an impression of several possible diagonal
+matrices:
 
    \code
    // Definition of a 3x3 row-major dense diagonal matrix with static memory
    blaze::DiagonalMatrix< blaze::StaticMatrix<int,3UL,3UL,blaze::rowMajor> > A;
 
-   // Definition of a resizable column-major dense diagonal matrix based on HybridMatrix
-   blaze::DiagonalMatrix< blaze::HybridMatrix<float,4UL,4UL,blaze::columnMajor> B;
+   // Definition of a resizable column-major dense diagonal matrix based on
+HybridMatrix blaze::DiagonalMatrix<
+blaze::HybridMatrix<float,4UL,4UL,blaze::columnMajor> B;
 
-   // Definition of a resizable row-major dense diagonal matrix based on DynamicMatrix
-   blaze::DiagonalMatrix< blaze::DynamicMatrix<double,blaze::rowMajor> > C;
+   // Definition of a resizable row-major dense diagonal matrix based on
+DynamicMatrix blaze::DiagonalMatrix<
+blaze::DynamicMatrix<double,blaze::rowMajor> > C;
 
    // Definition of a compressed row-major single precision diagonal matrix
    blaze::DiagonalMatrix< blaze::CompressedMatrix<float,blaze::rowMajor> > D;
    \endcode
 
-// The storage order of a diagonal matrix is depending on the storage order of the adapted matrix
-// type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e. is specified
-// as blaze::rowMajor), the diagonal matrix will also be a row-major matrix. Otherwise, if the
-// adapted matrix is column-major (i.e. is specified as blaze::columnMajor), the diagonal matrix
+// The storage order of a diagonal matrix is depending on the storage order of
+the adapted matrix
+// type \c MT. In case the adapted matrix is stored in a row-wise fashion (i.e.
+is specified
+// as blaze::rowMajor), the diagonal matrix will also be a row-major matrix.
+Otherwise, if the
+// adapted matrix is column-major (i.e. is specified as blaze::columnMajor), the
+diagonal matrix
 // will also be a column-major matrix.
 //
 //
-// \n \section adaptors_triangular_matrices_special_properties Special Properties of Triangular Matrices
+// \n \section adaptors_triangular_matrices_special_properties Special
+Properties of Triangular Matrices
 // <hr>
 //
-// A triangular matrix is used exactly like a matrix of the underlying, adapted matrix type \c MT.
-// It also provides (nearly) the same interface as the underlying matrix type. However, there are
+// A triangular matrix is used exactly like a matrix of the underlying, adapted
+matrix type \c MT.
+// It also provides (nearly) the same interface as the underlying matrix type.
+However, there are
 // some important exceptions resulting from the triangular matrix constraint:
 //
 //  -# <b>\ref adaptors_triangular_matrices_square</b>
@@ -6277,20 +7533,25 @@
 //  -# <b>\ref adaptors_triangular_matrices_storage</b>
 //  -# <b>\ref adaptors_triangular_matrices_scaling</b>
 //
-// \n \subsection adaptors_triangular_matrices_square Triangular Matrices Must Always be Square!
+// \n \subsection adaptors_triangular_matrices_square Triangular Matrices Must
+Always be Square!
 //
-// In case a resizable matrix is used (as for instance blaze::HybridMatrix, blaze::DynamicMatrix,
-// or blaze::CompressedMatrix), this means that the according constructors, the \c resize() and
-// the \c extend() functions only expect a single parameter, which specifies both the number of
-// rows and columns, instead of two (one for the number of rows and one for the number of columns):
+// In case a resizable matrix is used (as for instance blaze::HybridMatrix,
+blaze::DynamicMatrix,
+// or blaze::CompressedMatrix), this means that the according constructors, the
+\c resize() and
+// the \c extend() functions only expect a single parameter, which specifies
+both the number of
+// rows and columns, instead of two (one for the number of rows and one for the
+number of columns):
 
    \code
    using blaze::DynamicMatrix;
    using blaze::LowerMatrix;
    using blaze::rowMajor;
 
-   // Default constructed, default initialized, row-major 3x3 lower dynamic matrix
-   LowerMatrix< DynamicMatrix<double,rowMajor> > A( 3 );
+   // Default constructed, default initialized, row-major 3x3 lower dynamic
+matrix LowerMatrix< DynamicMatrix<double,rowMajor> > A( 3 );
 
    // Resizing the matrix to 5x5
    A.resize( 5 );
@@ -6299,7 +7560,8 @@
    A.extend( 2 );
    \endcode
 
-// In case a matrix with a fixed size is used (as for instance blaze::StaticMatrix), the number
+// In case a matrix with a fixed size is used (as for instance
+blaze::StaticMatrix), the number
 // of rows and number of columns must be specified equally:
 
    \code
@@ -6314,14 +7576,21 @@
    LowerMatrix< StaticMatrix<int,3UL,4UL,columnMajor> > B;
    \endcode
 
-// \n \subsection adaptors_triangular_matrices_triangular The Triangular Property is Always Enforced!
+// \n \subsection adaptors_triangular_matrices_triangular The Triangular
+Property is Always Enforced!
 //
-// This means that it is only allowed to modify elements in the lower part or the diagonal of
-// a lower triangular matrix and in the upper part or the diagonal of an upper triangular matrix.
-// Unitriangular and strictly triangular matrices are even more restrictive and don't allow the
-// modification of diagonal elements. Also, triangular matrices can only be assigned matrices that
-// don't violate their triangular property. The following example demonstrates this restriction
-// by means of the blaze::LowerMatrix adaptor. For examples with other triangular matrix types
+// This means that it is only allowed to modify elements in the lower part or
+the diagonal of
+// a lower triangular matrix and in the upper part or the diagonal of an upper
+triangular matrix.
+// Unitriangular and strictly triangular matrices are even more restrictive and
+don't allow the
+// modification of diagonal elements. Also, triangular matrices can only be
+assigned matrices that
+// don't violate their triangular property. The following example demonstrates
+this restriction
+// by means of the blaze::LowerMatrix adaptor. For examples with other
+triangular matrix types
 // see the according class documentations.
 
    \code
@@ -6344,12 +7613,14 @@
    // Inserting two more elements via the insert() function
    A.insert( 1, 0, 3.0 );  // Inserting the lower element (1,0)
    A.insert( 2, 1, 4.0 );  // Inserting the lower element (2,1)
-   A.insert( 0, 2, 9.0 );  // Throws an exception; invalid insertion of upper element
+   A.insert( 0, 2, 9.0 );  // Throws an exception; invalid insertion of upper
+element
 
    // Appending an element via the append() function
    A.reserve( 1, 3 );      // Reserving enough capacity in row 1
    A.append( 1, 1, 5.0 );  // Appending the diagonal element (1,1)
-   A.append( 1, 2, 9.0 );  // Throws an exception; appending an element in the upper part
+   A.append( 1, 2, 9.0 );  // Throws an exception; appending an element in the
+upper part
 
    // Access via a non-const iterator
    CompressedLower::Iterator it = A.begin(1);
@@ -6376,8 +7647,10 @@
    C = D;  // Throws an exception; lower matrix invariant would be violated!
    \endcode
 
-// The triangular property is also enforced during the construction of triangular custom matrices:
-// In case the given array of elements does not represent the according triangular matrix type, a
+// The triangular property is also enforced during the construction of
+triangular custom matrices:
+// In case the given array of elements does not represent the according
+triangular matrix type, a
 // \c std::invalid_argument exception is thrown:
 
    \code
@@ -6387,7 +7660,8 @@
    using blaze::unpadded;
    using blaze::rowMajor;
 
-   using CustomLower = LowerMatrix< CustomMatrix<double,unaligned,unpadded,rowMajor> >;
+   using CustomLower = LowerMatrix<
+CustomMatrix<double,unaligned,unpadded,rowMajor> >;
 
    // Creating a 3x3 lower custom matrix from a properly initialized array
    double array[9] = { 1.0, 0.0, 0.0,
@@ -6395,14 +7669,18 @@
                        4.0, 5.0, 6.0 };
    CustomLower A( array, 3UL );  // OK
 
-   // Attempt to create a second 3x3 lower custom matrix from an uninitialized array
-   CustomLower B( new double[9UL], 3UL, blaze::ArrayDelete() );  // Throws an exception
-   \endcode
+   // Attempt to create a second 3x3 lower custom matrix from an uninitialized
+array CustomLower B( new double[9UL], 3UL, blaze::ArrayDelete() );  // Throws an
+exception \endcode
 
-// Finally, the triangular matrix property is enforced for views (rows, columns, submatrices, ...)
-// on the triangular matrix. The following example demonstrates that modifying the elements of an
-// entire row and submatrix of a lower matrix only affects the lower and diagonal matrix elements.
-// Again, this example uses blaze::LowerMatrix, for examples with other triangular matrix types
+// Finally, the triangular matrix property is enforced for views (rows, columns,
+submatrices, ...)
+// on the triangular matrix. The following example demonstrates that modifying
+the elements of an
+// entire row and submatrix of a lower matrix only affects the lower and
+diagonal matrix elements.
+// Again, this example uses blaze::LowerMatrix, for examples with other
+triangular matrix types
 // see the according class documentations.
 
    \code
@@ -6423,7 +7701,8 @@
    A(3,0) = 4;
    A(3,2) = 5;
 
-   // Setting the lower and diagonal elements in the 2nd row to 9 results in the matrix
+   // Setting the lower and diagonal elements in the 2nd row to 9 results in the
+matrix
    //
    //       ( 0 0 0 0 )
    //   A = ( 1 2 0 0 )
@@ -6432,7 +7711,8 @@
    //
    row( A, 2 ) = 9;
 
-   // Setting the lower and diagonal elements in the 1st and 2nd column to 7 results in
+   // Setting the lower and diagonal elements in the 1st and 2nd column to 7
+results in
    //
    //       ( 0 0 0 0 )
    //   A = ( 1 7 0 0 )
@@ -6442,10 +7722,14 @@
    submatrix( A, 0, 1, 4, 2 ) = 7;
    \endcode
 
-// The next example demonstrates the (compound) assignment to rows/columns and submatrices of
-// triangular matrices. Since only lower/upper and potentially diagonal elements may be modified
-// the matrix to be assigned must be structured such that the triangular matrix invariant of the
-// matrix is preserved. Otherwise a \c std::invalid_argument exception is thrown:
+// The next example demonstrates the (compound) assignment to rows/columns and
+submatrices of
+// triangular matrices. Since only lower/upper and potentially diagonal elements
+may be modified
+// the matrix to be assigned must be structured such that the triangular matrix
+invariant of the
+// matrix is preserved. Otherwise a \c std::invalid_argument exception is
+thrown:
 
    \code
    using blaze::DynamicMatrix;
@@ -6471,7 +7755,8 @@
    //
    row( A1, 2 ) = v;  // OK
 
-   // Error: Assigning v to the 1st row of A1 violates the lower matrix invariant! The element
+   // Error: Assigning v to the 1st row of A1 violates the lower matrix
+invariant! The element
    //   marked with X cannot be assigned and triggers an exception.
    //
    //        ( 0 0 0 0 )
@@ -6492,7 +7777,8 @@
    B(2,0) = 8;
    B(2,1) = 9;
 
-   // OK: Assigning B to a submatrix of A2 such that the lower matrix invariant can be preserved
+   // OK: Assigning B to a submatrix of A2 such that the lower matrix invariant
+can be preserved
    //
    //        ( 0 0 0 0 )
    //   A2 = ( 0 7 0 0 )
@@ -6501,8 +7787,10 @@
    //
    submatrix( A2, 0UL, 1UL, 3UL, 2UL ) = B;  // OK
 
-   // Error: Assigning B to a submatrix of A2 such that the lower matrix invariant cannot be
-   //   preserved! The elements marked with X cannot be assigned without violating the invariant!
+   // Error: Assigning B to a submatrix of A2 such that the lower matrix
+invariant cannot be
+   //   preserved! The elements marked with X cannot be assigned without
+violating the invariant!
    //
    //        ( 0 0 0 0 )
    //   A2 = ( 0 7 X 0 )
@@ -6512,10 +7800,13 @@
    submatrix( A2, 0UL, 2UL, 3UL, 2UL ) = B;  // Assignment throws an exception!
    \endcode
 
-// \n \subsection adaptors_triangular_matrices_initialization The Elements of a Dense Triangular Matrix are Always Default Initialized!
+// \n \subsection adaptors_triangular_matrices_initialization The Elements of a
+Dense Triangular Matrix are Always Default Initialized!
 //
-// Although this results in a small loss of efficiency during the creation of a dense lower or
-// upper matrix this initialization is important since otherwise the lower/upper matrix property
+// Although this results in a small loss of efficiency during the creation of a
+dense lower or
+// upper matrix this initialization is important since otherwise the lower/upper
+matrix property
 // of dense lower matrices would not be guaranteed:
 
    \code
@@ -6529,38 +7820,50 @@
    // 5x5 row-major lower dynamic matrix with default initialized upper matrix
    LowerMatrix< DynamicMatrix<int,rowMajor> > B( 5 );
 
-   // 7x7 column-major upper dynamic matrix with default initialized lower matrix
-   UpperMatrix< DynamicMatrix<int,columnMajor> > C( 7 );
+   // 7x7 column-major upper dynamic matrix with default initialized lower
+matrix UpperMatrix< DynamicMatrix<int,columnMajor> > C( 7 );
 
-   // 3x3 row-major diagonal dynamic matrix with default initialized lower and upper matrix
-   DiagonalMatrix< DynamicMatrix<int,rowMajor> > D( 3 );
-   \endcode
+   // 3x3 row-major diagonal dynamic matrix with default initialized lower and
+upper matrix DiagonalMatrix< DynamicMatrix<int,rowMajor> > D( 3 ); \endcode
 
-// \n \subsection adaptors_triangular_matrices_storage Dense Triangular Matrices Store All Elements!
+// \n \subsection adaptors_triangular_matrices_storage Dense Triangular Matrices
+Store All Elements!
 //
-// All dense triangular matrices store all \f$ N \times N \f$ elements, including the immutable
-// elements in the lower or upper part, respectively. Therefore dense triangular matrices don't
-// provide any kind of memory reduction! There are two main reasons for this: First, storing also
-// the zero elements guarantees maximum performance for many algorithms that perform vectorized
-// operations on the triangular matrices, which is especially true for small dense matrices.
-// Second, conceptually all triangular adaptors merely restrict the interface to the matrix type
+// All dense triangular matrices store all \f$ N \times N \f$ elements,
+including the immutable
+// elements in the lower or upper part, respectively. Therefore dense triangular
+matrices don't
+// provide any kind of memory reduction! There are two main reasons for this:
+First, storing also
+// the zero elements guarantees maximum performance for many algorithms that
+perform vectorized
+// operations on the triangular matrices, which is especially true for small
+dense matrices.
+// Second, conceptually all triangular adaptors merely restrict the interface to
+the matrix type
 // \c MT and do not change the data layout or the underlying matrix type.
 //
-// This property matters most for diagonal matrices. In order to achieve the perfect combination
-// of performance and memory consumption for a diagonal matrix it is recommended to use dense
-// matrices for small diagonal matrices and sparse matrices for large diagonal matrices:
+// This property matters most for diagonal matrices. In order to achieve the
+perfect combination
+// of performance and memory consumption for a diagonal matrix it is recommended
+to use dense
+// matrices for small diagonal matrices and sparse matrices for large diagonal
+matrices:
 
    \code
    // Recommendation 1: use dense matrices for small diagonal matrices
-   using SmallDiagonalMatrix = blaze::DiagonalMatrix< blaze::StaticMatrix<float,3UL,3UL> >;
+   using SmallDiagonalMatrix = blaze::DiagonalMatrix<
+blaze::StaticMatrix<float,3UL,3UL> >;
 
    // Recommendation 2: use sparse matrices for large diagonal matrices
-   using LargeDiagonalMatrix = blaze::DiagonalMatrix< blaze::CompressedMatrix<float> >;
-   \endcode
+   using LargeDiagonalMatrix = blaze::DiagonalMatrix<
+blaze::CompressedMatrix<float> >; \endcode
 
-// \n \subsection adaptors_triangular_matrices_scaling Unitriangular Matrices Cannot Be Scaled!
+// \n \subsection adaptors_triangular_matrices_scaling Unitriangular Matrices
+Cannot Be Scaled!
 //
-// Since the diagonal elements of a unitriangular matrix have a fixed value of 1 it is not possible
+// Since the diagonal elements of a unitriangular matrix have a fixed value of 1
+it is not possible
 // to self-scale such a matrix:
 
    \code
@@ -6569,20 +7872,25 @@
 
    UniLowerMatrix< DynamicMatrix<int> > A( 4 );
 
-   A *= 2;        // Compilation error; Scale operation is not available on an unilower matrix
-   A /= 2;        // Compilation error; Scale operation is not available on an unilower matrix
-   A.scale( 2 );  // Compilation error; Scale function is not available on an unilower matrix
+   A *= 2;        // Compilation error; Scale operation is not available on an
+unilower matrix A /= 2;        // Compilation error; Scale operation is not
+available on an unilower matrix A.scale( 2 );  // Compilation error; Scale
+function is not available on an unilower matrix
 
    A = A * 2;  // Throws an exception; Invalid assignment of non-unilower matrix
    A = A / 2;  // Throws an exception; Invalid assignment of non-unilower matrix
    \endcode
 
-// \n \section adaptors_triangular_matrices_arithmetic_operations Arithmetic Operations
+// \n \section adaptors_triangular_matrices_arithmetic_operations Arithmetic
+Operations
 // <hr>
 //
-// A lower and upper triangular matrix can participate in numerical operations in any way any other
-// dense or sparse matrix can participate. It can also be combined with any other dense or sparse
-// vector or matrix. The following code example gives an impression of the use of blaze::LowerMatrix
+// A lower and upper triangular matrix can participate in numerical operations
+in any way any other
+// dense or sparse matrix can participate. It can also be combined with any
+other dense or sparse
+// vector or matrix. The following code example gives an impression of the use
+of blaze::LowerMatrix
 // within arithmetic operations:
 
    \code
@@ -6603,9 +7911,10 @@
    LowerMatrix< HybridMatrix<float,3UL,3UL,rowMajor> > E;
    LowerMatrix< StaticMatrix<float,3UL,3UL,columnMajor> > F;
 
-   E = A + B;     // Matrix addition and assignment to a row-major lower matrix (includes runtime check)
-   F = C - D;     // Matrix subtraction and assignment to a column-major lower matrix (only compile time check)
-   F = A * D;     // Matrix multiplication between a dense and a sparse matrix (includes runtime check)
+   E = A + B;     // Matrix addition and assignment to a row-major lower matrix
+(includes runtime check) F = C - D;     // Matrix subtraction and assignment to
+a column-major lower matrix (only compile time check) F = A * D;     // Matrix
+multiplication between a dense and a sparse matrix (includes runtime check)
 
    C *= 2.0;      // In-place scaling of matrix C
    E  = 2.0 * B;  // Scaling of matrix B (includes runtime check)
@@ -6616,14 +7925,19 @@
    F *= A * D;    // Multiplication assignment (includes runtime check)
    \endcode
 
-// Note that it is possible to assign any kind of matrix to a triangular matrix. In case the
-// matrix to be assigned does not satisfy the invariants of the triangular matrix at compile
-// time, a runtime check is performed. Also note that upper triangular, diagonal, unitriangular
-// and strictly triangular matrix types can be used in the same way, but may pose some additional
+// Note that it is possible to assign any kind of matrix to a triangular matrix.
+In case the
+// matrix to be assigned does not satisfy the invariants of the triangular
+matrix at compile
+// time, a runtime check is performed. Also note that upper triangular,
+diagonal, unitriangular
+// and strictly triangular matrix types can be used in the same way, but may
+pose some additional
 // restrictions (see the according class documentations).
 //
 //
-// \n \section adaptors_triangular_matrices_block_matrices Triangular Block Matrices
+// \n \section adaptors_triangular_matrices_block_matrices Triangular Block
+Matrices
 // <hr>
 //
 // It is also possible to use triangular block matrices:
@@ -6642,8 +7956,10 @@
    UpperMatrix< CompressedMatrix< StaticMatrix<int,3UL,3UL> > > B( 7 );
    \endcode
 
-// Also in this case the triangular matrix invariant is enforced, i.e. it is not possible to
-// manipulate elements in the upper part (lower triangular matrix) or the lower part (upper
+// Also in this case the triangular matrix invariant is enforced, i.e. it is not
+possible to
+// manipulate elements in the upper part (lower triangular matrix) or the lower
+part (upper
 // triangular matrix) of the matrix:
 
    \code
@@ -6651,11 +7967,12 @@
                                       { 6,  8, -3 },
                                       { 2, -1,  2 } };
 
-   A(2,4)(1,1) = -5;     // Invalid manipulation of upper matrix element; Results in an exception
-   B.insert( 4, 2, C );  // Invalid insertion of the elements (4,2); Results in an exception
-   \endcode
+   A(2,4)(1,1) = -5;     // Invalid manipulation of upper matrix element;
+Results in an exception B.insert( 4, 2, C );  // Invalid insertion of the
+elements (4,2); Results in an exception \endcode
 
-// Note that unitriangular matrices are restricted to numeric element types and therefore cannot
+// Note that unitriangular matrices are restricted to numeric element types and
+therefore cannot
 // be used for block matrices:
 
    \code
@@ -6665,32 +7982,45 @@
    using blaze::UniLowerMatrix;
    using blaze::UniUpperMatrix;
 
-   // Compilation error: lower unitriangular matrices are restricted to numeric element types
-   UniLowerMatrix< DynamicMatrix< StaticMatrix<int,3UL,3UL> > > A( 5 );
+   // Compilation error: lower unitriangular matrices are restricted to numeric
+element types UniLowerMatrix< DynamicMatrix< StaticMatrix<int,3UL,3UL> > > A( 5
+);
 
-   // Compilation error: upper unitriangular matrices are restricted to numeric element types
-   UniUpperMatrix< CompressedMatrix< StaticMatrix<int,3UL,3UL> > > B( 7 );
-   \endcode
+   // Compilation error: upper unitriangular matrices are restricted to numeric
+element types UniUpperMatrix< CompressedMatrix< StaticMatrix<int,3UL,3UL> > > B(
+7 ); \endcode
 
-// For more information on block matrices, see the tutorial on \ref block_vectors_and_matrices.
+// For more information on block matrices, see the tutorial on \ref
+block_vectors_and_matrices.
 //
 //
-// \n \section adaptors_triangular_matrices_performance Performance Considerations
+// \n \section adaptors_triangular_matrices_performance Performance
+Considerations
 // <hr>
 //
-// The \b Blaze library tries to exploit the properties of lower and upper triangular matrices
-// whenever and wherever possible. Therefore using triangular matrices instead of a general
-// matrices can result in a considerable performance improvement. However, there are also
-// situations when using a triangular matrix introduces some overhead. The following examples
-// demonstrate several common situations where triangular matrices can positively or negatively
+// The \b Blaze library tries to exploit the properties of lower and upper
+triangular matrices
+// whenever and wherever possible. Therefore using triangular matrices instead
+of a general
+// matrices can result in a considerable performance improvement. However, there
+are also
+// situations when using a triangular matrix introduces some overhead. The
+following examples
+// demonstrate several common situations where triangular matrices can
+positively or negatively
 // impact performance.
 //
-// \n \subsection adaptors_triangular_matrices_matrix_matrix_multiplication Positive Impact: Matrix/Matrix Multiplication
+// \n \subsection adaptors_triangular_matrices_matrix_matrix_multiplication
+Positive Impact: Matrix/Matrix Multiplication
 //
-// When multiplying two matrices, at least one of which is triangular, \b Blaze can exploit the
-// fact that either the lower or upper part of the matrix contains only default elements and
-// restrict the algorithm to the non-zero elements. The following example demonstrates this by
-// means of a dense matrix/dense matrix multiplication with lower triangular matrices:
+// When multiplying two matrices, at least one of which is triangular, \b Blaze
+can exploit the
+// fact that either the lower or upper part of the matrix contains only default
+elements and
+// restrict the algorithm to the non-zero elements. The following example
+demonstrates this by
+// means of a dense matrix/dense matrix multiplication with lower triangular
+matrices:
 
    \code
    using blaze::DynamicMatrix;
@@ -6707,15 +8037,21 @@
    C = A * B;
    \endcode
 
-// In comparison to a general matrix multiplication, the performance advantage is significant,
-// especially for large matrices. Therefore is it highly recommended to use the blaze::LowerMatrix
-// and blaze::UpperMatrix adaptors when a matrix is known to be lower or upper triangular,
-// respectively. Note however that the performance advantage is most pronounced for dense matrices
+// In comparison to a general matrix multiplication, the performance advantage
+is significant,
+// especially for large matrices. Therefore is it highly recommended to use the
+blaze::LowerMatrix
+// and blaze::UpperMatrix adaptors when a matrix is known to be lower or upper
+triangular,
+// respectively. Note however that the performance advantage is most pronounced
+for dense matrices
 // and much less so for sparse matrices.
 //
-// \n \subsection adaptors_triangular_matrices_matrix_vector_multiplication Positive Impact: Matrix/Vector Multiplication
+// \n \subsection adaptors_triangular_matrices_matrix_vector_multiplication
+Positive Impact: Matrix/Vector Multiplication
 //
-// A similar performance improvement can be gained when using a triangular matrix in a matrix/vector
+// A similar performance improvement can be gained when using a triangular
+matrix in a matrix/vector
 // multiplication:
 
    \code
@@ -6732,16 +8068,24 @@
    y = A * x;
    \endcode
 
-// In this example, \b Blaze also exploits the structure of the matrix and approx. halves the
-// runtime of the multiplication. Also in case of matrix/vector multiplications the performance
-// improvement is most pronounced for dense matrices and much less so for sparse matrices.
+// In this example, \b Blaze also exploits the structure of the matrix and
+approx. halves the
+// runtime of the multiplication. Also in case of matrix/vector multiplications
+the performance
+// improvement is most pronounced for dense matrices and much less so for sparse
+matrices.
 //
-// \n \subsection adaptors_triangular_matrices_assignment Negative Impact: Assignment of a General Matrix
+// \n \subsection adaptors_triangular_matrices_assignment Negative Impact:
+Assignment of a General Matrix
 //
-// In contrast to using a triangular matrix on the right-hand side of an assignment (i.e. for
-// read access), which introduces absolutely no performance penalty, using a triangular matrix
-// on the left-hand side of an assignment (i.e. for write access) may introduce additional
-// overhead when it is assigned a general matrix, which is not triangular at compile time:
+// In contrast to using a triangular matrix on the right-hand side of an
+assignment (i.e. for
+// read access), which introduces absolutely no performance penalty, using a
+triangular matrix
+// on the left-hand side of an assignment (i.e. for write access) may introduce
+additional
+// overhead when it is assigned a general matrix, which is not triangular at
+compile time:
 
    \code
    using blaze::DynamicMatrix;
@@ -6751,19 +8095,27 @@
    DynamicMatrix<double> B;
 
    B = A;  // Only read-access to the lower matrix; no performance penalty
-   C = A;  // Assignment of a lower matrix to another lower matrix; no runtime overhead
-   C = B;  // Assignment of a general matrix to a lower matrix; some runtime overhead
-   \endcode
+   C = A;  // Assignment of a lower matrix to another lower matrix; no runtime
+overhead C = B;  // Assignment of a general matrix to a lower matrix; some
+runtime overhead \endcode
 
-// When assigning a general (potentially not lower triangular) matrix to a lower matrix or a
-// general (potentially not upper triangular) matrix to an upper matrix it is necessary to check
-// whether the matrix is lower or upper at runtime in order to guarantee the triangular property
-// of the matrix. In case it turns out to be lower or upper, respectively, it is assigned as
-// efficiently as possible, if it is not, an exception is thrown. In order to prevent this runtime
-// overhead it is therefore generally advisable to assign lower or upper triangular matrices to
+// When assigning a general (potentially not lower triangular) matrix to a lower
+matrix or a
+// general (potentially not upper triangular) matrix to an upper matrix it is
+necessary to check
+// whether the matrix is lower or upper at runtime in order to guarantee the
+triangular property
+// of the matrix. In case it turns out to be lower or upper, respectively, it is
+assigned as
+// efficiently as possible, if it is not, an exception is thrown. In order to
+prevent this runtime
+// overhead it is therefore generally advisable to assign lower or upper
+triangular matrices to
 // other lower or upper triangular matrices.\n
-// In this context it is especially noteworthy that the addition, subtraction, and multiplication
-// of two triangular matrices of the same structure always results in another triangular matrix:
+// In this context it is especially noteworthy that the addition, subtraction,
+and multiplication
+// of two triangular matrices of the same structure always results in another
+triangular matrix:
 
    \code
    LowerMatrix< DynamicMatrix<double> > A, B, C;
@@ -6785,7 +8137,6 @@
 */
 //*************************************************************************************************
 
-
 //**Views******************************************************************************************
 /*!\page views Views
 //
@@ -6795,13 +8146,20 @@
 // \section views_general General Concepts
 // <hr>
 //
-// Views represents parts of a vector or matrix, such as a subvector, a submatrix, or a specific
-// row, column, or band of a matrix. As such, views act as a reference to a specific part of a
-// vector or matrix. This reference is valid and can be used in every way as any other vector
-// or matrix can be used as long as the referenced vector or matrix is not resized or entirely
-// destroyed. Views also act as alias to the elements of the vector or matrix: Changes made to the
-// elements (e.g. modifying values, inserting or erasing elements) via the view are immediately
-// visible in the vector or matrix and changes made via the vector or matrix are immediately
+// Views represents parts of a vector or matrix, such as a subvector, a
+submatrix, or a specific
+// row, column, or band of a matrix. As such, views act as a reference to a
+specific part of a
+// vector or matrix. This reference is valid and can be used in every way as any
+other vector
+// or matrix can be used as long as the referenced vector or matrix is not
+resized or entirely
+// destroyed. Views also act as alias to the elements of the vector or matrix:
+Changes made to the
+// elements (e.g. modifying values, inserting or erasing elements) via the view
+are immediately
+// visible in the vector or matrix and changes made via the vector or matrix are
+immediately
 // visible in the view.
 //
 // The \b Blaze library provides the following views on vectors and matrices:
@@ -6847,10 +8205,10 @@
    subvector( row( A, 1UL ), 2UL, 2UL ) = vec;
    \endcode
 
-// \n Previous: \ref adaptors_triangular_matrices &nbsp; &nbsp; Next: \ref views_subvectors
+// \n Previous: \ref adaptors_triangular_matrices &nbsp; &nbsp; Next: \ref
+views_subvectors
 */
 //*************************************************************************************************
-
 
 //**Subvectors*************************************************************************************
 /*!\page views_subvectors Subvectors
@@ -6858,59 +8216,77 @@
 // \tableofcontents
 //
 //
-// Subvectors provide views on a specific part of a dense or sparse vector. As such, subvectors
-// act as a reference to a specific range within a vector. This reference is valid and can be
-// used in every way any other dense or sparse vector can be used as long as the vector containing
-// the subvector is not resized or entirely destroyed. The subvector also acts as an alias to the
-// vector elements in the specified range: Changes made to the elements (e.g. modifying values,
-// inserting or erasing elements) are immediately visible in the vector and changes made via the
+// Subvectors provide views on a specific part of a dense or sparse vector. As
+such, subvectors
+// act as a reference to a specific range within a vector. This reference is
+valid and can be
+// used in every way any other dense or sparse vector can be used as long as the
+vector containing
+// the subvector is not resized or entirely destroyed. The subvector also acts
+as an alias to the
+// vector elements in the specified range: Changes made to the elements (e.g.
+modifying values,
+// inserting or erasing elements) are immediately visible in the vector and
+changes made via the
 // vector are immediately visible in the subvector.
 //
 //
 // \n \section views_subvectors_setup Setup of Subvectors
 // <hr>
 //
-// A view on a dense or sparse subvector can be created very conveniently via the \c subvector()
+// A view on a dense or sparse subvector can be created very conveniently via
+the \c subvector()
 // function. It can be included via the header file
 
    \code
    #include <blaze/math/Subvector.h>
    \endcode
 
-// The first parameter specifies the offset of the subvector within the underlying dense or sparse
-// vector, the second parameter specifies the size of the subvector. The two parameters can be
+// The first parameter specifies the offset of the subvector within the
+underlying dense or sparse
+// vector, the second parameter specifies the size of the subvector. The two
+parameters can be
 // specified either at compile time or at runtime:
 
    \code
    blaze::DynamicVector<double,blaze::rowVector> x;
    // ... Resizing and initialization
 
-   // Create a subvector from index 4 with a size of 12 (i.e. in the range [4..15]) (compile time arguments)
-   auto sv1 = subvector<4UL,12UL>( x );
+   // Create a subvector from index 4 with a size of 12 (i.e. in the range
+[4..15]) (compile time arguments) auto sv1 = subvector<4UL,12UL>( x );
 
-   // Create a subvector from index 8 with a size of 16 (i.e. in the range [8..23]) (runtime arguments)
-   auto sv2 = subvector( x, 8UL, 16UL );
-   \endcode
+   // Create a subvector from index 8 with a size of 16 (i.e. in the range
+[8..23]) (runtime arguments) auto sv2 = subvector( x, 8UL, 16UL ); \endcode
 
-// The \c subvector() function returns an expression representing the subvector view. The type of
-// this expression depends on the given subvector arguments, primarily the type of the vector and
-// the compile time arguments. If the type is required, it can be determined via \c decltype or
+// The \c subvector() function returns an expression representing the subvector
+view. The type of
+// this expression depends on the given subvector arguments, primarily the type
+of the vector and
+// the compile time arguments. If the type is required, it can be determined via
+\c decltype or
 // via the \c SubvectorExprTrait class template:
 
    \code
    using VectorType = blaze::DynamicVector<int>;
 
-   using SubvectorType1 = decltype( blaze::subvector<4UL,12UL>( std::declval<VectorType>() ) );
-   using SubvectorType2 = blaze::SubvectorExprTrait<VectorType,4UL,12UL>::Type;
-   \endcode
+   using SubvectorType1 = decltype( blaze::subvector<4UL,12UL>(
+std::declval<VectorType>() ) ); using SubvectorType2 =
+blaze::SubvectorExprTrait<VectorType,4UL,12UL>::Type; \endcode
 
-// The resulting view can be treated as any other dense or sparse vector, i.e. it can be assigned
-// to, it can be copied from, and it can be used in arithmetic operations. A subvector created
-// from a row vector can be used as any other row vector, a subvector created from a column vector
-// can be used as any other column vector. The view can also be used on both sides of an assignment:
-// The subvector can either be used as an alias to grant write access to a specific subvector of a
-// vector primitive on the left-hand side of an assignment or to grant read-access to a specific
-// subvector of a vector primitive or expression on the right-hand side of an assignment. The
+// The resulting view can be treated as any other dense or sparse vector, i.e.
+it can be assigned
+// to, it can be copied from, and it can be used in arithmetic operations. A
+subvector created
+// from a row vector can be used as any other row vector, a subvector created
+from a column vector
+// can be used as any other column vector. The view can also be used on both
+sides of an assignment:
+// The subvector can either be used as an alias to grant write access to a
+specific subvector of a
+// vector primitive on the left-hand side of an assignment or to grant
+read-access to a specific
+// subvector of a vector primitive or expression on the right-hand side of an
+assignment. The
 // following example demonstrates this in detail:
 
    \code
@@ -6919,8 +8295,8 @@
    blaze::DynamicMatrix<double,blaze::rowMajor> A;
    // ... Resizing and initialization
 
-   // Create a subvector from index 0 with a size of 10 (i.e. in the range [0..9])
-   auto sv = subvector( x, 0UL, 10UL );
+   // Create a subvector from index 0 with a size of 10 (i.e. in the range
+[0..9]) auto sv = subvector( x, 0UL, 10UL );
 
    // Setting the first ten elements of x to the 2nd row of matrix A
    sv = row( A, 2UL );
@@ -6931,14 +8307,14 @@
    // Setting the 3rd row of A to a subvector of x
    row( A, 3UL ) = subvector( x, 3UL, 10UL );
 
-   // Setting x to a subvector of the result of the addition between y and the 1st row of A
-   x = subvector( y + row( A, 1UL ), 2UL, 5UL )
-   \endcode
+   // Setting x to a subvector of the result of the addition between y and the
+1st row of A x = subvector( y + row( A, 1UL ), 2UL, 5UL ) \endcode
 
 // \n \section views_subvectors_element_access Element Access
 // <hr>
 //
-// The elements of a subvector can be directly accessed via the subscript operator:
+// The elements of a subvector can be directly accessed via the subscript
+operator:
 
    \code
    blaze::DynamicVector<double,blaze::rowVector> v;
@@ -6958,9 +8334,12 @@
                              0 & 1 & 2 & \cdots & N-1 \\
                              \end{array}\right),\f]
 
-// where N is the specified size of the subvector. Alternatively, the elements of a subvector can
-// be traversed via iterators. Just as with vectors, in case of non-const subvectors, \c begin()
-// and \c end() return an iterator, which allows to manipulate the elements, in case of constant
+// where N is the specified size of the subvector. Alternatively, the elements
+of a subvector can
+// be traversed via iterators. Just as with vectors, in case of non-const
+subvectors, \c begin()
+// and \c end() return an iterator, which allows to manipulate the elements, in
+case of constant
 // subvectors an iterator to immutable elements is returned:
 
    \code
@@ -6978,7 +8357,8 @@
 
    // Traversing the elements via iterators to const elements
    for( auto it=sv.cbegin(); it!=sv.cend(); ++it ) {
-      *it = ...;  // Compilation error: Assignment to the value via iterator-to-const is invalid.
+      *it = ...;  // Compilation error: Assignment to the value via
+iterator-to-const is invalid.
       ... = *it;  // OK: Read access to the dense subvector value.
    }
    \endcode
@@ -6992,17 +8372,21 @@
 
    // Traversing the elements via iterators to non-const elements
    for( auto it=sv.begin(); it!=sv.end(); ++it ) {
-      it->value() = ...;  // OK: Write access to the value of the non-zero element.
-      ... = it->value();  // OK: Read access to the value of the non-zero element.
-      it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
+      it->value() = ...;  // OK: Write access to the value of the non-zero
+element.
+      ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
       ... = it->index();  // OK: Read access to the index of the sparse element.
    }
 
    // Traversing the elements via iterators to const elements
    for( auto it=sv.cbegin(); it!=sv.cend(); ++it ) {
-      it->value() = ...;  // Compilation error: Assignment to the value via iterator-to-const is invalid.
-      ... = it->value();  // OK: Read access to the value of the non-zero element.
-      it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
+      it->value() = ...;  // Compilation error: Assignment to the value via
+iterator-to-const is invalid.
+      ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
       ... = it->index();  // OK: Read access to the index of the sparse element.
    }
    \endcode
@@ -7010,34 +8394,47 @@
 // \n \section views_subvectors_element_insertion Element Insertion
 // <hr>
 //
-// Inserting/accessing elements in a sparse subvector can be done by several alternative functions.
+// Inserting/accessing elements in a sparse subvector can be done by several
+alternative functions.
 // The following example demonstrates all options:
 
    \code
-   blaze::CompressedVector<double,blaze::rowVector> v( 256UL );  // Non-initialized vector of size 256
+   blaze::CompressedVector<double,blaze::rowVector> v( 256UL );  //
+Non-initialized vector of size 256
 
    auto sv = subvector( v, 10UL, 60UL );  // View on the range [10..69] of v
 
-   // The subscript operator provides access to all possible elements of the sparse subvector,
-   // including the zero elements. In case the subscript operator is used to access an element
-   // that is currently not stored in the sparse subvector, the element is inserted into the
+   // The subscript operator provides access to all possible elements of the
+sparse subvector,
+   // including the zero elements. In case the subscript operator is used to
+access an element
+   // that is currently not stored in the sparse subvector, the element is
+inserted into the
    // subvector.
    sv[42] = 2.0;
 
-   // The second operation for inserting elements is the set() function. In case the element is
-   // not contained in the subvector it is inserted into the subvector, if it is already contained
+   // The second operation for inserting elements is the set() function. In case
+the element is
+   // not contained in the subvector it is inserted into the subvector, if it is
+already contained
    // in the subvector its value is modified.
    sv.set( 45UL, -1.2 );
 
-   // An alternative for inserting elements into the subvector is the insert() function. However,
-   // it inserts the element only in case the element is not already contained in the subvector.
-   sv.insert( 50UL, 3.7 );
+   // An alternative for inserting elements into the subvector is the insert()
+function. However,
+   // it inserts the element only in case the element is not already contained
+in the subvector. sv.insert( 50UL, 3.7 );
 
-   // Just as in case of vectors, elements can also be inserted via the append() function. In
-   // case of subvectors, append() also requires that the appended element's index is strictly
-   // larger than the currently largest non-zero index of the subvector and that the subvector's
-   // capacity is large enough to hold the new element. Note however that due to the nature of
-   // a subvector, which may be an alias to the middle of a sparse vector, the append() function
+   // Just as in case of vectors, elements can also be inserted via the append()
+function. In
+   // case of subvectors, append() also requires that the appended element's
+index is strictly
+   // larger than the currently largest non-zero index of the subvector and that
+the subvector's
+   // capacity is large enough to hold the new element. Note however that due to
+the nature of
+   // a subvector, which may be an alias to the middle of a sparse vector, the
+append() function
    // does not work as efficiently for a subvector as it does for a vector.
    sv.reserve( 10UL );
    sv.append( 51UL, -2.1 );
@@ -7046,12 +8443,18 @@
 // \n \section views_subvectors_common_operations Common Operations
 // <hr>
 //
-// A subvector view can be used like any other dense or sparse vector. This means that with
-// only a few exceptions all \ref vector_operations and \ref arithmetic_operations can be used.
-// For instance, the current number of elements can be obtained via the \c size() function, the
-// current capacity via the \c capacity() function, and the number of non-zero elements via the
-// \c nonZeros() function. However, since subvectors are references to a specific range of a
-// vector, several operations are not possible, such as resizing and swapping. The following
+// A subvector view can be used like any other dense or sparse vector. This
+means that with
+// only a few exceptions all \ref vector_operations and \ref
+arithmetic_operations can be used.
+// For instance, the current number of elements can be obtained via the \c
+size() function, the
+// current capacity via the \c capacity() function, and the number of non-zero
+elements via the
+// \c nonZeros() function. However, since subvectors are references to a
+specific range of a
+// vector, several operations are not possible, such as resizing and swapping.
+The following
 // example shows this by means of a dense subvector view:
 
    \code
@@ -7063,9 +8466,11 @@
 
    sv.size();          // Returns the number of elements in the subvector
    sv.capacity();      // Returns the capacity of the subvector
-   sv.nonZeros();      // Returns the number of non-zero elements contained in the subvector
+   sv.nonZeros();      // Returns the number of non-zero elements contained in
+the subvector
 
-   sv.resize( 84UL );  // Compilation error: Cannot resize a subvector of a vector
+   sv.resize( 84UL );  // Compilation error: Cannot resize a subvector of a
+vector
 
    auto sv2 = subvector( v, 15UL, 10UL );
    swap( sv, sv2 );   // Compilation error: Swap operation not allowed
@@ -7074,10 +8479,14 @@
 // \n \section views_subvectors_arithmetic_operations Arithmetic Operations
 // <hr>
 //
-// Both dense and sparse subvectors can be used in all arithmetic operations that any other dense
-// or sparse vector can be used in. The following example gives an impression of the use of dense
-// subvectors within arithmetic operations. All operations (addition, subtraction, multiplication,
-// scaling, ...) can be performed on all possible combinations of dense and sparse subvectors with
+// Both dense and sparse subvectors can be used in all arithmetic operations
+that any other dense
+// or sparse vector can be used in. The following example gives an impression of
+the use of dense
+// subvectors within arithmetic operations. All operations (addition,
+subtraction, multiplication,
+// scaling, ...) can be performed on all possible combinations of dense and
+sparse subvectors with
 // fitting element types:
 
    \code
@@ -7088,35 +8497,43 @@
 
    blaze::DynamicMatrix<double,blaze::rowMajor> A;
 
-   auto sv( subvector( d1, 0UL, 10UL ) );  // View on the range [0..9] of vector d1
+   auto sv( subvector( d1, 0UL, 10UL ) );  // View on the range [0..9] of vector
+d1
 
-   sv = d2;                           // Dense vector initialization of the range [0..9]
-   subvector( d1, 10UL, 10UL ) = s1;  // Sparse vector initialization of the range [10..19]
+   sv = d2;                           // Dense vector initialization of the
+range [0..9] subvector( d1, 10UL, 10UL ) = s1;  // Sparse vector initialization
+of the range [10..19]
 
    d3 = sv + d2;                           // Dense vector/dense vector addition
-   s2 = s1 + subvector( d1, 10UL, 10UL );  // Sparse vector/dense vector addition
-   d2 = sv * subvector( d1, 20UL, 10UL );  // Component-wise vector multiplication
+   s2 = s1 + subvector( d1, 10UL, 10UL );  // Sparse vector/dense vector
+addition d2 = sv * subvector( d1, 20UL, 10UL );  // Component-wise vector
+multiplication
 
-   subvector( d1, 3UL, 4UL ) *= 2.0;      // In-place scaling of the range [3..6]
-   d2 = subvector( d1, 7UL, 3UL ) * 2.0;  // Scaling of the range [7..9]
-   d2 = 2.0 * subvector( d1, 7UL, 3UL );  // Scaling of the range [7..9]
+   subvector( d1, 3UL, 4UL ) *= 2.0;      // In-place scaling of the range
+[3..6] d2 = subvector( d1, 7UL, 3UL ) * 2.0;  // Scaling of the range [7..9] d2
+= 2.0 * subvector( d1, 7UL, 3UL );  // Scaling of the range [7..9]
 
    subvector( d1, 0UL , 10UL ) += d2;  // Addition assignment
    subvector( d1, 10UL, 10UL ) -= s2;  // Subtraction assignment
    subvector( d1, 20UL, 10UL ) *= sv;  // Multiplication assignment
 
-   double scalar = subvector( d1, 5UL, 10UL ) * trans( s1 );  // Scalar/dot/inner product between two vectors
+   double scalar = subvector( d1, 5UL, 10UL ) * trans( s1 );  //
+Scalar/dot/inner product between two vectors
 
-   A = trans( s1 ) * subvector( d1, 4UL, 16UL );  // Outer product between two vectors
-   \endcode
+   A = trans( s1 ) * subvector( d1, 4UL, 16UL );  // Outer product between two
+vectors \endcode
 
 // \n \section views_aligned_subvectors Aligned Subvectors
 // <hr>
 //
-// Usually subvectors can be defined anywhere within a vector. They may start at any position and
-// may have an arbitrary size (only restricted by the size of the underlying vector). However, in
-// contrast to vectors themselves, which are always properly aligned in memory and therefore can
-// provide maximum performance, this means that subvectors in general have to be considered to be
+// Usually subvectors can be defined anywhere within a vector. They may start at
+any position and
+// may have an arbitrary size (only restricted by the size of the underlying
+vector). However, in
+// contrast to vectors themselves, which are always properly aligned in memory
+and therefore can
+// provide maximum performance, this means that subvectors in general have to be
+considered to be
 // unaligned. This can be made explicit by the \a blaze::unaligned flag:
 
    \code
@@ -7132,18 +8549,28 @@
    auto sv4 = subvector<unaligned,8UL,16UL>( x );
    \endcode
 
-// All of these calls to the \c subvector() function are identical. Whether the alignment flag is
-// explicitly specified or not, it always returns an unaligned subvector. Whereas this may provide
-// full flexibility in the creation of subvectors, this might result in performance disadvantages
-// in comparison to vector primitives (even in case the specified subvector could be aligned).
-// Whereas vector primitives are guaranteed to be properly aligned and therefore provide maximum
-// performance in all operations, a general view on a vector might not be properly aligned. This
+// All of these calls to the \c subvector() function are identical. Whether the
+alignment flag is
+// explicitly specified or not, it always returns an unaligned subvector.
+Whereas this may provide
+// full flexibility in the creation of subvectors, this might result in
+performance disadvantages
+// in comparison to vector primitives (even in case the specified subvector
+could be aligned).
+// Whereas vector primitives are guaranteed to be properly aligned and therefore
+provide maximum
+// performance in all operations, a general view on a vector might not be
+properly aligned. This
 // may cause a performance penalty on some platforms and/or for some operations.
 //
-// However, it is also possible to create aligned subvectors. Aligned subvectors are identical to
-// unaligned subvectors in all aspects, except that they may pose additional alignment restrictions
-// and therefore have less flexibility during creation, but don't suffer from performance penalties
-// and provide the same performance as the underlying vector. Aligned subvectors are created by
+// However, it is also possible to create aligned subvectors. Aligned subvectors
+are identical to
+// unaligned subvectors in all aspects, except that they may pose additional
+alignment restrictions
+// and therefore have less flexibility during creation, but don't suffer from
+performance penalties
+// and provide the same performance as the underlying vector. Aligned subvectors
+are created by
 // explicitly specifying the blaze::aligned flag:
 
    \code
@@ -7154,10 +8581,14 @@
    auto sv2 = subvector<aligned,8UL,16UL>( x );
    \endcode
 
-// The alignment restrictions refer to system dependent address restrictions for the used element
-// type and the available vectorization mode (SSE, AVX, ...). In order to be properly aligned the
-// first element of the subvector must be aligned. The following source code gives some examples
-// for a double precision dynamic vector, assuming that AVX is available, which packs 4 \c double
+// The alignment restrictions refer to system dependent address restrictions for
+the used element
+// type and the available vectorization mode (SSE, AVX, ...). In order to be
+properly aligned the
+// first element of the subvector must be aligned. The following source code
+gives some examples
+// for a double precision dynamic vector, assuming that AVX is available, which
+packs 4 \c double
 // values into a SIMD vector:
 
    \code
@@ -7172,17 +8603,20 @@
    // OK: Start index is a multiple of 4, i.e. the first element is aligned
    auto dsv2 = subvector<aligned>( d, 4UL, 7UL );
 
-   // OK: The start index is a multiple of 4 and the subvector includes the last element
-   auto dsv3 = subvector<aligned>( d, 8UL, 9UL );
+   // OK: The start index is a multiple of 4 and the subvector includes the last
+element auto dsv3 = subvector<aligned>( d, 8UL, 9UL );
 
-   // Error: Start index is not a multiple of 4, i.e. the first element is not aligned
-   auto dsv4 = subvector<aligned>( d, 5UL, 8UL );
-   \endcode
+   // Error: Start index is not a multiple of 4, i.e. the first element is not
+aligned auto dsv4 = subvector<aligned>( d, 5UL, 8UL ); \endcode
 
-// Note that the discussed alignment restrictions are only valid for aligned dense subvectors.
-// In contrast, aligned sparse subvectors at this time don't pose any additional restrictions.
-// Therefore aligned and unaligned sparse subvectors are truly fully identical. Still, in case
-// the blaze::aligned flag is specified during setup, an aligned subvector is created:
+// Note that the discussed alignment restrictions are only valid for aligned
+dense subvectors.
+// In contrast, aligned sparse subvectors at this time don't pose any additional
+restrictions.
+// Therefore aligned and unaligned sparse subvectors are truly fully identical.
+Still, in case
+// the blaze::aligned flag is specified during setup, an aligned subvector is
+created:
 
    \code
    using blaze::aligned;
@@ -7199,67 +8633,85 @@
 */
 //*************************************************************************************************
 
-
 //**Submatrices************************************************************************************
 /*!\page views_submatrices Submatrices
 //
 // \tableofcontents
 //
 //
-// Submatrices provide views on a specific part of a dense or sparse matrix just as subvectors
-// provide views on specific parts of vectors. As such, submatrices act as a reference to a
-// specific block within a matrix. This reference is valid and can be used in evary way any
-// other dense or sparse matrix can be used as long as the matrix containing the submatrix is
-// not resized or entirely destroyed. The submatrix also acts as an alias to the matrix elements
-// in the specified block: Changes made to the elements (e.g. modifying values, inserting or
-// erasing elements) are immediately visible in the matrix and changes made via the matrix are
+// Submatrices provide views on a specific part of a dense or sparse matrix just
+as subvectors
+// provide views on specific parts of vectors. As such, submatrices act as a
+reference to a
+// specific block within a matrix. This reference is valid and can be used in
+evary way any
+// other dense or sparse matrix can be used as long as the matrix containing the
+submatrix is
+// not resized or entirely destroyed. The submatrix also acts as an alias to the
+matrix elements
+// in the specified block: Changes made to the elements (e.g. modifying values,
+inserting or
+// erasing elements) are immediately visible in the matrix and changes made via
+the matrix are
 // immediately visible in the submatrix.
 //
 //
 // \n \section views_submatrices_setup Setup of Submatrices
 // <hr>
 //
-// A view on a dense or sparse submatrix can be created very conveniently via the \c submatrix()
+// A view on a dense or sparse submatrix can be created very conveniently via
+the \c submatrix()
 // function. It can be included via the header file
 
    \code
    #include <blaze/math/Submatrix.h>
    \endcode
 
-// The first and second parameter specify the row and column of the first element of the submatrix.
-// The third and fourth parameter specify the number of rows and columns, respectively. The four
+// The first and second parameter specify the row and column of the first
+element of the submatrix.
+// The third and fourth parameter specify the number of rows and columns,
+respectively. The four
 // parameters can be specified either at compile time or at runtime:
 
    \code
    blaze::DynamicMatrix<double,blaze::rowMajor> A;
    // ... Resizing and initialization
 
-   // Creating a dense submatrix of size 4x8, starting in row 3 and column 0 (compile time arguments)
-   auto sm1 = submatrix<3UL,0UL,4UL,8UL>( A );
+   // Creating a dense submatrix of size 4x8, starting in row 3 and column 0
+(compile time arguments) auto sm1 = submatrix<3UL,0UL,4UL,8UL>( A );
 
-   // Creating a dense submatrix of size 8x16, starting in row 0 and column 4 (runtime arguments)
-   auto sm2 = submatrix( A, 0UL, 4UL, 8UL, 16UL );
-   \endcode
+   // Creating a dense submatrix of size 8x16, starting in row 0 and column 4
+(runtime arguments) auto sm2 = submatrix( A, 0UL, 4UL, 8UL, 16UL ); \endcode
 
-// The \c submatrix() function returns an expression representing the submatrix view. The type of
-// this expression depends on the given submatrix arguments, primarily the type of the matrix and
-// the compile time arguments. If the type is required, it can be determined via \c decltype or
+// The \c submatrix() function returns an expression representing the submatrix
+view. The type of
+// this expression depends on the given submatrix arguments, primarily the type
+of the matrix and
+// the compile time arguments. If the type is required, it can be determined via
+\c decltype or
 // via the \c SubmatrixExprTrait class template:
 
    \code
    using MatrixType = blaze::DynamicMatrix<int>;
 
-   using SubmatrixType1 = decltype( blaze::submatrix<3UL,0UL,4UL,8UL>( std::declval<MatrixType>() ) );
-   using SubmatrixType2 = blaze::SubmatrixExprTrait<VectorType,3UL,0UL,4UL,8UL>::Type;
-   \endcode
+   using SubmatrixType1 = decltype( blaze::submatrix<3UL,0UL,4UL,8UL>(
+std::declval<MatrixType>() ) ); using SubmatrixType2 =
+blaze::SubmatrixExprTrait<VectorType,3UL,0UL,4UL,8UL>::Type; \endcode
 
-// The resulting view can be treated as any other dense or sparse matrix, i.e. it can be assigned
-// to, it can be copied from, and it can be used in arithmetic operations. A submatrix created from
-// a row-major matrix will itself be a row-major matrix, a submatrix created from a column-major
-// matrix will be a column-major matrix. The view can also be used on both sides of an assignment:
-// The submatrix can either be used as an alias to grant write access to a specific submatrix
-// of a matrix primitive on the left-hand side of an assignment or to grant read-access to
-// a specific submatrix of a matrix primitive or expression on the right-hand side of an
+// The resulting view can be treated as any other dense or sparse matrix, i.e.
+it can be assigned
+// to, it can be copied from, and it can be used in arithmetic operations. A
+submatrix created from
+// a row-major matrix will itself be a row-major matrix, a submatrix created
+from a column-major
+// matrix will be a column-major matrix. The view can also be used on both sides
+of an assignment:
+// The submatrix can either be used as an alias to grant write access to a
+specific submatrix
+// of a matrix primitive on the left-hand side of an assignment or to grant
+read-access to
+// a specific submatrix of a matrix primitive or expression on the right-hand
+side of an
 // assignment. The following example demonstrates this in detail:
 
    \code
@@ -7283,7 +8735,8 @@
 // \n \section views_submatrices_element_access Element Access
 // <hr>
 //
-// The elements of a submatrix can be directly accessed with the function call operator:
+// The elements of a submatrix can be directly accessed with the function call
+operator:
 
    \code
    blaze::DynamicMatrix<double,blaze::rowMajor> A;
@@ -7297,9 +8750,12 @@
    sm(0,0) = 2.0;
    \endcode
 
-// Alternatively, the elements of a submatrix can be traversed via (const) iterators. Just as
-// with matrices, in case of non-const submatrices, \c begin() and \c end() return an iterator,
-// which allows to manipuate the elements, in case of constant submatrices an iterator to
+// Alternatively, the elements of a submatrix can be traversed via (const)
+iterators. Just as
+// with matrices, in case of non-const submatrices, \c begin() and \c end()
+return an iterator,
+// which allows to manipuate the elements, in case of constant submatrices an
+iterator to
 // immutable elements is returned:
 
    \code
@@ -7317,7 +8773,8 @@
 
    // Traversing the elements of the 1st row via iterators to const elements
    for( auto it=sm.cbegin(1); it!=sm.cend(1); ++it ) {
-      *it = ...;  // Compilation error: Assignment to the value via iterator-to-const is invalid.
+      *it = ...;  // Compilation error: Assignment to the value via
+iterator-to-const is invalid.
       ... = *it;  // OK: Read access to the dense submatrix value.
    }
    \endcode
@@ -7331,17 +8788,21 @@
 
    // Traversing the elements of the 0th row via iterators to non-const elements
    for( auto it=sm.begin(0); it!=sm.end(0); ++it ) {
-      it->value() = ...;  // OK: Write access to the value of the non-zero element.
-      ... = it->value();  // OK: Read access to the value of the non-zero element.
-      it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
+      it->value() = ...;  // OK: Write access to the value of the non-zero
+element.
+      ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
       ... = it->index();  // OK: Read access to the index of the sparse element.
    }
 
    // Traversing the elements of the 1st row via iterators to const elements
    for( auto it=sm.cbegin(1); it!=sm.cend(1); ++it ) {
-      it->value() = ...;  // Compilation error: Assignment to the value via iterator-to-const is invalid.
-      ... = it->value();  // OK: Read access to the value of the non-zero element.
-      it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
+      it->value() = ...;  // Compilation error: Assignment to the value via
+iterator-to-const is invalid.
+      ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
       ... = it->index();  // OK: Read access to the index of the sparse element.
    }
    \endcode
@@ -7349,35 +8810,50 @@
 // \n \section views_submatrices_element_insertion Element Insertion
 // <hr>
 //
-// Inserting/accessing elements in a sparse submatrix can be done by several alternative functions.
+// Inserting/accessing elements in a sparse submatrix can be done by several
+alternative functions.
 // The following example demonstrates all options:
 
    \code
-   blaze::CompressedMatrix<double,blaze::rowMajor> A( 256UL, 512UL );  // Non-initialized matrix of size 256x512
+   blaze::CompressedMatrix<double,blaze::rowMajor> A( 256UL, 512UL );  //
+Non-initialized matrix of size 256x512
 
-   auto sm = submatrix( A, 10UL, 10UL, 16UL, 16UL );  // View on a 16x16 submatrix of A
+   auto sm = submatrix( A, 10UL, 10UL, 16UL, 16UL );  // View on a 16x16
+submatrix of A
 
-   // The function call operator provides access to all possible elements of the sparse submatrix,
-   // including the zero elements. In case the subscript operator is used to access an element
-   // that is currently not stored in the sparse submatrix, the element is inserted into the
+   // The function call operator provides access to all possible elements of the
+sparse submatrix,
+   // including the zero elements. In case the subscript operator is used to
+access an element
+   // that is currently not stored in the sparse submatrix, the element is
+inserted into the
    // submatrix.
    sm(2,4) = 2.0;
 
-   // The second operation for inserting elements is the set() function. In case the element is
-   // not contained in the submatrix it is inserted into the submatrix, if it is already contained
+   // The second operation for inserting elements is the set() function. In case
+the element is
+   // not contained in the submatrix it is inserted into the submatrix, if it is
+already contained
    // in the submatrix its value is modified.
    sm.set( 2UL, 5UL, -1.2 );
 
-   // An alternative for inserting elements into the submatrix is the \c insert() function. However,
-   // it inserts the element only in case the element is not already contained in the submatrix.
-   sm.insert( 2UL, 6UL, 3.7 );
+   // An alternative for inserting elements into the submatrix is the \c
+insert() function. However,
+   // it inserts the element only in case the element is not already contained
+in the submatrix. sm.insert( 2UL, 6UL, 3.7 );
 
-   // Just as in the case of sparse matrices, elements can also be inserted via the \c append()
-   // function. In case of submatrices, \c append() also requires that the appended element's
-   // index is strictly larger than the currently largest non-zero index in the according row
-   // or column of the submatrix and that the according row's or column's capacity is large enough
-   // to hold the new element. Note however that due to the nature of a submatrix, which may be an
-   // alias to the middle of a sparse matrix, the \c append() function does not work as efficiently
+   // Just as in the case of sparse matrices, elements can also be inserted via
+the \c append()
+   // function. In case of submatrices, \c append() also requires that the
+appended element's
+   // index is strictly larger than the currently largest non-zero index in the
+according row
+   // or column of the submatrix and that the according row's or column's
+capacity is large enough
+   // to hold the new element. Note however that due to the nature of a
+submatrix, which may be an
+   // alias to the middle of a sparse matrix, the \c append() function does not
+work as efficiently
    // for a submatrix as it does for a matrix.
    sm.reserve( 2UL, 10UL );
    sm.append( 2UL, 10UL, -2.1 );
@@ -7386,12 +8862,18 @@
 // \n \section views_submatrices_common_operations Common Operations
 // <hr>
 //
-// A submatrix view can be used like any other dense or sparse matrix. This means that with only
-// a few exceptions all \ref matrix_operations and \ref arithmetic_operations can be used. For
-// instance, the current size of the matrix, i.e. the number of rows or columns can be obtained
-// via the \c rows() and \c columns() functions, the current total capacity via the \c capacity()
-// function, and the number of non-zero elements via the \c nonZeros() function. However, since
-// submatrices are views on a specific submatrix of a matrix, several operations are not possible,
+// A submatrix view can be used like any other dense or sparse matrix. This
+means that with only
+// a few exceptions all \ref matrix_operations and \ref arithmetic_operations
+can be used. For
+// instance, the current size of the matrix, i.e. the number of rows or columns
+can be obtained
+// via the \c rows() and \c columns() functions, the current total capacity via
+the \c capacity()
+// function, and the number of non-zero elements via the \c nonZeros() function.
+However, since
+// submatrices are views on a specific submatrix of a matrix, several operations
+are not possible,
 // such as resizing and swapping:
 
    \code
@@ -7404,9 +8886,11 @@
    sm.rows();      // Returns the number of rows of the submatrix
    sm.columns();   // Returns the number of columns of the submatrix
    sm.capacity();  // Returns the capacity of the submatrix
-   sm.nonZeros();  // Returns the number of non-zero elements contained in the submatrix
+   sm.nonZeros();  // Returns the number of non-zero elements contained in the
+submatrix
 
-   sm.resize( 10UL, 8UL );  // Compilation error: Cannot resize a submatrix of a matrix
+   sm.resize( 10UL, 8UL );  // Compilation error: Cannot resize a submatrix of a
+matrix
 
    auto sm2 = submatrix( A, 8UL, 0UL, 12UL, 8UL );
    swap( sm, sm2 );  // Compilation error: Swap operation not allowed
@@ -7415,10 +8899,14 @@
 // \n \section views_submatrices_arithmetic_operations Arithmetic Operations
 // <hr>
 //
-// Both dense and sparse submatrices can be used in all arithmetic operations that any other dense
-// or sparse matrix can be used in. The following example gives an impression of the use of dense
-// submatrices within arithmetic operations. All operations (addition, subtraction, multiplication,
-// scaling, ...) can be performed on all possible combinations of dense and sparse matrices with
+// Both dense and sparse submatrices can be used in all arithmetic operations
+that any other dense
+// or sparse matrix can be used in. The following example gives an impression of
+the use of dense
+// submatrices within arithmetic operations. All operations (addition,
+subtraction, multiplication,
+// scaling, ...) can be performed on all possible combinations of dense and
+sparse matrices with
 // fitting element types:
 
    \code
@@ -7429,36 +8917,47 @@
 
    // ... Resizing and initialization
 
-   auto sm = submatrix( D1, 0UL, 0UL, 8UL, 8UL );  // View on the 8x8 submatrix of matrix D1
-                                                   // starting from row 0 and column 0
+   auto sm = submatrix( D1, 0UL, 0UL, 8UL, 8UL );  // View on the 8x8 submatrix
+of matrix D1
+                                                   // starting from row 0 and
+column 0
 
-   submatrix( D1, 0UL, 8UL, 8UL, 8UL ) = D2;  // Dense matrix initialization of the 8x8 submatrix
+   submatrix( D1, 0UL, 8UL, 8UL, 8UL ) = D2;  // Dense matrix initialization of
+the 8x8 submatrix
                                               // starting in row 0 and column 8
-   sm = S1;                                   // Sparse matrix initialization of the second 8x8 submatrix
+   sm = S1;                                   // Sparse matrix initialization of
+the second 8x8 submatrix
 
-   D3 = sm + D2;                                    // Dense matrix/dense matrix addition
-   S2 = S1  - submatrix( D1, 8UL, 0UL, 8UL, 8UL );  // Sparse matrix/dense matrix subtraction
-   D2 = sm * submatrix( D1, 8UL, 8UL, 8UL, 8UL );   // Dense matrix/dense matrix multiplication
+   D3 = sm + D2;                                    // Dense matrix/dense matrix
+addition S2 = S1  - submatrix( D1, 8UL, 0UL, 8UL, 8UL );  // Sparse matrix/dense
+matrix subtraction D2 = sm * submatrix( D1, 8UL, 8UL, 8UL, 8UL );   // Dense
+matrix/dense matrix multiplication
 
-   submatrix( D1, 8UL, 0UL, 8UL, 8UL ) *= 2.0;      // In-place scaling of a submatrix of D1
-   D2 = submatrix( D1, 8UL, 8UL, 8UL, 8UL ) * 2.0;  // Scaling of the a submatrix of D1
-   D2 = 2.0 * sm;                                   // Scaling of the a submatrix of D1
+   submatrix( D1, 8UL, 0UL, 8UL, 8UL ) *= 2.0;      // In-place scaling of a
+submatrix of D1 D2 = submatrix( D1, 8UL, 8UL, 8UL, 8UL ) * 2.0;  // Scaling of
+the a submatrix of D1 D2 = 2.0 * sm;                                   //
+Scaling of the a submatrix of D1
 
    submatrix( D1, 0UL, 8UL, 8UL, 8UL ) += D2;  // Addition assignment
    submatrix( D1, 8UL, 0UL, 8UL, 8UL ) -= S1;  // Subtraction assignment
    submatrix( D1, 8UL, 8UL, 8UL, 8UL ) *= sm;  // Multiplication assignment
 
-   a = submatrix( D1, 4UL, 4UL, 8UL, 8UL ) * b;  // Dense matrix/sparse vector multiplication
-   \endcode
+   a = submatrix( D1, 4UL, 4UL, 8UL, 8UL ) * b;  // Dense matrix/sparse vector
+multiplication \endcode
 
 // \n \section views_aligned_submatrices Aligned Submatrices
 // <hr>
 //
-// Usually submatrices can be defined anywhere within a matrix. They may start at any position and
-// may have an arbitrary extension (only restricted by the extension of the underlying matrix).
-// However, in contrast to matrices themselves, which are always properly aligned in memory and
-// therefore can provide maximum performance, this means that submatrices in general have to be
-// considered to be unaligned. This can be made explicit by the blaze::unaligned flag:
+// Usually submatrices can be defined anywhere within a matrix. They may start
+at any position and
+// may have an arbitrary extension (only restricted by the extension of the
+underlying matrix).
+// However, in contrast to matrices themselves, which are always properly
+aligned in memory and
+// therefore can provide maximum performance, this means that submatrices in
+general have to be
+// considered to be unaligned. This can be made explicit by the blaze::unaligned
+flag:
 
    \code
    using blaze::unaligned;
@@ -7466,25 +8965,34 @@
    blaze::DynamicMatrix<double,blaze::rowMajor> A;
    // ... Resizing and initialization
 
-   // Identical creations of an unaligned submatrix of size 8x8, starting in row 0 and column 0
-   auto sm1 = submatrix           ( A, 0UL, 0UL, 8UL, 8UL );
-   auto sm2 = submatrix<unaligned>( A, 0UL, 0UL, 8UL, 8UL );
-   auto sm3 = submatrix<0UL,0UL,8UL,8UL>          ( A );
-   auto sm4 = submatrix<unaligned,0UL,0UL,8UL,8UL>( A );
-   \endcode
+   // Identical creations of an unaligned submatrix of size 8x8, starting in row
+0 and column 0 auto sm1 = submatrix           ( A, 0UL, 0UL, 8UL, 8UL ); auto
+sm2 = submatrix<unaligned>( A, 0UL, 0UL, 8UL, 8UL ); auto sm3 =
+submatrix<0UL,0UL,8UL,8UL>          ( A ); auto sm4 =
+submatrix<unaligned,0UL,0UL,8UL,8UL>( A ); \endcode
 
-// All of these calls to the \c submatrix() function are identical. Whether the alignment flag is
-// explicitly specified or not, it always returns an unaligned submatrix. Whereas this may provide
-// full flexibility in the creation of submatrices, this might result in performance disadvantages
-// in comparison to matrix primitives (even in case the specified submatrix could be aligned).
-// Whereas matrix primitives are guaranteed to be properly aligned and therefore provide maximum
-// performance in all operations, a general view on a matrix might not be properly aligned. This
+// All of these calls to the \c submatrix() function are identical. Whether the
+alignment flag is
+// explicitly specified or not, it always returns an unaligned submatrix.
+Whereas this may provide
+// full flexibility in the creation of submatrices, this might result in
+performance disadvantages
+// in comparison to matrix primitives (even in case the specified submatrix
+could be aligned).
+// Whereas matrix primitives are guaranteed to be properly aligned and therefore
+provide maximum
+// performance in all operations, a general view on a matrix might not be
+properly aligned. This
 // may cause a performance penalty on some platforms and/or for some operations.
 //
-// However, it is also possible to create aligned submatrices. Aligned submatrices are identical to
-// unaligned submatrices in all aspects, except that they may pose additional alignment restrictions
-// and therefore have less flexibility during creation, but don't suffer from performance penalties
-// and provide the same performance as the underlying matrix. Aligned submatrices are created by
+// However, it is also possible to create aligned submatrices. Aligned
+submatrices are identical to
+// unaligned submatrices in all aspects, except that they may pose additional
+alignment restrictions
+// and therefore have less flexibility during creation, but don't suffer from
+performance penalties
+// and provide the same performance as the underlying matrix. Aligned
+submatrices are created by
 // explicitly specifying the blaze::aligned flag:
 
    \code
@@ -7495,11 +9003,16 @@
    auto sv2 = submatrix<aligned,0UL,0UL,8UL,8UL>( A );
    \endcode
 
-// The alignment restrictions refer to system dependent address restrictions for the used element
-// type and the available vectorization mode (SSE, AVX, ...). In order to be properly aligned the
-// first element of each row/column of the submatrix must be aligned. The following source code
-// gives some examples for a double precision row-major dynamic matrix, assuming that padding is
-// enabled and that AVX is available, which packs 4 \c double values into a SIMD vector:
+// The alignment restrictions refer to system dependent address restrictions for
+the used element
+// type and the available vectorization mode (SSE, AVX, ...). In order to be
+properly aligned the
+// first element of each row/column of the submatrix must be aligned. The
+following source code
+// gives some examples for a double precision row-major dynamic matrix, assuming
+that padding is
+// enabled and that AVX is available, which packs 4 \c double values into a SIMD
+vector:
 
    \code
    using blaze::aligned;
@@ -7507,23 +9020,28 @@
    blaze::DynamicMatrix<double,blaze::rowMajor> D( 13UL, 17UL );
    // ... Resizing and initialization
 
-   // OK: Starts at position (0,0), i.e. the first element of each row is aligned (due to padding)
-   auto dsm1 = submatrix<aligned>( D, 0UL, 0UL, 7UL, 11UL );
+   // OK: Starts at position (0,0), i.e. the first element of each row is
+aligned (due to padding) auto dsm1 = submatrix<aligned>( D, 0UL, 0UL, 7UL, 11UL
+);
 
-   // OK: First column is a multiple of 4, i.e. the first element of each row is aligned (due to padding)
-   auto dsm2 = submatrix<aligned>( D, 3UL, 12UL, 8UL, 16UL );
+   // OK: First column is a multiple of 4, i.e. the first element of each row is
+aligned (due to padding) auto dsm2 = submatrix<aligned>( D, 3UL, 12UL, 8UL, 16UL
+);
 
-   // OK: First column is a multiple of 4 and the submatrix includes the last row and column
-   auto dsm3 = submatrix<aligned>( D, 4UL, 0UL, 9UL, 17UL );
+   // OK: First column is a multiple of 4 and the submatrix includes the last
+row and column auto dsm3 = submatrix<aligned>( D, 4UL, 0UL, 9UL, 17UL );
 
-   // Error: First column is not a multiple of 4, i.e. the first element is not aligned
-   auto dsm4 = submatrix<aligned>( D, 2UL, 3UL, 12UL, 12UL );
-   \endcode
+   // Error: First column is not a multiple of 4, i.e. the first element is not
+aligned auto dsm4 = submatrix<aligned>( D, 2UL, 3UL, 12UL, 12UL ); \endcode
 
-// Note that the discussed alignment restrictions are only valid for aligned dense submatrices.
-// In contrast, aligned sparse submatrices at this time don't pose any additional restrictions.
-// Therefore aligned and unaligned sparse submatrices are truly fully identical. Still, in case
-// the blaze::aligned flag is specified during setup, an aligned submatrix is created:
+// Note that the discussed alignment restrictions are only valid for aligned
+dense submatrices.
+// In contrast, aligned sparse submatrices at this time don't pose any
+additional restrictions.
+// Therefore aligned and unaligned sparse submatrices are truly fully identical.
+Still, in case
+// the blaze::aligned flag is specified during setup, an aligned submatrix is
+created:
 
    \code
    using blaze::aligned;
@@ -7535,9 +9053,11 @@
    auto sv = submatrix<aligned>( A, 0UL, 0UL, 8UL, 8UL );
    \endcode
 
-// \n \section views_submatrices_on_symmetric_matrices Submatrices on Symmetric Matrices
+// \n \section views_submatrices_on_symmetric_matrices Submatrices on Symmetric
+Matrices
 //
-// Submatrices can also be created on symmetric matrices (see the \c SymmetricMatrix class template):
+// Submatrices can also be created on symmetric matrices (see the \c
+SymmetricMatrix class template):
 
    \code
    using blaze::DynamicMatrix;
@@ -7550,11 +9070,16 @@
    auto sm = submatrix( A, 2UL, 4UL, 8UL, 12UL );
    \endcode
 
-// It is important to note, however, that (compound) assignments to such submatrices have a
-// special restriction: The symmetry of the underlying symmetric matrix must not be broken!
-// Since the modification of element \f$ a_{ij} \f$ of a symmetric matrix also modifies the
-// element \f$ a_{ji} \f$, the matrix to be assigned must be structured such that the symmetry
-// of the symmetric matrix is preserved. Otherwise a \a std::invalid_argument exception is
+// It is important to note, however, that (compound) assignments to such
+submatrices have a
+// special restriction: The symmetry of the underlying symmetric matrix must not
+be broken!
+// Since the modification of element \f$ a_{ij} \f$ of a symmetric matrix also
+modifies the
+// element \f$ a_{ji} \f$, the matrix to be assigned must be structured such
+that the symmetry
+// of the symmetric matrix is preserved. Otherwise a \a std::invalid_argument
+exception is
 // thrown:
 
    \code
@@ -7572,7 +9097,8 @@
    //
    DynamicMatrix<int> B{ { 1, 2 }, { 3, 4 }, { 5, 6 } };
 
-   // OK: Assigning B to a submatrix of A1 such that the symmetry can be preserved
+   // OK: Assigning B to a submatrix of A1 such that the symmetry can be
+preserved
    //
    //        ( 0 0 1 2 )
    //   A1 = ( 0 0 3 4 )
@@ -7581,7 +9107,8 @@
    //
    submatrix( A1, 0UL, 2UL, 3UL, 2UL ) = B;  // OK
 
-   // Error: Assigning B to a submatrix of A2 such that the symmetry cannot be preserved!
+   // Error: Assigning B to a submatrix of A2 such that the symmetry cannot be
+preserved!
    //   The elements marked with X cannot be assigned unambiguously!
    //
    //        ( 0 1 2 0 )
@@ -7596,18 +9123,22 @@
 */
 //*************************************************************************************************
 
-
 //**Rows*******************************************************************************************
 /*!\page views_rows Rows
 //
 // \tableofcontents
 //
 //
-// Rows provide views on a specific row of a dense or sparse matrix. As such, rows act as a
-// reference to a specific row. This reference is valid and can be used in every way any other
-// row vector can be used as long as the matrix containing the row is not resized or entirely
-// destroyed. The row also acts as an alias to the row elements: Changes made to the elements
-// (e.g. modifying values, inserting or erasing elements) are immediately visible in the matrix
+// Rows provide views on a specific row of a dense or sparse matrix. As such,
+rows act as a
+// reference to a specific row. This reference is valid and can be used in every
+way any other
+// row vector can be used as long as the matrix containing the row is not
+resized or entirely
+// destroyed. The row also acts as an alias to the row elements: Changes made to
+the elements
+// (e.g. modifying values, inserting or erasing elements) are immediately
+visible in the matrix
 // and changes made via the matrix are immediately visible in the row.
 //
 //
@@ -7617,14 +9148,16 @@
 // \image html row.png
 // \image latex row.eps "Row view" width=250pt
 //
-// A reference to a dense or sparse row can be created very conveniently via the \c row() function.
+// A reference to a dense or sparse row can be created very conveniently via the
+\c row() function.
 // It can be included via the header file
 
    \code
    #include <blaze/math/Row.h>
    \endcode
 
-// The row index must be in the range from \f$[0..M-1]\f$, where \c M is the total number of rows
+// The row index must be in the range from \f$[0..M-1]\f$, where \c M is the
+total number of rows
 // of the matrix, and can be specified both at compile time or at runtime:
 
    \code
@@ -7638,9 +9171,12 @@
    auto row2 = row( A, 2UL );
    \endcode
 
-// The \c row() function returns an expression representing the row view. The type of this
-// expression depends on the given row arguments, primarily the type of the matrix and the compile
-// time arguments. If the type is required, it can be determined via \c decltype or via the
+// The \c row() function returns an expression representing the row view. The
+type of this
+// expression depends on the given row arguments, primarily the type of the
+matrix and the compile
+// time arguments. If the type is required, it can be determined via \c decltype
+or via the
 // \c RowExprTrait class template:
 
    \code
@@ -7650,11 +9186,16 @@
    using RowType2 = blaze::RowExprTrait<MatrixType,1UL>::Type;
    \endcode
 
-// The resulting view can be treated as any other row vector, i.e. it can be assigned to, it can
-// be copied from, and it can be used in arithmetic operations. The reference can also be used on
-// both sides of an assignment: The row can either be used as an alias to grant write access to a
-// specific row of a matrix primitive on the left-hand side of an assignment or to grant read-access
-// to a specific row of a matrix primitive or expression on the right-hand side of an assignment.
+// The resulting view can be treated as any other row vector, i.e. it can be
+assigned to, it can
+// be copied from, and it can be used in arithmetic operations. The reference
+can also be used on
+// both sides of an assignment: The row can either be used as an alias to grant
+write access to a
+// specific row of a matrix primitive on the left-hand side of an assignment or
+to grant read-access
+// to a specific row of a matrix primitive or expression on the right-hand side
+of an assignment.
 // The following example demonstrates this in detail:
 
    \code
@@ -7701,9 +9242,12 @@
                              0 & 1 & 2 & \cdots & N-1 \\
                              \end{array}\right),\f]
 
-// where N is the number of columns of the referenced matrix. Alternatively, the elements of a
-// row can be traversed via iterators. Just as with vectors, in case of non-const rows, \c begin()
-// and \c end() return an iterator, which allows to manipulate the elements, in case of constant
+// where N is the number of columns of the referenced matrix. Alternatively, the
+elements of a
+// row can be traversed via iterators. Just as with vectors, in case of
+non-const rows, \c begin()
+// and \c end() return an iterator, which allows to manipulate the elements, in
+case of constant
 // rows an iterator to immutable elements is returned:
 
    \code
@@ -7721,7 +9265,8 @@
 
    // Traversing the elements via iterators to const elements
    for( auto it=row31.cbegin(); it!=row31.cend(); ++it ) {
-      *it = ...;  // Compilation error: Assignment to the value via a ConstIterator is invalid.
+      *it = ...;  // Compilation error: Assignment to the value via a
+ConstIterator is invalid.
       ... = *it;  // OK: Read access to the dense row value.
    }
    \endcode
@@ -7735,17 +9280,21 @@
 
    // Traversing the elements via iterators to non-const elements
    for( auto it=row31.begin(); it!=row31.end(); ++it ) {
-      it->value() = ...;  // OK: Write access to the value of the non-zero element.
-      ... = it->value();  // OK: Read access to the value of the non-zero element.
-      it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
+      it->value() = ...;  // OK: Write access to the value of the non-zero
+element.
+      ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
       ... = it->index();  // OK: Read access to the index of the sparse element.
    }
 
    // Traversing the elements via iterators to const elements
    for( auto it=row31.cbegin(); it!=row31.cend(); ++it ) {
-      it->value() = ...;  // Compilation error: Assignment to the value via a ConstIterator is invalid.
-      ... = it->value();  // OK: Read access to the value of the non-zero element.
-      it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
+      it->value() = ...;  // Compilation error: Assignment to the value via a
+ConstIterator is invalid.
+      ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
       ... = it->index();  // OK: Read access to the index of the sparse element.
    }
    \endcode
@@ -7753,31 +9302,41 @@
 // \n \section views_rows_element_insertion Element Insertion
 // <hr>
 //
-// Inserting/accessing elements in a sparse row can be done by several alternative functions.
+// Inserting/accessing elements in a sparse row can be done by several
+alternative functions.
 // The following example demonstrates all options:
 
    \code
-   blaze::CompressedMatrix<double,blaze::rowMajor> A( 10UL, 100UL );  // Non-initialized 10x100 matrix
+   blaze::CompressedMatrix<double,blaze::rowMajor> A( 10UL, 100UL );  //
+Non-initialized 10x100 matrix
 
    auto row0( row( A, 0UL ) );  // Reference to the 0th row of A
 
-   // The subscript operator provides access to all possible elements of the sparse row,
-   // including the zero elements. In case the subscript operator is used to access an element
-   // that is currently not stored in the sparse row, the element is inserted into the row.
-   row0[42] = 2.0;
+   // The subscript operator provides access to all possible elements of the
+sparse row,
+   // including the zero elements. In case the subscript operator is used to
+access an element
+   // that is currently not stored in the sparse row, the element is inserted
+into the row. row0[42] = 2.0;
 
-   // The second operation for inserting elements is the set() function. In case the element
-   // is not contained in the row it is inserted into the row, if it is already contained in
+   // The second operation for inserting elements is the set() function. In case
+the element
+   // is not contained in the row it is inserted into the row, if it is already
+contained in
    // the row its value is modified.
    row0.set( 45UL, -1.2 );
 
-   // An alternative for inserting elements into the row is the insert() function. However,
-   // it inserts the element only in case the element is not already contained in the row.
-   row0.insert( 50UL, 3.7 );
+   // An alternative for inserting elements into the row is the insert()
+function. However,
+   // it inserts the element only in case the element is not already contained
+in the row. row0.insert( 50UL, 3.7 );
 
-   // A very efficient way to add new elements to a sparse row is the append() function.
-   // Note that append() requires that the appended element's index is strictly larger than
-   // the currently largest non-zero index of the row and that the row's capacity is large
+   // A very efficient way to add new elements to a sparse row is the append()
+function.
+   // Note that append() requires that the appended element's index is strictly
+larger than
+   // the currently largest non-zero index of the row and that the row's
+capacity is large
    // enough to hold the new element.
    row0.reserve( 10UL );
    row0.append( 51UL, -2.1 );
@@ -7786,12 +9345,18 @@
 // \n \section views_rows_common_operations Common Operations
 // <hr>
 //
-// A row view can be used like any other row vector. This means that with only a few exceptions
-// all \ref vector_operations and \ref arithmetic_operations can be used. For instance, the
-// current number of elements can be obtained via the \c size() function, the current capacity
-// via the \c capacity() function, and the number of non-zero elements via the \c nonZeros()
-// function. However, since rows are references to specific rows of a matrix, several operations
-// are not possible on views, such as resizing and swapping. The following example shows this by
+// A row view can be used like any other row vector. This means that with only a
+few exceptions
+// all \ref vector_operations and \ref arithmetic_operations can be used. For
+instance, the
+// current number of elements can be obtained via the \c size() function, the
+current capacity
+// via the \c capacity() function, and the number of non-zero elements via the
+\c nonZeros()
+// function. However, since rows are references to specific rows of a matrix,
+several operations
+// are not possible on views, such as resizing and swapping. The following
+example shows this by
 // means of a dense row view:
 
    \code
@@ -7803,9 +9368,11 @@
 
    row2.size();          // Returns the number of elements in the row
    row2.capacity();      // Returns the capacity of the row
-   row2.nonZeros();      // Returns the number of non-zero elements contained in the row
+   row2.nonZeros();      // Returns the number of non-zero elements contained in
+the row
 
-   row2.resize( 84UL );  // Compilation error: Cannot resize a single row of a matrix
+   row2.resize( 84UL );  // Compilation error: Cannot resize a single row of a
+matrix
 
    auto row3 = row( A, 3UL );
    swap( row2, row3 );   // Compilation error: Swap operation not allowed
@@ -7814,10 +9381,14 @@
 // \n \section views_rows_arithmetic_operations Arithmetic Operations
 // <hr>
 //
-// Both dense and sparse rows can be used in all arithmetic operations that any other dense or
-// sparse row vector can be used in. The following example gives an impression of the use of
-// dense rows within arithmetic operations. All operations (addition, subtraction, multiplication,
-// scaling, ...) can be performed on all possible combinations of dense and sparse rows with
+// Both dense and sparse rows can be used in all arithmetic operations that any
+other dense or
+// sparse row vector can be used in. The following example gives an impression
+of the use of
+// dense rows within arithmetic operations. All operations (addition,
+subtraction, multiplication,
+// scaling, ...) can be performed on all possible combinations of dense and
+sparse rows with
 // fitting element types:
 
    \code
@@ -7825,7 +9396,8 @@
    blaze::CompressedVector<double,blaze::rowVector> c( 2UL );
    c[1] = 3.0;
 
-   blaze::DynamicMatrix<double,blaze::rowMajor> A( 4UL, 2UL );  // Non-initialized 4x2 matrix
+   blaze::DynamicMatrix<double,blaze::rowMajor> A( 4UL, 2UL );  //
+Non-initialized 4x2 matrix
 
    auto row0( row( A, 0UL ) );  // Reference to the 0th row of A
 
@@ -7847,18 +9419,24 @@
    row( A, 2UL ) -= c;              // Subtraction assignment
    row( A, 2UL ) *= row( A, 0UL );  // Multiplication assignment
 
-   double scalar = row( A, 1UL ) * trans( c );  // Scalar/dot/inner product between two vectors
+   double scalar = row( A, 1UL ) * trans( c );  // Scalar/dot/inner product
+between two vectors
 
    A = trans( c ) * row( A, 1UL );  // Outer product between two vectors
    \endcode
 
-// \n \section views_rows_non_fitting_storage_order Views on Matrices with Non-Fitting Storage Order
+// \n \section views_rows_non_fitting_storage_order Views on Matrices with
+Non-Fitting Storage Order
 // <hr>
 //
-// Especially noteworthy is that row views can be created for both row-major and column-major
-// matrices. Whereas the interface of a row-major matrix only allows to traverse a row directly
-// and the interface of a column-major matrix only allows to traverse a column, via views it is
-// possible to traverse a row of a column-major matrix or a column of a row-major matrix. For
+// Especially noteworthy is that row views can be created for both row-major and
+column-major
+// matrices. Whereas the interface of a row-major matrix only allows to traverse
+a row directly
+// and the interface of a column-major matrix only allows to traverse a column,
+via views it is
+// possible to traverse a row of a column-major matrix or a column of a
+row-major matrix. For
 // instance:
 
    \code
@@ -7873,10 +9451,14 @@
    }
    \endcode
 
-// However, please note that creating a row view on a matrix stored in a column-major fashion
-// can result in a considerable performance decrease in comparison to a row view on a matrix
-// with row-major storage format. This is due to the non-contiguous storage of the matrix
-// elements. Therefore care has to be taken in the choice of the most suitable storage order:
+// However, please note that creating a row view on a matrix stored in a
+column-major fashion
+// can result in a considerable performance decrease in comparison to a row view
+on a matrix
+// with row-major storage format. This is due to the non-contiguous storage of
+the matrix
+// elements. Therefore care has to be taken in the choice of the most suitable
+storage order:
 
    \code
    // Setup of two column-major matrices
@@ -7892,13 +9474,14 @@
    blaze::DynamicVector<double,blaze::rowVector> x = row( A, 15UL ) * B;
    \endcode
 
-// Although \b Blaze performs the resulting vector/matrix multiplication as efficiently as possible
-// using a row-major storage order for matrix \c A would result in a more efficient evaluation.
+// Although \b Blaze performs the resulting vector/matrix multiplication as
+efficiently as possible
+// using a row-major storage order for matrix \c A would result in a more
+efficient evaluation.
 //
 // \n Previous: \ref views_submatrices &nbsp; &nbsp; Next: \ref views_columns
 */
 //*************************************************************************************************
-
 
 //**Columns****************************************************************************************
 /*!\page views_columns Columns
@@ -7906,11 +9489,16 @@
 // \tableofcontents
 //
 //
-// Just as rows provide a view on a specific row of a matrix, columns provide views on a specific
-// column of a dense or sparse matrix. As such, columns act as a reference to a specific column.
-// This reference is valid an can be used in every way any other column vector can be used as long
-// as the matrix containing the column is not resized or entirely destroyed. Changes made to the
-// elements (e.g. modifying values, inserting or erasing elements) are immediately visible in the
+// Just as rows provide a view on a specific row of a matrix, columns provide
+views on a specific
+// column of a dense or sparse matrix. As such, columns act as a reference to a
+specific column.
+// This reference is valid an can be used in every way any other column vector
+can be used as long
+// as the matrix containing the column is not resized or entirely destroyed.
+Changes made to the
+// elements (e.g. modifying values, inserting or erasing elements) are
+immediately visible in the
 // matrix and changes made via the matrix are immediately visible in the column.
 //
 //
@@ -7920,15 +9508,18 @@
 // \image html column.png
 // \image latex column.eps "Column view" width=250pt
 //
-// A reference to a dense or sparse column can be created very conveniently via the \c column()
+// A reference to a dense or sparse column can be created very conveniently via
+the \c column()
 // function. It can be included via the header file
 
    \code
    #include <blaze/math/Column.h>
    \endcode
 
-// The column index must be in the range from \f$[0..N-1]\f$, where \c N is the total number of
-// columns of the matrix, and can be specified both at compile time or at runtime:
+// The column index must be in the range from \f$[0..N-1]\f$, where \c N is the
+total number of
+// columns of the matrix, and can be specified both at compile time or at
+runtime:
 
    \code
    blaze::DynamicMatrix<double,blaze::columnMajor> A;
@@ -7941,23 +9532,30 @@
    auto col2 = column( A, 2UL );
    \endcode
 
-// The \c column() function returns an expression representing the column view. The type of this
-// expression depends on the given column arguments, primarily the type of the matrix and the
-// compile time arguments. If the type is required, it can be determined via \c decltype or via
+// The \c column() function returns an expression representing the column view.
+The type of this
+// expression depends on the given column arguments, primarily the type of the
+matrix and the
+// compile time arguments. If the type is required, it can be determined via \c
+decltype or via
 // the \c ColumnExprTrait class template:
 
    \code
    using MatrixType = blaze::DynamicMatrix<int>;
 
-   using ColumnType1 = decltype( blaze::column<1UL>( std::declval<MatrixType>() ) );
-   using ColumnType2 = blaze::ColumnExprTrait<MatrixType,1UL>::Type;
-   \endcode
+   using ColumnType1 = decltype( blaze::column<1UL>( std::declval<MatrixType>()
+) ); using ColumnType2 = blaze::ColumnExprTrait<MatrixType,1UL>::Type; \endcode
 
-// The resulting view can be treated as any other column vector, i.e. it can be assigned to, it
-// can be copied from, and it can be used in arithmetic operations. The reference can also be used
-// on both sides of an assignment: The column can either be used as an alias to grant write access
-// to a specific column of a matrix primitive on the left-hand side of an assignment or to grant
-// read-access to a specific column of a matrix primitive or expression on the right-hand side
+// The resulting view can be treated as any other column vector, i.e. it can be
+assigned to, it
+// can be copied from, and it can be used in arithmetic operations. The
+reference can also be used
+// on both sides of an assignment: The column can either be used as an alias to
+grant write access
+// to a specific column of a matrix primitive on the left-hand side of an
+assignment or to grant
+// read-access to a specific column of a matrix primitive or expression on the
+right-hand side
 // of an assignment. The following example demonstrates this in detail:
 
    \code
@@ -7977,14 +9575,14 @@
    // Setting x to the 2nd column of the result of the matrix multiplication
    x = column( A * B, 2UL );
 
-   // Setting y to the 2nd column of the result of the sparse matrix multiplication
-   y = column( C * D, 2UL );
-   \endcode
+   // Setting y to the 2nd column of the result of the sparse matrix
+multiplication y = column( C * D, 2UL ); \endcode
 
 // \n \section views_columns_element_access Element Access
 // <hr>
 //
-// The elements of the dense column can be directly accessed with the subscript operator.
+// The elements of the dense column can be directly accessed with the subscript
+operator.
 
    \code
    blaze::DynamicMatrix<double,blaze::columnMajor> A;
@@ -8004,9 +9602,12 @@
                              0 & 1 & 2 & \cdots & N-1 \\
                              \end{array}\right),\f]
 
-// where N is the number of rows of the referenced matrix. Alternatively, the elements of a column
-// can be traversed via iterators. Just as with vectors, in case of non-const columns, \c begin()
-// and \c end() return an iterator, which allows to manipulate the elements, in case of constant
+// where N is the number of rows of the referenced matrix. Alternatively, the
+elements of a column
+// can be traversed via iterators. Just as with vectors, in case of non-const
+columns, \c begin()
+// and \c end() return an iterator, which allows to manipulate the elements, in
+case of constant
 // columns an iterator to immutable elements is returned:
 
    \code
@@ -8024,7 +9625,8 @@
 
    // Traversing the elements via iterators to const elements
    for( auto it=col31.cbegin(); it!=col31.cend(); ++it ) {
-      *it = ...;  // Compilation error: Assignment to the value via iterator-to-const is invalid.
+      *it = ...;  // Compilation error: Assignment to the value via
+iterator-to-const is invalid.
       ... = *it;  // OK: Read access to the dense column value.
    }
    \endcode
@@ -8038,17 +9640,21 @@
 
    // Traversing the elements via iterators to non-const elements
    for( auto it=col31.begin(); it!=col31.end(); ++it ) {
-      it->value() = ...;  // OK: Write access to the value of the non-zero element.
-      ... = it->value();  // OK: Read access to the value of the non-zero element.
-      it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
+      it->value() = ...;  // OK: Write access to the value of the non-zero
+element.
+      ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
       ... = it->index();  // OK: Read access to the index of the sparse element.
    }
 
    // Traversing the elements via iterators to const elements
    for( auto it=col31.cbegin(); it!=col31.cend(); ++it ) {
-      it->value() = ...;  // Compilation error: Assignment to the value via iterator-to-const is invalid.
-      ... = it->value();  // OK: Read access to the value of the non-zero element.
-      it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
+      it->value() = ...;  // Compilation error: Assignment to the value via
+iterator-to-const is invalid.
+      ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
       ... = it->index();  // OK: Read access to the index of the sparse element.
    }
    \endcode
@@ -8056,31 +9662,41 @@
 // \n \section views_columns_element_insertion Element Insertion
 // <hr>
 //
-// Inserting/accessing elements in a sparse column can be done by several alternative functions.
+// Inserting/accessing elements in a sparse column can be done by several
+alternative functions.
 // The following example demonstrates all options:
 
    \code
-   blaze::CompressedMatrix<double,blaze::columnMajor> A( 100UL, 10UL );  // Non-initialized 100x10 matrix
+   blaze::CompressedMatrix<double,blaze::columnMajor> A( 100UL, 10UL );  //
+Non-initialized 100x10 matrix
 
    auto col0( column( A, 0UL ) );  // Reference to the 0th column of A
 
-   // The subscript operator provides access to all possible elements of the sparse column,
-   // including the zero elements. In case the subscript operator is used to access an element
-   // that is currently not stored in the sparse column, the element is inserted into the column.
-   col0[42] = 2.0;
+   // The subscript operator provides access to all possible elements of the
+sparse column,
+   // including the zero elements. In case the subscript operator is used to
+access an element
+   // that is currently not stored in the sparse column, the element is inserted
+into the column. col0[42] = 2.0;
 
-   // The second operation for inserting elements is the set() function. In case the element
-   // is not contained in the column it is inserted into the column, if it is already contained
+   // The second operation for inserting elements is the set() function. In case
+the element
+   // is not contained in the column it is inserted into the column, if it is
+already contained
    // in the column its value is modified.
    col0.set( 45UL, -1.2 );
 
-   // An alternative for inserting elements into the column is the insert() function. However,
-   // it inserts the element only in case the element is not already contained in the column.
-   col0.insert( 50UL, 3.7 );
+   // An alternative for inserting elements into the column is the insert()
+function. However,
+   // it inserts the element only in case the element is not already contained
+in the column. col0.insert( 50UL, 3.7 );
 
-   // A very efficient way to add new elements to a sparse column is the append() function.
-   // Note that append() requires that the appended element's index is strictly larger than
-   // the currently largest non-zero index of the column and that the column's capacity is
+   // A very efficient way to add new elements to a sparse column is the
+append() function.
+   // Note that append() requires that the appended element's index is strictly
+larger than
+   // the currently largest non-zero index of the column and that the column's
+capacity is
    // large enough to hold the new element.
    col0.reserve( 10UL );
    col0.append( 51UL, -2.1 );
@@ -8089,12 +9705,18 @@
 // \n \section views_columns_common_operations Common Operations
 // <hr>
 //
-// A column view can be used like any other column vector. This means that with only a few
-// exceptions all \ref vector_operations and \ref arithmetic_operations can be used. For instance,
-// the current number of elements can be obtained via the \c size() function, the current capacity
-// via the \c capacity() function, and the number of non-zero elements via the \c nonZeros()
-// function. However, since columns are references to specific columns of a matrix, several
-// operations are not possible on views, such as resizing and swapping. The following example
+// A column view can be used like any other column vector. This means that with
+only a few
+// exceptions all \ref vector_operations and \ref arithmetic_operations can be
+used. For instance,
+// the current number of elements can be obtained via the \c size() function,
+the current capacity
+// via the \c capacity() function, and the number of non-zero elements via the
+\c nonZeros()
+// function. However, since columns are references to specific columns of a
+matrix, several
+// operations are not possible on views, such as resizing and swapping. The
+following example
 // shows this by means of a dense column view:
 
    \code
@@ -8106,9 +9728,11 @@
 
    col2.size();          // Returns the number of elements in the column
    col2.capacity();      // Returns the capacity of the column
-   col2.nonZeros();      // Returns the number of non-zero elements contained in the column
+   col2.nonZeros();      // Returns the number of non-zero elements contained in
+the column
 
-   col2.resize( 84UL );  // Compilation error: Cannot resize a single column of a matrix
+   col2.resize( 84UL );  // Compilation error: Cannot resize a single column of
+a matrix
 
    auto col3 = column( A, 3UL );
    swap( col2, col3 );   // Compilation error: Swap operation not allowed
@@ -8117,10 +9741,14 @@
 // \n \section views_columns_arithmetic_operations Arithmetic Operations
 // <hr>
 //
-// Both dense and sparse columns can be used in all arithmetic operations that any other dense or
-// sparse column vector can be used in. The following example gives an impression of the use of
-// dense columns within arithmetic operations. All operations (addition, subtraction, multiplication,
-// scaling, ...) can be performed on all possible combinations of dense and sparse columns with
+// Both dense and sparse columns can be used in all arithmetic operations that
+any other dense or
+// sparse column vector can be used in. The following example gives an
+impression of the use of
+// dense columns within arithmetic operations. All operations (addition,
+subtraction, multiplication,
+// scaling, ...) can be performed on all possible combinations of dense and
+sparse columns with
 // fitting element types:
 
    \code
@@ -8128,15 +9756,17 @@
    blaze::CompressedVector<double,blaze::columnVector> c( 2UL );
    c[1] = 3.0;
 
-   blaze::DynamicMatrix<double,blaze::columnMajor> A( 2UL, 4UL );  // Non-initialized 2x4 matrix
+   blaze::DynamicMatrix<double,blaze::columnMajor> A( 2UL, 4UL );  //
+Non-initialized 2x4 matrix
 
    auto col0( column( A, 0UL ) );  // Reference to the 0th column of A
 
    col0[0] = 0.0;           // Manual initialization of the 0th column of A
    col0[1] = 0.0;
    column( A, 1UL ) = 1.0;  // Homogeneous initialization of the 1st column of A
-   column( A, 2UL ) = a;    // Dense vector initialization of the 2nd column of A
-   column( A, 3UL ) = c;    // Sparse vector initialization of the 3rd column of A
+   column( A, 2UL ) = a;    // Dense vector initialization of the 2nd column of
+A column( A, 3UL ) = c;    // Sparse vector initialization of the 3rd column of
+A
 
    b = col0 + a;                 // Dense vector/dense vector addition
    b = c + column( A, 1UL );     // Sparse vector/dense vector addition
@@ -8150,18 +9780,24 @@
    column( A, 2UL ) -= c;                 // Subtraction assignment
    column( A, 2UL ) *= column( A, 0UL );  // Multiplication assignment
 
-   double scalar = trans( c ) * column( A, 1UL );  // Scalar/dot/inner product between two vectors
+   double scalar = trans( c ) * column( A, 1UL );  // Scalar/dot/inner product
+between two vectors
 
    A = column( A, 1UL ) * trans( c );  // Outer product between two vectors
    \endcode
 
-// \n \section views_columns_non_fitting_storage_order Views on Matrices with Non-Fitting Storage Order
+// \n \section views_columns_non_fitting_storage_order Views on Matrices with
+Non-Fitting Storage Order
 // <hr>
 //
-// Especially noteworthy is that column views can be created for both row-major and column-major
-// matrices. Whereas the interface of a row-major matrix only allows to traverse a row directly
-// and the interface of a column-major matrix only allows to traverse a column, via views it is
-// possible to traverse a row of a column-major matrix or a column of a row-major matrix. For
+// Especially noteworthy is that column views can be created for both row-major
+and column-major
+// matrices. Whereas the interface of a row-major matrix only allows to traverse
+a row directly
+// and the interface of a column-major matrix only allows to traverse a column,
+via views it is
+// possible to traverse a row of a column-major matrix or a column of a
+row-major matrix. For
 // instance:
 
    \code
@@ -8176,10 +9812,14 @@
    }
    \endcode
 
-// However, please note that creating a column view on a matrix stored in a row-major fashion
-// can result in a considerable performance decrease in comparison to a column view on a matrix
-// with column-major storage format. This is due to the non-contiguous storage of the matrix
-// elements. Therefore care has to be taken in the choice of the most suitable storage order:
+// However, please note that creating a column view on a matrix stored in a
+row-major fashion
+// can result in a considerable performance decrease in comparison to a column
+view on a matrix
+// with column-major storage format. This is due to the non-contiguous storage
+of the matrix
+// elements. Therefore care has to be taken in the choice of the most suitable
+storage order:
 
    \code
    // Setup of two row-major matrices
@@ -8187,21 +9827,22 @@
    blaze::DynamicMatrix<double,blaze::rowMajor> B( 128UL, 128UL );
    // ... Resizing and initialization
 
-   // The computation of the 15th column of the multiplication between A and B ...
-   blaze::DynamicVector<double,blaze::columnVector> x = column( A * B, 15UL );
+   // The computation of the 15th column of the multiplication between A and B
+... blaze::DynamicVector<double,blaze::columnVector> x = column( A * B, 15UL );
 
    // ... is essentially the same as the following computation, which multiplies
    // A with the 15th column of the row-major matrix B.
    blaze::DynamicVector<double,blaze::rowVector> x = A * column( B, 15UL );
    \endcode
 
-// Although \b Blaze performs the resulting matrix/vector multiplication as efficiently as possible
-// using a column-major storage order for matrix B would result in a more efficient evaluation.
+// Although \b Blaze performs the resulting matrix/vector multiplication as
+efficiently as possible
+// using a column-major storage order for matrix B would result in a more
+efficient evaluation.
 //
 // \n Previous: \ref views_rows &nbsp; &nbsp; Next: \ref views_bands
 */
 //*************************************************************************************************
-
 
 //**Bands******************************************************************************************
 /*!\page views_bands Bands
@@ -8209,12 +9850,18 @@
 // \tableofcontents
 //
 //
-// Bands provide views on a specific band of a dense or sparse matrix (e.g. the diagonal, the
-// subdiagonal, ...). As such, bands act as a reference to a specific band. This reference
-// is valid and can be used in every way any other vector can be used as long as the matrix
-// containing the band is not resized or entirely destroyed. The band also acts as an alias to
-// the band elements: Changes made to the elements (e.g. modifying values, inserting or erasing
-// elements) are immediately visible in the matrix and changes made via the matrix are immediately
+// Bands provide views on a specific band of a dense or sparse matrix (e.g. the
+diagonal, the
+// subdiagonal, ...). As such, bands act as a reference to a specific band. This
+reference
+// is valid and can be used in every way any other vector can be used as long as
+the matrix
+// containing the band is not resized or entirely destroyed. The band also acts
+as an alias to
+// the band elements: Changes made to the elements (e.g. modifying values,
+inserting or erasing
+// elements) are immediately visible in the matrix and changes made via the
+matrix are immediately
 // visible in the band.
 //
 //
@@ -8224,47 +9871,55 @@
 // \image html band.png
 // \image latex band.eps "Band view" width=250pt
 //
-// A reference to a dense or sparse band can be created very conveniently via the \c band()
+// A reference to a dense or sparse band can be created very conveniently via
+the \c band()
 // function. It can be included via the header file
 
    \code
    #include <blaze/math/Band.h>
    \endcode
 
-// The band index must be in the range from \f$[1-M..N-1]\f$, where \c M is the total number of
-// rows and \c N is the total number of columns, and can be specified both at compile time or at
+// The band index must be in the range from \f$[1-M..N-1]\f$, where \c M is the
+total number of
+// rows and \c N is the total number of columns, and can be specified both at
+compile time or at
 // runtime:
 
    \code
    blaze::DynamicMatrix<double,blaze::rowMajor> A;
    // ... Resizing and initialization
 
-   // Creating a reference to the 1st lower band of matrix A (compile time index)
-   auto band1 = band<-1L>( A );
+   // Creating a reference to the 1st lower band of matrix A (compile time
+index) auto band1 = band<-1L>( A );
 
    // Creating a reference to the 2nd upper band of matrix A (runtime index)
    auto band2 = band( A, 2L );
    \endcode
 
-// In addition, the \c diagonal() function provides a convenient shortcut for the setup of a view
-// on the diagonal of a dense or sparse matrix. It has the same effect as calling the \c band()
+// In addition, the \c diagonal() function provides a convenient shortcut for
+the setup of a view
+// on the diagonal of a dense or sparse matrix. It has the same effect as
+calling the \c band()
 // function with a compile time index of 0:
 
    \code
    blaze::DynamicMatrix<double,blaze::rowMajor> A;
    // ... Resizing and initialization
 
-   // Creating a reference to the diagonal of matrix A via the band() and diagonal() functions
-   auto diag1 = band<0L>( A );
-   auto diag2 = diagonal( A );
+   // Creating a reference to the diagonal of matrix A via the band() and
+diagonal() functions auto diag1 = band<0L>( A ); auto diag2 = diagonal( A );
 
-   static_assert( blaze::IsSame< decltype(diag1), decltype(diag2) >::value, "Non-identical types detected" );
-   \endcode
+   static_assert( blaze::IsSame< decltype(diag1), decltype(diag2) >::value,
+"Non-identical types detected" ); \endcode
 
-// Both the \c band() and the diagonal() function return an expression representing the band view.
-// The type of this expression depends on the given arguments, primarily the type of the matrix
-// and the compile time arguments. If the type is required, it can be determined via \c decltype
-// or via the \c BandExprTrait and \c DiagonalExprTrait class templates, respectively:
+// Both the \c band() and the diagonal() function return an expression
+representing the band view.
+// The type of this expression depends on the given arguments, primarily the
+type of the matrix
+// and the compile time arguments. If the type is required, it can be determined
+via \c decltype
+// or via the \c BandExprTrait and \c DiagonalExprTrait class templates,
+respectively:
 
    \code
    using MatrixType = blaze::DynamicMatrix<int>;
@@ -8272,17 +9927,23 @@
    using BandType1 = decltype( blaze::band<1L>( std::declval<MatrixType>() ) );
    using BandType2 = blaze::BandExprTrait<MatrixType,1L>::Type;
 
-   using DiagonalType1 = decltype( blaze::diagonal( std::declval<MatrixType>() ) );
-   using DiagonalType2 = blaze::DiagonalExprTrait<MatrixType>::Type;
-   \endcode
+   using DiagonalType1 = decltype( blaze::diagonal( std::declval<MatrixType>() )
+); using DiagonalType2 = blaze::DiagonalExprTrait<MatrixType>::Type; \endcode
 
-// This resulting view can be treated as any other vector, i.e. it can be assigned to, it can
-// be copied from, and it can be used in arithmetic operations. By default, bands are considered
-// column vectors, but this setting can be changed via the \c defaultTransposeFlag switch. The
-// reference can also be used on both sides of an assignment: The band can either be used as an
-// alias to grant write access to a specific band of a matrix primitive on the left-hand side of
-// an assignment or to grant read-access to a specific band of a matrix primitive or expression
-// on the right-hand side of an assignment. The following example demonstrates this in detail:
+// This resulting view can be treated as any other vector, i.e. it can be
+assigned to, it can
+// be copied from, and it can be used in arithmetic operations. By default,
+bands are considered
+// column vectors, but this setting can be changed via the \c
+defaultTransposeFlag switch. The
+// reference can also be used on both sides of an assignment: The band can
+either be used as an
+// alias to grant write access to a specific band of a matrix primitive on the
+left-hand side of
+// an assignment or to grant read-access to a specific band of a matrix
+primitive or expression
+// on the right-hand side of an assignment. The following example demonstrates
+this in detail:
 
    \code
    blaze::DynamicVector<double,blaze::rowVector> x;
@@ -8301,9 +9962,8 @@
    // Setting x to the 2nd lower band of the result of the matrix multiplication
    x = band( A * B, -2L );
 
-   // Setting y to the 2nd upper band of the result of the sparse matrix multiplication
-   y = band( C * D, 2L );
-   \endcode
+   // Setting y to the 2nd upper band of the result of the sparse matrix
+multiplication y = band( C * D, 2L ); \endcode
 
 // \n \section views_bands_element_access Element Access
 // <hr>
@@ -8328,9 +9988,12 @@
                              0 & 1 & 2 & \cdots & N-1 \\
                              \end{array}\right),\f]
 
-// where N is the number of elements of the referenced band. Alternatively, the elements of a band
-// can be traversed via iterators. Just as with vectors, in case of non-const band, \c begin() and
-// \c end() return an iterator, which allows to manipulate the elements, in case of constant bands
+// where N is the number of elements of the referenced band. Alternatively, the
+elements of a band
+// can be traversed via iterators. Just as with vectors, in case of non-const
+band, \c begin() and
+// \c end() return an iterator, which allows to manipulate the elements, in case
+of constant bands
 // an iterator to immutable elements is returned:
 
    \code
@@ -8348,7 +10011,8 @@
 
    // Traversing the elements via iterators to const elements
    for( auto it=band5.cbegin(); it!=band5.cend(); ++it ) {
-      *it = ...;  // Compilation error: Assignment to the value via iterator-to-const is invalid.
+      *it = ...;  // Compilation error: Assignment to the value via
+iterator-to-const is invalid.
       ... = *it;  // OK: Read access to the dense band value.
    }
    \endcode
@@ -8362,17 +10026,21 @@
 
    // Traversing the elements via iterators to non-const elements
    for( auto it=band5.begin(); it!=band5.end(); ++it ) {
-      it->value() = ...;  // OK: Write access to the value of the non-zero element.
-      ... = it->value();  // OK: Read access to the value of the non-zero element.
-      it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
+      it->value() = ...;  // OK: Write access to the value of the non-zero
+element.
+      ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
       ... = it->index();  // OK: Read access to the index of the sparse element.
    }
 
    // Traversing the elements via iterators to const elements
    for( auto it=band5.cbegin(); it!=band5.cend(); ++it ) {
-      it->value() = ...;  // Compilation error: Assignment to the value via iterator-to-const is invalid.
-      ... = it->value();  // OK: Read access to the value of the non-zero element.
-      it->index() = ...;  // Compilation error: The index of a non-zero element cannot be changed.
+      it->value() = ...;  // Compilation error: Assignment to the value via
+iterator-to-const is invalid.
+      ... = it->value();  // OK: Read access to the value of the non-zero
+element. it->index() = ...;  // Compilation error: The index of a non-zero
+element cannot be changed.
       ... = it->index();  // OK: Read access to the index of the sparse element.
    }
    \endcode
@@ -8380,38 +10048,50 @@
 // \n \section views_bands_element_insertion Element Insertion
 // <hr>
 //
-// Inserting/accessing elements in a sparse band can be done by several alternative functions.
+// Inserting/accessing elements in a sparse band can be done by several
+alternative functions.
 // The following example demonstrates all options:
 
    \code
-   blaze::CompressedMatrix<double,blaze::rowMajor> A( 10UL, 100UL );  // Non-initialized 10x100 matrix
+   blaze::CompressedMatrix<double,blaze::rowMajor> A( 10UL, 100UL );  //
+Non-initialized 10x100 matrix
 
    auto diag( band( A, 0L ) );  // Reference to the diagonal of A
 
-   // The subscript operator provides access to all possible elements of the sparse band,
-   // including the zero elements. In case the subscript operator is used to access an element
-   // that is currently not stored in the sparse band, the element is inserted into the band.
-   diag[42] = 2.0;
+   // The subscript operator provides access to all possible elements of the
+sparse band,
+   // including the zero elements. In case the subscript operator is used to
+access an element
+   // that is currently not stored in the sparse band, the element is inserted
+into the band. diag[42] = 2.0;
 
-   // The second operation for inserting elements is the set() function. In case the element
-   // is not contained in the band it is inserted into the band, if it is already contained in
+   // The second operation for inserting elements is the set() function. In case
+the element
+   // is not contained in the band it is inserted into the band, if it is
+already contained in
    // the band its value is modified.
    diag.set( 45UL, -1.2 );
 
-   // An alternative for inserting elements into the band is the insert() function. However,
-   // it inserts the element only in case the element is not already contained in the band.
-   diag.insert( 50UL, 3.7 );
-   \endcode
+   // An alternative for inserting elements into the band is the insert()
+function. However,
+   // it inserts the element only in case the element is not already contained
+in the band. diag.insert( 50UL, 3.7 ); \endcode
 
 // \n \section views_bands_common_operations Common Operations
 // <hr>
 //
-// A band view can be used like any other column vector. This means that with only a few
-// exceptions all \ref vector_operations and \ref arithmetic_operations can be used. For instance,
-// the current number of band elements can be obtained via the \c size() function, the current
-// capacity via the \c capacity() function, and the number of non-zero elements via the
-// \c nonZeros() function. However, since bands are references to specific bands of a matrix,
-// several operations are not possible, such as resizing and swapping. The following example
+// A band view can be used like any other column vector. This means that with
+only a few
+// exceptions all \ref vector_operations and \ref arithmetic_operations can be
+used. For instance,
+// the current number of band elements can be obtained via the \c size()
+function, the current
+// capacity via the \c capacity() function, and the number of non-zero elements
+via the
+// \c nonZeros() function. However, since bands are references to specific bands
+of a matrix,
+// several operations are not possible, such as resizing and swapping. The
+following example
 // shows this by means of a dense band view:
 
    \code
@@ -8423,9 +10103,11 @@
 
    band2.size();          // Returns the number of elements in the band
    band2.capacity();      // Returns the capacity of the band
-   band2.nonZeros();      // Returns the number of non-zero elements contained in the band
+   band2.nonZeros();      // Returns the number of non-zero elements contained
+in the band
 
-   band2.resize( 84UL );  // Compilation error: Cannot resize a single band of a matrix
+   band2.resize( 84UL );  // Compilation error: Cannot resize a single band of a
+matrix
 
    auto band3 = band( A, 3L );
    swap( band2, band3 );   // Compilation error: Swap operation not allowed
@@ -8434,10 +10116,14 @@
 // \n \section views_bands_arithmetic_operations Arithmetic Operations
 // <hr>
 //
-// Both dense and sparse bands can be used in all arithmetic operations that any other dense or
-// sparse vector can be used in. The following example gives an impression of the use of dense
-// bands within arithmetic operations. All operations (addition, subtraction, multiplication,
-// scaling, ...) can be performed on all possible combinations of dense and sparse bands with
+// Both dense and sparse bands can be used in all arithmetic operations that any
+other dense or
+// sparse vector can be used in. The following example gives an impression of
+the use of dense
+// bands within arithmetic operations. All operations (addition, subtraction,
+multiplication,
+// scaling, ...) can be performed on all possible combinations of dense and
+sparse bands with
 // fitting element types:
 
    \code
@@ -8445,15 +10131,17 @@
    blaze::CompressedVector<double,blaze::columnVector> c( 2UL );
    c[1] = 3.0;
 
-   blaze::DynamicMatrix<double,blaze::rowMajor> A( 4UL, 2UL );  // Non-initialized 4x2 matrix
+   blaze::DynamicMatrix<double,blaze::rowMajor> A( 4UL, 2UL );  //
+Non-initialized 4x2 matrix
 
    auto band1( band( A, 1L ) );  // Reference to the 1st upper band of A
    auto diag ( band( A, 0L ) );  // Reference to the diagonal of A
 
    band1[0] = 0.0;      // Manual initialization of the 1st upper band of A
    diag = 1.0;          // Homogeneous initialization of the diagonal of A
-   band( A, -1L ) = a;  // Dense vector initialization of the 1st lower band of A
-   band( A, -2L ) = c;  // Sparse vector initialization of the 2nd lower band of A
+   band( A, -1L ) = a;  // Dense vector initialization of the 1st lower band of
+A band( A, -2L ) = c;  // Sparse vector initialization of the 2nd lower band of
+A
 
    b = diag + a;               // Dense vector/dense vector addition
    b = c + band( A, -1L );     // Sparse vector/dense vector addition
@@ -8467,23 +10155,26 @@
    band( A, -2L ) -= c;              // Subtraction assignment
    band( A, -2L ) *= band( A, 0L );  // Multiplication assignment
 
-   double scalar = trans( c ) * band( A, -1L );  // Scalar/dot/inner product between two vectors
+   double scalar = trans( c ) * band( A, -1L );  // Scalar/dot/inner product
+between two vectors
 
    A = band( A, -1L ) * trans( c );  // Outer product between two vectors
    \endcode
 
-// \n Previous: \ref views_columns &nbsp; &nbsp; Next: \ref arithmetic_operations
+// \n Previous: \ref views_columns &nbsp; &nbsp; Next: \ref
+arithmetic_operations
 */
 //*************************************************************************************************
 
-
-//**Arithmetic Operations**************************************************************************
+//**Arithmetic
+//Operations**************************************************************************
 /*!\page arithmetic_operations Arithmetic Operations
 //
 // \tableofcontents
 //
 //
-// \b Blaze provides the following arithmetic operations for vectors and matrices:
+// \b Blaze provides the following arithmetic operations for vectors and
+matrices:
 //
 // <ul>
 //    <li> \ref addition </li>
@@ -8506,13 +10197,15 @@
 */
 //*************************************************************************************************
 
-
 //**Addition***************************************************************************************
 /*!\page addition Addition
 //
-// The addition of vectors and matrices is as intuitive as the addition of scalar values. For both
-// the vector addition as well as the matrix addition the addition operator can be used. It even
-// enables the addition of dense and sparse vectors as well as the addition of dense and sparse
+// The addition of vectors and matrices is as intuitive as the addition of
+scalar values. For both
+// the vector addition as well as the matrix addition the addition operator can
+be used. It even
+// enables the addition of dense and sparse vectors as well as the addition of
+dense and sparse
 // matrices:
 
    \code
@@ -8530,25 +10223,30 @@
 
    // ... Initializing the matrices
 
-   M3 = M1 + M2;  // Addition of a row-major and a column-major matrix of different data type
-   \endcode
+   M3 = M1 + M2;  // Addition of a row-major and a column-major matrix of
+different data type \endcode
 
-// Note that it is necessary that both operands have exactly the same dimensions. Violating this
-// precondition results in an exception. Also note that in case of vectors it is only possible to
+// Note that it is necessary that both operands have exactly the same
+dimensions. Violating this
+// precondition results in an exception. Also note that in case of vectors it is
+only possible to
 // add vectors with the same transpose flag:
 
    \code
    blaze::DynamicVector<int,columnVector>   v1( 5UL );
    blaze::CompressedVector<float,rowVector> v2( 5UL );
 
-   v1 + v2;           // Compilation error: Cannot add a column vector and a row vector
-   v1 + trans( v2 );  // OK: Addition of two column vectors
-   \endcode
+   v1 + v2;           // Compilation error: Cannot add a column vector and a row
+vector v1 + trans( v2 );  // OK: Addition of two column vectors \endcode
 
-// In case of matrices, however, it is possible to add row-major and column-major matrices. Note
-// however that in favor of performance the addition of two matrices with the same storage order
-// is favorable. The same argument holds for the element type: In case two vectors or matrices
-// with the same element type are added, the performance can be much higher due to vectorization
+// In case of matrices, however, it is possible to add row-major and
+column-major matrices. Note
+// however that in favor of performance the addition of two matrices with the
+same storage order
+// is favorable. The same argument holds for the element type: In case two
+vectors or matrices
+// with the same element type are added, the performance can be much higher due
+to vectorization
 // of the operation.
 
    \code
@@ -8564,20 +10262,22 @@
 
    // ... Initialization of the matrices
 
-   M3 = M1 + M2;  // Vectorized addition of two row-major, single precision dense matrices
-   \endcode
+   M3 = M1 + M2;  // Vectorized addition of two row-major, single precision
+dense matrices \endcode
 
 // \n Previous: \ref arithmetic_operations &nbsp; &nbsp; Next: \ref subtraction
 */
 //*************************************************************************************************
 
-
 //**Subtraction************************************************************************************
 /*!\page subtraction Subtraction
 //
-// The subtraction of vectors and matrices works exactly as intuitive as the addition, but with
-// the subtraction operator. For both the vector subtraction as well as the matrix subtraction
-// the subtraction operator can be used. It also enables the subtraction of dense and sparse
+// The subtraction of vectors and matrices works exactly as intuitive as the
+addition, but with
+// the subtraction operator. For both the vector subtraction as well as the
+matrix subtraction
+// the subtraction operator can be used. It also enables the subtraction of
+dense and sparse
 // vectors as well as the subtraction of dense and sparse matrices:
 
    \code
@@ -8594,25 +10294,31 @@
 
    // ... Initializing the matrices
 
-   M3 = M1 - M2;  // Subtraction of a row-major and a column-major matrix of different data type
-   \endcode
+   M3 = M1 - M2;  // Subtraction of a row-major and a column-major matrix of
+different data type \endcode
 
-// Note that it is necessary that both operands have exactly the same dimensions. Violating this
-// precondition results in an exception. Also note that in case of vectors it is only possible to
+// Note that it is necessary that both operands have exactly the same
+dimensions. Violating this
+// precondition results in an exception. Also note that in case of vectors it is
+only possible to
 // subtract vectors with the same transpose flag:
 
    \code
    blaze::DynamicVector<int,columnVector>   v1( 5UL );
    blaze::CompressedVector<float,rowVector> v2( 5UL );
 
-   v1 - v2;           // Compilation error: Cannot subtract a row vector from a column vector
-   v1 - trans( v2 );  // OK: Subtraction of two column vectors
+   v1 - v2;           // Compilation error: Cannot subtract a row vector from a
+column vector v1 - trans( v2 );  // OK: Subtraction of two column vectors
    \endcode
 
-// In case of matrices, however, it is possible to subtract row-major and column-major matrices.
-// Note however that in favor of performance the subtraction of two matrices with the same storage
-// order is favorable. The same argument holds for the element type: In case two vectors or matrices
-// with the same element type are added, the performance can be much higher due to vectorization
+// In case of matrices, however, it is possible to subtract row-major and
+column-major matrices.
+// Note however that in favor of performance the subtraction of two matrices
+with the same storage
+// order is favorable. The same argument holds for the element type: In case two
+vectors or matrices
+// with the same element type are added, the performance can be much higher due
+to vectorization
 // of the operation.
 
    \code
@@ -8627,20 +10333,23 @@
 
    // ... Initialization of the matrices
 
-   M3 = M1 - M2;  // Vectorized subtraction of two row-major, single precision dense matrices
-   \endcode
+   M3 = M1 - M2;  // Vectorized subtraction of two row-major, single precision
+dense matrices \endcode
 
 // \n Previous: \ref addition &nbsp; &nbsp; Next: \ref scalar_multiplication
 */
 //*************************************************************************************************
 
-
-//**Scalar Multiplication**************************************************************************
+//**Scalar
+//Multiplication**************************************************************************
 /*!\page scalar_multiplication Scalar Multiplication
 //
-// The scalar multiplication is the multiplication of a scalar value with a vector or a matrix.
-// In \b Blaze it is possible to use all built-in/fundamental data types except bool as scalar
-// values. Additionally, it is possible to use std::complex values with the same built-in data
+// The scalar multiplication is the multiplication of a scalar value with a
+vector or a matrix.
+// In \b Blaze it is possible to use all built-in/fundamental data types except
+bool as scalar
+// values. Additionally, it is possible to use std::complex values with the same
+built-in data
 // types as element type.
 
    \code
@@ -8657,9 +10366,12 @@
    blaze::CompressedMatrix<float> M3 = -0.3F * M1;
    \endcode
 
-// Vectors and matrices cannot be used for as scalar value for scalar multiplications (see the
-// following example). However, each vector and matrix provides the \c scale() function, which
-// can be used to scale a vector or matrix element-wise with arbitrary scalar data types:
+// Vectors and matrices cannot be used for as scalar value for scalar
+multiplications (see the
+// following example). However, each vector and matrix provides the \c scale()
+function, which
+// can be used to scale a vector or matrix element-wise with arbitrary scalar
+data types:
 
    \code
    blaze::CompressedMatrix< blaze::StaticMatrix<int,3UL,3UL> > M1;
@@ -8670,19 +10382,22 @@
    M1.scale( scalar );  // Scalar multiplication
    \endcode
 
-// \n Previous: \ref subtraction &nbsp; &nbsp; Next: \ref componentwise_multiplication
+// \n Previous: \ref subtraction &nbsp; &nbsp; Next: \ref
+componentwise_multiplication
 */
 //*************************************************************************************************
 
-
-//**Vector/Vector Multiplication*******************************************************************
+//**Vector/Vector
+//Multiplication*******************************************************************
 /*!\page vector_vector_multiplication Vector/Vector Multiplication
 //
 // \n \section componentwise_multiplication Componentwise Multiplication
 // <hr>
 //
-// Multiplying two vectors with the same transpose flag (i.e. either blaze::columnVector or
-// blaze::rowVector) via the multiplication operator results in a componentwise multiplication
+// Multiplying two vectors with the same transpose flag (i.e. either
+blaze::columnVector or
+// blaze::rowVector) via the multiplication operator results in a componentwise
+multiplication
 // of the two vectors:
 
    \code
@@ -8697,17 +10412,21 @@
 
    // ... Initialization of the vectors
 
-   CompressedVector<int,columnVector> v5( v1 * v2 );  // Componentwise multiplication of a sparse and
-                                                      // a dense column vector. The result is a sparse
+   CompressedVector<int,columnVector> v5( v1 * v2 );  // Componentwise
+multiplication of a sparse and
+                                                      // a dense column vector.
+The result is a sparse
                                                       // column vector.
-   DynamicVector<double,rowVector>    v6( v3 * v4 );  // Componentwise multiplication of two dense row
-                                                      // vectors. The result is a dense row vector.
-   \endcode
+   DynamicVector<double,rowVector>    v6( v3 * v4 );  // Componentwise
+multiplication of two dense row
+                                                      // vectors. The result is
+a dense row vector. \endcode
 
 // \n \section inner_product Inner Product / Scalar Product / Dot Product
 // <hr>
 //
-// The multiplication between a row vector and a column vector results in an inner product between
+// The multiplication between a row vector and a column vector results in an
+inner product between
 // the two vectors:
 
    \code
@@ -8726,29 +10445,33 @@
    int result = v1 * trans( v2 );  // Also results in the value 15
    \endcode
 
-// Alternatively, either the \c inner() function, the \c dot() function or the comma operator can
-// be used for any combination of vectors (row or column vectors) to perform an inner product:
+// Alternatively, either the \c inner() function, the \c dot() function or the
+comma operator can
+// be used for any combination of vectors (row or column vectors) to perform an
+inner product:
 
    \code
    blaze::StaticVector<int,3UL,columnVector> v1{  2, 5, -1 };
    blaze::StaticVector<int,3UL,rowVector>    v2{ -1, 3, -2 };
 
-   // All alternatives for the inner product between a column vector and a row vector
-   int result1 = trans( v1 ) * trans( v2 );
-   int result2 = inner( v1, v2 );
+   // All alternatives for the inner product between a column vector and a row
+vector int result1 = trans( v1 ) * trans( v2 ); int result2 = inner( v1, v2 );
    int result3 = dot( v1, v2 );
    int result4 = (v1,v2);
    \endcode
 
-// When using the comma operator, please note the brackets embracing the inner product expression.
-// Due to the low precedence of the comma operator (lower even than the assignment operator) these
+// When using the comma operator, please note the brackets embracing the inner
+product expression.
+// Due to the low precedence of the comma operator (lower even than the
+assignment operator) these
 // brackets are strictly required for a correct evaluation of the inner product.
 //
 //
 // \n \section outer_product Outer Product
 // <hr>
 //
-// The multiplication between a column vector and a row vector results in the outer product of
+// The multiplication between a column vector and a row vector results in the
+outer product of
 // the two vectors:
 
    \code
@@ -8767,20 +10490,22 @@
    int result = trans( v1 ) * v2;
    \endcode
 
-// Alternatively, the \c outer() function can be used for any combination of vectors (row or column
+// Alternatively, the \c outer() function can be used for any combination of
+vectors (row or column
 // vectors) to perform an outer product:
 
    \code
    blaze::StaticVector<int,3UL,rowVector> v1{  2, 5, -1 };
    blaze::StaticVector<int,3UL,rowVector> v2{ -1, 3, -2 };
 
-   StaticMatrix<int,3UL,3UL> M1 = outer( v1, v2 );  // Outer product between two row vectors
-   \endcode
+   StaticMatrix<int,3UL,3UL> M1 = outer( v1, v2 );  // Outer product between two
+row vectors \endcode
 
 // \n \section cross_product Cross Product
 // <hr>
 //
-// Two vectors with the same transpose flag can be multiplied via the cross product. The cross
+// Two vectors with the same transpose flag can be multiplied via the cross
+product. The cross
 // product between two vectors \f$ a \f$ and \f$ b \f$ is defined as
 
    \f[
@@ -8797,8 +10522,10 @@
    \end{array}\right).
    \f]
 
-// Due to the absence of a \f$ \times \f$ operator in the C++ language, the cross product is
-// realized via the \c cross() function. Alternatively, the modulo operator (i.e. \c operator%)
+// Due to the absence of a \f$ \times \f$ operator in the C++ language, the
+cross product is
+// realized via the \c cross() function. Alternatively, the modulo operator
+(i.e. \c operator%)
 // can be used in case infix notation is required:
 
    \code
@@ -8809,22 +10536,26 @@
    blaze::StaticVector<int,3UL,columnVector> v4( v1 % v2 );
    \endcode
 
-// Please note that the cross product is restricted to three dimensional (dense and sparse)
+// Please note that the cross product is restricted to three dimensional (dense
+and sparse)
 // column vectors.
 //
-// \n Previous: \ref scalar_multiplication &nbsp; &nbsp; Next: \ref vector_vector_division
+// \n Previous: \ref scalar_multiplication &nbsp; &nbsp; Next: \ref
+vector_vector_division
 */
 //*************************************************************************************************
 
-
-//**Vector/Vector Division*************************************************************************
+//**Vector/Vector
+//Division*************************************************************************
 /*!\page vector_vector_division Vector/Vector Division
 //
 // \n \section componentwise_division Componentwise Division
 // <hr>
 //
-// Dividing a vector by a dense vector with the same transpose flag (i.e. either blaze::columnVector
-// or blaze::rowVector) via the division operator results in a componentwise division:
+// Dividing a vector by a dense vector with the same transpose flag (i.e. either
+blaze::columnVector
+// or blaze::rowVector) via the division operator results in a componentwise
+division:
 
    \code
    using blaze::DynamicVector;
@@ -8838,27 +10569,35 @@
 
    // ... Initialization of the vectors
 
-   CompressedVector<int,columnVector> v5( v1 / v2 );  // Componentwise division of a sparse and a
-                                                      // dense column vector. The result is a sparse
+   CompressedVector<int,columnVector> v5( v1 / v2 );  // Componentwise division
+of a sparse and a
+                                                      // dense column vector.
+The result is a sparse
                                                       // column vector.
-   DynamicVector<double,rowVector>    v6( v3 / v4 );  // Componentwise division of two dense row
-                                                      // vectors. The result is a dense row vector.
-   \endcode
+   DynamicVector<double,rowVector>    v6( v3 / v4 );  // Componentwise division
+of two dense row
+                                                      // vectors. The result is
+a dense row vector. \endcode
 
-// Note that all values of the divisor must be non-zero and that no checks are performed to assert
+// Note that all values of the divisor must be non-zero and that no checks are
+performed to assert
 // this precondition!
 //
-// \n Previous: \ref vector_vector_multiplication &nbsp; &nbsp; Next: \ref matrix_vector_multiplication
+// \n Previous: \ref vector_vector_multiplication &nbsp; &nbsp; Next: \ref
+matrix_vector_multiplication
 */
 //*************************************************************************************************
 
-
-//**Matrix/Vector Multiplication*******************************************************************
+//**Matrix/Vector
+//Multiplication*******************************************************************
 /*!\page matrix_vector_multiplication Matrix/Vector Multiplication
 //
-// In \b Blaze matrix/vector multiplications can be as intuitively formulated as in mathematical
-// textbooks. Just as in textbooks there are two different multiplications between a matrix and
-// a vector: a matrix/column vector multiplication and a row vector/matrix multiplication:
+// In \b Blaze matrix/vector multiplications can be as intuitively formulated as
+in mathematical
+// textbooks. Just as in textbooks there are two different multiplications
+between a matrix and
+// a vector: a matrix/column vector multiplication and a row vector/matrix
+multiplication:
 
    \code
    using blaze::StaticVector;
@@ -8870,27 +10609,33 @@
 
    // ... Initialization of the matrix and the vector
 
-   DynamicVector<int,columnVector> v2 = M1 * v1;           // Matrix/column vector multiplication
-   DynamicVector<int,rowVector>    v3 = trans( v1 ) * M1;  // Row vector/matrix multiplication
-   \endcode
+   DynamicVector<int,columnVector> v2 = M1 * v1;           // Matrix/column
+vector multiplication DynamicVector<int,rowVector>    v3 = trans( v1 ) * M1;  //
+Row vector/matrix multiplication \endcode
 
-// Note that the storage order of the matrix poses no restrictions on the operation. Also note,
-// that the highest performance for a multiplication between a dense matrix and a dense vector can
-// be achieved if both the matrix and the vector have the same scalar element type.
+// Note that the storage order of the matrix poses no restrictions on the
+operation. Also note,
+// that the highest performance for a multiplication between a dense matrix and
+a dense vector can
+// be achieved if both the matrix and the vector have the same scalar element
+type.
 //
-// \n Previous: \ref vector_vector_division &nbsp; &nbsp; Next: \ref matrix_matrix_multiplication
+// \n Previous: \ref vector_vector_division &nbsp; &nbsp; Next: \ref
+matrix_matrix_multiplication
 */
 //*************************************************************************************************
 
-
-//**Matrix/Matrix Multiplication*******************************************************************
+//**Matrix/Matrix
+//Multiplication*******************************************************************
 /*!\page matrix_matrix_multiplication Matrix/Matrix Multiplication
 //
 // \n \section schur_product Componentwise Multiplication / Schur Product
 // <hr>
 //
-// Multiplying two matrices with the same dimensions (i.e. the same number of rows and columns)
-// via the modulo operator results in a componentwise multiplication (Schur product) of the two
+// Multiplying two matrices with the same dimensions (i.e. the same number of
+rows and columns)
+// via the modulo operator results in a componentwise multiplication (Schur
+product) of the two
 // matrices:
 
    \code
@@ -8908,7 +10653,8 @@
 // \n \section matrix_product Matrix Product
 // <hr>
 //
-// The matrix/matrix product can be formulated exactly as in mathematical textbooks:
+// The matrix/matrix product can be formulated exactly as in mathematical
+textbooks:
 
    \code
    using blaze::DynamicMatrix;
@@ -8922,15 +10668,22 @@
    DynamicMatrix<double> M3 = M1 * M2;
    \endcode
 
-// The storage order of the two matrices poses no restrictions on the operation, all variations
-// are possible. It is also possible to multiply two matrices with different element type, as
-// long as the element types themselves can be multiplied and added. Note however that the
-// highest performance for a multiplication between two matrices can be expected for two
+// The storage order of the two matrices poses no restrictions on the operation,
+all variations
+// are possible. It is also possible to multiply two matrices with different
+element type, as
+// long as the element types themselves can be multiplied and added. Note
+however that the
+// highest performance for a multiplication between two matrices can be expected
+for two
 // matrices with the same scalar element type.
 //
-// In case the resulting matrix is known to be symmetric, Hermitian, lower triangular, upper
-// triangular, or diagonal, the computation can be optimized by explicitly declaring the
-// multiplication as symmetric, Hermitian, lower triangular, upper triangular, or diagonal by
+// In case the resulting matrix is known to be symmetric, Hermitian, lower
+triangular, upper
+// triangular, or diagonal, the computation can be optimized by explicitly
+declaring the
+// multiplication as symmetric, Hermitian, lower triangular, upper triangular,
+or diagonal by
 // means of the \ref matrix_operations_declaration_operations :
 
    \code
@@ -8940,52 +10693,68 @@
 
    // ... Initialization of the square matrices
 
-   M3 = declsym ( M1 * M2 );  // Declare the result of the matrix multiplication as symmetric
-   M3 = declherm( M1 * M2 );  // Declare the result of the matrix multiplication as Hermitian
-   M3 = decllow ( M1 * M2 );  // Declare the result of the matrix multiplication as lower triangular
-   M3 = declupp ( M1 * M2 );  // Declare the result of the matrix multiplication as upper triangular
-   M3 = decldiag( M1 * M2 );  // Declare the result of the matrix multiplication as diagonal
-   \endcode
+   M3 = declsym ( M1 * M2 );  // Declare the result of the matrix multiplication
+as symmetric M3 = declherm( M1 * M2 );  // Declare the result of the matrix
+multiplication as Hermitian M3 = decllow ( M1 * M2 );  // Declare the result of
+the matrix multiplication as lower triangular M3 = declupp ( M1 * M2 );  //
+Declare the result of the matrix multiplication as upper triangular M3 =
+decldiag( M1 * M2 );  // Declare the result of the matrix multiplication as
+diagonal \endcode
 
-// Using a declaration operation on the a multiplication expression can speed up the computation
-// by a factor of 2. Note however that the caller of the according declaration operation takes
-// full responsibility for the correctness of the declaration. Falsely declaring a multiplication
-// as symmetric, Hermitian, lower triangular, upper triangular, or diagonal leads to undefined
+// Using a declaration operation on the a multiplication expression can speed up
+the computation
+// by a factor of 2. Note however that the caller of the according declaration
+operation takes
+// full responsibility for the correctness of the declaration. Falsely declaring
+a multiplication
+// as symmetric, Hermitian, lower triangular, upper triangular, or diagonal
+leads to undefined
 // behavior!
 //
-// \n Previous: \ref matrix_vector_multiplication &nbsp; &nbsp; Next: \ref shared_memory_parallelization
+// \n Previous: \ref matrix_vector_multiplication &nbsp; &nbsp; Next: \ref
+shared_memory_parallelization
 */
 //*************************************************************************************************
 
-
-//**Shared Memory Parallelization******************************************************************
+//**Shared Memory
+//Parallelization******************************************************************
 /*!\page shared_memory_parallelization Shared Memory Parallelization
 //
-// For all possible operations \b Blaze tries to achieve maximum performance on a single CPU
-// core. However, today's CPUs are not single core anymore, but provide several (homogeneous
-// or heterogeneous) compute cores. In order to fully exploit the performance potential of a
-// multicore CPU, computations have to be parallelized across all available cores of a CPU.
-// For this purpose, \b Blaze provides four different shared memory parallelization techniques:
+// For all possible operations \b Blaze tries to achieve maximum performance on
+a single CPU
+// core. However, today's CPUs are not single core anymore, but provide several
+(homogeneous
+// or heterogeneous) compute cores. In order to fully exploit the performance
+potential of a
+// multicore CPU, computations have to be parallelized across all available
+cores of a CPU.
+// For this purpose, \b Blaze provides four different shared memory
+parallelization techniques:
 //
 //  - \ref openmp_parallelization
 //  - \ref cpp_threads_parallelization
 //  - \ref boost_threads_parallelization
 //  - \ref hpx_threads_parallelization
 //
-// When any of the shared memory parallelization techniques is activated, all arithmetic
-// operations on dense vectors and matrices (including additions, subtractions, multiplications,
-// divisions, and all componentwise arithmetic operations) and most operations on sparse vectors
-// and matrices are automatically run in parallel. However, in addition, \b Blaze provides means
+// When any of the shared memory parallelization techniques is activated, all
+arithmetic
+// operations on dense vectors and matrices (including additions, subtractions,
+multiplications,
+// divisions, and all componentwise arithmetic operations) and most operations
+on sparse vectors
+// and matrices are automatically run in parallel. However, in addition, \b
+Blaze provides means
 // to enforce the serial execution of specific operations:
 //
 //  - \ref serial_execution
 //
-// \n Previous: \ref matrix_matrix_multiplication &nbsp; &nbsp; Next: \ref openmp_parallelization
+// \n Previous: \ref matrix_matrix_multiplication &nbsp; &nbsp; Next: \ref
+openmp_parallelization
 */
 //*************************************************************************************************
 
-
-//**OpenMP Parallelization*************************************************************************
+//**OpenMP
+//Parallelization*************************************************************************
 /*!\page openmp_parallelization OpenMP Parallelization
 //
 // \tableofcontents
@@ -8994,7 +10763,8 @@
 // \n \section openmp_setup OpenMP Setup
 // <hr>
 //
-// To enable the OpenMP-based parallelization, all that needs to be done is to explicitly specify
+// To enable the OpenMP-based parallelization, all that needs to be done is to
+explicitly specify
 // the use of OpenMP on the command line:
 
    \code
@@ -9003,10 +10773,12 @@
    /openmp    // Visual Studio
    \endcode
 
-// This simple action will cause the \b Blaze library to automatically try to run all operations
+// This simple action will cause the \b Blaze library to automatically try to
+run all operations
 // in parallel with the specified number of threads.
 //
-// As common for OpenMP, the number of threads can be specified either via an environment variable
+// As common for OpenMP, the number of threads can be specified either via an
+environment variable
 
    \code
    export OMP_NUM_THREADS=4  // Unix systems
@@ -9019,54 +10791,75 @@
    omp_set_num_threads( 4 );
    \endcode
 
-// Alternatively, the number of threads can also be specified via the \c setNumThreads() function
+// Alternatively, the number of threads can also be specified via the \c
+setNumThreads() function
 // provided by the \b Blaze library:
 
    \code
    blaze::setNumThreads( 4 );
    \endcode
 
-// Please note that the \b Blaze library does not limit the available number of threads. Therefore
-// it is in YOUR responsibility to choose an appropriate number of threads. The best performance,
-// though, can be expected if the specified number of threads matches the available number of
+// Please note that the \b Blaze library does not limit the available number of
+threads. Therefore
+// it is in YOUR responsibility to choose an appropriate number of threads. The
+best performance,
+// though, can be expected if the specified number of threads matches the
+available number of
 // cores.
 //
-// In order to query the number of threads used for the parallelization of operations, the
+// In order to query the number of threads used for the parallelization of
+operations, the
 // \c getNumThreads() function can be used:
 
    \code
    const size_t threads = blaze::getNumThreads();
    \endcode
 
-// In the context of OpenMP, the function returns the maximum number of threads OpenMP will use
-// within a parallel region and is therefore equivalent to the \c omp_get_max_threads() function.
+// In the context of OpenMP, the function returns the maximum number of threads
+OpenMP will use
+// within a parallel region and is therefore equivalent to the \c
+omp_get_max_threads() function.
 //
 //
 // \n \section openmp_configuration OpenMP Configuration
 // <hr>
 //
-// Note that \b Blaze is not unconditionally running an operation in parallel. In case \b Blaze
-// deems the parallel execution as counterproductive for the overall performance, the operation
-// is executed serially. One of the main reasons for not executing an operation in parallel is
-// the size of the operands. For instance, a vector addition is only executed in parallel if the
-// size of both vector operands exceeds a certain threshold. Otherwise, the performance could
-// seriously decrease due to the overhead caused by the thread setup. However, in order to be
-// able to adjust the \b Blaze library to a specific system, it is possible to configure these
-// thresholds manually. All shared memory thresholds are contained within the configuration file
+// Note that \b Blaze is not unconditionally running an operation in parallel.
+In case \b Blaze
+// deems the parallel execution as counterproductive for the overall
+performance, the operation
+// is executed serially. One of the main reasons for not executing an operation
+in parallel is
+// the size of the operands. For instance, a vector addition is only executed in
+parallel if the
+// size of both vector operands exceeds a certain threshold. Otherwise, the
+performance could
+// seriously decrease due to the overhead caused by the thread setup. However,
+in order to be
+// able to adjust the \b Blaze library to a specific system, it is possible to
+configure these
+// thresholds manually. All shared memory thresholds are contained within the
+configuration file
 // <tt>./blaze/config/Thresholds.h</tt>.
 //
-// Please note that these thresholds are highly sensitiv to the used system architecture and
-// the shared memory parallelization technique (see also \ref cpp_threads_parallelization and
-// \ref boost_threads_parallelization). Therefore the default values cannot guarantee maximum
-// performance for all possible situations and configurations. They merely provide a reasonable
+// Please note that these thresholds are highly sensitiv to the used system
+architecture and
+// the shared memory parallelization technique (see also \ref
+cpp_threads_parallelization and
+// \ref boost_threads_parallelization). Therefore the default values cannot
+guarantee maximum
+// performance for all possible situations and configurations. They merely
+provide a reasonable
 // standard for the current CPU generation.
 //
 //
 // \n \section openmp_first_touch First Touch Policy
 // <hr>
 //
-// So far the \b Blaze library does not (yet) automatically initialize dynamic memory according
-// to the first touch principle. Consider for instance the following vector triad example:
+// So far the \b Blaze library does not (yet) automatically initialize dynamic
+memory according
+// to the first touch principle. Consider for instance the following vector
+triad example:
 
    \code
    using blaze::columnVector;
@@ -9086,14 +10879,20 @@
    a = b + c * d;
    \endcode
 
-// If this code, which is prototypical for many OpenMP applications that have not been optimized
-// for ccNUMA architectures, is run across several locality domains (LD), it will not scale
-// beyond the maximum performance achievable on a single LD if the working set does not fit into
-// the cache. This is because the initialization loop is executed by a single thread, writing to
-// \c b, \c c, and \c d for the first time. Hence, all memory pages belonging to those arrays will
+// If this code, which is prototypical for many OpenMP applications that have
+not been optimized
+// for ccNUMA architectures, is run across several locality domains (LD), it
+will not scale
+// beyond the maximum performance achievable on a single LD if the working set
+does not fit into
+// the cache. This is because the initialization loop is executed by a single
+thread, writing to
+// \c b, \c c, and \c d for the first time. Hence, all memory pages belonging to
+those arrays will
 // be mapped into a single LD.
 //
-// As mentioned above, this problem can be solved by performing vector initialization in parallel:
+// As mentioned above, this problem can be solved by performing vector
+initialization in parallel:
 
    \code
    // ...
@@ -9109,23 +10908,29 @@
    // ...
    \endcode
 
-// This simple modification makes a huge difference on ccNUMA in memory-bound situations (as for
-// instance in all BLAS level 1 operations and partially BLAS level 2 operations). Therefore, in
-// order to achieve the maximum possible performance, it is imperative to initialize the memory
+// This simple modification makes a huge difference on ccNUMA in memory-bound
+situations (as for
+// instance in all BLAS level 1 operations and partially BLAS level 2
+operations). Therefore, in
+// order to achieve the maximum possible performance, it is imperative to
+initialize the memory
 // according to the later use of the data structures.
 //
 //
 // \n \section openmp_limitations Limitations of the OpenMP Parallelization
 // <hr>
 //
-// There are a few important limitations to the current \b Blaze OpenMP parallelization. The first
-// one involves the explicit use of an OpenMP parallel region (see \ref openmp_parallel), the
+// There are a few important limitations to the current \b Blaze OpenMP
+parallelization. The first
+// one involves the explicit use of an OpenMP parallel region (see \ref
+openmp_parallel), the
 // other one the OpenMP \c sections directive (see \ref openmp_sections).
 //
 //
 // \n \subsection openmp_parallel The Parallel Directive
 //
-// In OpenMP threads are explicitly spawned via the an OpenMP parallel directive:
+// In OpenMP threads are explicitly spawned via the an OpenMP parallel
+directive:
 
    \code
    // Serial region, executed by a single thread
@@ -9138,8 +10943,10 @@
    // Serial region, executed by a single thread
    \endcode
 
-// Conceptually, the specified number of threads (see \ref openmp_setup) is created every time a
-// parallel directive is encountered. Therefore, from a performance point of view, it seems to be
+// Conceptually, the specified number of threads (see \ref openmp_setup) is
+created every time a
+// parallel directive is encountered. Therefore, from a performance point of
+view, it seems to be
 // beneficial to use a single OpenMP parallel directive for several operations:
 
    \code
@@ -9153,19 +10960,28 @@
    }
    \endcode
 
-// Unfortunately, this optimization approach is not allowed within the \b Blaze library. More
-// explicitly, it is not allowed to put an operation into a parallel region. The reason is that
-// the entire code contained within a parallel region is executed by all threads. Although this
-// appears to just comprise the contained computations, a computation (or more specifically the
-// assignment of an expression to a vector or matrix) can contain additional logic that must not
-// be handled by multiple threads (as for instance memory allocations, setup of temporaries, etc.).
-// Therefore it is not possible to manually start a parallel region for several operations, but
-// \b Blaze will spawn threads automatically, depending on the specifics of the operation at hand
+// Unfortunately, this optimization approach is not allowed within the \b Blaze
+library. More
+// explicitly, it is not allowed to put an operation into a parallel region. The
+reason is that
+// the entire code contained within a parallel region is executed by all
+threads. Although this
+// appears to just comprise the contained computations, a computation (or more
+specifically the
+// assignment of an expression to a vector or matrix) can contain additional
+logic that must not
+// be handled by multiple threads (as for instance memory allocations, setup of
+temporaries, etc.).
+// Therefore it is not possible to manually start a parallel region for several
+operations, but
+// \b Blaze will spawn threads automatically, depending on the specifics of the
+operation at hand
 // and the given operands.
 //
 // \n \subsection openmp_sections The Sections Directive
 //
-// OpenMP provides several work-sharing construct to distribute work among threads. One of these
+// OpenMP provides several work-sharing construct to distribute work among
+threads. One of these
 // constructs is the \c sections directive:
 
    \code
@@ -9187,19 +11003,31 @@
    }
    \endcode
 
-// In this example, two threads are used to compute two distinct matrix/vector multiplications
-// concurrently. Thereby each of the \c sections is executed by exactly one thread.
+// In this example, two threads are used to compute two distinct matrix/vector
+multiplications
+// concurrently. Thereby each of the \c sections is executed by exactly one
+thread.
 //
-// Unfortunately \b Blaze does not support concurrent parallel computations and therefore this
-// approach does not work with any of the \b Blaze parallelization techniques. All techniques
-// (including the C++11 and Boost thread parallelizations; see \ref cpp_threads_parallelization
-// and \ref boost_threads_parallelization) are optimized for the parallel computation of an
-// operation within a single thread of execution. This means that \b Blaze tries to use all
-// available threads to compute the result of a single operation as efficiently as possible.
-// Therefore, for this special case, it is advisable to disable all \b Blaze parallelizations
-// and to let \b Blaze compute all operations within a \c sections directive in serial. This can
-// be done by either completely disabling the \b Blaze parallelization (see \ref serial_execution)
-// or by selectively serializing all operations within a \c sections directive via the \c serial()
+// Unfortunately \b Blaze does not support concurrent parallel computations and
+therefore this
+// approach does not work with any of the \b Blaze parallelization techniques.
+All techniques
+// (including the C++11 and Boost thread parallelizations; see \ref
+cpp_threads_parallelization
+// and \ref boost_threads_parallelization) are optimized for the parallel
+computation of an
+// operation within a single thread of execution. This means that \b Blaze tries
+to use all
+// available threads to compute the result of a single operation as efficiently
+as possible.
+// Therefore, for this special case, it is advisable to disable all \b Blaze
+parallelizations
+// and to let \b Blaze compute all operations within a \c sections directive in
+serial. This can
+// be done by either completely disabling the \b Blaze parallelization (see \ref
+serial_execution)
+// or by selectively serializing all operations within a \c sections directive
+via the \c serial()
 // function:
 
    \code
@@ -9221,102 +11049,136 @@
    }
    \endcode
 
-// Please note that the use of the \c BLAZE_SERIAL_SECTION (see also \ref serial_execution) does
+// Please note that the use of the \c BLAZE_SERIAL_SECTION (see also \ref
+serial_execution) does
 // NOT work in this context!
 //
-// \n Previous: \ref shared_memory_parallelization &nbsp; &nbsp; Next: \ref cpp_threads_parallelization
+// \n Previous: \ref shared_memory_parallelization &nbsp; &nbsp; Next: \ref
+cpp_threads_parallelization
 */
 //*************************************************************************************************
 
-
-//**C++11 Thread Parallelization*******************************************************************
+//**C++11 Thread
+//Parallelization*******************************************************************
 /*!\page cpp_threads_parallelization C++11 Thread Parallelization
 //
 // \tableofcontents
 //
 //
-// In addition to the OpenMP-based shared memory parallelization, starting with \b Blaze 2.1,
-// \b Blaze also provides a shared memory parallelization based on C++11 threads.
+// In addition to the OpenMP-based shared memory parallelization, starting with
+\b Blaze 2.1,
+// \b Blaze also provides a shared memory parallelization based on C++11
+threads.
 //
 //
 // \n \section cpp_threads_setup C++11 Thread Setup
 // <hr>
 //
-// In order to enable the C++11 thread-based parallelization, first the according C++11-specific
-// compiler flags have to be used and second the \c BLAZE_USE_CPP_THREADS command line argument
-// has to be explicitly specified. For instance, in case of the GNU C++ and Clang compilers the
+// In order to enable the C++11 thread-based parallelization, first the
+according C++11-specific
+// compiler flags have to be used and second the \c BLAZE_USE_CPP_THREADS
+command line argument
+// has to be explicitly specified. For instance, in case of the GNU C++ and
+Clang compilers the
 // compiler flags have to be extended by
 
    \code
    ... -std=c++11 -DBLAZE_USE_CPP_THREADS ...
    \endcode
 
-// This simple action will cause the \b Blaze library to automatically try to run all operations
-// in parallel with the specified number of C++11 threads. Note that in case both OpenMP and C++11
-// threads are enabled on the command line, the OpenMP-based parallelization has priority and
+// This simple action will cause the \b Blaze library to automatically try to
+run all operations
+// in parallel with the specified number of C++11 threads. Note that in case
+both OpenMP and C++11
+// threads are enabled on the command line, the OpenMP-based parallelization has
+priority and
 // is preferred.
 //
-// The number of threads can be either specified via the environment variable \c BLAZE_NUM_THREADS
+// The number of threads can be either specified via the environment variable \c
+BLAZE_NUM_THREADS
 
    \code
    export BLAZE_NUM_THREADS=4  // Unix systems
    set BLAZE_NUM_THREADS=4     // Windows systems
    \endcode
 
-// or alternatively via the \c setNumThreads() function provided by the \b Blaze library:
+// or alternatively via the \c setNumThreads() function provided by the \b Blaze
+library:
 
    \code
    blaze::setNumThreads( 4 );
    \endcode
 
-// Please note that the \b Blaze library does not limit the available number of threads. Therefore
-// it is in YOUR responsibility to choose an appropriate number of threads. The best performance,
-// though, can be expected if the specified number of threads matches the available number of
+// Please note that the \b Blaze library does not limit the available number of
+threads. Therefore
+// it is in YOUR responsibility to choose an appropriate number of threads. The
+best performance,
+// though, can be expected if the specified number of threads matches the
+available number of
 // cores.
 //
-// In order to query the number of threads used for the parallelization of operations, the
+// In order to query the number of threads used for the parallelization of
+operations, the
 // \c getNumThreads() function can be used:
 
    \code
    const size_t threads = blaze::getNumThreads();
    \endcode
 
-// In the context of C++11 threads, the function will return the previously specified number of
+// In the context of C++11 threads, the function will return the previously
+specified number of
 // threads.
 //
 //
 // \n \section cpp_threads_configuration C++11 Thread Configuration
 // <hr>
 //
-// As in case of the OpenMP-based parallelization \b Blaze is not unconditionally running an
-// operation in parallel. In case \b Blaze deems the parallel execution as counterproductive for
-// the overall performance, the operation is executed serially. One of the main reasons for not
-// executing an operation in parallel is the size of the operands. For instance, a vector addition
-// is only executed in parallel if the size of both vector operands exceeds a certain threshold.
-// Otherwise, the performance could seriously decrease due to the overhead caused by the thread
-// setup. However, in order to be able to adjust the \b Blaze library to a specific system, it
-// is possible to configure these thresholds manually. All thresholds are contained within the
+// As in case of the OpenMP-based parallelization \b Blaze is not
+unconditionally running an
+// operation in parallel. In case \b Blaze deems the parallel execution as
+counterproductive for
+// the overall performance, the operation is executed serially. One of the main
+reasons for not
+// executing an operation in parallel is the size of the operands. For instance,
+a vector addition
+// is only executed in parallel if the size of both vector operands exceeds a
+certain threshold.
+// Otherwise, the performance could seriously decrease due to the overhead
+caused by the thread
+// setup. However, in order to be able to adjust the \b Blaze library to a
+specific system, it
+// is possible to configure these thresholds manually. All thresholds are
+contained within the
 // configuration file <tt>./blaze/config/Thresholds.h</tt>.
 //
-// Please note that these thresholds are highly sensitiv to the used system architecture and
-// the shared memory parallelization technique. Therefore the default values cannot guarantee
-// maximum performance for all possible situations and configurations. They merely provide a
-// reasonable standard for the current CPU generation. Also note that the provided defaults
-// have been determined using the OpenMP parallelization and require individual adaption for
+// Please note that these thresholds are highly sensitiv to the used system
+architecture and
+// the shared memory parallelization technique. Therefore the default values
+cannot guarantee
+// maximum performance for all possible situations and configurations. They
+merely provide a
+// reasonable standard for the current CPU generation. Also note that the
+provided defaults
+// have been determined using the OpenMP parallelization and require individual
+adaption for
 // the C++11 thread parallelization.
 //
 //
 // \n \section cpp_threads_known_issues Known Issues
 // <hr>
 //
-// There is a known issue in Visual Studio 2012 and 2013 that may cause C++11 threads to hang
+// There is a known issue in Visual Studio 2012 and 2013 that may cause C++11
+threads to hang
 // if their destructor is executed after the \c main() function:
 //
 //    http://connect.microsoft.com/VisualStudio/feedback/details/747145
 //
-// Unfortunately, the C++11 parallelization of the \b Blaze library is affected from this bug.
-// In order to circumvent this problem, \b Blaze provides the \c shutDownThreads() function,
-// which can be used to manually destroy all threads at the end of the \c main() function:
+// Unfortunately, the C++11 parallelization of the \b Blaze library is affected
+from this bug.
+// In order to circumvent this problem, \b Blaze provides the \c
+shutDownThreads() function,
+// which can be used to manually destroy all threads at the end of the \c main()
+function:
 
    \code
    int main()
@@ -9327,178 +11189,237 @@
    }
    \endcode
 
-// Please note that this function may only be used at the end of the \c main() function. After
-// this function no further computation may be executed! Also note that this function has an
-// effect for Visual Studio compilers only and doesn't need to be used with any other compiler.
+// Please note that this function may only be used at the end of the \c main()
+function. After
+// this function no further computation may be executed! Also note that this
+function has an
+// effect for Visual Studio compilers only and doesn't need to be used with any
+other compiler.
 //
-// \n Previous: \ref openmp_parallelization &nbsp; &nbsp; Next: \ref boost_threads_parallelization
+// \n Previous: \ref openmp_parallelization &nbsp; &nbsp; Next: \ref
+boost_threads_parallelization
 */
 //*************************************************************************************************
 
-
-//**Boost Thread Parallelization*******************************************************************
+//**Boost Thread
+//Parallelization*******************************************************************
 /*!\page boost_threads_parallelization Boost Thread Parallelization
 //
 // \tableofcontents
 //
 //
-// The third available shared memory parallelization provided with \b Blaze is based on Boost
+// The third available shared memory parallelization provided with \b Blaze is
+based on Boost
 // threads.
 //
 //
 // \n \section boost_threads_setup Boost Thread Setup
 // <hr>
 //
-// In order to enable the Boost thread-based parallelization, two steps have to be taken: First,
-// the \c BLAZE_USE_BOOST_THREADS command line argument has to be explicitly specified during
+// In order to enable the Boost thread-based parallelization, two steps have to
+be taken: First,
+// the \c BLAZE_USE_BOOST_THREADS command line argument has to be explicitly
+specified during
 // compilation:
 
    \code
    ... -DBLAZE_USE_BOOST_THREADS ...
    \endcode
 
-// Second, the according Boost libraries have to be linked. These two simple actions will cause
-// the \b Blaze library to automatically try to run all operations in parallel with the specified
-// number of Boost threads. Note that the OpenMP-based and C++11 thread-based parallelizations
-// have priority, i.e. are preferred in case either is enabled in combination with the Boost
+// Second, the according Boost libraries have to be linked. These two simple
+actions will cause
+// the \b Blaze library to automatically try to run all operations in parallel
+with the specified
+// number of Boost threads. Note that the OpenMP-based and C++11 thread-based
+parallelizations
+// have priority, i.e. are preferred in case either is enabled in combination
+with the Boost
 // thread parallelization.
 //
-// The number of threads can be either specified via the environment variable \c BLAZE_NUM_THREADS
+// The number of threads can be either specified via the environment variable \c
+BLAZE_NUM_THREADS
 
    \code
    export BLAZE_NUM_THREADS=4  // Unix systems
    set BLAZE_NUM_THREADS=4     // Windows systems
    \endcode
 
-// or alternatively via the \c setNumThreads() function provided by the \b Blaze library:
+// or alternatively via the \c setNumThreads() function provided by the \b Blaze
+library:
 
    \code
    blaze::setNumThreads( 4 );
    \endcode
 
-// Please note that the \b Blaze library does not limit the available number of threads. Therefore
-// it is in YOUR responsibility to choose an appropriate number of threads. The best performance,
-// though, can be expected if the specified number of threads matches the available number of
+// Please note that the \b Blaze library does not limit the available number of
+threads. Therefore
+// it is in YOUR responsibility to choose an appropriate number of threads. The
+best performance,
+// though, can be expected if the specified number of threads matches the
+available number of
 // cores.
 //
-// In order to query the number of threads used for the parallelization of operations, the
+// In order to query the number of threads used for the parallelization of
+operations, the
 // \c getNumThreads() function can be used:
 
    \code
    const size_t threads = blaze::getNumThreads();
    \endcode
 
-// In the context of Boost threads, the function will return the previously specified number of
+// In the context of Boost threads, the function will return the previously
+specified number of
 // threads.
 //
 //
 // \n \section boost_threads_configuration Boost Thread Configuration
 // <hr>
 //
-// As in case of the other shared memory parallelizations \b Blaze is not unconditionally running
-// an operation in parallel (see \ref openmp_parallelization or \ref cpp_threads_parallelization).
-// All thresholds related to the Boost thread parallelization are also contained within the
+// As in case of the other shared memory parallelizations \b Blaze is not
+unconditionally running
+// an operation in parallel (see \ref openmp_parallelization or \ref
+cpp_threads_parallelization).
+// All thresholds related to the Boost thread parallelization are also contained
+within the
 // configuration file <tt>./blaze/config/Thresholds.h</tt>.
 //
-// Please note that these thresholds are highly sensitiv to the used system architecture and
-// the shared memory parallelization technique. Therefore the default values cannot guarantee
-// maximum performance for all possible situations and configurations. They merely provide a
-// reasonable standard for the current CPU generation. Also note that the provided defaults
-// have been determined using the OpenMP parallelization and require individual adaption for
+// Please note that these thresholds are highly sensitiv to the used system
+architecture and
+// the shared memory parallelization technique. Therefore the default values
+cannot guarantee
+// maximum performance for all possible situations and configurations. They
+merely provide a
+// reasonable standard for the current CPU generation. Also note that the
+provided defaults
+// have been determined using the OpenMP parallelization and require individual
+adaption for
 // the Boost thread parallelization.
 //
-// \n Previous: \ref cpp_threads_parallelization &nbsp; &nbsp; Next: \ref hpx_threads_parallelization
+// \n Previous: \ref cpp_threads_parallelization &nbsp; &nbsp; Next: \ref
+hpx_threads_parallelization
 */
 //*************************************************************************************************
 
-
-//**HPX Thread Parallelization*********************************************************************
+//**HPX Thread
+//Parallelization*********************************************************************
 /*!\page hpx_threads_parallelization HPX Thread Parallelization
 //
 // \tableofcontents
 //
 //
-// The fourth and final shared memory parallelization provided with \b Blaze is based on
+// The fourth and final shared memory parallelization provided with \b Blaze is
+based on
 // <a href="http://stellar.cct.lsu.edu/projects/hpx/">HPX</a>.
 //
 //
 // \n \section hpx_setup HPX Setup
 // <hr>
 //
-// In order to enable the HPX-based parallelization, the following steps have to be taken: First,
-// the \c BLAZE_USE_HPX_THREADS command line argument has to be explicitly specified during
+// In order to enable the HPX-based parallelization, the following steps have to
+be taken: First,
+// the \c BLAZE_USE_HPX_THREADS command line argument has to be explicitly
+specified during
 // compilation:
 
    \code
    ... -DBLAZE_USE_HPX_THREADS ...
    \endcode
 
-// Second, the HPX library and depending libraries such as Boost, hwloc, etc. have to be linked.
-// And third, the HPX threads have to be initialized by a call to the \c hpx::init() function (see
-// the <a href="http://stellar.cct.lsu.edu/files/hpx_0.9.0/docs/hpx/tutorial.html">HPX tutorial</a>
-// for further details). These three actions will cause the \b Blaze library to automatically try
+// Second, the HPX library and depending libraries such as Boost, hwloc, etc.
+have to be linked.
+// And third, the HPX threads have to be initialized by a call to the \c
+hpx::init() function (see
+// the <a
+href="http://stellar.cct.lsu.edu/files/hpx_0.9.0/docs/hpx/tutorial.html">HPX
+tutorial</a>
+// for further details). These three actions will cause the \b Blaze library to
+automatically try
 // to run all operations in parallel with the specified number of HPX threads.
 //
-// Note that the OpenMP-based, C++11 thread-based, and Boost thread-based parallelizations have
-// priority, i.e. are preferred in case either is enabled in combination with the HPX thread
+// Note that the OpenMP-based, C++11 thread-based, and Boost thread-based
+parallelizations have
+// priority, i.e. are preferred in case either is enabled in combination with
+the HPX thread
 // parallelization.
 //
-// The number of threads used by the HPX backend has to be specified via the command line:
+// The number of threads used by the HPX backend has to be specified via the
+command line:
 
    \code
    ... --hpx:threads 4 ...
    \endcode
 
-// Please note that the \b Blaze library does not limit the available number of threads. Therefore
-// it is in YOUR responsibility to choose an appropriate number of threads. The best performance,
-// though, can be expected if the specified number of threads matches the available number of
+// Please note that the \b Blaze library does not limit the available number of
+threads. Therefore
+// it is in YOUR responsibility to choose an appropriate number of threads. The
+best performance,
+// though, can be expected if the specified number of threads matches the
+available number of
 // cores.
 //
-// In order to query the number of threads used for the parallelization of operations, the
+// In order to query the number of threads used for the parallelization of
+operations, the
 // \c getNumThreads() function can be used:
 
    \code
    const size_t threads = blaze::getNumThreads();
    \endcode
 
-// In the context of HPX threads, the function will return the actual number of threads used by
+// In the context of HPX threads, the function will return the actual number of
+threads used by
 // the HPX subsystem.
 //
 //
 // \n \section hpx_configuration HPX Configuration
 // <hr>
 //
-// As in case of the other shared memory parallelizations \b Blaze is not unconditionally running
-// an operation in parallel (see for instance \ref openmp_parallelization). Only in case a given
-// operation is large enough and exceeds a certain threshold the operation is executed in parallel.
-// All thresholds related to the HPX-based parallelization are contained within the configuration
+// As in case of the other shared memory parallelizations \b Blaze is not
+unconditionally running
+// an operation in parallel (see for instance \ref openmp_parallelization). Only
+in case a given
+// operation is large enough and exceeds a certain threshold the operation is
+executed in parallel.
+// All thresholds related to the HPX-based parallelization are contained within
+the configuration
 // file <tt>./blaze/config/Thresholds.h</tt>.
 //
-// Please note that these thresholds are highly sensitiv to the used system architecture and
-// the shared memory parallelization technique. Therefore the default values cannot guarantee
-// maximum performance for all possible situations and configurations. They merely provide a
-// reasonable standard for the current CPU generation. Also note that the provided defaults
-// have been determined using the OpenMP parallelization and require individual adaption for
+// Please note that these thresholds are highly sensitiv to the used system
+architecture and
+// the shared memory parallelization technique. Therefore the default values
+cannot guarantee
+// maximum performance for all possible situations and configurations. They
+merely provide a
+// reasonable standard for the current CPU generation. Also note that the
+provided defaults
+// have been determined using the OpenMP parallelization and require individual
+adaption for
 // the HPX-based parallelization.
 //
-// \n Previous: \ref boost_threads_parallelization &nbsp; &nbsp; Next: \ref serial_execution
+// \n Previous: \ref boost_threads_parallelization &nbsp; &nbsp; Next: \ref
+serial_execution
 */
 //*************************************************************************************************
 
-
-//**Serial Execution*******************************************************************************
+//**Serial
+//Execution*******************************************************************************
 /*!\page serial_execution Serial Execution
 //
-// Sometimes it may be necessary to enforce the serial execution of specific operations. For this
-// purpose, the \b Blaze library offers three possible options: the serialization of a single
-// expression via the \c serial() function, the serialization of a block of expressions via the
-// \c BLAZE_SERIAL_SECTION, and the general deactivation of the parallel execution.
+// Sometimes it may be necessary to enforce the serial execution of specific
+operations. For this
+// purpose, the \b Blaze library offers three possible options: the
+serialization of a single
+// expression via the \c serial() function, the serialization of a block of
+expressions via the
+// \c BLAZE_SERIAL_SECTION, and the general deactivation of the parallel
+execution.
 //
 //
-// \n \section serial_execution_serial_expression Option 1: Serialization of a Single Expression
+// \n \section serial_execution_serial_expression Option 1: Serialization of a
+Single Expression
 // <hr>
 //
-// The first option is the serialization of a specific operation via the \c serial() function:
+// The first option is the serialization of a specific operation via the \c
+serial() function:
 
    \code
    blaze::DynamicMatrix<double> A, B, C;
@@ -9506,14 +11427,17 @@
    C = serial( A + B );
    \endcode
 
-// \c serial() enforces the serial evaluation of the enclosed expression. It can be used on any
+// \c serial() enforces the serial evaluation of the enclosed expression. It can
+be used on any
 // kind of dense or sparse vector or matrix expression.
 //
 //
-// \n \section serial_execution_serial_section Option 2: Serialization of Multiple Expressions
+// \n \section serial_execution_serial_section Option 2: Serialization of
+Multiple Expressions
 // <hr>
 //
-// The second option is the temporary and local enforcement of a serial execution via the
+// The second option is the temporary and local enforcement of a serial
+execution via the
 // \c BLAZE_SERIAL_SECTION:
 
    \code
@@ -9526,11 +11450,12 @@
    // ... Resizing and initialization
 
    // Parallel execution
-   // If possible and beneficial for performance the following operation is executed in parallel.
-   x = A * b;
+   // If possible and beneficial for performance the following operation is
+executed in parallel. x = A * b;
 
    // Serial execution
-   // All operations executed within the serial section are guaranteed to be executed in
+   // All operations executed within the serial section are guaranteed to be
+executed in
    // serial (even if a parallel execution would be possible and/or beneficial).
    BLAZE_SERIAL_SECTION
    {
@@ -9542,56 +11467,71 @@
    // ...
    \endcode
 
-// Within the scope of the \c BLAZE_SERIAL_SECTION, all operations are guaranteed to run in serial.
-// Outside the scope of the serial section, all operations are run in parallel (if beneficial for
+// Within the scope of the \c BLAZE_SERIAL_SECTION, all operations are
+guaranteed to run in serial.
+// Outside the scope of the serial section, all operations are run in parallel
+(if beneficial for
 // the performance).
 //
-// Note that the \c BLAZE_SERIAL_SECTION must only be used within a single thread of execution.
-// The use of the serial section within several concurrent threads will result undefined behavior!
+// Note that the \c BLAZE_SERIAL_SECTION must only be used within a single
+thread of execution.
+// The use of the serial section within several concurrent threads will result
+undefined behavior!
 //
 //
-// \n \section serial_execution_deactivate_parallelism Option 3: Deactivation of Parallel Execution
+// \n \section serial_execution_deactivate_parallelism Option 3: Deactivation of
+Parallel Execution
 // <hr>
 //
-// The third option is the general deactivation of the parallel execution (even in case OpenMP is
-// enabled on the command line). This can be achieved via the \c BLAZE_USE_SHARED_MEMORY_PARALLELIZATION
+// The third option is the general deactivation of the parallel execution (even
+in case OpenMP is
+// enabled on the command line). This can be achieved via the \c
+BLAZE_USE_SHARED_MEMORY_PARALLELIZATION
 // switch in the <tt>./blaze/config/SMP.h</tt> configuration file:
 
    \code
    #define BLAZE_USE_SHARED_MEMORY_PARALLELIZATION 1
    \endcode
 
-// In case the \c BLAZE_USE_SHARED_MEMORY_PARALLELIZATION switch is set to 0, the shared memory
+// In case the \c BLAZE_USE_SHARED_MEMORY_PARALLELIZATION switch is set to 0,
+the shared memory
 // parallelization is deactivated altogether.
 //
-// \n Previous: \ref hpx_threads_parallelization &nbsp; &nbsp; Next: \ref serialization
+// \n Previous: \ref hpx_threads_parallelization &nbsp; &nbsp; Next: \ref
+serialization
 */
 //*************************************************************************************************
-
 
 //**Serialization**********************************************************************************
 /*!\page serialization Serialization
 //
-// Sometimes it is necessary to store vector and/or matrices on disk, for instance for storing
-// results or for sharing specific setups with other people. The \b Blaze math serialization
-// module provides the according functionality to create platform independent, portable, binary
-// representations of vectors and matrices that can be used to store the \b Blaze data structures
-// without loss of precision and to reliably transfer them from one machine to another.
+// Sometimes it is necessary to store vector and/or matrices on disk, for
+instance for storing
+// results or for sharing specific setups with other people. The \b Blaze math
+serialization
+// module provides the according functionality to create platform independent,
+portable, binary
+// representations of vectors and matrices that can be used to store the \b
+Blaze data structures
+// without loss of precision and to reliably transfer them from one machine to
+another.
 //
 // The following two pages explain how to serialize vectors and matrices:
 //
 //  - \ref vector_serialization
 //  - \ref matrix_serialization
 //
-// \n Previous: \ref serial_execution &nbsp; &nbsp; Next: \ref vector_serialization
+// \n Previous: \ref serial_execution &nbsp; &nbsp; Next: \ref
+vector_serialization
 */
 //*************************************************************************************************
 
-
-//**Vector Serialization***************************************************************************
+//**Vector
+//Serialization***************************************************************************
 /*!\page vector_serialization Vector Serialization
 //
-// The following example demonstrates the (de-)serialization of dense and sparse vectors:
+// The following example demonstrates the (de-)serialization of dense and sparse
+vectors:
 
    \code
    using blaze::columnVector;
@@ -9607,8 +11547,8 @@
       // Creating an archive that writes into a the file "vectors.blaze"
       blaze::Archive<std::ofstream> archive( "vectors.blaze" );
 
-      // Serialization of both vectors into the same archive. Note that d lies before s!
-      archive << d << s;
+      // Serialization of both vectors into the same archive. Note that d lies
+before s! archive << d << s;
    }
 
    // Reconstitution of both vectors
@@ -9619,26 +11559,33 @@
       // Creating an archive that reads from the file "vectors.blaze"
       blaze::Archive<std::ifstream> archive( "vectors.blaze" );
 
-      // Reconstituting the former d vector into d1. Note that it is possible to reconstitute
-      // the vector into a differrent kind of vector (StaticVector -> DynamicVector), but that
+      // Reconstituting the former d vector into d1. Note that it is possible to
+reconstitute
+      // the vector into a differrent kind of vector (StaticVector ->
+DynamicVector), but that
       // the type of elements has to be the same.
       archive >> d1;
 
-      // Reconstituting the former s vector into d2. Note that is is even possible to reconstitute
-      // a sparse vector as a dense vector (also the reverse is possible) and that a column vector
-      // can be reconstituted as row vector (and vice versa). Note however that also in this case
+      // Reconstituting the former s vector into d2. Note that is is even
+possible to reconstitute
+      // a sparse vector as a dense vector (also the reverse is possible) and
+that a column vector
+      // can be reconstituted as row vector (and vice versa). Note however that
+also in this case
       // the type of elements is the same!
       archive >> d2
    }
    \endcode
 
-// The (de-)serialization of vectors is not restricted to vectors of built-in data type, but can
+// The (de-)serialization of vectors is not restricted to vectors of built-in
+data type, but can
 // also be used for vectors with vector or matrix element type:
 
    \code
    // Serialization
    {
-      blaze::CompressedVector< blaze::DynamicVector< blaze::complex<double> > > vec;
+      blaze::CompressedVector< blaze::DynamicVector< blaze::complex<double> > >
+vec;
 
       // ... Resizing and initialization
 
@@ -9651,7 +11598,8 @@
 
    // Deserialization
    {
-      blaze::CompressedVector< blaze::DynamicVector< blaze::complex<double> > > vec;
+      blaze::CompressedVector< blaze::DynamicVector< blaze::complex<double> > >
+vec;
 
       // Creating an archive that reads from the file "vector.blaze"
       blaze::Archive<std::ifstream> archive( "vector.blaze" );
@@ -9661,28 +11609,35 @@
    }
    \endcode
 
-// As the examples demonstrates, the vector serialization offers an enormous flexibility. However,
+// As the examples demonstrates, the vector serialization offers an enormous
+flexibility. However,
 // several actions result in errors:
 //
 //  - vectors cannot be reconstituted as matrices (and vice versa)
-//  - the element type of the serialized and reconstituted vector must match, which means
-//    that on the source and destination platform the general type (signed/unsigned integral
+//  - the element type of the serialized and reconstituted vector must match,
+which means
+//    that on the source and destination platform the general type
+(signed/unsigned integral
 //    or floating point) and the size of the type must be exactly the same
-//  - when reconstituting a \c StaticVector, its size must match the size of the serialized vector
+//  - when reconstituting a \c StaticVector, its size must match the size of the
+serialized vector
 //
-// In case an error is encountered during (de-)serialization, a \c std::runtime_exception is
+// In case an error is encountered during (de-)serialization, a \c
+std::runtime_exception is
 // thrown.
 //
 // \n Previous: \ref serialization &nbsp; &nbsp; Next: \ref matrix_serialization
 */
 //*************************************************************************************************
 
-
-//**Matrix Serialization***************************************************************************
+//**Matrix
+//Serialization***************************************************************************
 /*!\page matrix_serialization Matrix Serialization
 //
-// The serialization of matrices works in the same manner as the serialization of vectors. The
-// following example demonstrates the (de-)serialization of dense and sparse matrices:
+// The serialization of matrices works in the same manner as the serialization
+of vectors. The
+// following example demonstrates the (de-)serialization of dense and sparse
+matrices:
 
    \code
    using blaze::rowMajor;
@@ -9698,8 +11653,8 @@
       // Creating an archive that writes into a the file "matrices.blaze"
       blaze::Archive<std::ofstream> archive( "matrices.blaze" );
 
-      // Serialization of both matrices into the same archive. Note that D lies before S!
-      archive << D << S;
+      // Serialization of both matrices into the same archive. Note that D lies
+before S! archive << D << S;
    }
 
    // Reconstitution of both matrices
@@ -9710,26 +11665,33 @@
       // Creating an archive that reads from the file "matrices.blaze"
       blaze::Archive<std::ifstream> archive( "matrices.blaze" );
 
-      // Reconstituting the former D matrix into D1. Note that it is possible to reconstitute
-      // the matrix into a differrent kind of matrix (StaticMatrix -> DynamicMatrix), but that
+      // Reconstituting the former D matrix into D1. Note that it is possible to
+reconstitute
+      // the matrix into a differrent kind of matrix (StaticMatrix ->
+DynamicMatrix), but that
       // the type of elements has to be the same.
       archive >> D1;
 
-      // Reconstituting the former S matrix into D2. Note that is is even possible to reconstitute
-      // a sparse matrix as a dense matrix (also the reverse is possible) and that a column-major
-      // matrix can be reconstituted as row-major matrix (and vice versa). Note however that also
+      // Reconstituting the former S matrix into D2. Note that is is even
+possible to reconstitute
+      // a sparse matrix as a dense matrix (also the reverse is possible) and
+that a column-major
+      // matrix can be reconstituted as row-major matrix (and vice versa). Note
+however that also
       // in this case the type of elements is the same!
       archive >> D2
    }
    \endcode
 
-// Note that also in case of matrices it is possible to (de-)serialize matrices with vector or
+// Note that also in case of matrices it is possible to (de-)serialize matrices
+with vector or
 // matrix elements:
 
    \code
    // Serialization
    {
-      blaze::CompressedMatrix< blaze::DynamicMatrix< blaze::complex<double> > > mat;
+      blaze::CompressedMatrix< blaze::DynamicMatrix< blaze::complex<double> > >
+mat;
 
       // ... Resizing and initialization
 
@@ -9742,7 +11704,8 @@
 
    // Deserialization
    {
-      blaze::CompressedMatrix< blaze::DynamicMatrix< blaze::complex<double> > > mat;
+      blaze::CompressedMatrix< blaze::DynamicMatrix< blaze::complex<double> > >
+mat;
 
       // Creating an archive that reads from the file "matrix.blaze"
       blaze::Archive<std::ifstream> archive( "matrix.blaze" );
@@ -9752,73 +11715,92 @@
    }
    \endcode
 
-// Note that just as the vector serialization, the matrix serialization is restricted by a
+// Note that just as the vector serialization, the matrix serialization is
+restricted by a
 // few important rules:
 //
 //  - matrices cannot be reconstituted as vectors (and vice versa)
-//  - the element type of the serialized and reconstituted matrix must match, which means
-//    that on the source and destination platform the general type (signed/unsigned integral
+//  - the element type of the serialized and reconstituted matrix must match,
+which means
+//    that on the source and destination platform the general type
+(signed/unsigned integral
 //    or floating point) and the size of the type must be exactly the same
-//  - when reconstituting a \c StaticMatrix, the number of rows and columns must match those
+//  - when reconstituting a \c StaticMatrix, the number of rows and columns must
+match those
 //    of the serialized matrix
 //
-// In case an error is encountered during (de-)serialization, a \c std::runtime_exception is
+// In case an error is encountered during (de-)serialization, a \c
+std::runtime_exception is
 // thrown.
 //
-// \n Previous: \ref vector_serialization &nbsp; &nbsp; Next: \ref customization \n
+// \n Previous: \ref vector_serialization &nbsp; &nbsp; Next: \ref customization
+\n
 */
 //*************************************************************************************************
-
 
 //**Customization**********************************************************************************
 /*!\page customization Customization
 //
-// Although \b Blaze tries to work out of the box for every possible setting, still it may be
-// necessary to adapt the library to specific requirements. The following three pages explain
+// Although \b Blaze tries to work out of the box for every possible setting,
+still it may be
+// necessary to adapt the library to specific requirements. The following three
+pages explain
 // how to customize the \b Blaze library to your own needs:
 //
 //  - \ref configuration_files
 //  - \ref vector_and_matrix_customization
 //  - \ref error_reporting_customization
 //
-// \n Previous: \ref matrix_serialization &nbsp; &nbsp; Next: \ref configuration_files
+// \n Previous: \ref matrix_serialization &nbsp; &nbsp; Next: \ref
+configuration_files
 */
 //*************************************************************************************************
 
-
-//**Configuration Files****************************************************************************
+//**Configuration
+//Files****************************************************************************
 /*!\page configuration_files Configuration Files
 //
 // \tableofcontents
 //
 //
-// Sometimes it is necessary to adapt \b Blaze to specific requirements. For this purpose
-// \b Blaze provides several configuration files in the <tt>./blaze/config/</tt> subdirectory,
-// which provide ample opportunity to customize internal settings, behavior, and thresholds.
-// This chapter explains the most important of these configuration files. For a complete
-// overview of all customization opportunities, please go to the configuration files in the
-// <tt>./blaze/config/</tt> subdirectory or see the complete \b Blaze documentation.
+// Sometimes it is necessary to adapt \b Blaze to specific requirements. For
+this purpose
+// \b Blaze provides several configuration files in the <tt>./blaze/config/</tt>
+subdirectory,
+// which provide ample opportunity to customize internal settings, behavior, and
+thresholds.
+// This chapter explains the most important of these configuration files. For a
+complete
+// overview of all customization opportunities, please go to the configuration
+files in the
+// <tt>./blaze/config/</tt> subdirectory or see the complete \b Blaze
+documentation.
 //
 //
 // \n \section transpose_flag Default Vector Storage
 // <hr>
 //
-// The \b Blaze default is that all vectors are created as column vectors (if not specified
+// The \b Blaze default is that all vectors are created as column vectors (if
+not specified
 // explicitly):
 
    \code
-   blaze::StaticVector<double,3UL> x;  // Creates a 3-dimensional static column vector
-   \endcode
+   blaze::StaticVector<double,3UL> x;  // Creates a 3-dimensional static column
+vector \endcode
 
-// The header file <tt>./blaze/config/TransposeFlag.h</tt> allows the configuration of the default
-// vector storage (i.e. the default transpose flag) of all vectors within the \b Blaze library.
-// The default transpose flag is specified via the \c BLAZE_DEFAULT_TRANSPOSE_FLAG macro:
+// The header file <tt>./blaze/config/TransposeFlag.h</tt> allows the
+configuration of the default
+// vector storage (i.e. the default transpose flag) of all vectors within the \b
+Blaze library.
+// The default transpose flag is specified via the \c
+BLAZE_DEFAULT_TRANSPOSE_FLAG macro:
 
    \code
    #define BLAZE_DEFAULT_TRANSPOSE_FLAG blaze::columnVector
    \endcode
 
-// Alternatively the default transpose flag can be specified via command line or by defining this
+// Alternatively the default transpose flag can be specified via command line or
+by defining this
 // symbol manually before including any \b Blaze header file:
 
    \code
@@ -9826,7 +11808,8 @@
    #include <blaze/Blaze.h>
    \endcode
 
-// Valid settings for \c BLAZE_DEFAULT_TRANSPOSE_FLAG are blaze::rowVector and blaze::columnVector.
+// Valid settings for \c BLAZE_DEFAULT_TRANSPOSE_FLAG are blaze::rowVector and
+blaze::columnVector.
 //
 //
 // \n \section storage_order Default Matrix Storage
@@ -9838,15 +11821,18 @@
    blaze::StaticMatrix<double,3UL,3UL>  A;  // Creates a 3x3 row-major matrix
    \endcode
 
-// The header file <tt>./blaze/config/StorageOrder.h</tt> allows the configuration of the default
-// matrix storage order. Via the \c BLAZE_DEFAULT_STORAGE_ORDER macro the default storage order
+// The header file <tt>./blaze/config/StorageOrder.h</tt> allows the
+configuration of the default
+// matrix storage order. Via the \c BLAZE_DEFAULT_STORAGE_ORDER macro the
+default storage order
 // for all matrices of the \b Blaze library can be specified.
 
    \code
    #define BLAZE_DEFAULT_STORAGE_ORDER blaze::rowMajor
    \endcode
 
-// Alternatively the default storage order can be specified via command line or by defining this
+// Alternatively the default storage order can be specified via command line or
+by defining this
 // symbol manually before including any \b Blaze header file:
 
    \code
@@ -9854,28 +11840,33 @@
    #include <blaze/Blaze.h>
    \endcode
 
-// Valid settings for \c BLAZE_DEFAULT_STORAGE_ORDER are blaze::rowMajor and blaze::columnMajor.
+// Valid settings for \c BLAZE_DEFAULT_STORAGE_ORDER are blaze::rowMajor and
+blaze::columnMajor.
 //
 //
 // \n \section blas_mode BLAS Mode
 // <hr>
 //
-// In order to achieve maximum performance for multiplications with dense matrices, \b Blaze can
-// be configured to use a BLAS library. Via the following compilation switch in the configuration
+// In order to achieve maximum performance for multiplications with dense
+matrices, \b Blaze can
+// be configured to use a BLAS library. Via the following compilation switch in
+the configuration
 // file <tt>./blaze/config/BLAS.h</tt> BLAS can be enabled:
 
    \code
    #define BLAZE_BLAS_MODE 1
    \endcode
 
-// In case the selected BLAS library provides parallel execution, the \c BLAZE_BLAS_IS_PARALLEL
+// In case the selected BLAS library provides parallel execution, the \c
+BLAZE_BLAS_IS_PARALLEL
 // switch should be activated to prevent \b Blaze from parallelizing on its own:
 
    \code
    #define BLAZE_BLAS_IS_PARALLEL 1
    \endcode
 
-// Alternatively, both settings can be specified via command line or by defining the symbols
+// Alternatively, both settings can be specified via command line or by defining
+the symbols
 // manually before including any \b Blaze header file:
 
    \code
@@ -9884,23 +11875,28 @@
    #include <blaze/Blaze.h>
    \endcode
 
-// In case no BLAS library is available, \b Blaze will still work and will not be reduced in
+// In case no BLAS library is available, \b Blaze will still work and will not
+be reduced in
 // functionality, but performance may be limited.
 //
 //
 // \n \section cache_size Cache Size
 // <hr>
 //
-// The optimization of several \b Blaze compute kernels depends on the cache size of the target
-// architecture. By default, \b Blaze assumes a cache size of 3 MiByte. However, for optimal
-// speed the exact cache size of the system should be provided via the \c cacheSize value in the
+// The optimization of several \b Blaze compute kernels depends on the cache
+size of the target
+// architecture. By default, \b Blaze assumes a cache size of 3 MiByte. However,
+for optimal
+// speed the exact cache size of the system should be provided via the \c
+cacheSize value in the
 // <tt>./blaze/config/CacheSize.h</tt> configuration file:
 
    \code
    #define BLAZE_CACHE_SIZE 3145728UL;
    \endcode
 
-// The cache size can also be specified via command line or by defining this symbol manually
+// The cache size can also be specified via command line or by defining this
+symbol manually
 // before including any \b Blaze header file:
 
    \code
@@ -9911,17 +11907,22 @@
 // \n \section vectorization Vectorization
 // <hr>
 //
-// In order to achieve maximum performance and to exploit the compute power of a target platform
-// the \b Blaze library attempts to vectorize all linear algebra operations by SSE, AVX, and/or
-// AVX-512 intrinsics, depending on which instruction set is available. However, it is possible
-// to disable the vectorization entirely by the compile time switch in the configuration file
+// In order to achieve maximum performance and to exploit the compute power of a
+target platform
+// the \b Blaze library attempts to vectorize all linear algebra operations by
+SSE, AVX, and/or
+// AVX-512 intrinsics, depending on which instruction set is available. However,
+it is possible
+// to disable the vectorization entirely by the compile time switch in the
+configuration file
 // <tt>./blaze/config/Vectorization.h</tt>:
 
    \code
    #define BLAZE_USE_VECTORIZATION 1
    \endcode
 
-// It is also possible to (de-)activate vectorization via command line or by defining this symbol
+// It is also possible to (de-)activate vectorization via command line or by
+defining this symbol
 // manually before including any \b Blaze header file:
 
    \code
@@ -9929,27 +11930,40 @@
    #include <blaze/Blaze.h>
    \endcode
 
-// In case the switch is set to 1, vectorization is enabled and the \b Blaze library is allowed
-// to use intrinsics to speed up computations. In case the switch is set to 0, vectorization is
-// disabled entirely and the \b Blaze library chooses default, non-vectorized functionality for
-// the operations. Note that deactivating the vectorization may pose a severe performance
+// In case the switch is set to 1, vectorization is enabled and the \b Blaze
+library is allowed
+// to use intrinsics to speed up computations. In case the switch is set to 0,
+vectorization is
+// disabled entirely and the \b Blaze library chooses default, non-vectorized
+functionality for
+// the operations. Note that deactivating the vectorization may pose a severe
+performance
 // limitation for a large number of operations!
 //
 //
 // \n \section thresholds Thresholds
 // <hr>
 //
-// For many computations \b Blaze distinguishes between small and large vectors and matrices.
-// This separation is especially important for the parallel execution of computations, since
-// the use of several threads only pays off for sufficiently large vectors and matrices.
-// Additionally, it also enables \b Blaze to select kernels that are optimized for a specific
+// For many computations \b Blaze distinguishes between small and large vectors
+and matrices.
+// This separation is especially important for the parallel execution of
+computations, since
+// the use of several threads only pays off for sufficiently large vectors and
+matrices.
+// Additionally, it also enables \b Blaze to select kernels that are optimized
+for a specific
 // size.
 //
-// In order to distinguish between small and large data structures \b Blaze provides several
-// thresholds that can be adapted to the characteristics of the target platform. For instance,
-// the \c DMATDVECMULT_THRESHOLD specifies the threshold between the application of the custom
-// \b Blaze kernels for small dense matrix/dense vector multiplications and the BLAS kernels
-// for large multiplications. All thresholds, including the thresholds for the OpenMP- and
+// In order to distinguish between small and large data structures \b Blaze
+provides several
+// thresholds that can be adapted to the characteristics of the target platform.
+For instance,
+// the \c DMATDVECMULT_THRESHOLD specifies the threshold between the application
+of the custom
+// \b Blaze kernels for small dense matrix/dense vector multiplications and the
+BLAS kernels
+// for large multiplications. All thresholds, including the thresholds for the
+OpenMP- and
 // thread-based parallelization, are contained within the configuration file
 // <tt>./blaze/config/Thresholds.h</tt>.
 //
@@ -9957,20 +11971,26 @@
 // \n \section padding Padding
 // <hr>
 //
-// By default the \b Blaze library uses padding for all dense vectors and matrices in order to
-// achieve maximum performance in all operations. Due to padding, the proper alignment of data
-// elements can be guaranteed and the need for remainder loops is minimized. However, on the
-// downside padding introduces an additional memory overhead, which can be large depending on
+// By default the \b Blaze library uses padding for all dense vectors and
+matrices in order to
+// achieve maximum performance in all operations. Due to padding, the proper
+alignment of data
+// elements can be guaranteed and the need for remainder loops is minimized.
+However, on the
+// downside padding introduces an additional memory overhead, which can be large
+depending on
 // the used data type.
 //
-// The configuration file <tt>./blaze/config/Optimizations.h</tt> provides a compile time switch
+// The configuration file <tt>./blaze/config/Optimizations.h</tt> provides a
+compile time switch
 // that can be used to (de-)activate padding:
 
    \code
    #define BLAZE_USE_PADDING 1
    \endcode
 
-// Alternatively it is possible to (de-)activate padding via command line or by defining this
+// Alternatively it is possible to (de-)activate padding via command line or by
+defining this
 // symbol manually before including any \b Blaze header file:
 
    \code
@@ -9978,28 +11998,36 @@
    #include <blaze/Blaze.h>
    \endcode
 
-// If \c BLAZE_USE_PADDING is set to 1 padding is enabled for all dense vectors and matrices, if
-// it is set to 0 padding is disabled. Note however that disabling padding can considerably reduce
+// If \c BLAZE_USE_PADDING is set to 1 padding is enabled for all dense vectors
+and matrices, if
+// it is set to 0 padding is disabled. Note however that disabling padding can
+considerably reduce
 // the performance of all dense vector and matrix operations!
 //
 //
 // \n \section streaming Streaming (Non-Temporal Stores)
 // <hr>
 //
-// For vectors and matrices that don't fit into the cache anymore non-temporal stores can provide
-// a significant performance advantage of about 20%. However, this advantage is only in effect in
-// case the memory bandwidth of the target architecture is maxed out. If the target architecture's
-// memory bandwidth cannot be exhausted the use of non-temporal stores can decrease performance
+// For vectors and matrices that don't fit into the cache anymore non-temporal
+stores can provide
+// a significant performance advantage of about 20%. However, this advantage is
+only in effect in
+// case the memory bandwidth of the target architecture is maxed out. If the
+target architecture's
+// memory bandwidth cannot be exhausted the use of non-temporal stores can
+decrease performance
 // instead of increasing it.
 //
-// The configuration file <tt>./blaze/config/Optimizations.h</tt> provides a compile time switch
+// The configuration file <tt>./blaze/config/Optimizations.h</tt> provides a
+compile time switch
 // that can be used to (de-)activate streaming:
 
    \code
    #define BLAZE_USE_STREAMING 1
    \endcode
 
-// Alternatively streaming can be (de-)activated via command line or by defining this symbol
+// Alternatively streaming can be (de-)activated via command line or by defining
+this symbol
 // manually before including any \b Blaze header file:
 
    \code
@@ -10007,17 +12035,20 @@
    #include <blaze/Blaze.h>
    \endcode
 
-// If \c BLAZE_USE_STREAMING is set to 1 streaming is enabled, if it is set to 0 streaming is
-// disabled. It is recommended to consult the target architecture's white papers to decide whether
+// If \c BLAZE_USE_STREAMING is set to 1 streaming is enabled, if it is set to 0
+streaming is
+// disabled. It is recommended to consult the target architecture's white papers
+to decide whether
 // streaming is beneficial or hurtful for performance.
 //
 //
-// \n Previous: \ref customization &nbsp; &nbsp; Next: \ref vector_and_matrix_customization \n
+// \n Previous: \ref customization &nbsp; &nbsp; Next: \ref
+vector_and_matrix_customization \n
 */
 //*************************************************************************************************
 
-
-//**Customization of Vectors and Matrices**********************************************************
+//**Customization of Vectors and
+//Matrices**********************************************************
 /*!\page vector_and_matrix_customization Customization of Vectors and Matrices
 //
 // \tableofcontents
@@ -10026,10 +12057,14 @@
 // \n \section custom_data_members Custom Data Members
 // <hr>
 //
-// So far the \b Blaze library does not provide a lot of flexibility to customize the data
-// members of existing \ref vector_types and \ref matrix_types. However, to some extend it is
-// possible to customize vectors and matrices by inheritance. The following example gives an
-// impression on how to create a simple variation of \ref matrix_types_custom_matrix, which
+// So far the \b Blaze library does not provide a lot of flexibility to
+customize the data
+// members of existing \ref vector_types and \ref matrix_types. However, to some
+extend it is
+// possible to customize vectors and matrices by inheritance. The following
+example gives an
+// impression on how to create a simple variation of \ref
+matrix_types_custom_matrix, which
 // automatically takes care of acquiring and releasing custom memory.
 
    \code
@@ -10051,25 +12086,35 @@
    };
    \endcode
 
-// Please note that this is a simplified example with the intent to show the general approach.
-// The number of constructors, the memory acquisition, and the kind of memory management can of
-// course be adapted to specific requirements. Also, please note that since none of the \b Blaze
-// vectors and matrices have virtual destructors polymorphic destruction cannot be used.
+// Please note that this is a simplified example with the intent to show the
+general approach.
+// The number of constructors, the memory acquisition, and the kind of memory
+management can of
+// course be adapted to specific requirements. Also, please note that since none
+of the \b Blaze
+// vectors and matrices have virtual destructors polymorphic destruction cannot
+be used.
 //
 //
 // \n \section custom_operations Custom Operations
 // <hr>
 //
-// There are two approaches to extend \b Blaze with custom operations. First, the \c map()
-// functions provide the possibility to execute componentwise custom operations on vectors and
+// There are two approaches to extend \b Blaze with custom operations. First,
+the \c map()
+// functions provide the possibility to execute componentwise custom operations
+on vectors and
 // matrices. Second, it is possible to add customized free functions.
 //
 // \n \subsection custom_operations_map The map() Functions
 //
-// Via the unary and binary \c map() functions it is possible to execute componentwise custom
-// operations on vectors and matrices. The unary \c map() function can be used to apply a custom
-// operation on each single element of a dense vector or matrix or each non-zero element of a
-// sparse vector or matrix. For instance, the following example demonstrates a custom square
+// Via the unary and binary \c map() functions it is possible to execute
+componentwise custom
+// operations on vectors and matrices. The unary \c map() function can be used
+to apply a custom
+// operation on each single element of a dense vector or matrix or each non-zero
+element of a
+// sparse vector or matrix. For instance, the following example demonstrates a
+custom square
 // root computation on a dense matrix:
 
    \code
@@ -10078,9 +12123,12 @@
    B = map( A, []( double d ) { return std::sqrt( d ); } );
    \endcode
 
-// The binary \c map() function can be used to apply an operation pairwise to the elements of
-// two dense vectors or two dense matrices. The following example demonstrates the merging of
-// two matrices of double precision values into a matrix of double precision complex numbers:
+// The binary \c map() function can be used to apply an operation pairwise to
+the elements of
+// two dense vectors or two dense matrices. The following example demonstrates
+the merging of
+// two matrices of double precision values into a matrix of double precision
+complex numbers:
 
    \code
    blaze::DynamicMatrix<double> real{ { 2.1, -4.2 }, { 1.0,  0.6 } };
@@ -10091,11 +12139,13 @@
    // Creating the matrix
    //    ( (-2.1,  0.3) (-4.2, -1.4) )
    //    ( ( 1.0,  2.9) ( 0.6, -3.4) )
-   cplx = map( real, imag, []( double r, double i ){ return complex( r, i ); } );
-   \endcode
+   cplx = map( real, imag, []( double r, double i ){ return complex( r, i ); }
+); \endcode
 
-// These examples demonstrate the most convenient way of defining a unary custom operation by
-// passing a lambda to the \c map() function. Alternatively, it is possible to pass a custom
+// These examples demonstrate the most convenient way of defining a unary custom
+operation by
+// passing a lambda to the \c map() function. Alternatively, it is possible to
+pass a custom
 // functor:
 
    \code
@@ -10110,47 +12160,75 @@
    B = map( A, Sqrt() );
    \endcode
 
-// In order for the functor to work in a call to \c map() it must define a function call operator,
-// which accepts arguments of the type of the according vector or matrix elements.
+// In order for the functor to work in a call to \c map() it must define a
+function call operator,
+// which accepts arguments of the type of the according vector or matrix
+elements.
 //
-// Although the operation is automatically parallelized depending on the size of the vector or
-// matrix, no automatic vectorization is possible. In order to enable vectorization, a \c load()
-// function can be added to the functor, which handles the vectorized computation. Depending on
-// the data type this function is passed one of the following \b Blaze SIMD data types:
+// Although the operation is automatically parallelized depending on the size of
+the vector or
+// matrix, no automatic vectorization is possible. In order to enable
+vectorization, a \c load()
+// function can be added to the functor, which handles the vectorized
+computation. Depending on
+// the data type this function is passed one of the following \b Blaze SIMD data
+types:
 //
 // <ul>
 //    <li>SIMD data types for fundamental data types
 //       <ul>
-//          <li>\c blaze::SIMDint8: Packed SIMD type for 8-bit signed integral data types</li>
-//          <li>\c blaze::SIMDuint8: Packed SIMD type for 8-bit unsigned integral data types</li>
-//          <li>\c blaze::SIMDint16: Packed SIMD type for 16-bit signed integral data types</li>
-//          <li>\c blaze::SIMDuint16: Packed SIMD type for 16-bit unsigned integral data types</li>
-//          <li>\c blaze::SIMDint32: Packed SIMD type for 32-bit signed integral data types</li>
-//          <li>\c blaze::SIMDuint32: Packed SIMD type for 32-bit unsigned integral data types</li>
-//          <li>\c blaze::SIMDint64: Packed SIMD type for 64-bit signed integral data types</li>
-//          <li>\c blaze::SIMDuint64: Packed SIMD type for 64-bit unsigned integral data types</li>
-//          <li>\c blaze::SIMDfloat: Packed SIMD type for single precision floating point data</li>
-//          <li>\c blaze::SIMDdouble: Packed SIMD type for double precision floating point data</li>
+//          <li>\c blaze::SIMDint8: Packed SIMD type for 8-bit signed integral
+data types</li>
+//          <li>\c blaze::SIMDuint8: Packed SIMD type for 8-bit unsigned
+integral data types</li>
+//          <li>\c blaze::SIMDint16: Packed SIMD type for 16-bit signed integral
+data types</li>
+//          <li>\c blaze::SIMDuint16: Packed SIMD type for 16-bit unsigned
+integral data types</li>
+//          <li>\c blaze::SIMDint32: Packed SIMD type for 32-bit signed integral
+data types</li>
+//          <li>\c blaze::SIMDuint32: Packed SIMD type for 32-bit unsigned
+integral data types</li>
+//          <li>\c blaze::SIMDint64: Packed SIMD type for 64-bit signed integral
+data types</li>
+//          <li>\c blaze::SIMDuint64: Packed SIMD type for 64-bit unsigned
+integral data types</li>
+//          <li>\c blaze::SIMDfloat: Packed SIMD type for single precision
+floating point data</li>
+//          <li>\c blaze::SIMDdouble: Packed SIMD type for double precision
+floating point data</li>
 //       </ul>
 //    </li>
 //    <li>SIMD data types for complex data types
 //       <ul>
-//          <li>\c blaze::SIMDcint8: Packed SIMD type for complex 8-bit signed integral data types</li>
-//          <li>\c blaze::SIMDcuint8: Packed SIMD type for complex 8-bit unsigned integral data types</li>
-//          <li>\c blaze::SIMDcint16: Packed SIMD type for complex 16-bit signed integral data types</li>
-//          <li>\c blaze::SIMDcuint16: Packed SIMD type for complex 16-bit unsigned integral data types</li>
-//          <li>\c blaze::SIMDcint32: Packed SIMD type for complex 32-bit signed integral data types</li>
-//          <li>\c blaze::SIMDcuint32: Packed SIMD type for complex 32-bit unsigned integral data types</li>
-//          <li>\c blaze::SIMDcint64: Packed SIMD type for complex 64-bit signed integral data types</li>
-//          <li>\c blaze::SIMDcuint64: Packed SIMD type for complex 64-bit unsigned integral data types</li>
-//          <li>\c blaze::SIMDcfloat: Packed SIMD type for complex single precision floating point data</li>
-//          <li>\c blaze::SIMDcdouble: Packed SIMD type for complex double precision floating point data</li>
+//          <li>\c blaze::SIMDcint8: Packed SIMD type for complex 8-bit signed
+integral data types</li>
+//          <li>\c blaze::SIMDcuint8: Packed SIMD type for complex 8-bit
+unsigned integral data types</li>
+//          <li>\c blaze::SIMDcint16: Packed SIMD type for complex 16-bit signed
+integral data types</li>
+//          <li>\c blaze::SIMDcuint16: Packed SIMD type for complex 16-bit
+unsigned integral data types</li>
+//          <li>\c blaze::SIMDcint32: Packed SIMD type for complex 32-bit signed
+integral data types</li>
+//          <li>\c blaze::SIMDcuint32: Packed SIMD type for complex 32-bit
+unsigned integral data types</li>
+//          <li>\c blaze::SIMDcint64: Packed SIMD type for complex 64-bit signed
+integral data types</li>
+//          <li>\c blaze::SIMDcuint64: Packed SIMD type for complex 64-bit
+unsigned integral data types</li>
+//          <li>\c blaze::SIMDcfloat: Packed SIMD type for complex single
+precision floating point data</li>
+//          <li>\c blaze::SIMDcdouble: Packed SIMD type for complex double
+precision floating point data</li>
 //       </ul>
 //    </li>
 // </ul>
 //
-// All SIMD types provide the \c value data member for a direct access to the underlying intrinsic
-// data element. In the following example, this intrinsic element is passed to the AVX function
+// All SIMD types provide the \c value data member for a direct access to the
+underlying intrinsic
+// data element. In the following example, this intrinsic element is passed to
+the AVX function
 // \c _mm256_sqrt_pd():
 
    \code
@@ -10168,15 +12246,22 @@
    };
    \endcode
 
-// In this example, whenever vectorization is generally applicable, the \c load() function is
-// called instead of the function call operator for as long as the number of remaining elements
-// is larger-or-equal to the width of the packed SIMD type. In all other cases (which also
+// In this example, whenever vectorization is generally applicable, the \c
+load() function is
+// called instead of the function call operator for as long as the number of
+remaining elements
+// is larger-or-equal to the width of the packed SIMD type. In all other cases
+(which also
 // includes peel-off and remainder loops) the scalar operation is used.
 //
-// Please note that this example has two drawbacks: First, it will only compile in case the
-// intrinsic \c _mm256_sqrt_pd() function is available (i.e. when AVX is active). Second, the
-// availability of AVX is not taken into account. The first drawback can be alleviated by making
-// the \c load() function a function template. The second drawback can be dealt with by adding a
+// Please note that this example has two drawbacks: First, it will only compile
+in case the
+// intrinsic \c _mm256_sqrt_pd() function is available (i.e. when AVX is
+active). Second, the
+// availability of AVX is not taken into account. The first drawback can be
+alleviated by making
+// the \c load() function a function template. The second drawback can be dealt
+with by adding a
 // \c simdEnabled() function template to the functor:
 
    \code
@@ -10204,15 +12289,22 @@
    };
    \endcode
 
-// The \c simdEnabled() function must be a \c static, \c constexpr function and must return whether
-// or not vectorization is available for the given data type \c T. In case the function returns
-// \c true, the \c load() function is used for a vectorized evaluation, in case the function
+// The \c simdEnabled() function must be a \c static, \c constexpr function and
+must return whether
+// or not vectorization is available for the given data type \c T. In case the
+function returns
+// \c true, the \c load() function is used for a vectorized evaluation, in case
+the function
 // returns \c false, \c load() is not called.
 //
-// Note that this is a simplified example that is only working when used for dense vectors and
-// matrices with double precision floating point elements. The following code shows the complete
-// implementation of the according functor that is used within the \b Blaze library. The \b Blaze
-// \c Sqrt functor is working for all data types that are providing a square root operation:
+// Note that this is a simplified example that is only working when used for
+dense vectors and
+// matrices with double precision floating point elements. The following code
+shows the complete
+// implementation of the according functor that is used within the \b Blaze
+library. The \b Blaze
+// \c Sqrt functor is working for all data types that are providing a square
+root operation:
 
    \code
    namespace blaze {
@@ -10239,8 +12331,10 @@
    } // namespace blaze
    \endcode
 
-// The same approach can be taken for binary custom operations. The following code demonstrates
-// the \c Min functor of the \b Blaze library, which is working for all data types that provide
+// The same approach can be taken for binary custom operations. The following
+code demonstrates
+// the \c Min functor of the \b Blaze library, which is working for all data
+types that provide
 // a \c min() operation:
 
    \code
@@ -10250,7 +12344,8 @@
       {}
 
       template< typename T1, typename T2 >
-      BLAZE_ALWAYS_INLINE decltype(auto) operator()( const T1& a, const T2& b ) const
+      BLAZE_ALWAYS_INLINE decltype(auto) operator()( const T1& a, const T2& b )
+const
       {
          return min( a, b );
       }
@@ -10268,17 +12363,23 @@
    };
    \endcode
 
-// For more information on the available \b Blaze SIMD data types and functions, please see the
+// For more information on the available \b Blaze SIMD data types and functions,
+please see the
 // SIMD module in the complete \b Blaze documentation.
 //
 // \n \subsection custom_operations_free_functions Free Functions
 //
-// In order to extend \b Blaze with new functionality it is possible to add free functions. Free
-// functions can be used either as wrappers around calls to the map() function or to implement
-// general, non-componentwise operations. The following two examples will demonstrate both ideas.
+// In order to extend \b Blaze with new functionality it is possible to add free
+functions. Free
+// functions can be used either as wrappers around calls to the map() function
+or to implement
+// general, non-componentwise operations. The following two examples will
+demonstrate both ideas.
 //
-// The first example shows the \c setToZero() function, which resets a sparse matrix to zero
-// without affecting the sparsity pattern. It is implemented as a convenience wrapper around
+// The first example shows the \c setToZero() function, which resets a sparse
+matrix to zero
+// without affecting the sparsity pattern. It is implemented as a convenience
+wrapper around
 // the map() function:
 
    \code
@@ -10290,14 +12391,21 @@
    }
    \endcode
 
-// The blaze::SparseMatrix class template is the base class for all kinds of sparse matrices and
-// provides an abstraction from the actual type \c MT of the sparse matrix. However, due to the
-// <a href="https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern">Curiously Recurring Template Pattern (CRTP)</a>
-// it also enables a conversion back to the actual type. This downcast is performed via the tilde
-// operator (i.e. \c operator~()). The template parameter \c SO represents the storage order
+// The blaze::SparseMatrix class template is the base class for all kinds of
+sparse matrices and
+// provides an abstraction from the actual type \c MT of the sparse matrix.
+However, due to the
+// <a
+href="https://en.wikipedia.org/wiki/Curiously_recurring_template_pattern">Curiously
+Recurring Template Pattern (CRTP)</a>
+// it also enables a conversion back to the actual type. This downcast is
+performed via the tilde
+// operator (i.e. \c operator~()). The template parameter \c SO represents the
+storage order
 // (blaze::rowMajor or blaze::columnMajor) of the matrix.
 //
-// The second example shows the \c countZeros() function, which counts the number of values, which
+// The second example shows the \c countZeros() function, which counts the
+number of values, which
 // are exactly zero, in a dense, row-major matrix:
 
    \code
@@ -10319,48 +12427,54 @@
    }
    \endcode
 
-// The blaze::DenseMatrix class template is the base class for all kinds of dense matrices. Again,
-// it is possible to perform the conversion to the actual type via the tilde operator.
+// The blaze::DenseMatrix class template is the base class for all kinds of
+dense matrices. Again,
+// it is possible to perform the conversion to the actual type via the tilde
+operator.
 //
-// The following two listings show the declarations of all vector and matrix base classes, which
+// The following two listings show the declarations of all vector and matrix
+base classes, which
 // can be used for custom free functions:
 
    \code
    template< typename VT  // Concrete type of the dense or sparse vector
-           , bool TF >    // Transpose flag (blaze::columnVector or blaze::rowVector)
-   class Vector;
+           , bool TF >    // Transpose flag (blaze::columnVector or
+blaze::rowVector) class Vector;
 
    template< typename VT  // Concrete type of the dense vector
-           , bool TF >    // Transpose flag (blaze::columnVector or blaze::rowVector)
-   class DenseVector;
+           , bool TF >    // Transpose flag (blaze::columnVector or
+blaze::rowVector) class DenseVector;
 
    template< typename VT  // Concrete type of the sparse vector
-           , bool TF >    // Transpose flag (blaze::columnVector or blaze::rowVector)
-   class SparseVector;
-   \endcode
+           , bool TF >    // Transpose flag (blaze::columnVector or
+blaze::rowVector) class SparseVector; \endcode
 
    \code
    template< typename MT  // Concrete type of the dense or sparse matrix
-           , bool SO >    // Storage order (blaze::rowMajor or blaze::columnMajor)
-   class Matrix;
+           , bool SO >    // Storage order (blaze::rowMajor or
+blaze::columnMajor) class Matrix;
 
    template< typename MT  // Concrete type of the dense matrix
-           , bool SO >    // Storage order (blaze::rowMajor or blaze::columnMajor)
-   class DenseMatrix;
+           , bool SO >    // Storage order (blaze::rowMajor or
+blaze::columnMajor) class DenseMatrix;
 
    template< typename MT  // Concrete type of the sparse matrix
-           , bool SO >    // Storage order (blaze::rowMajor or blaze::columnMajor)
-   class SparseMatrix;
-   \endcode
+           , bool SO >    // Storage order (blaze::rowMajor or
+blaze::columnMajor) class SparseMatrix; \endcode
 
 // \n \section custom_data_types Custom Data Types
 // <hr>
 //
-// The \b Blaze library tries hard to make the use of custom data types as convenient, easy and
-// intuitive as possible. However, unfortunately it is not possible to meet the requirements of
-// all possible data types. Thus it might be necessary to provide \b Blaze with some additional
-// information about the data type. The following sections give an overview of the necessary steps
-// to enable the use of the hypothetical custom data type \c custom::double_t for vector and
+// The \b Blaze library tries hard to make the use of custom data types as
+convenient, easy and
+// intuitive as possible. However, unfortunately it is not possible to meet the
+requirements of
+// all possible data types. Thus it might be necessary to provide \b Blaze with
+some additional
+// information about the data type. The following sections give an overview of
+the necessary steps
+// to enable the use of the hypothetical custom data type \c custom::double_t
+for vector and
 // matrix operations. For example:
 
    \code
@@ -10369,10 +12483,14 @@
    c = a + b;
    \endcode
 
-// The \b Blaze library assumes that the \c custom::double_t data type provides \c operator+()
-// for additions, \c operator-() for subtractions, \c operator*() for multiplications and
-// \c operator/() for divisions. If any of these functions is missing it is necessary to implement
-// the operator to perform the according operation. For this example we assume that the custom
+// The \b Blaze library assumes that the \c custom::double_t data type provides
+\c operator+()
+// for additions, \c operator-() for subtractions, \c operator*() for
+multiplications and
+// \c operator/() for divisions. If any of these functions is missing it is
+necessary to implement
+// the operator to perform the according operation. For this example we assume
+that the custom
 // data type provides the four following functions instead of operators:
 
    \code
@@ -10386,33 +12504,41 @@
    } // namespace custom
    \endcode
 
-// The following implementations will satisfy the requirements of the \b Blaze library:
+// The following implementations will satisfy the requirements of the \b Blaze
+library:
 
    \code
-   inline custom::double_t operator+( const custom::double_t& a, const custom::double_t& b )
+   inline custom::double_t operator+( const custom::double_t& a, const
+custom::double_t& b )
    {
       return add( a, b );
    }
 
-   inline custom::double_t operator-( const custom::double_t& a, const custom::double_t& b )
+   inline custom::double_t operator-( const custom::double_t& a, const
+custom::double_t& b )
    {
       return sub( a, b );
    }
 
-   inline custom::double_t operator*( const custom::double_t& a, const custom::double_t& b )
+   inline custom::double_t operator*( const custom::double_t& a, const
+custom::double_t& b )
    {
       return mult( a, b );
    }
 
-   inline custom::double_t operator/( const custom::double_t& a, const custom::double_t& b )
+   inline custom::double_t operator/( const custom::double_t& a, const
+custom::double_t& b )
    {
       return div( a, b );
    }
    \endcode
 
-// \b Blaze will use all the information provided with these functions (for instance the return
-// type) to properly handle the operations. In the rare case that the return type cannot be
-// automatically determined from the operator it might be additionally necessary to provide a
+// \b Blaze will use all the information provided with these functions (for
+instance the return
+// type) to properly handle the operations. In the rare case that the return
+type cannot be
+// automatically determined from the operator it might be additionally necessary
+to provide a
 // specialization of the following four \b Blaze class templates:
 
    \code
@@ -10441,27 +12567,33 @@
    } // namespace blaze
    \endcode
 
-// The same steps are necessary if several custom data types need to be combined (as for instance
-// \c custom::double_t and \c custom::float_t). Note that in this case both permutations need to
+// The same steps are necessary if several custom data types need to be combined
+(as for instance
+// \c custom::double_t and \c custom::float_t). Note that in this case both
+permutations need to
 // be taken into account:
 
    \code
-   custom::double_t operator+( const custom::double_t& a, const custom::float_t& b );
-   custom::double_t operator+( const custom::float_t& a, const custom::double_t& b );
+   custom::double_t operator+( const custom::double_t& a, const custom::float_t&
+b ); custom::double_t operator+( const custom::float_t& a, const
+custom::double_t& b );
    // ...
    \endcode
 
-// Please note that only built-in data types apply for vectorization and thus custom data types
+// Please note that only built-in data types apply for vectorization and thus
+custom data types
 // cannot achieve maximum performance!
 //
 //
-// \n Previous: \ref configuration_files &nbsp; &nbsp; Next: \ref custom_operations \n
+// \n Previous: \ref configuration_files &nbsp; &nbsp; Next: \ref
+custom_operations \n
 */
 //*************************************************************************************************
 
-
-//**Customization of the Error Reporting Mechanism*************************************************
-/*!\page error_reporting_customization Customization of the Error Reporting Mechanism
+//**Customization of the Error Reporting
+//Mechanism*************************************************
+/*!\page error_reporting_customization Customization of the Error Reporting
+Mechanism
 //
 // \tableofcontents
 //
@@ -10469,20 +12601,29 @@
 // \n \section error_reporting_background Background
 // <hr>
 //
-// The default way of \b Blaze to report errors of any kind is to throw a standard exception.
-// However, although in general this approach works well, in certain environments and under
-// special circumstances exceptions may not be the mechanism of choice and a different error
-// reporting mechanism may be desirable. For this reason, \b Blaze provides several macros,
-// which enable the customization of the error reporting mechanism. Via these macros it is
-// possible to replace the standard exceptions by some other exception type or a completely
+// The default way of \b Blaze to report errors of any kind is to throw a
+standard exception.
+// However, although in general this approach works well, in certain
+environments and under
+// special circumstances exceptions may not be the mechanism of choice and a
+different error
+// reporting mechanism may be desirable. For this reason, \b Blaze provides
+several macros,
+// which enable the customization of the error reporting mechanism. Via these
+macros it is
+// possible to replace the standard exceptions by some other exception type or a
+completely
 // different approach to report errors.
 //
 //
-// \n \section error_reporting_general_customization Customization of the Reporting Mechanism
+// \n \section error_reporting_general_customization Customization of the
+Reporting Mechanism
 // <hr>
 //
-// In some cases it might be necessary to adapt the entire error reporting mechanism and to
-// replace it by some other means to signal failure. The primary macro for this purpose is the
+// In some cases it might be necessary to adapt the entire error reporting
+mechanism and to
+// replace it by some other means to signal failure. The primary macro for this
+purpose is the
 // \c BLAZE_THROW macro:
 
    \code
@@ -10490,10 +12631,14 @@
       throw EXCEPTION
    \endcode
 
-// This macro represents the default mechanism of the \b Blaze library to report errors of any
-// kind. In order to customize the error reporing mechanism all that needs to be done is to
-// define the macro prior to including any \b Blaze header file. This will cause the \b Blaze
-// specific mechanism to be overridden. The following example demonstrates this by replacing
+// This macro represents the default mechanism of the \b Blaze library to report
+errors of any
+// kind. In order to customize the error reporing mechanism all that needs to be
+done is to
+// define the macro prior to including any \b Blaze header file. This will cause
+the \b Blaze
+// specific mechanism to be overridden. The following example demonstrates this
+by replacing
 // exceptions by a call to a \c log() function and a direct call to abort:
 
    \code
@@ -10504,24 +12649,33 @@
    #include <blaze/Blaze.h>
    \endcode
 
-// Doing this will trigger a call to \c log() and an abort instead of throwing an exception
+// Doing this will trigger a call to \c log() and an abort instead of throwing
+an exception
 // whenever an error (such as an invalid argument) is detected.
 //
-// \note It is possible to execute several statements instead of executing a single statement to
-// throw an exception. Also note that it is recommended to define the macro such that a subsequent
+// \note It is possible to execute several statements instead of executing a
+single statement to
+// throw an exception. Also note that it is recommended to define the macro such
+that a subsequent
 // semicolon is required!
 //
-// \warning This macro is provided with the intention to assist in adapting \b Blaze to special
-// conditions and environments. However, the customization of the error reporting mechanism via
-// this macro can have a significant effect on the library. Thus be advised to use the macro
+// \warning This macro is provided with the intention to assist in adapting \b
+Blaze to special
+// conditions and environments. However, the customization of the error
+reporting mechanism via
+// this macro can have a significant effect on the library. Thus be advised to
+use the macro
 // with due care!
 //
 //
-// \n \section error_reporting_exception_customization Customization of the Type of Exceptions
+// \n \section error_reporting_exception_customization Customization of the Type
+of Exceptions
 // <hr>
 //
-// In addition to the customization of the entire error reporting mechanism it is also possible
-// to customize the type of exceptions being thrown. This can be achieved by customizing any
+// In addition to the customization of the entire error reporting mechanism it
+is also possible
+// to customize the type of exceptions being thrown. This can be achieved by
+customizing any
 // number of the following macros:
 
    \code
@@ -10544,9 +12698,12 @@
       BLAZE_THROW( std::runtime_error( MESSAGE ) )
    \endcode
 
-// In order to customize the type of exception the according macro has to be defined prior to
-// including any \b Blaze header file. This will override the \b Blaze default behavior. The
-// following example demonstrates this by replacing \c std::invalid_argument by a custom
+// In order to customize the type of exception the according macro has to be
+defined prior to
+// including any \b Blaze header file. This will override the \b Blaze default
+behavior. The
+// following example demonstrates this by replacing \c std::invalid_argument by
+a custom
 // exception type:
 
    \code
@@ -10564,20 +12721,26 @@
    #include <blaze/Blaze.h>
    \endcode
 
-// By manually defining the macro, an \c InvalidArgument exception is thrown instead of a
-// \c std::invalid_argument exception. Note that it is recommended to define the macro such
+// By manually defining the macro, an \c InvalidArgument exception is thrown
+instead of a
+// \c std::invalid_argument exception. Note that it is recommended to define the
+macro such
 // that a subsequent semicolon is required!
 //
-// \warning These macros are provided with the intention to assist in adapting \b Blaze to
-// special conditions and environments. However, the customization of the type of an exception
-// via this macro may have an effect on the library. Thus be advised to use the macro with due
+// \warning These macros are provided with the intention to assist in adapting
+\b Blaze to
+// special conditions and environments. However, the customization of the type
+of an exception
+// via this macro may have an effect on the library. Thus be advised to use the
+macro with due
 // care!
 //
 //
 // \n \section error_reporting_special_errors Customization of Special Errors
 // <hr>
 //
-// Last but not least it is possible to customize the error reporting for special kinds of errors.
+// Last but not least it is possible to customize the error reporting for
+special kinds of errors.
 // This can be achieved by customizing any number of the following macros:
 
    \code
@@ -10588,25 +12751,31 @@
       BLAZE_THROW_RUNTIME_ERROR( MESSAGE )
    \endcode
 
-// As explained in the previous sections, in order to customize the handling of special errors
-// the according macro has to be defined prior to including any \b Blaze header file. This will
+// As explained in the previous sections, in order to customize the handling of
+special errors
+// the according macro has to be defined prior to including any \b Blaze header
+file. This will
 // override the \b Blaze default behavior.
 //
 //
-// \n Previous: \ref vector_and_matrix_customization &nbsp; &nbsp; Next: \ref blas_functions \n
+// \n Previous: \ref vector_and_matrix_customization &nbsp; &nbsp; Next: \ref
+blas_functions \n
 */
 //*************************************************************************************************
 
-
-//**BLAS Functions*********************************************************************************
+//**BLAS
+//Functions*********************************************************************************
 /*!\page blas_functions BLAS Functions
 //
 // \tableofcontents
 //
 //
-// For vector/vector, matrix/vector and matrix/matrix multiplications with large dense matrices
-// \b Blaze relies on the efficiency of BLAS libraries. For this purpose, \b Blaze implements
-// several convenient C++ wrapper functions for several BLAS functions. The following sections
+// For vector/vector, matrix/vector and matrix/matrix multiplications with large
+dense matrices
+// \b Blaze relies on the efficiency of BLAS libraries. For this purpose, \b
+Blaze implements
+// several convenient C++ wrapper functions for several BLAS functions. The
+following sections
 // give a complete overview of all available BLAS level 1, 2 and 3 functions.
 //
 //
@@ -10615,8 +12784,10 @@
 //
 // \subsection blas_level_1_dotu Dot Product (dotu)
 //
-// The following wrapper functions provide a generic interface for the BLAS functions for the
-// dot product of two dense vectors (\c sdot(), \c ddot(), \c cdotu_sub(), and \c zdotu_sub()):
+// The following wrapper functions provide a generic interface for the BLAS
+functions for the
+// dot product of two dense vectors (\c sdot(), \c ddot(), \c cdotu_sub(), and
+\c zdotu_sub()):
 
    \code
    namespace blaze {
@@ -10632,15 +12803,18 @@
                          const complex<double>* y, int incY );
 
    template< typename VT1, bool TF1, typename VT2, bool TF2 >
-   ElementType_<VT1> dotu( const DenseVector<VT1,TF1>& x, const DenseVector<VT2,TF2>& y );
+   ElementType_<VT1> dotu( const DenseVector<VT1,TF1>& x, const
+DenseVector<VT2,TF2>& y );
 
    } // namespace blaze
    \endcode
 
 // \subsection blas_level_1_dotc Complex Conjugate Dot Product (dotc)
 //
-// The following wrapper functions provide a generic interface for the BLAS functions for the
-// complex conjugate dot product of two dense vectors (\c sdot(), \c ddot(), \c cdotc_sub(),
+// The following wrapper functions provide a generic interface for the BLAS
+functions for the
+// complex conjugate dot product of two dense vectors (\c sdot(), \c ddot(), \c
+cdotc_sub(),
 // and \c zdotc_sub()):
 
    \code
@@ -10657,22 +12831,27 @@
                          const complex<double>* y, int incY );
 
    template< typename VT1, bool TF1, typename VT2, bool TF2 >
-   ElementType_<VT1> dotc( const DenseVector<VT1,TF1>& x, const DenseVector<VT2,TF2>& y );
+   ElementType_<VT1> dotc( const DenseVector<VT1,TF1>& x, const
+DenseVector<VT2,TF2>& y );
 
    } // namespace blaze
    \endcode
 
 // \subsection blas_level_1_axpy Axpy Product (axpy)
 //
-// The following wrapper functions provide a generic interface for the BLAS functions for the
-// axpy product of two dense vectors (\c saxpy(), \c daxpy(), \c caxpy(), and \c zaxpy()):
+// The following wrapper functions provide a generic interface for the BLAS
+functions for the
+// axpy product of two dense vectors (\c saxpy(), \c daxpy(), \c caxpy(), and \c
+zaxpy()):
 
    \code
    namespace blaze {
 
-   void axpy( int n, float alpha, const float* x, int incX, float* y, int incY );
+   void axpy( int n, float alpha, const float* x, int incX, float* y, int incY
+);
 
-   void axpy( int n, double alpha, const double* x, int incX, double* y, int incY );
+   void axpy( int n, double alpha, const double* x, int incX, double* y, int
+incY );
 
    void axpy( int n, complex<float> alpha, const complex<float>* x,
               int incX, complex<float>* y, int incY );
@@ -10681,7 +12860,8 @@
               int incX, complex<double>* y, int incY );
 
    template< typename VT1, bool TF1, typename VT2, bool TF2, typename ST >
-   void axpy( const DenseVector<VT1,TF1>& x, const DenseVector<VT2,TF2>& y, ST alpha );
+   void axpy( const DenseVector<VT1,TF1>& x, const DenseVector<VT2,TF2>& y, ST
+alpha );
 
    } // namespace blaze
    \endcode
@@ -10691,27 +12871,29 @@
 //
 // \subsection blas_level_2_gemv General Matrix/Vector Multiplication (gemv)
 //
-// The following wrapper functions provide a generic interface for the BLAS functions for the
-// general matrix/vector multiplication (\c sgemv(), \c dgemv(), \c cgemv(), and \c zgemv()):
+// The following wrapper functions provide a generic interface for the BLAS
+functions for the
+// general matrix/vector multiplication (\c sgemv(), \c dgemv(), \c cgemv(), and
+\c zgemv()):
 
    \code
    namespace blaze {
 
-   void gemv( CBLAS_ORDER layout, CBLAS_TRANSPOSE transA, int m, int n, float alpha,
-              const float* A, int lda, const float* x, int incX,
-              float beta, float* y, int incY );
+   void gemv( CBLAS_ORDER layout, CBLAS_TRANSPOSE transA, int m, int n, float
+alpha, const float* A, int lda, const float* x, int incX, float beta, float* y,
+int incY );
 
-   void gemv( CBLAS_ORDER layout, CBLAS_TRANSPOSE transA, int m, int n, double alpha,
-              const double* A, int lda, const double* x, int incX,
-              double beta, double* y, int incY );
+   void gemv( CBLAS_ORDER layout, CBLAS_TRANSPOSE transA, int m, int n, double
+alpha, const double* A, int lda, const double* x, int incX, double beta, double*
+y, int incY );
 
-   void gemv( CBLAS_ORDER layout, CBLAS_TRANSPOSE transA, int m, int n, complex<float> alpha,
-              const complex<float>* A, int lda, const complex<float>* x, int incX,
-              complex<float> beta, complex<float>* y, int incY );
+   void gemv( CBLAS_ORDER layout, CBLAS_TRANSPOSE transA, int m, int n,
+complex<float> alpha, const complex<float>* A, int lda, const complex<float>* x,
+int incX, complex<float> beta, complex<float>* y, int incY );
 
-   void gemv( CBLAS_ORDER layout, CBLAS_TRANSPOSE transA, int m, int n, complex<double> alpha,
-              const complex<double>* A, int lda, const complex<double>* x, int incX,
-              complex<double> beta, complex<double>* y, int incY );
+   void gemv( CBLAS_ORDER layout, CBLAS_TRANSPOSE transA, int m, int n,
+complex<double> alpha, const complex<double>* A, int lda, const complex<double>*
+x, int incX, complex<double> beta, complex<double>* y, int incY );
 
    template< typename VT1, typename MT1, bool SO, typename VT2, typename ST >
    void gemv( DenseVector<VT1,false>& y, const DenseMatrix<MT1,SO>& A,
@@ -10724,32 +12906,39 @@
    } // namespace blaze
    \endcode
 
-// \n \subsection blas_level_2_trmv Triangular Matrix/Vector Multiplication (trmv)
+// \n \subsection blas_level_2_trmv Triangular Matrix/Vector Multiplication
+(trmv)
 //
-// The following wrapper functions provide a generic interface for the BLAS functions for the
-// matrix/vector multiplication with a triangular matrix (\c strmv(), \c dtrmv(), \c ctrmv(),
+// The following wrapper functions provide a generic interface for the BLAS
+functions for the
+// matrix/vector multiplication with a triangular matrix (\c strmv(), \c
+dtrmv(), \c ctrmv(),
 // and \c ztrmv()):
 
    \code
    namespace blaze {
 
-   void trmv( CBLAS_ORDER order, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA, CBLAS_DIAG diag,
-              int n, const float* A, int lda, float* x, int incX );
+   void trmv( CBLAS_ORDER order, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA,
+CBLAS_DIAG diag, int n, const float* A, int lda, float* x, int incX );
 
-   void trmv( CBLAS_ORDER order, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA, CBLAS_DIAG diag,
-              int n, const double* A, int lda, double* x, int incX );
+   void trmv( CBLAS_ORDER order, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA,
+CBLAS_DIAG diag, int n, const double* A, int lda, double* x, int incX );
 
-   void trmv( CBLAS_ORDER order, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA, CBLAS_DIAG diag,
-              int n, const complex<float>* A, int lda, complex<float>* x, int incX );
+   void trmv( CBLAS_ORDER order, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA,
+CBLAS_DIAG diag, int n, const complex<float>* A, int lda, complex<float>* x, int
+incX );
 
-   void trmv( CBLAS_ORDER order, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA, CBLAS_DIAG diag,
-              int n, const complex<double>* A, int lda, complex<double>* x, int incX );
+   void trmv( CBLAS_ORDER order, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA,
+CBLAS_DIAG diag, int n, const complex<double>* A, int lda, complex<double>* x,
+int incX );
 
    template< typename VT, typename MT, bool SO >
-   void trmv( DenseVector<VT,false>& x, const DenseMatrix<MT,SO>& A, CBLAS_UPLO uplo );
+   void trmv( DenseVector<VT,false>& x, const DenseMatrix<MT,SO>& A, CBLAS_UPLO
+uplo );
 
    template< typename VT, typename MT, bool SO >
-   void trmv( DenseVector<VT,true>& x, const DenseMatrix<MT,SO>& A, CBLAS_UPLO uplo );
+   void trmv( DenseVector<VT,true>& x, const DenseMatrix<MT,SO>& A, CBLAS_UPLO
+uplo );
 
    } // namespace blaze
    \endcode
@@ -10759,8 +12948,10 @@
 //
 // \subsection blas_level_3_gemm General Matrix/Matrix Multiplication (gemm)
 //
-// The following wrapper functions provide a generic interface for the BLAS functions for the
-// general matrix/matrix multiplication (\c sgemm(), \c dgemm(), \c cgemm(), and \c zgemm()):
+// The following wrapper functions provide a generic interface for the BLAS
+functions for the
+// general matrix/matrix multiplication (\c sgemm(), \c dgemm(), \c cgemm(), and
+\c zgemm()):
 
    \code
    namespace blaze {
@@ -10774,44 +12965,49 @@
               const double* B, int ldb, double beta, float* C, int ldc );
 
    void gemm( CBLAS_ORDER order, CBLAS_TRANSPOSE transA, CBLAS_TRANSPOSE transB,
-              int m, int n, int k, complex<float> alpha, const complex<float>* A, int lda,
-              const complex<float>* B, int ldb, complex<float> beta, float* C, int ldc );
+              int m, int n, int k, complex<float> alpha, const complex<float>*
+A, int lda, const complex<float>* B, int ldb, complex<float> beta, float* C, int
+ldc );
 
    void gemm( CBLAS_ORDER order, CBLAS_TRANSPOSE transA, CBLAS_TRANSPOSE transB,
-              int m, int n, int k, complex<double> alpha, const complex<double>* A, int lda,
-              const complex<double>* B, int ldb, complex<double> beta, float* C, int ldc );
+              int m, int n, int k, complex<double> alpha, const complex<double>*
+A, int lda, const complex<double>* B, int ldb, complex<double> beta, float* C,
+int ldc );
 
-   template< typename MT1, bool SO1, typename MT2, bool SO2, typename MT3, bool SO3, typename ST >
-   void gemm( DenseMatrix<MT1,SO1>& C, const DenseMatrix<MT2,SO2>& A,
-              const DenseMatrix<MT3,SO3>& B, ST alpha, ST beta );
+   template< typename MT1, bool SO1, typename MT2, bool SO2, typename MT3, bool
+SO3, typename ST > void gemm( DenseMatrix<MT1,SO1>& C, const
+DenseMatrix<MT2,SO2>& A, const DenseMatrix<MT3,SO3>& B, ST alpha, ST beta );
 
    } // namespace blaze
    \endcode
 
-// \n \subsection blas_level_3_trmm Triangular Matrix/Matrix Multiplication (trmm)
+// \n \subsection blas_level_3_trmm Triangular Matrix/Matrix Multiplication
+(trmm)
 //
-// The following wrapper functions provide a generic interface for the BLAS functions for the
-// matrix/matrix multiplication with a triangular matrix (\c strmm(), \c dtrmm(), \c ctrmm(), and
+// The following wrapper functions provide a generic interface for the BLAS
+functions for the
+// matrix/matrix multiplication with a triangular matrix (\c strmm(), \c
+dtrmm(), \c ctrmm(), and
 // \c ztrmm()):
 
    \code
    namespace blaze {
 
-   void trmm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA,
-              CBLAS_DIAG diag, int m, int n, float alpha, const float* A,
-              int lda, float* B, int ldb );
+   void trmm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo,
+CBLAS_TRANSPOSE transA, CBLAS_DIAG diag, int m, int n, float alpha, const float*
+A, int lda, float* B, int ldb );
 
-   void trmm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA,
-              CBLAS_DIAG diag, int m, int n, double alpha, const double* A,
-              int lda, double* B, int ldb );
+   void trmm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo,
+CBLAS_TRANSPOSE transA, CBLAS_DIAG diag, int m, int n, double alpha, const
+double* A, int lda, double* B, int ldb );
 
-   void trmm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA,
-              CBLAS_DIAG diag, int m, int n, complex<float> alpha, const complex<float>* A,
-              int lda, complex<float>* B, int ldb );
+   void trmm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo,
+CBLAS_TRANSPOSE transA, CBLAS_DIAG diag, int m, int n, complex<float> alpha,
+const complex<float>* A, int lda, complex<float>* B, int ldb );
 
-   void trmm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA,
-              CBLAS_DIAG diag, int m, int n, complex<double> alpha, const complex<double>* A,
-              int lda, complex<double>* B, int ldb );
+   void trmm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo,
+CBLAS_TRANSPOSE transA, CBLAS_DIAG diag, int m, int n, complex<double> alpha,
+const complex<double>* A, int lda, complex<double>* B, int ldb );
 
    template< typename MT1, bool SO1, typename MT2, bool SO2, typename ST >
    void trmm( DenseMatrix<MT1,SO1>& B, const DenseMatrix<MT2,SO2>& A,
@@ -10822,27 +13018,29 @@
 
 // \n \subsection blas_level_3_trsm Triangular System Solver (trsm)
 //
-// The following wrapper functions provide a generic interface for the BLAS functions for solving
-// a triangular system of equations (\c strsm(), \c dtrsm(), \c ctrsm(), and \c ztrsm()):
+// The following wrapper functions provide a generic interface for the BLAS
+functions for solving
+// a triangular system of equations (\c strsm(), \c dtrsm(), \c ctrsm(), and \c
+ztrsm()):
 
    \code
    namespace blaze {
 
-   void trsm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA,
-              CBLAS_DIAG diag, int m, int n, float alpha, const float* A,
-              int lda, float* B, int ldb );
+   void trsm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo,
+CBLAS_TRANSPOSE transA, CBLAS_DIAG diag, int m, int n, float alpha, const float*
+A, int lda, float* B, int ldb );
 
-   void trsm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA,
-              CBLAS_DIAG diag, int m, int n, double alpha, const double* A,
-              int lda, double* B, int ldb );
+   void trsm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo,
+CBLAS_TRANSPOSE transA, CBLAS_DIAG diag, int m, int n, double alpha, const
+double* A, int lda, double* B, int ldb );
 
-   void trsm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA,
-              CBLAS_DIAG diag, int m, int n, complex<float> alpha, const complex<float>* A,
-              int lda, complex<float>* B, int ldb );
+   void trsm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo,
+CBLAS_TRANSPOSE transA, CBLAS_DIAG diag, int m, int n, complex<float> alpha,
+const complex<float>* A, int lda, complex<float>* B, int ldb );
 
-   void trsm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo, CBLAS_TRANSPOSE transA,
-              CBLAS_DIAG diag, int m, int n, complex<double> alpha, const complex<double>* A,
-              int lda, complex<double>* B, int ldb );
+   void trsm( CBLAS_ORDER order, CBLAS_SIDE side, CBLAS_UPLO uplo,
+CBLAS_TRANSPOSE transA, CBLAS_DIAG diag, int m, int n, complex<double> alpha,
+const complex<double>* A, int lda, complex<double>* B, int ldb );
 
    template< typename MT, bool SO, typename VT, bool TF, typename ST >
    void trsm( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b,
@@ -10855,12 +13053,13 @@
    } // namespace blaze
    \endcode
 
-// \n Previous: \ref error_reporting_customization &nbsp; &nbsp; Next: \ref lapack_functions \n
+// \n Previous: \ref error_reporting_customization &nbsp; &nbsp; Next: \ref
+lapack_functions \n
 */
 //*************************************************************************************************
 
-
-//**LAPACK Functions*******************************************************************************
+//**LAPACK
+//Functions*******************************************************************************
 /*!\page lapack_functions LAPACK Functions
 //
 // \tableofcontents
@@ -10869,17 +13068,24 @@
 // \n \section lapack_introction Introduction
 // <hr>
 //
-// The \b Blaze library makes extensive use of the LAPACK functionality for various compute tasks
-// (including the decomposition, inversion and the computation of the determinant of dense matrices).
-// For this purpose, \b Blaze implements several convenient C++ wrapper functions for all required
-// LAPACK functions. The following sections give a complete overview of all available LAPACK wrapper
-// functions. For more details on the individual LAPACK functions see the \b Blaze function
+// The \b Blaze library makes extensive use of the LAPACK functionality for
+various compute tasks
+// (including the decomposition, inversion and the computation of the
+determinant of dense matrices).
+// For this purpose, \b Blaze implements several convenient C++ wrapper
+functions for all required
+// LAPACK functions. The following sections give a complete overview of all
+available LAPACK wrapper
+// functions. For more details on the individual LAPACK functions see the \b
+Blaze function
 // documentation or the LAPACK online documentation browser:
 //
 //        http://www.netlib.org/lapack/explore-html/
 //
-// Most of the wrapper functions are implemented as thin wrappers around LAPACK functions. They
-// provide the parameters of the original LAPACK functions and thus provide maximum flexibility:
+// Most of the wrapper functions are implemented as thin wrappers around LAPACK
+functions. They
+// provide the parameters of the original LAPACK functions and thus provide
+maximum flexibility:
 
    \code
    constexpr size_t N( 100UL );
@@ -10892,16 +13098,18 @@
    const int lda  ( numeric_cast<int>( A.spacing() ) );  // >= N
    const int lwork( n*lda );
 
-   const std::unique_ptr<int[]> ipiv( new int[N] );        // No initialization required
-   const std::unique_ptr<double[]> work( new double[N] );  // No initialization required
+   const std::unique_ptr<int[]> ipiv( new int[N] );        // No initialization
+required const std::unique_ptr<double[]> work( new double[N] );  // No
+initialization required
 
    int info( 0 );
 
-   getrf( m, n, A.data(), lda, ipiv.get(), &info );                  // Reports failure via 'info'
-   getri( n, A.data(), lda, ipiv.get(), work.get(), lwork, &info );  // Reports failure via 'info'
-   \endcode
+   getrf( m, n, A.data(), lda, ipiv.get(), &info );                  // Reports
+failure via 'info' getri( n, A.data(), lda, ipiv.get(), work.get(), lwork, &info
+);  // Reports failure via 'info' \endcode
 
-// Additionally, \b Blaze provides wrappers that provide a higher level of abstraction. These
+// Additionally, \b Blaze provides wrappers that provide a higher level of
+abstraction. These
 // wrappers provide a maximum of convenience:
 
    \code
@@ -10910,34 +13118,45 @@
    blaze::DynamicMatrix<double,blaze::columnMajor> A( N, N );
    // ... Initializing the matrix
 
-   const std::unique_ptr<int[]> ipiv( new int[N] );  // No initialization required
+   const std::unique_ptr<int[]> ipiv( new int[N] );  // No initialization
+required
 
    getrf( A, ipiv.get() );  // Cannot fail
    getri( A, ipiv.get() );  // Reports failure via exception
    \endcode
 
-// \note All functions only work for general, non-adapted matrices with \c float, \c double,
-// \c complex<float>, or \c complex<double> element type. The attempt to call the function with
-// adaptors or matrices of any other element type results in a compile time error!
+// \note All functions only work for general, non-adapted matrices with \c
+float, \c double,
+// \c complex<float>, or \c complex<double> element type. The attempt to call
+the function with
+// adaptors or matrices of any other element type results in a compile time
+error!
 //
-// \note All functions can only be used if a fitting LAPACK library is available and linked to
-// the final executable. Otherwise a call to this function will result in a linker error.
+// \note All functions can only be used if a fitting LAPACK library is available
+and linked to
+// the final executable. Otherwise a call to this function will result in a
+linker error.
 //
-// \note For performance reasons all functions do only provide the basic exception safety guarantee,
-// i.e. in case an exception is thrown the given matrix may already have been modified.
+// \note For performance reasons all functions do only provide the basic
+exception safety guarantee,
+// i.e. in case an exception is thrown the given matrix may already have been
+modified.
 //
 //
 // \n \section lapack_decomposition Matrix Decomposition
 // <hr>
 //
-// The following functions decompose/factorize the given dense matrix. Based on this decomposition
+// The following functions decompose/factorize the given dense matrix. Based on
+this decomposition
 // the matrix can be inverted or used to solve a linear system of equations.
 //
 //
 // \n \subsection lapack_lu_decomposition LU Decomposition
 //
-// The following functions provide an interface for the LAPACK functions \c sgetrf(), \c dgetrf(),
-// \c cgetrf(), and \c zgetrf(), which compute the LU decomposition for the given general matrix:
+// The following functions provide an interface for the LAPACK functions \c
+sgetrf(), \c dgetrf(),
+// \c cgetrf(), and \c zgetrf(), which compute the LU decomposition for the
+given general matrix:
 
    \code
    namespace blaze {
@@ -10948,7 +13167,8 @@
 
    void getrf( int m, int n, complex<float>* A, int lda, int* ipiv, int* info );
 
-   void getrf( int m, int n, complex<double>* A, int lda, int* ipiv, int* info );
+   void getrf( int m, int n, complex<double>* A, int lda, int* ipiv, int* info
+);
 
    template< typename MT, bool SO >
    void getrf( DenseMatrix<MT,SO>& A, int* ipiv );
@@ -10960,33 +13180,45 @@
 
                           \f[ A = P \cdot L \cdot U, \f]\n
 
-// where \c P is a permutation matrix, \c L is a lower unitriangular matrix, and \c U is an upper
-// triangular matrix. The resulting decomposition is stored within \a A: In case of a column-major
-// matrix, \c L is stored in the lower part of \a A and \c U is stored in the upper part. The unit
-// diagonal elements of \c L are not stored. In case \a A is a row-major matrix the result is
+// where \c P is a permutation matrix, \c L is a lower unitriangular matrix, and
+\c U is an upper
+// triangular matrix. The resulting decomposition is stored within \a A: In case
+of a column-major
+// matrix, \c L is stored in the lower part of \a A and \c U is stored in the
+upper part. The unit
+// diagonal elements of \c L are not stored. In case \a A is a row-major matrix
+the result is
 // transposed.
 //
-// \note The LU decomposition will never fail, even for singular matrices. However, in case of a
-// singular matrix the resulting decomposition cannot be used for a matrix inversion or solving
+// \note The LU decomposition will never fail, even for singular matrices.
+However, in case of a
+// singular matrix the resulting decomposition cannot be used for a matrix
+inversion or solving
 // a linear system of equations.
 //
 //
 // \n \subsection lapack_ldlt_decomposition LDLT Decomposition
 //
-// The following functions provide an interface for the LAPACK functions \c ssytrf(), \c dsytrf(),
-// \c csytrf(), and \c zsytrf(), which compute the LDLT (Bunch-Kaufman) decomposition for the given
+// The following functions provide an interface for the LAPACK functions \c
+ssytrf(), \c dsytrf(),
+// \c csytrf(), and \c zsytrf(), which compute the LDLT (Bunch-Kaufman)
+decomposition for the given
 // symmetric indefinite matrix:
 
    \code
    namespace blaze {
 
-   void sytrf( char uplo, int n, float* A, int lda, int* ipiv, float* work, int lwork, int* info );
+   void sytrf( char uplo, int n, float* A, int lda, int* ipiv, float* work, int
+lwork, int* info );
 
-   void sytrf( char uplo, int n, double* A, int lda, int* ipiv, double* work, int lwork, int* info );
+   void sytrf( char uplo, int n, double* A, int lda, int* ipiv, double* work,
+int lwork, int* info );
 
-   void sytrf( char uplo, int n, complex<float>* A, int lda, int* ipiv, complex<float>* work, int lwork, int* info );
+   void sytrf( char uplo, int n, complex<float>* A, int lda, int* ipiv,
+complex<float>* work, int lwork, int* info );
 
-   void sytrf( char uplo, int n, complex<double>* A, int lda, int* ipiv, complex<double>* work, int lwork, int* info );
+   void sytrf( char uplo, int n, complex<double>* A, int lda, int* ipiv,
+complex<double>* work, int lwork, int* info );
 
    template< typename MT, bool SO >
    void sytrf( DenseMatrix<MT,SO>& A, char uplo, int* ipiv );
@@ -10999,28 +13231,39 @@
                       \f[ A = U D U^{T} \texttt{ (if uplo = 'U'), or }
                           A = L D L^{T} \texttt{ (if uplo = 'L'), } \f]
 
-// where \c U (or \c L) is a product of permutation and unit upper (lower) triangular matrices,
-// and \c D is symmetric and block diagonal with 1-by-1 and 2-by-2 diagonal blocks. The resulting
-// decomposition is stored within \a A: In case \a uplo is set to \c 'L' the result is stored in
-// the lower part of the matrix and the upper part remains untouched, in case \a uplo is set to
-// \c 'U' the result is stored in the upper part and the lower part remains untouched.
+// where \c U (or \c L) is a product of permutation and unit upper (lower)
+triangular matrices,
+// and \c D is symmetric and block diagonal with 1-by-1 and 2-by-2 diagonal
+blocks. The resulting
+// decomposition is stored within \a A: In case \a uplo is set to \c 'L' the
+result is stored in
+// the lower part of the matrix and the upper part remains untouched, in case \a
+uplo is set to
+// \c 'U' the result is stored in the upper part and the lower part remains
+untouched.
 //
-// \note The Bunch-Kaufman decomposition will never fail, even for singular matrices. However, in
-// case of a singular matrix the resulting decomposition cannot be used for a matrix inversion or
+// \note The Bunch-Kaufman decomposition will never fail, even for singular
+matrices. However, in
+// case of a singular matrix the resulting decomposition cannot be used for a
+matrix inversion or
 // solving a linear system of equations.
 //
 //
 // \n \subsection lapack_ldlh_decomposition LDLH Decomposition
 //
-// The following functions provide an interface for the LAPACK functions \c chetrf() and \c zsytrf(),
-// which compute the LDLH (Bunch-Kaufman) decomposition for the given Hermitian indefinite matrix:
+// The following functions provide an interface for the LAPACK functions \c
+chetrf() and \c zsytrf(),
+// which compute the LDLH (Bunch-Kaufman) decomposition for the given Hermitian
+indefinite matrix:
 
    \code
    namespace blaze {
 
-   void hetrf( char uplo, int n, complex<float>* A, int lda, int* ipiv, complex<float>* work, int lwork, int* info );
+   void hetrf( char uplo, int n, complex<float>* A, int lda, int* ipiv,
+complex<float>* work, int lwork, int* info );
 
-   void hetrf( char uplo, int n, complex<double>* A, int lda, int* ipiv, complex<double>* work, int lwork, int* info );
+   void hetrf( char uplo, int n, complex<double>* A, int lda, int* ipiv,
+complex<double>* work, int lwork, int* info );
 
    template< typename MT, bool SO >
    void hetrf( DenseMatrix<MT,SO>& A, char uplo, int* ipiv );
@@ -11033,21 +13276,30 @@
                       \f[ A = U D U^{H} \texttt{ (if uplo = 'U'), or }
                           A = L D L^{H} \texttt{ (if uplo = 'L'), } \f]
 
-// where \c U (or \c L) is a product of permutation and unit upper (lower) triangular matrices,
-// and \c D is Hermitian and block diagonal with 1-by-1 and 2-by-2 diagonal blocks. The resulting
-// decomposition is stored within \a A: In case \a uplo is set to \c 'L' the result is stored in
-// the lower part of the matrix and the upper part remains untouched, in case \a uplo is set to
-// \c 'U' the result is stored in the upper part and the lower part remains untouched.
+// where \c U (or \c L) is a product of permutation and unit upper (lower)
+triangular matrices,
+// and \c D is Hermitian and block diagonal with 1-by-1 and 2-by-2 diagonal
+blocks. The resulting
+// decomposition is stored within \a A: In case \a uplo is set to \c 'L' the
+result is stored in
+// the lower part of the matrix and the upper part remains untouched, in case \a
+uplo is set to
+// \c 'U' the result is stored in the upper part and the lower part remains
+untouched.
 //
-// \note The Bunch-Kaufman decomposition will never fail, even for singular matrices. However, in
-// case of a singular matrix the resulting decomposition cannot be used for a matrix inversion or
+// \note The Bunch-Kaufman decomposition will never fail, even for singular
+matrices. However, in
+// case of a singular matrix the resulting decomposition cannot be used for a
+matrix inversion or
 // solving a linear system of equations.
 //
 //
 // \n \subsection lapack_llh_decomposition Cholesky Decomposition
 //
-// The following functions provide an interface for the LAPACK functions \c spotrf(), \c dpotrf(),
-// \c cpotrf(), and \c zpotrf(), which compute the Cholesky (LLH) decomposition for the given
+// The following functions provide an interface for the LAPACK functions \c
+spotrf(), \c dpotrf(),
+// \c cpotrf(), and \c zpotrf(), which compute the Cholesky (LLH) decomposition
+for the given
 // positive definite matrix:
 
    \code
@@ -11072,26 +13324,34 @@
                       \f[ A = U^{T} U \texttt{ (if uplo = 'U'), or }
                           A = L L^{T} \texttt{ (if uplo = 'L'), } \f]
 
-// where \c U is an upper triangular matrix and \c L is a lower triangular matrix. The Cholesky
-// decomposition fails if the given matrix \a A is not a positive definite matrix. In this case
+// where \c U is an upper triangular matrix and \c L is a lower triangular
+matrix. The Cholesky
+// decomposition fails if the given matrix \a A is not a positive definite
+matrix. In this case
 // a \a std::std::invalid_argument exception is thrown.
 //
 //
 // \n \subsection lapack_qr_decomposition QR Decomposition
 //
-// The following functions provide an interface for the LAPACK functions \c sgeqrf(), \c dgeqrf(),
-// \c cgeqrf(), and \c zgeqrf(), which compute the QR decomposition of the given general matrix:
+// The following functions provide an interface for the LAPACK functions \c
+sgeqrf(), \c dgeqrf(),
+// \c cgeqrf(), and \c zgeqrf(), which compute the QR decomposition of the given
+general matrix:
 
    \code
    namespace blaze {
 
-   void geqrf( int m, int n, float* A, int lda, float* tau, float* work, int lwork, int* info );
+   void geqrf( int m, int n, float* A, int lda, float* tau, float* work, int
+lwork, int* info );
 
-   void geqrf( int m, int n, double* A, int lda, double* tau, double* work, int lwork, int* info );
+   void geqrf( int m, int n, double* A, int lda, double* tau, double* work, int
+lwork, int* info );
 
-   void geqrf( int m, int n, complex<float>* A, int lda, complex<float>* tau, complex<float>* work, int lwork, int* info );
+   void geqrf( int m, int n, complex<float>* A, int lda, complex<float>* tau,
+complex<float>* work, int lwork, int* info );
 
-   void geqrf( int m, int n, complex<double>* A, int lda, complex<double>* tau, complex<double>* work, int lwork, int* info );
+   void geqrf( int m, int n, complex<double>* A, int lda, complex<double>* tau,
+complex<double>* work, int lwork, int* info );
 
    template< typename MT, bool SO >
    void geqrf( DenseMatrix<MT,SO>& A, typename MT::ElementType* tau );
@@ -11111,26 +13371,37 @@
 
                       \f[ H(i) = I - tau \cdot v \cdot v^T, \f]
 
-// where \c tau is a real scalar, and \c v is a real vector with <tt>v(0:i-1) = 0</tt> and
-// <tt>v(i) = 1</tt>. <tt>v(i+1:m)</tt> is stored on exit in <tt>A(i+1:m,i)</tt>, and \c tau
-// in \c tau(i). Thus on exit the elements on and above the diagonal of the matrix contain the
-// min(\a m,\a n)-by-\a n upper trapezoidal matrix \c R (\c R is upper triangular if \a m >= \a n);
-// the elements below the diagonal, with the array \c tau, represent the orthogonal matrix \c Q as
+// where \c tau is a real scalar, and \c v is a real vector with <tt>v(0:i-1) =
+0</tt> and
+// <tt>v(i) = 1</tt>. <tt>v(i+1:m)</tt> is stored on exit in
+<tt>A(i+1:m,i)</tt>, and \c tau
+// in \c tau(i). Thus on exit the elements on and above the diagonal of the
+matrix contain the
+// min(\a m,\a n)-by-\a n upper trapezoidal matrix \c R (\c R is upper
+triangular if \a m >= \a n);
+// the elements below the diagonal, with the array \c tau, represent the
+orthogonal matrix \c Q as
 // a product of min(\a m,\a n) elementary reflectors.
 //
-// The following functions provide an interface for the LAPACK functions \c sorgqr(), \c dorgqr(),
-// \c cungqr(), and \c zunqqr(), which reconstruct the \c Q matrix from a QR decomposition:
+// The following functions provide an interface for the LAPACK functions \c
+sorgqr(), \c dorgqr(),
+// \c cungqr(), and \c zunqqr(), which reconstruct the \c Q matrix from a QR
+decomposition:
 
    \code
    namespace blaze {
 
-   void orgqr( int m, int n, int k, float* A, int lda, const float* tau, float* work, int lwork, int* info );
+   void orgqr( int m, int n, int k, float* A, int lda, const float* tau, float*
+work, int lwork, int* info );
 
-   void orgqr( int m, int n, int k, double* A, int lda, const double* tau, double* work, int lwork, int* info );
+   void orgqr( int m, int n, int k, double* A, int lda, const double* tau,
+double* work, int lwork, int* info );
 
-   void ungqr( int m, int n, int k, complex<float>* A, int lda, const complex<float>* tau, complex<float>* work, int lwork, int* info );
+   void ungqr( int m, int n, int k, complex<float>* A, int lda, const
+complex<float>* tau, complex<float>* work, int lwork, int* info );
 
-   void ungqr( int m, int n, int k, complex<double>* A, int lda, const complex<double>* tau, complex<double>* work, int lwork, int* info );
+   void ungqr( int m, int n, int k, complex<double>* A, int lda, const
+complex<double>* tau, complex<double>* work, int lwork, int* info );
 
    template< typename MT, bool SO >
    void orgqr( DenseMatrix<MT,SO>& A, const typename MT::ElementType* tau );
@@ -11141,45 +13412,62 @@
    } // namespace blaze
    \endcode
 
-// The following functions provide an interface for the LAPACK functions \c sormqr(), \c dormqr(),
-// \c cunmqr(), and \c zunmqr(), which can be used to multiply a matrix with the \c Q matrix from
+// The following functions provide an interface for the LAPACK functions \c
+sormqr(), \c dormqr(),
+// \c cunmqr(), and \c zunmqr(), which can be used to multiply a matrix with the
+\c Q matrix from
 // a QR decomposition:
 
    \code
    namespace blaze {
 
-   void ormqr( char side, char trans, int m, int n, int k, const float* A, int lda, const float* tau, float* C, int ldc, float* work, int lwork, int* info );
+   void ormqr( char side, char trans, int m, int n, int k, const float* A, int
+lda, const float* tau, float* C, int ldc, float* work, int lwork, int* info );
 
-   void ormqr( char side, char trans, int m, int n, int k, const double* A, int lda, const double* tau, double* C, int ldc, double* work, int lwork, int* info );
+   void ormqr( char side, char trans, int m, int n, int k, const double* A, int
+lda, const double* tau, double* C, int ldc, double* work, int lwork, int* info
+);
 
-   void unmqr( char side, char trans, int m, int n, int k, const complex<float>* A, int lda, const complex<float>* tau, complex<float>* C, int ldc, complex<float>* work, int lwork, int* info );
+   void unmqr( char side, char trans, int m, int n, int k, const complex<float>*
+A, int lda, const complex<float>* tau, complex<float>* C, int ldc,
+complex<float>* work, int lwork, int* info );
 
-   void unmqr( char side, char trans, int m, int n, int k, const complex<double>* A, int lda, const complex<double>* tau, complex<double>* C, int ldc, complex<double>* work, int lwork, int* info );
+   void unmqr( char side, char trans, int m, int n, int k, const
+complex<double>* A, int lda, const complex<double>* tau, complex<double>* C, int
+ldc, complex<double>* work, int lwork, int* info );
 
    template< typename MT1, bool SO1, typename MT2, bool SO2 >
-   void ormqr( DenseMatrix<MT1,SO1>& C, const DenseMatrix<MT2,SO2>& A, char side, char trans, const ElementType_<MT2>* tau );
+   void ormqr( DenseMatrix<MT1,SO1>& C, const DenseMatrix<MT2,SO2>& A, char
+side, char trans, const ElementType_<MT2>* tau );
 
    template< typename MT1, bool SO, typename MT2 >
-   void unmqr( DenseMatrix<MT1,SO>& C, DenseMatrix<MT2,SO>& A, char side, char trans, ElementType_<MT2>* tau );
+   void unmqr( DenseMatrix<MT1,SO>& C, DenseMatrix<MT2,SO>& A, char side, char
+trans, ElementType_<MT2>* tau );
 
    } // namespace blaze
    \endcode
 
 // \n \subsection lapack_rq_decomposition RQ Decomposition
 //
-// The following functions provide an interface for the LAPACK functions \c sgerqf(), \c dgerqf(),
-// \c cgerqf(), and \c zgerqf(), which compute the RQ decomposition of the given general matrix:
+// The following functions provide an interface for the LAPACK functions \c
+sgerqf(), \c dgerqf(),
+// \c cgerqf(), and \c zgerqf(), which compute the RQ decomposition of the given
+general matrix:
 
    \code
    namespace blaze {
 
-   void gerqf( int m, int n, float* A, int lda, float* tau, float* work, int lwork, int* info );
+   void gerqf( int m, int n, float* A, int lda, float* tau, float* work, int
+lwork, int* info );
 
-   void gerqf( int m, int n, double* A, int lda, double* tau, double* work, int lwork, int* info );
+   void gerqf( int m, int n, double* A, int lda, double* tau, double* work, int
+lwork, int* info );
 
-   void gerqf( int m, int n, complex<float>* A, int lda, complex<float>* tau, complex<float>* work, int lwork, int* info );
+   void gerqf( int m, int n, complex<float>* A, int lda, complex<float>* tau,
+complex<float>* work, int lwork, int* info );
 
-   void gerqf( int m, int n, complex<double>* A, int lda, complex<double>* tau, complex<double>* work, int lwork, int* info );
+   void gerqf( int m, int n, complex<double>* A, int lda, complex<double>* tau,
+complex<double>* work, int lwork, int* info );
 
    template< typename MT, bool SO >
    void gerqf( DenseMatrix<MT,SO>& A, typename MT::ElementType* tau );
@@ -11199,27 +13487,40 @@
 
                       \f[ H(i) = I - tau \cdot v \cdot v^T, \f]
 
-// where \c tau is a real scalar, and \c v is a real vector with <tt>v(n-k+i+1:n) = 0</tt> and
-// <tt>v(n-k+i) = 1</tt>. <tt>v(1:n-k+i-1)</tt> is stored on exit in <tt>A(m-k+i,1:n-k+i-1)</tt>,
-// and \c tau in \c tau(i). Thus in case \a m <= \a n, the upper triangle of the subarray
-// <tt>A(1:m,n-m+1:n)</tt> contains the \a m-by-\a m upper triangular matrix \c R and in case
-// \a m >= \a n, the elements on and above the (\a m-\a n)-th subdiagonal contain the \a m-by-\a n
-// upper trapezoidal matrix \c R; the remaining elements in combination with the array \c tau
-// represent the orthogonal matrix \c Q as a product of min(\a m,\a n) elementary reflectors.
+// where \c tau is a real scalar, and \c v is a real vector with
+<tt>v(n-k+i+1:n) = 0</tt> and
+// <tt>v(n-k+i) = 1</tt>. <tt>v(1:n-k+i-1)</tt> is stored on exit in
+<tt>A(m-k+i,1:n-k+i-1)</tt>,
+// and \c tau in \c tau(i). Thus in case \a m <= \a n, the upper triangle of the
+subarray
+// <tt>A(1:m,n-m+1:n)</tt> contains the \a m-by-\a m upper triangular matrix \c
+R and in case
+// \a m >= \a n, the elements on and above the (\a m-\a n)-th subdiagonal
+contain the \a m-by-\a n
+// upper trapezoidal matrix \c R; the remaining elements in combination with the
+array \c tau
+// represent the orthogonal matrix \c Q as a product of min(\a m,\a n)
+elementary reflectors.
 //
-// The following functions provide an interface for the LAPACK functions \c sorgrq(), \c dorgrq(),
-// \c cungrq(), and \c zunqrq(), which reconstruct the \c Q matrix from a RQ decomposition:
+// The following functions provide an interface for the LAPACK functions \c
+sorgrq(), \c dorgrq(),
+// \c cungrq(), and \c zunqrq(), which reconstruct the \c Q matrix from a RQ
+decomposition:
 
    \code
    namespace blaze {
 
-   void orgrq( int m, int n, int k, float* A, int lda, const float* tau, float* work, int lwork, int* info );
+   void orgrq( int m, int n, int k, float* A, int lda, const float* tau, float*
+work, int lwork, int* info );
 
-   void orgrq( int m, int n, int k, double* A, int lda, const double* tau, double* work, int lwork, int* info );
+   void orgrq( int m, int n, int k, double* A, int lda, const double* tau,
+double* work, int lwork, int* info );
 
-   void ungrq( int m, int n, int k, complex<float>* A, int lda, const complex<float>* tau, complex<float>* work, int lwork, int* info );
+   void ungrq( int m, int n, int k, complex<float>* A, int lda, const
+complex<float>* tau, complex<float>* work, int lwork, int* info );
 
-   void ungrq( int m, int n, int k, complex<double>* A, int lda, const complex<double>* tau, complex<double>* work, int lwork, int* info );
+   void ungrq( int m, int n, int k, complex<double>* A, int lda, const
+complex<double>* tau, complex<double>* work, int lwork, int* info );
 
    template< typename MT, bool SO >
    void orgrq( DenseMatrix<MT,SO>& A, const typename MT::ElementType* tau );
@@ -11230,45 +13531,62 @@
    } // namespace blaze
    \endcode
 
-// The following functions provide an interface for the LAPACK functions \c sormrq(), \c dormrq(),
-// \c cunmrq(), and \c zunmrq(), which can be used to multiply a matrix with the \c Q matrix from
+// The following functions provide an interface for the LAPACK functions \c
+sormrq(), \c dormrq(),
+// \c cunmrq(), and \c zunmrq(), which can be used to multiply a matrix with the
+\c Q matrix from
 // a RQ decomposition:
 
    \code
    namespace blaze {
 
-   void ormrq( char side, char trans, int m, int n, int k, const float* A, int lda, const float* tau, float* C, int ldc, float* work, int lwork, int* info );
+   void ormrq( char side, char trans, int m, int n, int k, const float* A, int
+lda, const float* tau, float* C, int ldc, float* work, int lwork, int* info );
 
-   void ormrq( char side, char trans, int m, int n, int k, const double* A, int lda, const double* tau, double* C, int ldc, double* work, int lwork, int* info );
+   void ormrq( char side, char trans, int m, int n, int k, const double* A, int
+lda, const double* tau, double* C, int ldc, double* work, int lwork, int* info
+);
 
-   void unmrq( char side, char trans, int m, int n, int k, const complex<float>* A, int lda, const complex<float>* tau, complex<float>* C, int ldc, complex<float>* work, int lwork, int* info );
+   void unmrq( char side, char trans, int m, int n, int k, const complex<float>*
+A, int lda, const complex<float>* tau, complex<float>* C, int ldc,
+complex<float>* work, int lwork, int* info );
 
-   void unmrq( char side, char trans, int m, int n, int k, const complex<double>* A, int lda, const complex<double>* tau, complex<double>* C, int ldc, complex<double>* work, int lwork, int* info );
+   void unmrq( char side, char trans, int m, int n, int k, const
+complex<double>* A, int lda, const complex<double>* tau, complex<double>* C, int
+ldc, complex<double>* work, int lwork, int* info );
 
    template< typename MT1, bool SO1, typename MT2, bool SO2 >
-   void ormrq( DenseMatrix<MT1,SO1>& C, const DenseMatrix<MT2,SO2>& A, char side, char trans, const ElementType_<MT2>* tau );
+   void ormrq( DenseMatrix<MT1,SO1>& C, const DenseMatrix<MT2,SO2>& A, char
+side, char trans, const ElementType_<MT2>* tau );
 
    template< typename MT1, bool SO, typename MT2 >
-   void unmrq( DenseMatrix<MT1,SO>& C, DenseMatrix<MT2,SO>& A, char side, char trans, ElementType_<MT2>* tau );
+   void unmrq( DenseMatrix<MT1,SO>& C, DenseMatrix<MT2,SO>& A, char side, char
+trans, ElementType_<MT2>* tau );
 
    } // namespace blaze
    \endcode
 
 // \n \subsection lapack_ql_decomposition QL Decomposition
 //
-// The following functions provide an interface for the LAPACK functions \c sgeqlf(), \c dgeqlf(),
-// \c cgeqlf(), and \c zgeqlf(), which compute the QL decomposition of the given general matrix:
+// The following functions provide an interface for the LAPACK functions \c
+sgeqlf(), \c dgeqlf(),
+// \c cgeqlf(), and \c zgeqlf(), which compute the QL decomposition of the given
+general matrix:
 
    \code
    namespace blaze {
 
-   void geqlf( int m, int n, float* A, int lda, float* tau, float* work, int lwork, int* info );
+   void geqlf( int m, int n, float* A, int lda, float* tau, float* work, int
+lwork, int* info );
 
-   void geqlf( int m, int n, double* A, int lda, double* tau, double* work, int lwork, int* info );
+   void geqlf( int m, int n, double* A, int lda, double* tau, double* work, int
+lwork, int* info );
 
-   void geqlf( int m, int n, complex<float>* A, int lda, complex<float>* tau, complex<float>* work, int lwork, int* info );
+   void geqlf( int m, int n, complex<float>* A, int lda, complex<float>* tau,
+complex<float>* work, int lwork, int* info );
 
-   void geqlf( int m, int n, complex<double>* A, int lda, complex<double>* tau, complex<double>* work, int lwork, int* info );
+   void geqlf( int m, int n, complex<double>* A, int lda, complex<double>* tau,
+complex<double>* work, int lwork, int* info );
 
    template< typename MT, bool SO >
    void geqlf( DenseMatrix<MT,SO>& A, typename MT::ElementType* tau );
@@ -11288,27 +13606,40 @@
 
                       \f[ H(i) = I - tau \cdot v \cdot v^T, \f]
 
-// where \c tau is a real scalar, and \c v is a real vector with <tt>v(m-k+i+1:m) = 0</tt> and
-// <tt>v(m-k+i) = 1</tt>. <tt>v(1:m-k+i-1)</tt> is stored on exit in <tt>A(1:m-k+i-1,n-k+i)</tt>,
-// and \c tau in \c tau(i). Thus in case \a m >= \a n, the lower triangle of the subarray
-// A(m-n+1:m,1:n) contains the \a n-by-\a n lower triangular matrix \c L and in case \a m <= \a n,
-// the elements on and below the (\a n-\a m)-th subdiagonal contain the \a m-by-\a n lower
-// trapezoidal matrix \c L; the remaining elements in combination with the array \c tau represent
-// the orthogonal matrix \c Q as a product of min(\a m,\a n) elementary reflectors.
+// where \c tau is a real scalar, and \c v is a real vector with
+<tt>v(m-k+i+1:m) = 0</tt> and
+// <tt>v(m-k+i) = 1</tt>. <tt>v(1:m-k+i-1)</tt> is stored on exit in
+<tt>A(1:m-k+i-1,n-k+i)</tt>,
+// and \c tau in \c tau(i). Thus in case \a m >= \a n, the lower triangle of the
+subarray
+// A(m-n+1:m,1:n) contains the \a n-by-\a n lower triangular matrix \c L and in
+case \a m <= \a n,
+// the elements on and below the (\a n-\a m)-th subdiagonal contain the \a
+m-by-\a n lower
+// trapezoidal matrix \c L; the remaining elements in combination with the array
+\c tau represent
+// the orthogonal matrix \c Q as a product of min(\a m,\a n) elementary
+reflectors.
 //
-// The following functions provide an interface for the LAPACK functions \c sorgql(), \c dorgql(),
-// \c cungql(), and \c zunqql(), which reconstruct the \c Q matrix from an QL decomposition:
+// The following functions provide an interface for the LAPACK functions \c
+sorgql(), \c dorgql(),
+// \c cungql(), and \c zunqql(), which reconstruct the \c Q matrix from an QL
+decomposition:
 
    \code
    namespace blaze {
 
-   void orgql( int m, int n, int k, float* A, int lda, const float* tau, float* work, int lwork, int* info );
+   void orgql( int m, int n, int k, float* A, int lda, const float* tau, float*
+work, int lwork, int* info );
 
-   void orgql( int m, int n, int k, double* A, int lda, const double* tau, double* work, int lwork, int* info );
+   void orgql( int m, int n, int k, double* A, int lda, const double* tau,
+double* work, int lwork, int* info );
 
-   void ungql( int m, int n, int k, complex<float>* A, int lda, const complex<float>* tau, complex<float>* work, int lwork, int* info );
+   void ungql( int m, int n, int k, complex<float>* A, int lda, const
+complex<float>* tau, complex<float>* work, int lwork, int* info );
 
-   void ungql( int m, int n, int k, complex<double>* A, int lda, const complex<double>* tau, complex<double>* work, int lwork, int* info );
+   void ungql( int m, int n, int k, complex<double>* A, int lda, const
+complex<double>* tau, complex<double>* work, int lwork, int* info );
 
    template< typename MT, bool SO >
    void orgql( DenseMatrix<MT,SO>& A, const typename MT::ElementType* tau );
@@ -11319,45 +13650,62 @@
    } // namespace blaze
    \endcode
 
-// The following functions provide an interface for the LAPACK functions \c sormql(), \c dormql(),
-// \c cunmql(), and \c zunmql(), which can be used to multiply a matrix with the \c Q matrix from
+// The following functions provide an interface for the LAPACK functions \c
+sormql(), \c dormql(),
+// \c cunmql(), and \c zunmql(), which can be used to multiply a matrix with the
+\c Q matrix from
 // a QL decomposition:
 
    \code
    namespace blaze {
 
-   void ormql( char side, char trans, int m, int n, int k, const float* A, int lda, const float* tau, float* C, int ldc, float* work, int lwork, int* info );
+   void ormql( char side, char trans, int m, int n, int k, const float* A, int
+lda, const float* tau, float* C, int ldc, float* work, int lwork, int* info );
 
-   void ormql( char side, char trans, int m, int n, int k, const double* A, int lda, const double* tau, double* C, int ldc, double* work, int lwork, int* info );
+   void ormql( char side, char trans, int m, int n, int k, const double* A, int
+lda, const double* tau, double* C, int ldc, double* work, int lwork, int* info
+);
 
-   void unmql( char side, char trans, int m, int n, int k, const complex<float>* A, int lda, const complex<float>* tau, complex<float>* C, int ldc, complex<float>* work, int lwork, int* info );
+   void unmql( char side, char trans, int m, int n, int k, const complex<float>*
+A, int lda, const complex<float>* tau, complex<float>* C, int ldc,
+complex<float>* work, int lwork, int* info );
 
-   void unmql( char side, char trans, int m, int n, int k, const complex<double>* A, int lda, const complex<double>* tau, complex<double>* C, int ldc, complex<double>* work, int lwork, int* info );
+   void unmql( char side, char trans, int m, int n, int k, const
+complex<double>* A, int lda, const complex<double>* tau, complex<double>* C, int
+ldc, complex<double>* work, int lwork, int* info );
 
    template< typename MT1, bool SO1, typename MT2, bool SO2 >
-   void ormql( DenseMatrix<MT1,SO1>& C, const DenseMatrix<MT2,SO2>& A, char side, char trans, const ElementType_<MT2>* tau );
+   void ormql( DenseMatrix<MT1,SO1>& C, const DenseMatrix<MT2,SO2>& A, char
+side, char trans, const ElementType_<MT2>* tau );
 
    template< typename MT1, bool SO, typename MT2 >
-   void unmql( DenseMatrix<MT1,SO>& C, DenseMatrix<MT2,SO>& A, char side, char trans, ElementType_<MT2>* tau );
+   void unmql( DenseMatrix<MT1,SO>& C, DenseMatrix<MT2,SO>& A, char side, char
+trans, ElementType_<MT2>* tau );
 
    } // namespace blaze
    \endcode
 
 // \n \subsection lapack_lq_decomposition LQ Decomposition
 //
-// The following functions provide an interface for the LAPACK functions \c sgelqf(), \c dgelqf(),
-// \c cgelqf(), and \c zgelqf(), which compute the LQ decomposition of the given general matrix:
+// The following functions provide an interface for the LAPACK functions \c
+sgelqf(), \c dgelqf(),
+// \c cgelqf(), and \c zgelqf(), which compute the LQ decomposition of the given
+general matrix:
 
    \code
    namespace blaze {
 
-   void gelqf( int m, int n, float* A, int lda, float* tau, float* work, int lwork, int* info );
+   void gelqf( int m, int n, float* A, int lda, float* tau, float* work, int
+lwork, int* info );
 
-   void gelqf( int m, int n, double* A, int lda, double* tau, double* work, int lwork, int* info );
+   void gelqf( int m, int n, double* A, int lda, double* tau, double* work, int
+lwork, int* info );
 
-   void gelqf( int m, int n, complex<float>* A, int lda, complex<float>* tau, complex<float>* work, int lwork, int* info );
+   void gelqf( int m, int n, complex<float>* A, int lda, complex<float>* tau,
+complex<float>* work, int lwork, int* info );
 
-   void gelqf( int m, int n, complex<double>* A, int lda, complex<double>* tau, complex<double>* work, int lwork, int* info );
+   void gelqf( int m, int n, complex<double>* A, int lda, complex<double>* tau,
+complex<double>* work, int lwork, int* info );
 
    template< typename MT, bool SO >
    void gelqf( DenseMatrix<MT,SO>& A, typename MT::ElementType* tau );
@@ -11377,26 +13725,37 @@
 
                       \f[ H(i) = I - tau \cdot v \cdot v^T, \f]
 
-// where \c tau is a real scalar, and \c v is a real vector with <tt>v(0:i-1) = 0</tt> and
-// <tt>v(i) = 1</tt>. <tt>v(i+1:n)</tt> is stored on exit in <tt>A(i,i+1:n)</tt>, and \c tau
-// in \c tau(i). Thus on exit the elements on and below the diagonal of the matrix contain the
-// \a m-by-min(\a m,\a n) lower trapezoidal matrix \c L (\c L is lower triangular if \a m <= \a n);
-// the elements above the diagonal, with the array \c tau, represent the orthogonal matrix \c Q
+// where \c tau is a real scalar, and \c v is a real vector with <tt>v(0:i-1) =
+0</tt> and
+// <tt>v(i) = 1</tt>. <tt>v(i+1:n)</tt> is stored on exit in
+<tt>A(i,i+1:n)</tt>, and \c tau
+// in \c tau(i). Thus on exit the elements on and below the diagonal of the
+matrix contain the
+// \a m-by-min(\a m,\a n) lower trapezoidal matrix \c L (\c L is lower
+triangular if \a m <= \a n);
+// the elements above the diagonal, with the array \c tau, represent the
+orthogonal matrix \c Q
 // as a product of min(\a m,\a n) elementary reflectors.
 //
-// The following functions provide an interface for the LAPACK functions \c sorglq(), \c dorglq(),
-// \c cunglq(), and \c zunqlq(), which reconstruct the \c Q matrix from an LQ decomposition:
+// The following functions provide an interface for the LAPACK functions \c
+sorglq(), \c dorglq(),
+// \c cunglq(), and \c zunqlq(), which reconstruct the \c Q matrix from an LQ
+decomposition:
 
    \code
    namespace blaze {
 
-   void orglq( int m, int n, int k, float* A, int lda, const float* tau, float* work, int lwork, int* info );
+   void orglq( int m, int n, int k, float* A, int lda, const float* tau, float*
+work, int lwork, int* info );
 
-   void orglq( int m, int n, int k, double* A, int lda, const double* tau, double* work, int lwork, int* info );
+   void orglq( int m, int n, int k, double* A, int lda, const double* tau,
+double* work, int lwork, int* info );
 
-   void unglq( int m, int n, int k, complex<float>* A, int lda, const complex<float>* tau, complex<float>* work, int lwork, int* info );
+   void unglq( int m, int n, int k, complex<float>* A, int lda, const
+complex<float>* tau, complex<float>* work, int lwork, int* info );
 
-   void unglq( int m, int n, int k, complex<double>* A, int lda, const complex<double>* tau, complex<double>* work, int lwork, int* info );
+   void unglq( int m, int n, int k, complex<double>* A, int lda, const
+complex<double>* tau, complex<double>* work, int lwork, int* info );
 
    template< typename MT, bool SO >
    void orglq( DenseMatrix<MT,SO>& A, const typename MT::ElementType* tau );
@@ -11407,26 +13766,37 @@
    } // namespace blaze
    \endcode
 
-// The following functions provide an interface for the LAPACK functions \c sormlq(), \c dormlq(),
-// \c cunmlq(), and \c zunmlq(), which can be used to multiply a matrix with the \c Q matrix from
+// The following functions provide an interface for the LAPACK functions \c
+sormlq(), \c dormlq(),
+// \c cunmlq(), and \c zunmlq(), which can be used to multiply a matrix with the
+\c Q matrix from
 // a LQ decomposition:
 
    \code
    namespace blaze {
 
-   void ormlq( char side, char trans, int m, int n, int k, const float* A, int lda, const float* tau, float* C, int ldc, float* work, int lwork, int* info );
+   void ormlq( char side, char trans, int m, int n, int k, const float* A, int
+lda, const float* tau, float* C, int ldc, float* work, int lwork, int* info );
 
-   void ormlq( char side, char trans, int m, int n, int k, const double* A, int lda, const double* tau, double* C, int ldc, double* work, int lwork, int* info );
+   void ormlq( char side, char trans, int m, int n, int k, const double* A, int
+lda, const double* tau, double* C, int ldc, double* work, int lwork, int* info
+);
 
-   void unmlq( char side, char trans, int m, int n, int k, const complex<float>* A, int lda, const complex<float>* tau, complex<float>* C, int ldc, complex<float>* work, int lwork, int* info );
+   void unmlq( char side, char trans, int m, int n, int k, const complex<float>*
+A, int lda, const complex<float>* tau, complex<float>* C, int ldc,
+complex<float>* work, int lwork, int* info );
 
-   void unmlq( char side, char trans, int m, int n, int k, const complex<double>* A, int lda, const complex<double>* tau, complex<double>* C, int ldc, complex<double>* work, int lwork, int* info );
+   void unmlq( char side, char trans, int m, int n, int k, const
+complex<double>* A, int lda, const complex<double>* tau, complex<double>* C, int
+ldc, complex<double>* work, int lwork, int* info );
 
    template< typename MT1, bool SO1, typename MT2, bool SO2 >
-   void ormlq( DenseMatrix<MT1,SO1>& C, const DenseMatrix<MT2,SO2>& A, char side, char trans, const ElementType_<MT2>* tau );
+   void ormlq( DenseMatrix<MT1,SO1>& C, const DenseMatrix<MT2,SO2>& A, char
+side, char trans, const ElementType_<MT2>* tau );
 
    template< typename MT1, bool SO, typename MT2 >
-   void unmlq( DenseMatrix<MT1,SO>& C, DenseMatrix<MT2,SO>& A, char side, char trans, ElementType_<MT2>* tau );
+   void unmlq( DenseMatrix<MT1,SO>& C, DenseMatrix<MT2,SO>& A, char side, char
+trans, ElementType_<MT2>* tau );
 
    } // namespace blaze
    \endcode
@@ -11434,26 +13804,33 @@
 // \n \section lapack_inversion Matrix Inversion
 // <hr>
 //
-// Given a matrix that has already been decomposed, the following functions can be used to invert
+// Given a matrix that has already been decomposed, the following functions can
+be used to invert
 // the matrix in-place.
 //
 //
 // \n \subsection lapack_lu_inversion LU-based Inversion
 //
-// The following functions provide an interface for the LAPACK functions \c sgetri(), \c dgetri(),
-// \c cgetri(), and \c zgetri(), which invert a general matrix that has already been decomposed by
+// The following functions provide an interface for the LAPACK functions \c
+sgetri(), \c dgetri(),
+// \c cgetri(), and \c zgetri(), which invert a general matrix that has already
+been decomposed by
 // an \ref lapack_lu_decomposition :
 
    \code
    namespace blaze {
 
-   void getri( int n, float* A, int lda, const int* ipiv, float* work, int lwork, int* info );
+   void getri( int n, float* A, int lda, const int* ipiv, float* work, int
+lwork, int* info );
 
-   void getri( int n, double* A, int lda, const int* ipiv, double* work, int lwork, int* info );
+   void getri( int n, double* A, int lda, const int* ipiv, double* work, int
+lwork, int* info );
 
-   void getri( int n, complex<float>* A, int lda, const int* ipiv, complex<float>* work, int lwork, int* info );
+   void getri( int n, complex<float>* A, int lda, const int* ipiv,
+complex<float>* work, int lwork, int* info );
 
-   void getri( int n, complex<double>* A, int lda, const int* ipiv, complex<double>* work, int lwork, int* info );
+   void getri( int n, complex<double>* A, int lda, const int* ipiv,
+complex<double>* work, int lwork, int* info );
 
    template< typename MT, bool SO >
    void getri( DenseMatrix<MT,SO>& A, const int* ipiv );
@@ -11466,26 +13843,33 @@
 //  - ... the given matrix is not a square matrix;
 //  - ... the given matrix is singular and not invertible.
 //
-// The first four functions report failure via the \c info argument, the fifth function throws a
+// The first four functions report failure via the \c info argument, the fifth
+function throws a
 // \a std::invalid_argument exception in case of an error.
 //
 //
 // \n \subsection lapack_ldlt_inversion LDLT-based Inversion
 //
-// The following functions provide an interface for the LAPACK functions \c ssytri(), \c dsytri(),
-// \c csytri(), and \c zsytri(), which invert a symmetric indefinite matrix that has already been
+// The following functions provide an interface for the LAPACK functions \c
+ssytri(), \c dsytri(),
+// \c csytri(), and \c zsytri(), which invert a symmetric indefinite matrix that
+has already been
 // decomposed by an \ref lapack_ldlt_decomposition :
 
    \code
    namespace blaze {
 
-   void sytri( char uplo, int n, float* A, int lda, const int* ipiv, float* work, int* info );
+   void sytri( char uplo, int n, float* A, int lda, const int* ipiv, float*
+work, int* info );
 
-   void sytri( char uplo, int n, double* A, int lda, const int* ipiv, double* work, int* info );
+   void sytri( char uplo, int n, double* A, int lda, const int* ipiv, double*
+work, int* info );
 
-   void sytri( char uplo, int n, complex<float>* A, int lda, const int* ipiv, complex<float>* work, int* info );
+   void sytri( char uplo, int n, complex<float>* A, int lda, const int* ipiv,
+complex<float>* work, int* info );
 
-   void sytri( char uplo, int n, complex<double>* A, int lda, const int* ipiv, complex<double>* work, int* info );
+   void sytri( char uplo, int n, complex<double>* A, int lda, const int* ipiv,
+complex<double>* work, int* info );
 
    template< typename MT, bool SO >
    void sytri( DenseMatrix<MT,SO>& A, char uplo, const int* ipiv );
@@ -11498,22 +13882,27 @@
 //  - ... the given matrix is not a square matrix;
 //  - ... the given matrix is singular and not invertible.
 //
-// The first four functions report failure via the \c info argument, the fifth function throws a
+// The first four functions report failure via the \c info argument, the fifth
+function throws a
 // \a std::invalid_argument exception in case of an error.
 //
 //
 // \n \subsection lapack_ldlh_inversion LDLH-based Inversion
 //
-// The following functions provide an interface for the LAPACK functions \c chetri() and
-// \c zhetri(), which invert an Hermitian indefinite matrix that has already been decomposed by
+// The following functions provide an interface for the LAPACK functions \c
+chetri() and
+// \c zhetri(), which invert an Hermitian indefinite matrix that has already
+been decomposed by
 // an \ref lapack_ldlh_decomposition :
 
    \code
    namespace blaze {
 
-   void hetri( char uplo, int n, complex<float>* A, int lda, const int* ipiv, complex<float>* work, int* info );
+   void hetri( char uplo, int n, complex<float>* A, int lda, const int* ipiv,
+complex<float>* work, int* info );
 
-   void hetri( char uplo, int n, complex<double>* A, int lda, const int* ipiv, complex<double>* work, int* info );
+   void hetri( char uplo, int n, complex<double>* A, int lda, const int* ipiv,
+complex<double>* work, int* info );
 
    template< typename MT, bool SO >
    void hetri( DenseMatrix<MT,SO>& A, char uplo, const int* ipiv );
@@ -11526,14 +13915,17 @@
 //  - ... the given matrix is not a square matrix;
 //  - ... the given matrix is singular and not invertible.
 //
-// The first four functions report failure via the \c info argument, the fifth function throws a
+// The first four functions report failure via the \c info argument, the fifth
+function throws a
 // \a std::invalid_argument exception in case of an error.
 //
 //
 // \n \subsection lapack_llh_inversion Cholesky-based Inversion
 //
-// The following functions provide an interface for the LAPACK functions \c spotri(), \c dpotri(),
-// \c cpotri(), and \c zpotri(), which invert a positive definite matrix that has already been
+// The following functions provide an interface for the LAPACK functions \c
+spotri(), \c dpotri(),
+// \c cpotri(), and \c zpotri(), which invert a positive definite matrix that
+has already been
 // decomposed by an \ref lapack_llh_decomposition :
 
    \code
@@ -11559,14 +13951,17 @@
 //  - ... the given \a uplo argument is neither 'L' nor 'U';
 //  - ... the given matrix is singular and not invertible.
 //
-// The first four functions report failure via the \c info argument, the fifth function throws a
+// The first four functions report failure via the \c info argument, the fifth
+function throws a
 // \a std::invalid_argument exception in case of an error.
 //
 //
 // \n \subsection lapack_triangular_inversion Inversion of Triangular Matrices
 //
-// The following functions provide an interface for the LAPACK functions \c strtri(), \c dtrtri(),
-// \c ctrtri(), and \c ztrtri(), which invert the given triangular matrix in-place:
+// The following functions provide an interface for the LAPACK functions \c
+strtri(), \c dtrtri(),
+// \c ctrtri(), and \c ztrtri(), which invert the given triangular matrix
+in-place:
 
    \code
    namespace blaze {
@@ -11575,9 +13970,11 @@
 
    void trtri( char uplo, char diag, int n, double* A, int lda, int* info );
 
-   void trtri( char uplo, char diag, int n, complex<float>* A, int lda, int* info );
+   void trtri( char uplo, char diag, int n, complex<float>* A, int lda, int*
+info );
 
-   void trtri( char uplo, char diag, int n, complex<double>* A, int lda, int* info );
+   void trtri( char uplo, char diag, int n, complex<double>* A, int lda, int*
+info );
 
    template< typename MT, bool SO >
    void trtri( DenseMatrix<MT,SO>& A, char uplo, char diag );
@@ -11592,16 +13989,20 @@
 //  - ... the given \a diag argument is neither 'U' nor 'N';
 //  - ... the given matrix is singular and not invertible.
 //
-// The first four functions report failure via the \c info argument, the fifth function throws a
+// The first four functions report failure via the \c info argument, the fifth
+function throws a
 // \a std::invalid_argument exception in case of an error.
 //
 //
 // \n \section lapack_substitution Substitution
 // <hr>
 //
-// Given a matrix that has already been decomposed the following functions can be used to perform
-// the forward/backward substitution step to compute the solution to a system of linear equations.
-// Note that depending on the storage order of the system matrix and the given right-hand side the
+// Given a matrix that has already been decomposed the following functions can
+be used to perform
+// the forward/backward substitution step to compute the solution to a system of
+linear equations.
+// Note that depending on the storage order of the system matrix and the given
+right-hand side the
 // functions solve different equation systems:
 //
 // Single right-hand side:
@@ -11614,181 +14015,232 @@
 //  - \f$ A  *X^T=B^T \f$ if \a A is column-major and \a B is row-major
 //  - \f$ A^T*X^T=B^T \f$ if both \a A and \a B are row-major
 //
-// In this context the general system matrix \a A is a n-by-n matrix that has already been
-// factorized by the according decomposition function, \a x and \a b are n-dimensional vectors
-// and \a X and \a B are either row-major m-by-n matrices or column-major n-by-m matrices.
+// In this context the general system matrix \a A is a n-by-n matrix that has
+already been
+// factorized by the according decomposition function, \a x and \a b are
+n-dimensional vectors
+// and \a X and \a B are either row-major m-by-n matrices or column-major n-by-m
+matrices.
 //
 //
 // \n \subsection lapack_lu_substitution LU-based Substitution
 //
-// The following functions provide an interface for the LAPACK functions \c sgetrs(), \c dgetrs(),
-// \c cgetrs(), and \c zgetrs(), which perform the substitution step for a general matrix that has
+// The following functions provide an interface for the LAPACK functions \c
+sgetrs(), \c dgetrs(),
+// \c cgetrs(), and \c zgetrs(), which perform the substitution step for a
+general matrix that has
 // already been decomposed by an \ref lapack_lu_decomposition :
 
    \code
    namespace blaze {
 
-   void getrs( char trans, int n, int nrhs, const float* A, int lda, const int* ipiv, float* B, int ldb, int* info );
+   void getrs( char trans, int n, int nrhs, const float* A, int lda, const int*
+ipiv, float* B, int ldb, int* info );
 
-   void getrs( char trans, int n, int nrhs, const double* A, int lda, const int* ipiv, double* B, int ldb, int* info );
+   void getrs( char trans, int n, int nrhs, const double* A, int lda, const int*
+ipiv, double* B, int ldb, int* info );
 
-   void getrs( char trans, int n, const complex<float>* A, int lda, const int* ipiv, complex<float>* B, int ldb, int* info );
+   void getrs( char trans, int n, const complex<float>* A, int lda, const int*
+ipiv, complex<float>* B, int ldb, int* info );
 
-   void getrs( char trans, int n, const complex<double>* A, int lda, const int* ipiv, complex<double>* B, int ldb, int* info );
+   void getrs( char trans, int n, const complex<double>* A, int lda, const int*
+ipiv, complex<double>* B, int ldb, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
-   void getrs( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char trans, const int* ipiv );
+   void getrs( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char trans,
+const int* ipiv );
 
    template< typename MT1, bool SO1, typename MT2, bool SO2 >
-   void getrs( const DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char trans, const int* ipiv );
+   void getrs( const DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char
+trans, const int* ipiv );
 
    } // namespace blaze
    \endcode
 
-// If the function exits successfully, the vector \a b or the matrix \a B contain the solution(s)
+// If the function exits successfully, the vector \a b or the matrix \a B
+contain the solution(s)
 // of the linear system of equations. The functions fail if ...
 //
 //  - ... the given system matrix is not a square matrix;
 //  - ... the given \a trans argument is neither 'N' nor 'T' nor 'C';
 //  - ... the sizes of the two given matrices do not match.
 //
-// The first four functions report failure via the \c info argument, the last two functions throw
+// The first four functions report failure via the \c info argument, the last
+two functions throw
 // a \a std::invalid_argument exception in case of an error.
 //
 //
 // \n \subsection lapack_ldlt_substitution LDLT-based Substitution
 //
-// The following functions provide an interface for the LAPACK functions \c ssytrs(), \c dsytrs(),
-// \c csytrs(), and \c zsytrs(), which perform the substitution step for a symmetric indefinite
-// matrix that has already been decomposed by an \ref lapack_ldlt_decomposition :
+// The following functions provide an interface for the LAPACK functions \c
+ssytrs(), \c dsytrs(),
+// \c csytrs(), and \c zsytrs(), which perform the substitution step for a
+symmetric indefinite
+// matrix that has already been decomposed by an \ref lapack_ldlt_decomposition
+:
 
    \code
    namespace blaze {
 
-   void sytrs( char uplo, int n, int nrhs, const float* A, int lda, const int* ipiv, float* B, int ldb, int* info );
+   void sytrs( char uplo, int n, int nrhs, const float* A, int lda, const int*
+ipiv, float* B, int ldb, int* info );
 
-   void sytrs( char uplo, int n, int nrhs, const double* A, int lda, const int* ipiv, double* B, int ldb, int* info );
+   void sytrs( char uplo, int n, int nrhs, const double* A, int lda, const int*
+ipiv, double* B, int ldb, int* info );
 
-   void sytrs( char uplo, int n, int nrhs, const complex<float>* A, int lda, const int* ipiv, complex<float>* B, int ldb, int* info );
+   void sytrs( char uplo, int n, int nrhs, const complex<float>* A, int lda,
+const int* ipiv, complex<float>* B, int ldb, int* info );
 
-   void sytrs( char uplo, int n, int nrhs, const complex<double>* A, int lda, const int* ipiv, complex<double>* B, int ldb, int* info );
+   void sytrs( char uplo, int n, int nrhs, const complex<double>* A, int lda,
+const int* ipiv, complex<double>* B, int ldb, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
-   void sytrs( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo, const int* ipiv );
+   void sytrs( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo,
+const int* ipiv );
 
    template< typename MT1, bool SO1, typename MT2, bool SO2 >
-   void sytrs( const DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char uplo, const int* ipiv );
+   void sytrs( const DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char
+uplo, const int* ipiv );
 
    } // namespace blaze
    \endcode
 
-// If the function exits successfully, the vector \a b or the matrix \a B contain the solution(s)
+// If the function exits successfully, the vector \a b or the matrix \a B
+contain the solution(s)
 // of the linear system of equations. The functions fail if ...
 //
 //  - ... the given system matrix is not a square matrix;
 //  - ... the given \a uplo argument is neither 'L' nor 'U';
 //  - ... the sizes of the two given matrices do not match.
 //
-// The first four functions report failure via the \c info argument, the last two functions throw
+// The first four functions report failure via the \c info argument, the last
+two functions throw
 // a \a std::invalid_argument exception in case of an error.
 //
 //
 // \n \subsection lapack_ldlh_substitution LDLH-based Substitution
 //
-// The following functions provide an interface for the LAPACK functions \c chetrs(), and \c zhetrs(),
-// which perform the substitution step for an Hermitian indefinite matrix that has already been
+// The following functions provide an interface for the LAPACK functions \c
+chetrs(), and \c zhetrs(),
+// which perform the substitution step for an Hermitian indefinite matrix that
+has already been
 // decomposed by an \ref lapack_ldlh_decomposition :
 
    \code
    namespace blaze {
 
-   void hetrs( char uplo, int n, int nrhs, const complex<float>* A, int lda, const int* ipiv, complex<float>* B, int ldb, int* info );
+   void hetrs( char uplo, int n, int nrhs, const complex<float>* A, int lda,
+const int* ipiv, complex<float>* B, int ldb, int* info );
 
-   void hetrs( char uplo, int n, int nrhs, const complex<double>* A, int lda, const int* ipiv, complex<double>* B, int ldb, int* info );
+   void hetrs( char uplo, int n, int nrhs, const complex<double>* A, int lda,
+const int* ipiv, complex<double>* B, int ldb, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
-   void hetrs( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo, const int* ipiv );
+   void hetrs( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo,
+const int* ipiv );
 
    template< typename MT1, bool SO1, typename MT2, bool SO2 >
-   void hetrs( const DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char uplo, const int* ipiv );
+   void hetrs( const DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char
+uplo, const int* ipiv );
 
    } // namespace blaze
    \endcode
 
-// If the function exits successfully, the vector \a b or the matrix \a B contain the solution(s)
+// If the function exits successfully, the vector \a b or the matrix \a B
+contain the solution(s)
 // of the linear system of equations. The functions fail if ...
 //
 //  - ... the given system matrix is not a square matrix;
 //  - ... the given \a uplo argument is neither 'L' nor 'U';
 //  - ... the sizes of the two given matrices do not match.
 //
-// The first two functions report failure via the \c info argument, the last two functions throw
+// The first two functions report failure via the \c info argument, the last two
+functions throw
 // a \a std::invalid_argument exception in case of an error.
 //
 //
 // \n \subsection lapack_llh_substitution Cholesky-based Substitution
 //
-// The following functions provide an interface for the LAPACK functions \c spotrs(), \c dpotrs(),
-// \c cpotrs(), and \c zpotrs(), which perform the substitution step for a positive definite matrix
+// The following functions provide an interface for the LAPACK functions \c
+spotrs(), \c dpotrs(),
+// \c cpotrs(), and \c zpotrs(), which perform the substitution step for a
+positive definite matrix
 // that has already been decomposed by an \ref lapack_llh_decomposition :
 
    \code
    namespace blaze {
 
-   void potrs( char uplo, int n, int nrhs, const float* A, int lda, float* B, int ldb, int* info );
+   void potrs( char uplo, int n, int nrhs, const float* A, int lda, float* B,
+int ldb, int* info );
 
-   void potrs( char uplo, int n, int nrhs, const double* A, int lda, double* B, int ldb, int* info );
+   void potrs( char uplo, int n, int nrhs, const double* A, int lda, double* B,
+int ldb, int* info );
 
-   void potrs( char uplo, int n, int nrhs, const complex<float>* A, int lda, complex<float>* B, int ldb, int* info );
+   void potrs( char uplo, int n, int nrhs, const complex<float>* A, int lda,
+complex<float>* B, int ldb, int* info );
 
-   void potrs( char uplo, int n, int nrhs, const complex<double>* A, int lda, complex<double>* B, int ldb, int* info );
+   void potrs( char uplo, int n, int nrhs, const complex<double>* A, int lda,
+complex<double>* B, int ldb, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
    void potrs( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo );
 
    template< typename MT1, bool SO1, typename MT2, bool SO2 >
-   void potrs( const DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char uplo );
+   void potrs( const DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char uplo
+);
 
    } // namespace blaze
    \endcode
 
-// If the function exits successfully, the vector \a b or the matrix \a B contain the solution(s)
+// If the function exits successfully, the vector \a b or the matrix \a B
+contain the solution(s)
 // of the linear system of equations. The functions fail if ...
 //
 //  - ... the given system matrix is not a square matrix;
 //  - ... the given \a uplo argument is neither 'L' nor 'U';
 //  - ... the sizes of the two given matrices do not match.
 //
-// The first two functions report failure via the \c info argument, the last two functions throw
+// The first two functions report failure via the \c info argument, the last two
+functions throw
 // a \a std::invalid_argument exception in case of an error.
 //
 //
-// \n \subsection lapack_triangular_substitution Substitution for Triangular Matrices
+// \n \subsection lapack_triangular_substitution Substitution for Triangular
+Matrices
 //
-// The following functions provide an interface for the LAPACK functions \c strtrs(), \c dtrtrs(),
-// \c ctrtrs(), and \c ztrtrs(), which perform the substitution step for a triangular matrix:
+// The following functions provide an interface for the LAPACK functions \c
+strtrs(), \c dtrtrs(),
+// \c ctrtrs(), and \c ztrtrs(), which perform the substitution step for a
+triangular matrix:
 
    \code
    namespace blaze {
 
-   void trtrs( char uplo, char trans, char diag, int n, int nrhs, const float* A, int lda, float* B, int ldb, int* info );
+   void trtrs( char uplo, char trans, char diag, int n, int nrhs, const float*
+A, int lda, float* B, int ldb, int* info );
 
-   void trtrs( char uplo, char trans, char diag, int n, int nrhs, const double* A, int lda, double* B, int ldb, int* info );
+   void trtrs( char uplo, char trans, char diag, int n, int nrhs, const double*
+A, int lda, double* B, int ldb, int* info );
 
-   void trtrs( char uplo, char trans, char diag, int n, int nrhs, const complex<float>* A, int lda, complex<float>* B, int ldb, int* info );
+   void trtrs( char uplo, char trans, char diag, int n, int nrhs, const
+complex<float>* A, int lda, complex<float>* B, int ldb, int* info );
 
-   void trtrs( char uplo, char trans, char diag, int n, int nrhs, const complex<double>* A, int lda, complex<double>* B, int ldb, int* info );
+   void trtrs( char uplo, char trans, char diag, int n, int nrhs, const
+complex<double>* A, int lda, complex<double>* B, int ldb, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
-   void trtrs( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo, char trans, char diag );
+   void trtrs( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo,
+char trans, char diag );
 
    template< typename MT1, bool SO1, typename MT2, bool SO2 >
-   void trtrs( const DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char uplo, char trans, char diag );
+   void trtrs( const DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char
+uplo, char trans, char diag );
 
    } // namespace blaze
    \endcode
 
-// If the function exits successfully, the vector \a b or the matrix \a B contain the solution(s)
+// If the function exits successfully, the vector \a b or the matrix \a B
+contain the solution(s)
 // of the linear system of equations. The functions fail if ...
 //
 //  - ... the given system matrix is not a square matrix;
@@ -11797,16 +14249,20 @@
 //  - ... the given \a diag argument is neither 'U' nor 'N';
 //  - ... the sizes of the two given matrices do not match.
 //
-// The first four functions report failure via the \c info argument, the last two functions throw
+// The first four functions report failure via the \c info argument, the last
+two functions throw
 // a \a std::invalid_argument exception in case of an error.
 //
 //
 // \n \section lapack_linear_system_solver Linear System Solver
 // <hr>
 //
-// The following functions represent compound functions that perform both the decomposition step
-// as well as the substitution step to compute the solution to a system of linear equations. Note
-// that depending on the storage order of the system matrix and the given right-hand side the
+// The following functions represent compound functions that perform both the
+decomposition step
+// as well as the substitution step to compute the solution to a system of
+linear equations. Note
+// that depending on the storage order of the system matrix and the given
+right-hand side the
 // functions solve different equation systems:
 //
 // Single right-hand side:
@@ -11819,27 +14275,36 @@
 //  - \f$ A  *X^T=B^T \f$ if \a A is column-major and \a B is row-major
 //  - \f$ A^T*X^T=B^T \f$ if both \a A and \a B are row-major
 //
-// In this context the general system matrix \a A is a n-by-n matrix that has already been
-// factorized by the according decomposition function, \a x and \a b are n-dimensional vectors
-// and \a X and \a B are either row-major m-by-n matrices or column-major n-by-m matrices.
+// In this context the general system matrix \a A is a n-by-n matrix that has
+already been
+// factorized by the according decomposition function, \a x and \a b are
+n-dimensional vectors
+// and \a X and \a B are either row-major m-by-n matrices or column-major n-by-m
+matrices.
 //
 //
 // \subsection lapack_lu_linear_system_solver LU-based Linear System Solver
 //
-// The following functions provide an interface for the LAPACK functions \c sgesv(), \c dgesv(),
-// \c cgesv(), and \c zgesv(), which combine an \ref lapack_lu_decomposition and the according
+// The following functions provide an interface for the LAPACK functions \c
+sgesv(), \c dgesv(),
+// \c cgesv(), and \c zgesv(), which combine an \ref lapack_lu_decomposition and
+the according
 // \ref lapack_lu_substitution :
 
    \code
    namespace blaze {
 
-   void gesv( int n, int nrhs, float* A, int lda, int* ipiv, float* B, int ldb, int* info );
+   void gesv( int n, int nrhs, float* A, int lda, int* ipiv, float* B, int ldb,
+int* info );
 
-   void gesv( int n, int nrhs, double* A, int lda, int* ipiv, double* B, int ldb, int* info );
+   void gesv( int n, int nrhs, double* A, int lda, int* ipiv, double* B, int
+ldb, int* info );
 
-   void gesv( int n, int nrhs, complex<float>* A, int lda, int* ipiv, complex<float>* B, int ldb, int* info );
+   void gesv( int n, int nrhs, complex<float>* A, int lda, int* ipiv,
+complex<float>* B, int ldb, int* info );
 
-   void gesv( int n, int nrhs, complex<double>* A, int lda, int* ipiv, complex<double>* B, int ldb, int* info );
+   void gesv( int n, int nrhs, complex<double>* A, int lda, int* ipiv,
+complex<double>* B, int ldb, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
    void gesv( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, int* ipiv );
@@ -11850,8 +14315,10 @@
    } // namespace blaze
    \endcode
 
-// If the function exits successfully, the vector \a b or the matrix \a B contain the
-// solution(s) of the linear system of equations and \a A has been decomposed by means of an
+// If the function exits successfully, the vector \a b or the matrix \a B
+contain the
+// solution(s) of the linear system of equations and \a A has been decomposed by
+means of an
 // \ref lapack_lu_decomposition.
 //
 // The functions fail if ...
@@ -11859,38 +14326,51 @@
 //  - ... the given system matrix is not a square matrix;
 //  - ... the given system matrix is singular and not invertible.
 //
-// The first four functions report failure via the \c info argument, the fifth function throws a
+// The first four functions report failure via the \c info argument, the fifth
+function throws a
 // \a std::invalid_argument exception in case of an error.
 //
 //
-// \n \subsection lapack_ldlt_linear_system_solver LDLT-based Linear System Solver
+// \n \subsection lapack_ldlt_linear_system_solver LDLT-based Linear System
+Solver
 //
-// The following functions provide an interface for the LAPACK functions \c ssysv(), \c dsysv(),
-// \c csysv(), and \c zsysv(), which combine an \ref lapack_ldlt_decomposition and the according
+// The following functions provide an interface for the LAPACK functions \c
+ssysv(), \c dsysv(),
+// \c csysv(), and \c zsysv(), which combine an \ref lapack_ldlt_decomposition
+and the according
 // \ref lapack_ldlt_substitution :
 
    \code
    namespace blaze {
 
-   void sysv( char uplo, int n, int nrhs, float* A, int lda, int* ipiv, float* B, int ldb, float* work, int lwork, int* info );
+   void sysv( char uplo, int n, int nrhs, float* A, int lda, int* ipiv, float*
+B, int ldb, float* work, int lwork, int* info );
 
-   void sysv( char uplo, int n, int nrhs, double* A, int lda, int* ipiv, double* B, int ldb, double* work, int lwork, int* info );
+   void sysv( char uplo, int n, int nrhs, double* A, int lda, int* ipiv, double*
+B, int ldb, double* work, int lwork, int* info );
 
-   void sysv( char uplo, int n, int nrhs, complex<float>* A, int lda, int* ipiv, complex<float>* B, int ldb, complex<float>* work, int lwork, int* info );
+   void sysv( char uplo, int n, int nrhs, complex<float>* A, int lda, int* ipiv,
+complex<float>* B, int ldb, complex<float>* work, int lwork, int* info );
 
-   void sysv( char uplo, int n, int nrhs, complex<double>* A, int lda, int* ipiv, complex<double>* B, int ldb, complex<double>* work, int lwork, int* info );
+   void sysv( char uplo, int n, int nrhs, complex<double>* A, int lda, int*
+ipiv, complex<double>* B, int ldb, complex<double>* work, int lwork, int* info
+);
 
    template< typename MT, bool SO, typename VT, bool TF >
-   void sysv( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo, int* ipiv );
+   void sysv( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo, int* ipiv
+);
 
    template< typename MT1, bool SO1, typename MT2, bool SO2 >
-   void sysv( DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char uplo, int* ipiv );
+   void sysv( DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char uplo, int*
+ipiv );
 
    } // namespace blaze
    \endcode
 
-// If the function exits successfully, the vector \a b or the matrix \a B contain the
-// solution(s) of the linear system of equations and \a A has been decomposed by means of an
+// If the function exits successfully, the vector \a b or the matrix \a B
+contain the
+// solution(s) of the linear system of equations and \a A has been decomposed by
+means of an
 // \ref lapack_ldlt_decomposition.
 //
 // The functions fail if ...
@@ -11900,34 +14380,45 @@
 //  - ... the sizes of the two given matrices do not match;
 //  - ... the given system matrix is singular and not invertible.
 //
-// The first four functions report failure via the \c info argument, the fifth function throws a
+// The first four functions report failure via the \c info argument, the fifth
+function throws a
 // \a std::invalid_argument exception in case of an error.
 //
 //
-// \n \subsection lapack_ldlh_linear_system_solver LDLH-based Linear System Solver
+// \n \subsection lapack_ldlh_linear_system_solver LDLH-based Linear System
+Solver
 //
-// The following functions provide an interface for the LAPACK functions \c shesv(), \c dhesv(),
-// \c chesv(), and \c zhesv(), which combine an \ref lapack_ldlh_decomposition and the according
+// The following functions provide an interface for the LAPACK functions \c
+shesv(), \c dhesv(),
+// \c chesv(), and \c zhesv(), which combine an \ref lapack_ldlh_decomposition
+and the according
 // \ref lapack_ldlh_substitution :
 
    \code
    namespace blaze {
 
-   void hesv( char uplo, int n, int nrhs, complex<float>* A, int lda, int* ipiv, complex<float>* B, int ldb, complex<float>* work, int lwork, int* info );
+   void hesv( char uplo, int n, int nrhs, complex<float>* A, int lda, int* ipiv,
+complex<float>* B, int ldb, complex<float>* work, int lwork, int* info );
 
-   void hesv( char uplo, int n, int nrhs, complex<double>* A, int lda, int* ipiv, complex<double>* B, int ldb, complex<double>* work, int lwork, int* info );
+   void hesv( char uplo, int n, int nrhs, complex<double>* A, int lda, int*
+ipiv, complex<double>* B, int ldb, complex<double>* work, int lwork, int* info
+);
 
    template< typename MT, bool SO, typename VT, bool TF >
-   void hesv( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo, int* ipiv );
+   void hesv( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo, int* ipiv
+);
 
    template< typename MT1, bool SO1, typename MT2, bool SO2 >
-   void hesv( DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char uplo, int* ipiv );
+   void hesv( DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& B, char uplo, int*
+ipiv );
 
    } // namespace blaze
    \endcode
 
-// If the function exits successfully, the vector \a b or the matrix \a B contain the
-// solution(s) of the linear system of equations and \a A has been decomposed by means of an
+// If the function exits successfully, the vector \a b or the matrix \a B
+contain the
+// solution(s) of the linear system of equations and \a A has been decomposed by
+means of an
 // \ref lapack_ldlh_decomposition.
 //
 // The functions fail if ...
@@ -11937,26 +14428,34 @@
 //  - ... the sizes of the two given matrices do not match;
 //  - ... the given system matrix is singular and not invertible.
 //
-// The first two functions report failure via the \c info argument, the fifth function throws a
+// The first two functions report failure via the \c info argument, the fifth
+function throws a
 // \a std::invalid_argument exception in case of an error.
 //
 //
-// \n \subsection lapack_llh_linear_system_solver Cholesky-based Linear System Solver
+// \n \subsection lapack_llh_linear_system_solver Cholesky-based Linear System
+Solver
 //
-// The following functions provide an interface for the LAPACK functions \c sposv(), \c dposv(),
-// \c cposv(), and \c zposv(), which combine an \ref lapack_llh_decomposition and the according
+// The following functions provide an interface for the LAPACK functions \c
+sposv(), \c dposv(),
+// \c cposv(), and \c zposv(), which combine an \ref lapack_llh_decomposition
+and the according
 // \ref lapack_llh_substitution :
 
    \code
    namespace blaze {
 
-   void posv( char uplo, int n, int nrhs, float* A, int lda, float* B, int ldb, int* info );
+   void posv( char uplo, int n, int nrhs, float* A, int lda, float* B, int ldb,
+int* info );
 
-   void posv( char uplo, int n, int nrhs, double* A, int lda, double* B, int ldb, int* info );
+   void posv( char uplo, int n, int nrhs, double* A, int lda, double* B, int
+ldb, int* info );
 
-   void posv( char uplo, int n, int nrhs, complex<float>* A, int lda, complex<float>* B, int ldb, int* info );
+   void posv( char uplo, int n, int nrhs, complex<float>* A, int lda,
+complex<float>* B, int ldb, int* info );
 
-   void posv( char uplo, int n, int nrhs, complex<double>* A, int lda, complex<double>* B, int ldb, int* info );
+   void posv( char uplo, int n, int nrhs, complex<double>* A, int lda,
+complex<double>* B, int ldb, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
    void posv( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo );
@@ -11967,8 +14466,10 @@
    } // namespace blaze
    \endcode
 
-// If the function exits successfully, the vector \a b or the matrix \a B contain the
-// solution(s) of the linear system of equations and \a A has been decomposed by means of an
+// If the function exits successfully, the vector \a b or the matrix \a B
+contain the
+// solution(s) of the linear system of equations and \a A has been decomposed by
+means of an
 // \ref lapack_llh_decomposition.
 //
 // The functions fail if ...
@@ -11978,33 +14479,42 @@
 //  - ... the sizes of the two given matrices do not match;
 //  - ... the given system matrix is singular and not invertible.
 //
-// The first four functions report failure via the \c info argument, the fifth function throws a
+// The first four functions report failure via the \c info argument, the fifth
+function throws a
 // \a std::invalid_argument exception in case of an error.
 //
 //
-// \n \subsection lapack_triangular_linear_system_solver Linear System Solver for Triangular Matrices
+// \n \subsection lapack_triangular_linear_system_solver Linear System Solver
+for Triangular Matrices
 //
-// The following functions provide an interface for the LAPACK functions \c strsv(), \c dtrsv(),
+// The following functions provide an interface for the LAPACK functions \c
+strsv(), \c dtrsv(),
 // \c ctrsv(), and \c ztrsv():
 
    \code
    namespace blaze {
 
-   void trsv( char uplo, char trans, char diag, int n, const float* A, int lda, float* x, int incX );
+   void trsv( char uplo, char trans, char diag, int n, const float* A, int lda,
+float* x, int incX );
 
-   void trsv( char uplo, char trans, char diag, int n, const double* A, int lda, double* x, int incX );
+   void trsv( char uplo, char trans, char diag, int n, const double* A, int lda,
+double* x, int incX );
 
-   void trsv( char uplo, char trans, char diag, int n, const complex<float>* A, int lda, complex<float>* x, int incX );
+   void trsv( char uplo, char trans, char diag, int n, const complex<float>* A,
+int lda, complex<float>* x, int incX );
 
-   void trsv( char uplo, char trans, char diag, int n, const complex<double>* A, int lda, complex<double>* x, int incX );
+   void trsv( char uplo, char trans, char diag, int n, const complex<double>* A,
+int lda, complex<double>* x, int incX );
 
    template< typename MT, bool SO, typename VT, bool TF >
-   void trsv( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo, char trans, char diag );
+   void trsv( const DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& b, char uplo,
+char trans, char diag );
 
    } // namespace blaze
    \endcode
 
-// If the function exits successfully, the vector \a b or the matrix \a B contain the
+// If the function exits successfully, the vector \a b or the matrix \a B
+contain the
 // solution(s) of the linear system of equations.
 //
 // The functions fail if ...
@@ -12014,8 +14524,10 @@
 //  - ... the given \a trans argument is neither 'N' nor 'T' nor 'C';
 //  - ... the given \a diag argument is neither 'U' nor 'N'.
 //
-// The last function throws a \a std::invalid_argument exception in case of an error. Note that
-// none of the functions does perform any test for singularity or near-singularity. Such tests
+// The last function throws a \a std::invalid_argument exception in case of an
+error. Note that
+// none of the functions does perform any test for singularity or
+near-singularity. Such tests
 // must be performed prior to calling this function!
 //
 //
@@ -12023,342 +14535,475 @@
 //
 // \subsection lapack_eigenvalues_general General Matrices
 //
-// The following functions provide an interface for the LAPACK functions \c sgeev(), \c dgeev(),
-// \c cgeev(), and \c zgeev(), which compute the eigenvalues and optionally the eigenvectors of
+// The following functions provide an interface for the LAPACK functions \c
+sgeev(), \c dgeev(),
+// \c cgeev(), and \c zgeev(), which compute the eigenvalues and optionally the
+eigenvectors of
 // the given general matrix:
 
    \code
    namespace blaze {
 
-   void geev( char jobvl, char jobvr, int n, float* A, int lda, float* wr, float* wi, float* VL, int ldvl, float* VR, int ldvr, float* work, int lwork, int* info );
+   void geev( char jobvl, char jobvr, int n, float* A, int lda, float* wr,
+float* wi, float* VL, int ldvl, float* VR, int ldvr, float* work, int lwork,
+int* info );
 
-   void geev( char jobvl, char jobvr, int n, double* A, int lda, double* wr, double* wi, double* VL, int ldvl, double* VR, int ldvr, double* work, int lwork, int* info );
+   void geev( char jobvl, char jobvr, int n, double* A, int lda, double* wr,
+double* wi, double* VL, int ldvl, double* VR, int ldvr, double* work, int lwork,
+int* info );
 
-   void geev( char jobvl, char jobvr, int n, complex<float>* A, int lda, complex<float>* w, complex<float>* VL, int ldvl, complex<float>* VR, int ldvr, complex<float>* work, int lwork, float* rwork, int* info );
+   void geev( char jobvl, char jobvr, int n, complex<float>* A, int lda,
+complex<float>* w, complex<float>* VL, int ldvl, complex<float>* VR, int ldvr,
+complex<float>* work, int lwork, float* rwork, int* info );
 
-   void geev( char jobvl, char jobvr, int n, complex<double>* A, int lda, complex<double>* w, complex<double>* VL, int ldvl, complex<double>* VR, int ldvr, complex<double>* work, int lwork, double* rwork, int* info );
+   void geev( char jobvl, char jobvr, int n, complex<double>* A, int lda,
+complex<double>* w, complex<double>* VL, int ldvl, complex<double>* VR, int
+ldvr, complex<double>* work, int lwork, double* rwork, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
    void geev( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w );
 
-   template< typename MT1, bool SO1, typename MT2, bool SO2, typename VT, bool TF >
-   void geev( DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& VL, DenseVector<VT,TF>& w );
+   template< typename MT1, bool SO1, typename MT2, bool SO2, typename VT, bool
+TF > void geev( DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& VL,
+DenseVector<VT,TF>& w );
 
-   template< typename MT1, bool SO1, typename VT, bool TF, typename MT2, bool SO2 >
-   void geev( DenseMatrix<MT1,SO1>& A, DenseVector<VT,TF>& w, DenseMatrix<MT2,SO2>& VR );
+   template< typename MT1, bool SO1, typename VT, bool TF, typename MT2, bool
+SO2 > void geev( DenseMatrix<MT1,SO1>& A, DenseVector<VT,TF>& w,
+DenseMatrix<MT2,SO2>& VR );
 
-   template< typename MT1, bool SO1, typename MT2, bool SO2, typename VT, bool TF, typename MT3, bool SO3 >
-   void geev( DenseMatrix<MT1,SO1>& A, DenseMatrix<MT2,SO2>& VL, DenseVector<VT,TF>& w, DenseMatrix<MT3,SO3>& VR );
+   template< typename MT1, bool SO1, typename MT2, bool SO2, typename VT, bool
+TF, typename MT3, bool SO3 > void geev( DenseMatrix<MT1,SO1>& A,
+DenseMatrix<MT2,SO2>& VL, DenseVector<VT,TF>& w, DenseMatrix<MT3,SO3>& VR );
 
    } // namespace blaze
    \endcode
 
-// The complex eigenvalues of the given matrix \a A are returned in the given vector \a w.
-// Please note that no order of eigenvalues can be assumed, except that complex conjugate pairs
-// of eigenvalues appear consecutively with the eigenvalue having the positive imaginary part
+// The complex eigenvalues of the given matrix \a A are returned in the given
+vector \a w.
+// Please note that no order of eigenvalues can be assumed, except that complex
+conjugate pairs
+// of eigenvalues appear consecutively with the eigenvalue having the positive
+imaginary part
 // first.
 //
-// If \a VR is provided as an argument, the right eigenvectors are returned in the rows of \a VR
-// in case \a VR is a row-major matrix and in the columns of \a VR in case \a VR is a column-major
+// If \a VR is provided as an argument, the right eigenvectors are returned in
+the rows of \a VR
+// in case \a VR is a row-major matrix and in the columns of \a VR in case \a VR
+is a column-major
 // matrix. The right eigenvector \f$v[j]\f$ of \a A satisfies
 
                           \f[ A * v[j] = lambda[j] * v[j], \f]
 
 // where \f$lambda[j]\f$ is its eigenvalue.
 //
-// If \a VL is provided as an argument, the left eigenvectors are returned in the rows of \a VL
-// in case \a VL is a row-major matrix and in the columns of \a VL in case \a VL is a column-major
+// If \a VL is provided as an argument, the left eigenvectors are returned in
+the rows of \a VL
+// in case \a VL is a row-major matrix and in the columns of \a VL in case \a VL
+is a column-major
 // matrix. The left eigenvector \f$u[j]\f$ of \a A satisfies
 
                        \f[ u[j]^{H} * A = lambda[j] * u[j]^{H}, \f]
 
 // where \f$u[j]^{H}\f$ denotes the conjugate transpose of \f$u[j]\f$.
 //
-// \a w, \a VL, and \a VR are resized to the correct dimensions (if possible and necessary). The
+// \a w, \a VL, and \a VR are resized to the correct dimensions (if possible and
+necessary). The
 // functions fail if ...
 //
 //  - ... the given matrix \a A is not a square matrix;
-//  - ... the given matrix \a VL is a fixed size matrix and the dimensions don't match;
-//  - ... the given vector \a w is a fixed size vector and the size doesn't match;
-//  - ... the given matrix \a VR is a fixed size matrix and the dimensions don't match;
+//  - ... the given matrix \a VL is a fixed size matrix and the dimensions don't
+match;
+//  - ... the given vector \a w is a fixed size vector and the size doesn't
+match;
+//  - ... the given matrix \a VR is a fixed size matrix and the dimensions don't
+match;
 //  - ... the eigenvalue computation fails.
 //
-// The first four functions report failure via the \c info argument, the last four functions throw
+// The first four functions report failure via the \c info argument, the last
+four functions throw
 // an exception in case of an error.
 //
 //
 // \n \subsection lapack_eigenvalues_symmetric Symmetric Matrices
 //
-// The following functions provide an interface for the LAPACK functions \c ssyev() and \c dsyev(),
+// The following functions provide an interface for the LAPACK functions \c
+ssyev() and \c dsyev(),
 // which compute the eigenvalues and eigenvectors of the given symmetric matrix:
 
    \code
    namespace blaze {
 
-   void syev( char jobz, char uplo, int n, float* A, int lda, float* w, float* work, int lwork, int* info );
+   void syev( char jobz, char uplo, int n, float* A, int lda, float* w, float*
+work, int lwork, int* info );
 
-   void syev( char jobz, char uplo, int n, double* A, int lda, double* w, double* work, int lwork, int* info );
+   void syev( char jobz, char uplo, int n, double* A, int lda, double* w,
+double* work, int lwork, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
-   void syev( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char jobz, char uplo );
+   void syev( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char jobz, char uplo
+);
 
    } // namespace blaze
    \endcode
 
-// Alternatively, the following functions can be used, which provide an interface to the LAPACK
-// functions \c ssyevd() and \c dsyevd(). In contrast to the \c syev() functions they use a
-// divide-and-conquer strategy for the computation of the left and right eigenvectors:
+// Alternatively, the following functions can be used, which provide an
+interface to the LAPACK
+// functions \c ssyevd() and \c dsyevd(). In contrast to the \c syev() functions
+they use a
+// divide-and-conquer strategy for the computation of the left and right
+eigenvectors:
 
    \code
    namespace blaze {
 
-   void syevd( char jobz, char uplo, int n, float* A, int lda, float* w, float* work, int lwork, int* iwork, int liwork, int* info );
+   void syevd( char jobz, char uplo, int n, float* A, int lda, float* w, float*
+work, int lwork, int* iwork, int liwork, int* info );
 
-   void syevd( char jobz, char uplo, int n, double* A, int lda, double* w, double* work, int lwork, int* iwork, int liwork, int* info );
+   void syevd( char jobz, char uplo, int n, double* A, int lda, double* w,
+double* work, int lwork, int* iwork, int liwork, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
-   void syevd( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char jobz, char uplo );
+   void syevd( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char jobz, char
+uplo );
 
    } // namespace blaze
    \endcode
 
-// The real eigenvalues are returned in ascending order in the given vector \a w. \a w is resized
-// to the correct size (if possible and necessary). In case \a A is a row-major matrix, the left
-// eigenvectors are returned in the rows of \a A, in case \a A is a column-major matrix, the right
+// The real eigenvalues are returned in ascending order in the given vector \a
+w. \a w is resized
+// to the correct size (if possible and necessary). In case \a A is a row-major
+matrix, the left
+// eigenvectors are returned in the rows of \a A, in case \a A is a column-major
+matrix, the right
 // eigenvectors are returned in the columns of \a A.
 //
 // The functions fail if ...
 //
 //  - ... the given matrix \a A is not a square matrix;
-//  - ... the given vector \a w is a fixed size vector and the size doesn't match;
+//  - ... the given vector \a w is a fixed size vector and the size doesn't
+match;
 //  - ... the given \a jobz argument is neither \c 'V' nor \c 'N';
 //  - ... the given \a uplo argument is neither \c 'L' nor \c 'U';
 //  - ... the eigenvalue computation fails.
 //
-// The first two functions report failure via the \c info argument, the last function throws an
+// The first two functions report failure via the \c info argument, the last
+function throws an
 // exception in case of an error.
 //
-// Via the following functions, which wrap the LAPACK functions \c ssyevx() and \c dsyevx(), it
-// is possible to compute a subset of eigenvalues and/or eigenvectors of a symmetric matrix:
+// Via the following functions, which wrap the LAPACK functions \c ssyevx() and
+\c dsyevx(), it
+// is possible to compute a subset of eigenvalues and/or eigenvectors of a
+symmetric matrix:
 
    \code
    namespace blaze {
 
-   void syevx( char jobz, char range, char uplo, int n, float* A, int lda, float vl, float vu, int il, int iu, float abstol, int* m, float* w, float* Z, int ldz, float* work, int lwork, int* iwork, int* ifail, int* info );
+   void syevx( char jobz, char range, char uplo, int n, float* A, int lda, float
+vl, float vu, int il, int iu, float abstol, int* m, float* w, float* Z, int ldz,
+float* work, int lwork, int* iwork, int* ifail, int* info );
 
-   void syevx( char jobz, char range, char uplo, int n, double* A, int lda, double vl, double vu, int il, int iu, double abstol, int* m, double* w, double* Z, int ldz, double* work, int lwork, int* iwork, int* ifail, int* info );
+   void syevx( char jobz, char range, char uplo, int n, double* A, int lda,
+double vl, double vu, int il, int iu, double abstol, int* m, double* w, double*
+Z, int ldz, double* work, int lwork, int* iwork, int* ifail, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
    size_t syevx( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char uplo );
 
    template< typename MT, bool SO, typename VT, bool TF, typename ST >
-   size_t syevx( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char uplo, ST low, ST upp );
+   size_t syevx( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char uplo, ST
+low, ST upp );
 
-   template< typename MT1, bool SO1, typename VT, bool TF, typename MT2, bool SO2 >
-   size_t syevx( DenseMatrix<MT1,SO1>& A, DenseVector<VT,TF>& w, DenseMatrix<MT2,SO2>& Z, char uplo );
+   template< typename MT1, bool SO1, typename VT, bool TF, typename MT2, bool
+SO2 > size_t syevx( DenseMatrix<MT1,SO1>& A, DenseVector<VT,TF>& w,
+DenseMatrix<MT2,SO2>& Z, char uplo );
 
-   template< typename MT1, bool SO1, typename VT, bool TF, typename MT2, bool SO2, typename ST >
-   size_t syevx( DenseMatrix<MT1,SO1>& A, DenseVector<VT,TF>& w, DenseMatrix<MT2,SO2>& Z, char uplo, ST low, ST upp );
+   template< typename MT1, bool SO1, typename VT, bool TF, typename MT2, bool
+SO2, typename ST > size_t syevx( DenseMatrix<MT1,SO1>& A, DenseVector<VT,TF>& w,
+DenseMatrix<MT2,SO2>& Z, char uplo, ST low, ST upp );
 
    } // namespace blaze
    \endcode
 
-// The number of eigenvalues to be computed is specified by the lower bound \c low and the upper
+// The number of eigenvalues to be computed is specified by the lower bound \c
+low and the upper
 // bound \c upp, which either form an integral or a floating point range.
 //
-// In case \a low and \a upp are of integral type, the function computes all eigenvalues in the
-// index range \f$[low..upp]\f$. The \a num resulting real eigenvalues are stored in ascending
-// order in the given vector \a w, which is either resized (if possible) or expected to be a
-// \a num-dimensional vector. The eigenvectors are returned in the rows of \a Z in case \a Z is
-// row-major matrix and in the columns of \a Z in case \a Z is a column-major matrix. \a Z is
-// resized (if possible) or expected to be a \a num-by-\a n row-major matrix or a \a n-by-\a num
+// In case \a low and \a upp are of integral type, the function computes all
+eigenvalues in the
+// index range \f$[low..upp]\f$. The \a num resulting real eigenvalues are
+stored in ascending
+// order in the given vector \a w, which is either resized (if possible) or
+expected to be a
+// \a num-dimensional vector. The eigenvectors are returned in the rows of \a Z
+in case \a Z is
+// row-major matrix and in the columns of \a Z in case \a Z is a column-major
+matrix. \a Z is
+// resized (if possible) or expected to be a \a num-by-\a n row-major matrix or
+a \a n-by-\a num
 // column-major matrix.
 //
-// In case \a low and \a upp are of floating point type, the function computes all eigenvalues
-// in the half-open interval \f$(low..upp]\f$. The resulting real eigenvalues are stored in
-// ascending order in the given vector \a w, which is either resized (if possible) or expected
-// to be an \a n-dimensional vector. The eigenvectors are returned in the rows of \a Z in case
-// \a Z is a row-major matrix and in the columns of \a Z in case \a Z is a column-major matrix.
+// In case \a low and \a upp are of floating point type, the function computes
+all eigenvalues
+// in the half-open interval \f$(low..upp]\f$. The resulting real eigenvalues
+are stored in
+// ascending order in the given vector \a w, which is either resized (if
+possible) or expected
+// to be an \a n-dimensional vector. The eigenvectors are returned in the rows
+of \a Z in case
+// \a Z is a row-major matrix and in the columns of \a Z in case \a Z is a
+column-major matrix.
 // \a Z is resized (if possible) or expected to be a \a n-by-\a n matrix.
 //
 // The functions fail if ...
 //
 //  - ... the given matrix \a A is not a square matrix;
-//  - ... the given vector \a w is a fixed size vector and the size doesn't match;
-//  - ... the given matrix \a Z is a fixed size matrix and the dimensions don't match;
+//  - ... the given vector \a w is a fixed size vector and the size doesn't
+match;
+//  - ... the given matrix \a Z is a fixed size matrix and the dimensions don't
+match;
 //  - ... the given \a uplo argument is neither \c 'L' nor \c 'U';
 //  - ... the eigenvalue computation fails.
 //
-// The first two functions report failure via the \c info argument, the last four functions throw
+// The first two functions report failure via the \c info argument, the last
+four functions throw
 // an exception in case of an error.
 //
 //
 // \n \subsection lapack_eigenvalues_hermitian Hermitian Matrices
 //
-// The following functions provide an interface for the LAPACK functions \c cheev() and \c zheev(),
+// The following functions provide an interface for the LAPACK functions \c
+cheev() and \c zheev(),
 // which compute the eigenvalues and eigenvectors of the given Hermitian matrix:
 
    \code
    namespace blaze {
 
-   void heev( char jobz, char uplo, int n, complex<float>* A, int lda, float* w, complex<float>* work, int lwork, float* rwork, int* info );
+   void heev( char jobz, char uplo, int n, complex<float>* A, int lda, float* w,
+complex<float>* work, int lwork, float* rwork, int* info );
 
-   void heev( char jobz, char uplo, int n, complex<double>* A, int lda, double* w, complex<double>* work, int lwork, float* rwork, int* info );
+   void heev( char jobz, char uplo, int n, complex<double>* A, int lda, double*
+w, complex<double>* work, int lwork, float* rwork, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
-   void heev( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char jobz, char uplo );
+   void heev( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char jobz, char uplo
+);
 
    } // namespace blaze
    \endcode
 
-// Alternatively, the following functions can be used, which provide an interface to the LAPACK
-// functions \c cheevd() and \c zheevd(). In contrast to the \c heev() functions they use a
-// divide-and-conquer strategy for the computation of the left and right eigenvectors:
+// Alternatively, the following functions can be used, which provide an
+interface to the LAPACK
+// functions \c cheevd() and \c zheevd(). In contrast to the \c heev() functions
+they use a
+// divide-and-conquer strategy for the computation of the left and right
+eigenvectors:
 
    \code
    namespace blaze {
 
-   void heevd( char jobz, char uplo, int n, complex<float>* A, int lda, float* w, complex<float>* work, int lwork, float* rwork, int* lrwork, int* iwork, int* liwork, int* info );
+   void heevd( char jobz, char uplo, int n, complex<float>* A, int lda, float*
+w, complex<float>* work, int lwork, float* rwork, int* lrwork, int* iwork, int*
+liwork, int* info );
 
-   void heevd( char jobz, char uplo, int n, complex<double>* A, int lda, double* w, complex<double>* work, int lwork, double* rwork, int lrwork, int* iwork, int* liwork, int* info );
+   void heevd( char jobz, char uplo, int n, complex<double>* A, int lda, double*
+w, complex<double>* work, int lwork, double* rwork, int lrwork, int* iwork, int*
+liwork, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
-   void heevd( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char jobz, char uplo );
+   void heevd( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char jobz, char
+uplo );
 
    } // namespace blaze
    \endcode
 
-// The real eigenvalues are returned in ascending order in the given vector \a w. \a w is resized
-// to the correct size (if possible and necessary). In case \a A is a row-major matrix, the left
-// eigenvectors are returned in the rows of \a A, in case \a A is a column-major matrix, the right
+// The real eigenvalues are returned in ascending order in the given vector \a
+w. \a w is resized
+// to the correct size (if possible and necessary). In case \a A is a row-major
+matrix, the left
+// eigenvectors are returned in the rows of \a A, in case \a A is a column-major
+matrix, the right
 // eigenvectors are returned in the columns of \a A.
 //
 // The functions fail if ...
 //
 //  - ... the given matrix \a A is not a square matrix;
-//  - ... the given vector \a w is a fixed size vector and the size doesn't match;
+//  - ... the given vector \a w is a fixed size vector and the size doesn't
+match;
 //  - ... the given \a jobz argument is neither \c 'V' nor \c 'N';
 //  - ... the given \a uplo argument is neither \c 'L' nor \c 'U';
 //  - ... the eigenvalue computation fails.
 //
-// The first two functions report failure via the \c info argument, the last function throws an
+// The first two functions report failure via the \c info argument, the last
+function throws an
 // exception in case of an error.
 //
-// Via the following functions, which wrap the LAPACK functions \c cheevx() and \c zheevx(), it
-// is possible to compute a subset of eigenvalues and/or eigenvectors of an Hermitian matrix:
+// Via the following functions, which wrap the LAPACK functions \c cheevx() and
+\c zheevx(), it
+// is possible to compute a subset of eigenvalues and/or eigenvectors of an
+Hermitian matrix:
 
    \code
    namespace blaze {
 
-   void heevx( char jobz, char range, char uplo, int n, complex<float>* A, int lda, float vl, float vu, int il, int iu, float abstol, int* m, float* w, complex<float>* Z, int ldz, complex<float>* work, int lwork, float* rwork, int* iwork, int* ifail, int* info );
+   void heevx( char jobz, char range, char uplo, int n, complex<float>* A, int
+lda, float vl, float vu, int il, int iu, float abstol, int* m, float* w,
+complex<float>* Z, int ldz, complex<float>* work, int lwork, float* rwork, int*
+iwork, int* ifail, int* info );
 
-   void heevx( char jobz, char range, char uplo, int n, complex<double>* A, int lda, double vl, double vu, int il, int iu, double abstol, int* m, double* w, complex<double>* Z, int ldz, complex<double>* work, int lwork, double* rwork, int* iwork, int* ifail, int* info );
+   void heevx( char jobz, char range, char uplo, int n, complex<double>* A, int
+lda, double vl, double vu, int il, int iu, double abstol, int* m, double* w,
+complex<double>* Z, int ldz, complex<double>* work, int lwork, double* rwork,
+int* iwork, int* ifail, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
    size_t heevx( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char uplo );
 
    template< typename MT, bool SO, typename VT, bool TF, typename ST >
-   size_t heevx( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char uplo, ST low, ST upp );
+   size_t heevx( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& w, char uplo, ST
+low, ST upp );
 
-   template< typename MT1, bool SO1, typename VT, bool TF, typename MT2, bool SO2 >
-   size_t heevx( DenseMatrix<MT1,SO1>& A, DenseVector<VT,TF>& w, DenseMatrix<MT2,SO2>& Z, char uplo );
+   template< typename MT1, bool SO1, typename VT, bool TF, typename MT2, bool
+SO2 > size_t heevx( DenseMatrix<MT1,SO1>& A, DenseVector<VT,TF>& w,
+DenseMatrix<MT2,SO2>& Z, char uplo );
 
-   template< typename MT1, bool SO1, typename VT, bool TF, typename MT2, bool SO2, typename ST >
-   size_t heevx( DenseMatrix<MT1,SO1>& A, DenseVector<VT,TF>& w, DenseMatrix<MT2,SO2>& Z, char uplo, ST low, ST upp );
+   template< typename MT1, bool SO1, typename VT, bool TF, typename MT2, bool
+SO2, typename ST > size_t heevx( DenseMatrix<MT1,SO1>& A, DenseVector<VT,TF>& w,
+DenseMatrix<MT2,SO2>& Z, char uplo, ST low, ST upp );
 
    } // namespace blaze
    \endcode
 
-// The number of eigenvalues to be computed is specified by the lower bound \c low and the upper
+// The number of eigenvalues to be computed is specified by the lower bound \c
+low and the upper
 // bound \c upp, which either form an integral or a floating point range.
 //
-// In case \a low and \a upp are of integral type, the function computes all eigenvalues in the
-// index range \f$[low..upp]\f$. The \a num resulting real eigenvalues are stored in ascending
-// order in the given vector \a w, which is either resized (if possible) or expected to be a
-// \a num-dimensional vector. The eigenvectors are returned in the rows of \a Z in case \a Z is
-// row-major matrix and in the columns of \a Z in case \a Z is a column-major matrix. \a Z is
-// resized (if possible) or expected to be a \a num-by-\a n row-major matrix or a \a n-by-\a num
+// In case \a low and \a upp are of integral type, the function computes all
+eigenvalues in the
+// index range \f$[low..upp]\f$. The \a num resulting real eigenvalues are
+stored in ascending
+// order in the given vector \a w, which is either resized (if possible) or
+expected to be a
+// \a num-dimensional vector. The eigenvectors are returned in the rows of \a Z
+in case \a Z is
+// row-major matrix and in the columns of \a Z in case \a Z is a column-major
+matrix. \a Z is
+// resized (if possible) or expected to be a \a num-by-\a n row-major matrix or
+a \a n-by-\a num
 // column-major matrix.
 //
-// In case \a low and \a upp are of floating point type, the function computes all eigenvalues
-// in the half-open interval \f$(low..upp]\f$. The resulting real eigenvalues are stored in
-// ascending order in the given vector \a w, which is either resized (if possible) or expected
-// to be an \a n-dimensional vector. The eigenvectors are returned in the rows of \a Z in case
-// \a Z is a row-major matrix and in the columns of \a Z in case \a Z is a column-major matrix.
+// In case \a low and \a upp are of floating point type, the function computes
+all eigenvalues
+// in the half-open interval \f$(low..upp]\f$. The resulting real eigenvalues
+are stored in
+// ascending order in the given vector \a w, which is either resized (if
+possible) or expected
+// to be an \a n-dimensional vector. The eigenvectors are returned in the rows
+of \a Z in case
+// \a Z is a row-major matrix and in the columns of \a Z in case \a Z is a
+column-major matrix.
 // \a Z is resized (if possible) or expected to be a \a n-by-\a n matrix.
 //
 // The functions fail if ...
 //
 //  - ... the given matrix \a A is not a square matrix;
-//  - ... the given vector \a w is a fixed size vector and the size doesn't match;
-//  - ... the given matrix \a Z is a fixed size matrix and the dimensions don't match;
+//  - ... the given vector \a w is a fixed size vector and the size doesn't
+match;
+//  - ... the given matrix \a Z is a fixed size matrix and the dimensions don't
+match;
 //  - ... the given \a uplo argument is neither \c 'L' nor \c 'U';
 //  - ... the eigenvalue computation fails.
 //
-// The first two functions report failure via the \c info argument, the last four functions throw
+// The first two functions report failure via the \c info argument, the last
+four functions throw
 // an exception in case of an error.
 //
 //
 // \n \section lapack_singular_values Singular Values/Singular Vectors
 //
-// The following functions provide an interface for the LAPACK functions \c sgesvd(), \c dgesvd(),
-// \c cgesvd(), and \c zgesvd(), which perform a singular value decomposition (SVD) on the given
+// The following functions provide an interface for the LAPACK functions \c
+sgesvd(), \c dgesvd(),
+// \c cgesvd(), and \c zgesvd(), which perform a singular value decomposition
+(SVD) on the given
 // general matrix:
 
    \code
    namespace blaze {
 
-   void gesvd( char jobu, char jobv, int m, int n, float* A, int lda, float* s, float* U, int ldu, float* V, int ldv, float* work, int lwork, int* info );
+   void gesvd( char jobu, char jobv, int m, int n, float* A, int lda, float* s,
+float* U, int ldu, float* V, int ldv, float* work, int lwork, int* info );
 
-   void gesvd( char jobu, char jobv, int m, int n, double* A, int lda, double* s, double* U, int ldu, double* V, int ldv, double* work, int lwork, int* info );
+   void gesvd( char jobu, char jobv, int m, int n, double* A, int lda, double*
+s, double* U, int ldu, double* V, int ldv, double* work, int lwork, int* info );
 
-   void gesvd( char jobu, char jobv, int m, int n, complex<float>* A, int lda, float* s, complex<float>* U, int ldu, complex<float>* V, int ldv, complex<float>* work, int lwork, float* rwork, int* info );
+   void gesvd( char jobu, char jobv, int m, int n, complex<float>* A, int lda,
+float* s, complex<float>* U, int ldu, complex<float>* V, int ldv,
+complex<float>* work, int lwork, float* rwork, int* info );
 
-   void gesvd( char jobu, char jobv, int m, int n, complex<double>* A, int lda, double* s, complex<double>* U, int ldu, complex<double>* V, int ldv, complex<double>* work, int lwork, double* rwork, int* info );
+   void gesvd( char jobu, char jobv, int m, int n, complex<double>* A, int lda,
+double* s, complex<double>* U, int ldu, complex<double>* V, int ldv,
+complex<double>* work, int lwork, double* rwork, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
-   void gesvd( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& s, char jobu, char jobv );
+   void gesvd( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& s, char jobu, char
+jobv );
 
    template< typename MT1, bool SO, typename MT2, typename VT, bool TF >
-   void gesvd( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U, DenseVector<VT,TF>& s, char jobu, char jobv );
+   void gesvd( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U,
+DenseVector<VT,TF>& s, char jobu, char jobv );
 
    template< typename MT1, bool SO, typename VT, bool TF, typename MT2 >
-   void gesvd( DenseMatrix<MT1,SO>& A, DenseVector<VT,TF>& s, DenseMatrix<MT2,SO>& V, char jobu, char jobv );
+   void gesvd( DenseMatrix<MT1,SO>& A, DenseVector<VT,TF>& s,
+DenseMatrix<MT2,SO>& V, char jobu, char jobv );
 
-   template< typename MT1, bool SO, typename MT2, typename VT, bool TF, typename MT3 >
-   void gesvd( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U, DenseVector<VT,TF>& s, DenseMatrix<MT3,SO>& V, char jobu, char jobv );
+   template< typename MT1, bool SO, typename MT2, typename VT, bool TF, typename
+MT3 > void gesvd( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U,
+DenseVector<VT,TF>& s, DenseMatrix<MT3,SO>& V, char jobu, char jobv );
 
    } // namespace blaze
    \endcode
 
-// Alternatively, the following functions can be used, which provide an interface to the LAPACK
-// functions \c sgesdd(), \c dgesdd(), \c cgesdd(), and \c zgesdd(). In contrast to the \c gesvd()
-// functions they compute the singular value decomposition (SVD) of the given general matrix by
-// applying a divide-and-conquer strategy for the computation of the left and right singular
+// Alternatively, the following functions can be used, which provide an
+interface to the LAPACK
+// functions \c sgesdd(), \c dgesdd(), \c cgesdd(), and \c zgesdd(). In contrast
+to the \c gesvd()
+// functions they compute the singular value decomposition (SVD) of the given
+general matrix by
+// applying a divide-and-conquer strategy for the computation of the left and
+right singular
 // vectors:
 
    \code
    namespace blaze {
 
-   void gesdd( char jobz, int m, int n, float* A, int lda, float* s, float* U, int ldu, float* V, int ldv, float* work, int lwork, int* iwork, int* info );
+   void gesdd( char jobz, int m, int n, float* A, int lda, float* s, float* U,
+int ldu, float* V, int ldv, float* work, int lwork, int* iwork, int* info );
 
-   void gesdd( char jobz, int m, int n, double* A, int lda, double* s, double* U, int ldu, double* V, int ldv, double* work, int lwork, int* iwork, int* info );
+   void gesdd( char jobz, int m, int n, double* A, int lda, double* s, double*
+U, int ldu, double* V, int ldv, double* work, int lwork, int* iwork, int* info
+);
 
-   void gesdd( char jobz, int m, int n, complex<float>* A, int lda, float* s, complex<float>* U, int ldu, complex<float>* V, int ldv, complex<float>* work, int lwork, float* rwork, int* iwork, int* info );
+   void gesdd( char jobz, int m, int n, complex<float>* A, int lda, float* s,
+complex<float>* U, int ldu, complex<float>* V, int ldv, complex<float>* work,
+int lwork, float* rwork, int* iwork, int* info );
 
-   void gesdd( char jobz, int m, int n, complex<double>* A, int lda, double* s, complex<double>* U, int ldu, complex<double>* V, int ldv, complex<double>* work, int lwork, double* rwork, int* iwork, int* info );
+   void gesdd( char jobz, int m, int n, complex<double>* A, int lda, double* s,
+complex<double>* U, int ldu, complex<double>* V, int ldv, complex<double>* work,
+int lwork, double* rwork, int* iwork, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
    void gesdd( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& s );
 
    template< typename MT1, bool SO, typename MT2, typename VT, bool TF >
-   void gesdd( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U, DenseVector<VT,TF>& s, char jobz );
+   void gesdd( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U,
+DenseVector<VT,TF>& s, char jobz );
 
    template< typename MT1, bool SO, typename MT2, typename VT, bool TF >
-   void gesdd( DenseMatrix<MT1,SO>& A, DenseVector<VT,TF>& s, DenseMatrix<MT2,SO>& V, char jobz );
+   void gesdd( DenseMatrix<MT1,SO>& A, DenseVector<VT,TF>& s,
+DenseMatrix<MT2,SO>& V, char jobz );
 
-   template< typename MT1, bool SO, typename MT2, typename VT, bool TF, typename MT3 >
-   void gesdd( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U, DenseVector<VT,TF>& s, DenseMatrix<MT3,SO>& V, char jobz );
+   template< typename MT1, bool SO, typename MT2, typename VT, bool TF, typename
+MT3 > void gesdd( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U,
+DenseVector<VT,TF>& s, DenseMatrix<MT3,SO>& V, char jobz );
 
    } // namespace blaze
    \endcode
@@ -12367,94 +15012,139 @@
 
                           \f[ A = U \cdot S \cdot V, \f]
 
-// where \a S is a \a m-by-\a n matrix, which is zero except for its min(\a m,\a n) diagonal
-// elements, \a U is an \a m-by-\a m orthogonal matrix, and \a V is a \a n-by-\a n orthogonal
-// matrix. The diagonal elements of \a S are the singular values of \a A, the first min(\a m,\a n)
-// columns of \a U and rows of \a V are the left and right singular vectors of \a A, respectively.
+// where \a S is a \a m-by-\a n matrix, which is zero except for its min(\a m,\a
+n) diagonal
+// elements, \a U is an \a m-by-\a m orthogonal matrix, and \a V is a \a n-by-\a
+n orthogonal
+// matrix. The diagonal elements of \a S are the singular values of \a A, the
+first min(\a m,\a n)
+// columns of \a U and rows of \a V are the left and right singular vectors of
+\a A, respectively.
 //
-// The resulting min(\a m,\a n) real and non-negative singular values are returned in descending
-// order in the vector \a s, which is resized to the correct size (if possible and necessary).
+// The resulting min(\a m,\a n) real and non-negative singular values are
+returned in descending
+// order in the vector \a s, which is resized to the correct size (if possible
+and necessary).
 //
-// Via the following functions, which wrap the LAPACK functions \c sgesvdx(), \c dgesvdx(),
-// \c cgesvdx(), and \c zgesvdx(), it is possible to compute a subset of singular values and/or
+// Via the following functions, which wrap the LAPACK functions \c sgesvdx(), \c
+dgesvdx(),
+// \c cgesvdx(), and \c zgesvdx(), it is possible to compute a subset of
+singular values and/or
 // vectors:
 
    \code
    namespace blaze {
 
-   void gesvdx( char jobu, char jobv, char range, int m, int n, float* A, int lda, float vl, float vu, int il, int iu, int* ns, float* s, float* U, int ldu, float* V, int ldv, float* work, int lwork, int* iwork, int* info );
+   void gesvdx( char jobu, char jobv, char range, int m, int n, float* A, int
+lda, float vl, float vu, int il, int iu, int* ns, float* s, float* U, int ldu,
+float* V, int ldv, float* work, int lwork, int* iwork, int* info );
 
-   void gesvdx( char jobu, char jobv, char range, int m, int n, double* A, int lda, double vl, double vu, int il, int iu, int* ns, double* s, double* U, int ldu, double* V, int ldv, double* work, int lwork, int* iwork, int* info );
+   void gesvdx( char jobu, char jobv, char range, int m, int n, double* A, int
+lda, double vl, double vu, int il, int iu, int* ns, double* s, double* U, int
+ldu, double* V, int ldv, double* work, int lwork, int* iwork, int* info );
 
-   void gesvdx( char jobu, char jobv, char range, int m, int n, complex<float>* A, int lda, float vl, float vu, int il, int iu, int* ns, float* s, complex<float>* U, int ldu, complex<float>* V, int ldv, complex<float>* work, int lwork, float* rwork, int* iwork, int* info );
+   void gesvdx( char jobu, char jobv, char range, int m, int n, complex<float>*
+A, int lda, float vl, float vu, int il, int iu, int* ns, float* s,
+complex<float>* U, int ldu, complex<float>* V, int ldv, complex<float>* work,
+int lwork, float* rwork, int* iwork, int* info );
 
-   void gesvdx( char jobu, char jobv, char range, int m, int n, complex<double>* A, int lda, double vl, double vu, int il, int iu, int* ns, double* s, complex<double>* U, int ldu, complex<double>* V, int ldv, complex<double>* work, int lwork, double* rwork, int* iwork, int* info );
+   void gesvdx( char jobu, char jobv, char range, int m, int n, complex<double>*
+A, int lda, double vl, double vu, int il, int iu, int* ns, double* s,
+complex<double>* U, int ldu, complex<double>* V, int ldv, complex<double>* work,
+int lwork, double* rwork, int* iwork, int* info );
 
    template< typename MT, bool SO, typename VT, bool TF >
    size_t gesvdx( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& s );
 
    template< typename MT, bool SO, typename VT, bool TF, typename ST >
-   size_t gesvdx( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& s, ST low, ST upp );
+   size_t gesvdx( DenseMatrix<MT,SO>& A, DenseVector<VT,TF>& s, ST low, ST upp
+);
 
    template< typename MT1, bool SO, typename MT2, typename VT, bool TF >
-   size_t gesvdx( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U, DenseVector<VT,TF>& s );
+   size_t gesvdx( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U,
+DenseVector<VT,TF>& s );
 
-   template< typename MT1, bool SO, typename MT2, typename VT, bool TF, typename ST >
-   size_t gesvdx( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U, DenseVector<VT,TF>& s, ST low, ST upp );
+   template< typename MT1, bool SO, typename MT2, typename VT, bool TF, typename
+ST > size_t gesvdx( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U,
+DenseVector<VT,TF>& s, ST low, ST upp );
 
    template< typename MT1, bool SO, typename VT, bool TF, typename MT2 >
-   size_t gesvdx( DenseMatrix<MT1,SO>& A, DenseVector<VT,TF>& s, DenseMatrix<MT2,SO>& V );
+   size_t gesvdx( DenseMatrix<MT1,SO>& A, DenseVector<VT,TF>& s,
+DenseMatrix<MT2,SO>& V );
 
-   template< typename MT1, bool SO, typename VT, bool TF, typename MT2, typename ST >
-   size_t gesvdx( DenseMatrix<MT1,SO>& A, DenseVector<VT,TF>& s, DenseMatrix<MT2,SO>& V, ST low, ST upp );
+   template< typename MT1, bool SO, typename VT, bool TF, typename MT2, typename
+ST > size_t gesvdx( DenseMatrix<MT1,SO>& A, DenseVector<VT,TF>& s,
+DenseMatrix<MT2,SO>& V, ST low, ST upp );
 
-   template< typename MT1, bool SO, typename MT2, typename VT, bool TF, typename MT3 >
-   size_t gesvdx( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U, DenseVector<VT,TF>& s, DenseMatrix<MT3,SO>& V );
+   template< typename MT1, bool SO, typename MT2, typename VT, bool TF, typename
+MT3 > size_t gesvdx( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U,
+DenseVector<VT,TF>& s, DenseMatrix<MT3,SO>& V );
 
-   template< typename MT1, bool SO, typename MT2, typename VT, bool TF, typename MT3, typename ST >
-   size_t gesvdx( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>& U, DenseVector<VT,TF>& s, DenseMatrix<MT3,SO>& V, ST low, ST upp );
+   template< typename MT1, bool SO, typename MT2, typename VT, bool TF, typename
+MT3, typename ST > size_t gesvdx( DenseMatrix<MT1,SO>& A, DenseMatrix<MT2,SO>&
+U, DenseVector<VT,TF>& s, DenseMatrix<MT3,SO>& V, ST low, ST upp );
 
    } // namespace blaze
    \endcode
 
-// The number of singular values to be computed is specified by the lower bound \a low and the
+// The number of singular values to be computed is specified by the lower bound
+\a low and the
 // upper bound \a upp, which either form an integral or a floating point range.
 //
-// In case \a low and \a upp form are of integral type, the function computes all singular values
-// in the index range \f$[low..upp]\f$. The \a num resulting real and non-negative singular values
-// are stored in descending order in the given vector \a s, which is either resized (if possible)
-// or expected to be a \a num-dimensional vector. The resulting left singular vectors are stored
-// in the given matrix \a U, which is either resized (if possible) or expected to be a
-// \a m-by-\a num matrix. The resulting right singular vectors are stored in the given matrix \a V,
-// which is either resized (if possible) or expected to be a \a num-by-\a n matrix.
+// In case \a low and \a upp form are of integral type, the function computes
+all singular values
+// in the index range \f$[low..upp]\f$. The \a num resulting real and
+non-negative singular values
+// are stored in descending order in the given vector \a s, which is either
+resized (if possible)
+// or expected to be a \a num-dimensional vector. The resulting left singular
+vectors are stored
+// in the given matrix \a U, which is either resized (if possible) or expected
+to be a
+// \a m-by-\a num matrix. The resulting right singular vectors are stored in the
+given matrix \a V,
+// which is either resized (if possible) or expected to be a \a num-by-\a n
+matrix.
 //
-// In case \a low and \a upp are of floating point type, the function computes all singular values
-// in the half-open interval \f$(low..upp]\f$. The resulting real and non-negative singular values
-// are stored in descending order in the given vector \a s, which is either resized (if possible)
-// or expected to be a min(\a m,\a n)-dimensional vector. The resulting left singular vectors are
-// stored in the given matrix \a U, which is either resized (if possible) or expected to be a
-// \a m-by-min(\a m,\a n) matrix. The resulting right singular vectors are stored in the given
-// matrix \a V, which is either resized (if possible) or expected to be a min(\a m,\a n)-by-\a n
+// In case \a low and \a upp are of floating point type, the function computes
+all singular values
+// in the half-open interval \f$(low..upp]\f$. The resulting real and
+non-negative singular values
+// are stored in descending order in the given vector \a s, which is either
+resized (if possible)
+// or expected to be a min(\a m,\a n)-dimensional vector. The resulting left
+singular vectors are
+// stored in the given matrix \a U, which is either resized (if possible) or
+expected to be a
+// \a m-by-min(\a m,\a n) matrix. The resulting right singular vectors are
+stored in the given
+// matrix \a V, which is either resized (if possible) or expected to be a min(\a
+m,\a n)-by-\a n
 // matrix.
 //
 // The functions fail if ...
 //
-//  - ... the given matrix \a U is a fixed size matrix and the dimensions don't match;
-//  - ... the given vector \a s is a fixed size vector and the size doesn't match;
-//  - ... the given matrix \a V is a fixed size matrix and the dimensions don't match;
+//  - ... the given matrix \a U is a fixed size matrix and the dimensions don't
+match;
+//  - ... the given vector \a s is a fixed size vector and the size doesn't
+match;
+//  - ... the given matrix \a V is a fixed size matrix and the dimensions don't
+match;
 //  - ... the given scalar values don't form a proper range;
 //  - ... the singular value decomposition fails.
 //
-// The first four functions report failure via the \c info argument, the remaining functions throw
+// The first four functions report failure via the \c info argument, the
+remaining functions throw
 // an exception in case of an error.
 //
 //
-// \n Previous: \ref blas_functions &nbsp; &nbsp; Next: \ref block_vectors_and_matrices \n
+// \n Previous: \ref blas_functions &nbsp; &nbsp; Next: \ref
+block_vectors_and_matrices \n
 */
 //*************************************************************************************************
 
-
-//**Block Vectors and Matrices*********************************************************************
+//**Block Vectors and
+//Matrices*********************************************************************
 /*!\page block_vectors_and_matrices Block Vectors and Matrices
 //
 // \tableofcontents
@@ -12463,8 +15153,10 @@
 // \n \section block_vectors_and_matrices_general General Concepts
 // <hr>
 //
-// In addition to fundamental element types, the \b Blaze library supports vectors and matrices
-// with non-fundamental element type. For instance, it is possible to define block matrices by
+// In addition to fundamental element types, the \b Blaze library supports
+vectors and matrices
+// with non-fundamental element type. For instance, it is possible to define
+block matrices by
 // using a matrix type as the element type:
 
    \code
@@ -12481,35 +15173,43 @@
    y = A * x;
    \endcode
 
-// The matrix/vector multiplication in this example runs fully parallel and uses vectorization
+// The matrix/vector multiplication in this example runs fully parallel and uses
+vectorization
 // for every inner matrix/vector multiplication and vector addition.
 //
 //
 // \n \section block_vectors_and_matrices_pitfalls Pitfalls
 // <hr>
 //
-// The only thing to keep in mind when using non-fundamental element types is that all operations
-// between the elements have to be well defined. More specifically, the size of vector and matrix
-// elements has to match. The attempt to combine two non-matching elements results in either a
-// compilation error (in case of statically sized elements) or an exception (for dynamically sized
+// The only thing to keep in mind when using non-fundamental element types is
+that all operations
+// between the elements have to be well defined. More specifically, the size of
+vector and matrix
+// elements has to match. The attempt to combine two non-matching elements
+results in either a
+// compilation error (in case of statically sized elements) or an exception (for
+dynamically sized
 // elements):
 
    \code
    DynamicVector< StaticVector<int,2UL> > a;
    DynamicVector< StaticVector<int,3UL> > b;
 
-   DynamicVector< DynamicVector<int> > c( a + b );  // Compilation error: element size doesn't match
-   \endcode
+   DynamicVector< DynamicVector<int> > c( a + b );  // Compilation error:
+element size doesn't match \endcode
 
-// Therefore please don't forget that dynamically sized elements (e.g. \c blaze::DynamicVector,
-// \c blaze::HybridVector, \c blaze::DynamicMatrix, \c blaze::HybridMatrix, ...) need to be sized
+// Therefore please don't forget that dynamically sized elements (e.g. \c
+blaze::DynamicVector,
+// \c blaze::HybridVector, \c blaze::DynamicMatrix, \c blaze::HybridMatrix, ...)
+need to be sized
 // accordingly upfront.
 //
 //
 // \n \section block_vectors_and_matrices_examples Examples
 // <hr>
 //
-// The first example demonstrates the multiplication between a statically sized block matrix
+// The first example demonstrates the multiplication between a statically sized
+block matrix
 // and a block vector:
 
    \code
@@ -12532,7 +15232,8 @@
    DynamicVector<V2,columnVector> y( A * x );
    \endcode
 
-// The second example shows the multiplication between a compressed block matrix with blocks of
+// The second example shows the multiplication between a compressed block matrix
+with blocks of
 // varying size and a compressed block vector:
 
    \code
@@ -12565,17 +15266,21 @@
    CompressedVector<V3,columnVector> y( A * x );
    \endcode
 
-// \n Previous: \ref lapack_functions &nbsp; &nbsp; Next: \ref intra_statement_optimization \n
+// \n Previous: \ref lapack_functions &nbsp; &nbsp; Next: \ref
+intra_statement_optimization \n
 */
 //*************************************************************************************************
 
-
-//**Intra-Statement Optimization*******************************************************************
+//**Intra-Statement
+//Optimization*******************************************************************
 /*!\page intra_statement_optimization Intra-Statement Optimization
 //
-// One of the prime features of the \b Blaze library is the automatic intra-statement optimization.
-// In order to optimize the overall performance of every single statement \b Blaze attempts to
-// rearrange the operands based on their types. For instance, the following addition of dense and
+// One of the prime features of the \b Blaze library is the automatic
+intra-statement optimization.
+// In order to optimize the overall performance of every single statement \b
+Blaze attempts to
+// rearrange the operands based on their types. For instance, the following
+addition of dense and
 // sparse vectors
 
    \code
@@ -12594,11 +15299,14 @@
    d3 = d1 + d2 + s1;  // <- Note that s1 and d2 have been rearranged
    \endcode
 
-// This order of operands is highly favorable for the overall performance since the addition of
-// the two dense vectors \c d1 and \c d2 can be handled much more efficiently in a vectorized
+// This order of operands is highly favorable for the overall performance since
+the addition of
+// the two dense vectors \c d1 and \c d2 can be handled much more efficiently in
+a vectorized
 // fashion.
 //
-// This intra-statement optimization can have a tremendous effect on the performance of a statement.
+// This intra-statement optimization can have a tremendous effect on the
+performance of a statement.
 // Consider for instance the following computation:
 
    \code
@@ -12610,11 +15318,16 @@
    y = A * B * x;
    \endcode
 
-// Since multiplications are evaluated from left to right, this statement would result in a
-// matrix/matrix multiplication, followed by a matrix/vector multiplication. However, if the
-// right subexpression is evaluated first, the performance can be dramatically improved since the
-// matrix/matrix multiplication can be avoided in favor of a second matrix/vector multiplication.
-// The \b Blaze library exploits this by automatically restructuring the expression such that the
+// Since multiplications are evaluated from left to right, this statement would
+result in a
+// matrix/matrix multiplication, followed by a matrix/vector multiplication.
+However, if the
+// right subexpression is evaluated first, the performance can be dramatically
+improved since the
+// matrix/matrix multiplication can be avoided in favor of a second
+matrix/vector multiplication.
+// The \b Blaze library exploits this by automatically restructuring the
+expression such that the
 // right multiplication is evaluated first:
 
    \code
@@ -12622,10 +15335,14 @@
    y = A * ( B * x );
    \endcode
 
-// Note however that although this intra-statement optimization may result in a measurable or
-// even significant performance improvement, this behavior may be undesirable for several reasons,
-// for instance because of numerical stability. Therefore, in case the order of evaluation matters,
-// the best solution is to be explicit and to separate a statement into several statements:
+// Note however that although this intra-statement optimization may result in a
+measurable or
+// even significant performance improvement, this behavior may be undesirable
+for several reasons,
+// for instance because of numerical stability. Therefore, in case the order of
+evaluation matters,
+// the best solution is to be explicit and to separate a statement into several
+statements:
 
    \code
    blaze::DynamicVector<double> d1, d2, d3;
@@ -12644,11 +15361,12 @@
 
    // ... Resizing and initialization
 
-   C = A * B;  // Compute the left-hand side matrix-matrix multiplication first ...
-   y = C * x;  // ... before the right-hand side matrix-vector multiplication
+   C = A * B;  // Compute the left-hand side matrix-matrix multiplication first
+... y = C * x;  // ... before the right-hand side matrix-vector multiplication
    \endcode
 
-// Alternatively, it is also possible to use the \c eval() function to fix the order of evaluation:
+// Alternatively, it is also possible to use the \c eval() function to fix the
+order of evaluation:
 
    \code
    blaze::DynamicVector<double> d1, d2, d3;

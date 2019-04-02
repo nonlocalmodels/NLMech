@@ -6,4 +6,4 @@
 #include "initialCondition.h"
 #include "../inp/decks/initialConditionDeck.h"
 
-loading::InitialCondition::InitialCondition(inp::InitialConditionDeck *deck){}
+loading::InitialCondition::InitialCondition(inp::InitialConditionDeck *deck) {}

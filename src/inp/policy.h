@@ -6,8 +6,8 @@
 #ifndef IO_POLICY_H
 #define IO_POLICY_H
 
-#include <vector>
 #include <string>
+#include <vector>
 
 // forward declaration of policy deck
 namespace inp {
@@ -20,7 +20,6 @@ namespace inp {
 class Policy {
 
 public:
-
   /**
    * \defgroup Methods to get and destroy instance
    */
@@ -56,14 +55,14 @@ public:
    * @param level Level of tag list
    * @param tag Tag to be appended to list
    */
-  void addToTags(size_t level, const std::string& tag);
+  void addToTags(size_t level, const std::string &tag);
 
   /*!
    * @brief Returns true/false depending on whether tag is found
    * @param tag Tag to search for
    * @return True/False
    */
-  bool populateData(const std::string& tag);
+  bool populateData(const std::string &tag);
 
   /*!
    * @brief Returns memory control flag
@@ -86,10 +85,10 @@ private:
   Policy(inp::PolicyDeck *deck);
 
   /*! @brief Private operator */
-  Policy(Policy const&);
+  Policy(Policy const &);
 
   /*! @brief Private operator */
-  const Policy & operator=(const Policy &);
+  const Policy &operator=(const Policy &);
 
   /*! @brief Private destructor */
   ~Policy();

@@ -6,18 +6,18 @@
 #ifndef MODEL_ABSTRACTIONS_H
 #define MODEL_ABSTRACTIONS_H
 
+#include <cstdlib>
 #include <hpx/config.hpp>
 #include <vector>
-#include <cstdlib>
 
-#include "../util/point.h"
 #include "../util/matrix.h"
+#include "../util/point.h"
 
-//namespace util {
+// namespace util {
 //
 // forward declaration
-//struct Point3;
-//struct SymMatrix3;
+// struct Point3;
+// struct SymMatrix3;
 //}
 
 //! Collection of models
@@ -27,11 +27,11 @@ namespace model {
 class Model {
 
 public:
-//  /*!
-//   * @brief Constructor
-//   * @param deck The input deck
-//   */
-//  Model();
+  //  /*!
+  //   * @brief Constructor
+  //   * @param deck The input deck
+  //   */
+  //  Model();
 
   /**
    * \defgroup Common methods
