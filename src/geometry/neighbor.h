@@ -3,8 +3,8 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef NEIGHBOR_H
-#define NEIGHBOR_H
+#ifndef GEOM_NEIGHBOR_H
+#define GEOM_NEIGHBOR_H
 
 #include <string>
 #include <vector>
@@ -14,10 +14,17 @@ namespace inp {
 struct NeighborDeck;
 }
 
-//! Collection of methods and database purely related to geometry
 namespace geometry {
 
-/*! @brief Methods and database associated to the mesh */
+/*! @brief A class to store neighbor list and provide access to the list
+ *
+ * Currently, nested vector is used for list. However, this is not memory
+ * efficient, as the vectors have small memory overhead and the total
+ * overhead then is N times the overhead of vector, where N is the number of
+ * nodes. When N is large, the total overhead becomes very large.
+ *
+ * @note Require further memory optimization.
+ */
 class Neighbor {
 
 public:
@@ -25,20 +32,16 @@ public:
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
    */
-  Neighbor(inp::NeighborDeck *deck);
+  explicit Neighbor(inp::NeighborDeck *deck);
 
 private:
-  /**
-   * \defgroup Mesh related data
-   */
-  /**@{*/
+  /*! @brief Interior flags deck */
+  inp::NeighborDeck *d_neighborDeck_p;
 
-  /*! @brief Vector of initial (reference) coordinates of nodes */
-  //  std::vector<double> d_nd;
-
-  /** @}*/
+  /*! @brief Vector of list of neighbors for each node */
+  std::vector<std::vector<size_t>> d_neighbors;
 };
 
 } // namespace geometry
 
-#endif // NEIGHBOR_H
+#endif // GEOM_NEIGHBOR_H

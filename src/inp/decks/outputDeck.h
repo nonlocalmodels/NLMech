@@ -3,19 +3,24 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef OUTPUTDECK_H
-#define OUTPUTDECK_H
+#ifndef INP_OUTPUTDECK_H
+#define INP_OUTPUTDECK_H
 
 #include <string>
 #include <vector>
 
 namespace inp {
 
+/**
+ * \ingroup Input
+ */
+/**@{*/
+
 /*! @brief Structure to read and store output data */
 struct OutputDeck {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
@@ -34,9 +39,12 @@ struct OutputDeck {
   /*! @brief Flag specifying debug level */
   size_t d_debug;
 
-  /*! @brief Flag specifying if element-node connectivity should not be
-   * dumped (for large mesh, writing this data creates trouble with vtk
-   * writer)
+  /*!
+   * @brief Flag specifying if element-node connectivity should not be
+   * dumped
+   *
+   * for large mesh, writing element-node connectivity using vtk writer
+   * creates problem.
    */
   bool d_performFEOut;
 
@@ -48,5 +56,8 @@ struct OutputDeck {
   OutputDeck() : d_dtOut(0), d_debug(0), d_performFEOut(true){};
 };
 
+/** @}*/
+
 } // namespace inp
-#endif // OUTPUTDECK_H
+
+#endif // INP_OUTPUTDECK_H

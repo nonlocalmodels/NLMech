@@ -11,26 +11,26 @@
 #include <stdlib.h>
 #include <vector>
 
+/*!
+ * @brief Collection of methods useful in simulation
+ *
+ * This namespace provides number of useful functions and struct definition.
+ *
+ * @sa Point3, Matrix3, SymMatrix3, compare, transformation
+ */
 namespace util {
 
 /*! @brief A structure to represent 3d vectors */
 struct Point3 {
 
-  /**
-   * \defgroup Data members
-   */
-  /**@{*/
-
-  /**< @brief the x coordinate */
+  /*! @brief the x coordinate */
   double d_x;
 
-  /**< @brief the y coordinate */
+  /*! @brief the y coordinate */
   double d_y;
 
-  /**< @brief the z coordinate */
+  /*! @brief the z coordinate */
   double d_z;
-
-  /** @}*/
 
   /*!
    * @brief Constructor
@@ -45,27 +45,21 @@ struct Point3 {
    */
   Point3(double x, double y, double z) : d_x(x), d_y(y), d_z(z){};
 
-  /**
-   * \defgroup Methods
-   */
-  /**@{*/
-
   /*!
    * @brief Computes the Euclidean length of the vector
-   * @return Euclidean length of the vector
+   * @return Length Euclidean length of the vector
    */
   double length() { return std::sqrt(d_x * d_x + d_y * d_y + d_z * d_z); }
 
   /*!
-   * @brief Computes the dot product with another point
-   * @return Dot product
+   * @brief Computes the dot product of this vector with another point
+   * @param b Another vector
+   * @return Value a dot product
    */
   double dot(Point3 b) { return d_x * b.d_x + d_y * b.d_y + d_z * b.d_z; }
 
-  /** @}*/
-
   /**
-   * @name group Operators
+   * @name Group operators
    */
   /**@{*/
 
@@ -159,7 +153,7 @@ struct Point3 {
 };
 
 /*!
- * Adds point b to point a inplace
+ * @brief Adds point b to point a inplace
  * @param a Point a
  * @param b Point b
  */
@@ -175,7 +169,7 @@ static inline void addInplace(std::vector<util::Point3> &a,
 }
 
 /*!
- * Subtracts point b to point a inplace
+ * @brief Subtracts point b to point a inplace
  * @param a Point a
  * @param b Point b
  */
@@ -191,9 +185,9 @@ static inline void subInplace(std::vector<util::Point3> &a,
 }
 
 /*!
- * Copys vector's a content to b
- * @param a Vector a
- * @param b Vector b
+ * @brief Copys vector's a content to b
+ * @param a vector of points
+ * @param b vector of points
  */
 inline void copy(std::vector<util::Point3> a, std::vector<util::Point3> &b) {
 
@@ -202,9 +196,11 @@ inline void copy(std::vector<util::Point3> a, std::vector<util::Point3> &b) {
 }
 
 /*!
- * Adds point b to point a and returns result
- * @param a Point a
- * @param b Point b
+ * @brief Adds vector of points b to vector of points a in a element wise
+ * manner
+ * @param a vector of points
+ * @param b vector of points
+ * @return Vector vector of point after element wise addition
  */
 inline std::vector<util::Point3> add(std::vector<util::Point3> a,
                                      std::vector<util::Point3> b) {
@@ -217,9 +213,11 @@ inline std::vector<util::Point3> add(std::vector<util::Point3> a,
 }
 
 /*!
- * Subtracts point b to point a and returns result
+ * @brief Subtracts vector of points b to vector of points a in a
+ * element-wise manner
  * @param a Point a
  * @param b Point b
+ * @return Vector vector of points after element-wise subtraction
  */
 inline std::vector<util::Point3> subb(std::vector<util::Point3> a,
                                       std::vector<util::Point3> b) {

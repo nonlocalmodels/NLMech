@@ -3,11 +3,12 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef MATERIALDECK_H
-#define MATERIALDECK_H
+#ifndef INP_MATERIALDECK_H
+#define INP_MATERIALDECK_H
 
 #include <cmath>
 #include <vector>
+#include <string>
 
 namespace inp {
 
@@ -15,14 +16,14 @@ namespace inp {
 struct MatData {
 
   /**
-   * \defgroup Elastic material properties
+   * @name Elastic material properties
    */
   /**@{*/
 
   /*! @brief Young's elastic modulus */
   double d_E;
 
-  /*! @brief Shear modulus or Lam'e second parameter */
+  /*! @brief Shear modulus or Lame second parameter */
   double d_G;
 
   /*! @brief Bulk modulus */
@@ -31,16 +32,16 @@ struct MatData {
   /*! @brief Poisson's ratio */
   double d_nu;
 
-  /*! @brief Lam'e first parameter */
+  /*! @brief Lame first parameter */
   double d_lambda;
 
-  /*! @brief Lam'e second parameter */
+  /*! @brief Lame second parameter */
   double d_mu;
 
   /** @}*/
 
   /**
-   * \defgroup Fracture properties
+   * @name Fracture properties
    */
   /**@{*/
 
@@ -60,8 +61,7 @@ struct MatData {
         d_Gc(0.){};
 
   /**
-   * \defgroup Methods to compute elastic property using given elastic
-   * properties
+   * @name Conversion methods
    */
   /**@{*/
 
@@ -82,22 +82,23 @@ struct MatData {
   double toK(double E, double nu) { return E / (3.0 * (1 - 2.0 * nu)); }
 
   /*!
-   * @brief Compute Lam'e first parameter lambda from Young's modulus K and
+   * @brief Compute Lame first parameter lambda from Young's modulus K
+   * and
    * Poisson's ratio nu
    * @param E Young's modulus
    * @param nu Poisson's ratio
-   * @return lambda Lam'e first parameter
+   * @return lambda Lame first parameter
    */
   double toLambdaE(double E, double nu) {
     return E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu));
   }
 
   /*!
-   * @brief Compute Lam'e first parameter lambda from Bulk modulus K and
+   * @brief Compute Lame first parameter lambda from Bulk modulus K and
    * Poisson's ratio nu
    * @param K Bulk modulus
    * @param nu Poisson's ratio
-   * @return lambda Lam'e first parameter
+   * @return lambda Lame first parameter
    */
   double toLambdaK(double K, double nu) { return 3.0 * K * nu / (1.0 + nu); }
 
@@ -129,16 +130,24 @@ struct MatData {
   /** @}*/
 };
 
+/**
+ * \ingroup Input
+ */
+/**@{*/
+
 /*! @brief Structure to read and store material related data */
 struct MaterialDeck {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
-  /*! @brief 2D type, either plane-stress (thin material) or plane-strain
-   * (very thick material)
+  /*!
+   * @brief 2D type
+   *
+   * - \a plane-stress -- thin material
+   * - \a plane-strain -- thick material
    */
   std::string d_2DType;
 
@@ -163,21 +172,20 @@ struct MaterialDeck {
   /*! @brief List of parameters for influence function */
   std::vector<double> d_influenceFnParams;
 
-  /*! @brief Flag for irreversible breaking of bonds. True means bond
-   * breaking is irreversible
+  /*!
+   * @brief Flag for irreversible breaking of bonds.
+   *
+   * True means bond breaking is irreversible.
    */
   bool d_irreversibleBondBreak;
 
   /*! @brief Flag for contribution to hydrostatic force from the broken bond */
   bool d_stateContributionFromBrokenBond;
 
-  /*! @brief Factor to check if bond is broken
-   */
+  /*! @brief Factor to check if bond is broken */
   double d_checkScFactor;
 
-  /*! @brief Specify if parameters should be computed from provided elastic
-   * material properties
-   */
+  /*! @brief Compute Peridynamic material properties from elastic properties */
   bool d_computeParamsFromElastic;
 
   /*! @brief List of elastic and fracture properties */
@@ -194,5 +202,8 @@ struct MaterialDeck {
         d_checkScFactor(1.), d_computeParamsFromElastic(true), d_matData(){};
 };
 
+/** @}*/
+
 } // namespace inp
-#endif // MATERIALDECK_H
+
+#endif // INP_MATERIALDECK_H

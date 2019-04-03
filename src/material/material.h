@@ -3,20 +3,29 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef MATERIAL_H
-#define MATERIAL_H
-
-#include <string>
-#include <vector>
+#ifndef MATERIAL_MATERIAL_H
+#define MATERIAL_MATERIAL_H
 
 // forward declaration of material deck
 namespace inp {
 struct MaterialDeck;
 }
 
+/*!
+ * @brief Collection of methods and database related to material
+ *
+ * This namespace provides collection of different materials within the
+ * Peridynamics theory.
+ *
+ * At present we have implemented state-based model which can also simulate
+ * bond-based model. We consider \b RNP regularized potential as well \b PMB
+ * material.
+ *
+ * @sa Material
+ */
 namespace material {
 
-/*! @brief Methods and database associated to the mesh */
+/*! @brief A class to model a peridynamic material */
 class Material {
 
 public:
@@ -24,13 +33,17 @@ public:
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
    */
-  Material(inp::MaterialDeck *deck);
+  explicit Material(inp::MaterialDeck *deck);
 
+  /*!
+   * @brief Returns true if state-based potential is active
+   * @return True/false
+   */
   bool isStateActive();
 
 private:
   /**
-   * \defgroup Mesh related data
+   * @name Internal data
    */
   /**@{*/
 
@@ -42,4 +55,4 @@ private:
 
 } // namespace material
 
-#endif // NEIGHBOR_H
+#endif // MATERIAL_MATERIAL_H

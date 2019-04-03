@@ -47,6 +47,73 @@ void debug_Input_setLoadingDeck() {
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+// MESH 1
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+  // check getElementConnectivity() method
+  for (size_t i=0; i<5; i++) {
+
+    size_t j = (i+1) * d_numElems/6;
+
+    // get connectivity using standard method
+    std::vector<size_t> j_con_1;
+    for (size_t k=0; k<d_eNumVertex; k++)
+      j_con_1.emplace_back(d_enc[j*d_eNumVertex + k]);
+
+    // get connectivity using function
+    std::vector<size_t> j_con_2 = getElementConnectivity(j);
+
+    if (j_con_1 != j_con_2)
+      std::cerr << "Error in connectivity of element = "<<j<<"\n";
+  }
+
+  std::cout<<"Num nodes = "<<d_nodes.size()<<" "<<d_enc.size()<<" "
+                                                                ""<<d_nec
+                                                                .size()<<"\n";
+
+ std::cout<<d_nodes[0].d_x<<" "<<d_nodes[0].d_y<<" "<<d_nodes[0].d_z<<"\n";
+  std::cout<<d_nodes[9].d_x<<" "<<d_nodes[9].d_y<<" "<<d_nodes[9].d_z<<"\n";
+
+    std::ofstream myfile("nodes.csv");
+  myfile.precision(6);
+  for (size_t i=0; i<10; i++)
+    myfile << i <<","<< d_nodes[i].d_x << "," << d_nodes[i].d_y << "," <<
+    d_nodes[i].d_z <<"\n";
+  myfile.close();
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+// MESH 2
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+
+// check fixity
+for (size_t i=0; i<d_fix.size(); i++) {
+
+if (!(d_fix[i] & FIX_X_MASK) and i%1000 == 0)
+std::cout << "x is free "<<d_fix[i]<<"\n";
+
+d_fix[i] |= FIX_X_MASK;
+
+if (d_fix[i] & FIX_X_MASK and i%1000 == 0)
+std::cout << "x is fixed "<<d_fix[i]<<"\n";
+
+if (!(d_fix[i] & FIX_Y_MASK) and i%1000 == 0)
+std::cout << "y is free "<<d_fix[i]<<"\n";
+
+d_fix[i] |= FIX_Y_MASK;
+
+if (d_fix[i] & FIX_Y_MASK and i%1000 == 0)
+std::cout << "y is fixed "<<d_fix[i]<<"\n";
+
+if (!(d_fix[i] & FIX_Z_MASK) and i%1000 == 0)
+std::cout << "z is free "<<d_fix[i]<<"\n";
+
+d_fix[i] |= FIX_Z_MASK;
+
+if (d_fix[i] & FIX_Z_MASK and i%1000 == 0)
+std::cout << "z is fixed "<<d_fix[i]<<"\n";
+
+}
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 // Debug bitwise operations
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 // Example program

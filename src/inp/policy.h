@@ -16,12 +16,27 @@ struct PolicyDeck;
 
 namespace inp {
 
-/*! @brief Methods and database associated to the mesh */
+/*! @brief A class to enforce certain policies to reduce memory loads
+ *
+ * This class introduces policies which restrict population (declaration) of
+ * post-processing data which are not important for running simulation and
+ * are postprocessing data.
+ *
+ * For example, if the simulation is large, this class will restrict
+ * population of data such as fracture energy, damage data, strain and stress
+ * data, etc.
+ *
+ * This class also enforces lumping approximation of mass matrix if the level
+ * of restriction is set to 2 or higher.
+ *
+ * The level of memory restriction can be set in the input file. Default
+ * value is 0 which means no restriction.
+ */
 class Policy {
 
 public:
   /**
-   * \defgroup Methods to get and destroy instance
+   * @name Get and destroy instance
    */
   /**@{*/
 
@@ -35,6 +50,7 @@ public:
    * @brief Returns the pointer to static class. Creates instance in its
    * first call
    * @param deck Input deck which contains user-specified information
+   * @return Policy instance of static class Policy
    */
   static Policy *getInstance(inp::PolicyDeck *deck);
 
@@ -46,7 +62,7 @@ public:
   /** @}*/
 
   /**
-   * \defgroup Methods to get and set tags from the list
+   * @name Setter method
    */
   /**@{*/
 
@@ -56,6 +72,13 @@ public:
    * @param tag Tag to be appended to list
    */
   void addToTags(size_t level, const std::string &tag);
+
+  /** @}*/
+
+  /**
+   * @name Getter method
+   */
+  /**@{*/
 
   /*!
    * @brief Returns true/false depending on whether tag is found
@@ -94,7 +117,7 @@ private:
   ~Policy();
 
   /**
-   * \defgroup Private methods
+   * @name Private methods
    */
   /**@{*/
 
@@ -104,7 +127,7 @@ private:
   /** @}*/
 
   /**
-   * \defgroup Data members
+   * @name Internal data
    */
   /**@{*/
 

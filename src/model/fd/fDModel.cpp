@@ -46,9 +46,15 @@ size_t model::FDModel::currentStep() { return d_n; }
 float model::FDModel::getEnergy() { return d_te - d_tw + d_tk; }
 
 void model::FDModel::initHObjects() {
+
   d_mesh_p = new fe::Mesh(d_input_p->getMeshDeck());
+
+  d_quadrature_p = new fe::Quadrature(d_input_p->getQuadratureDeck(),
+      d_mesh_p->getElementType());
+
   d_massMatrix_p = new fe::MassMatrix(d_input_p->getMassMatrixDeck());
-  d_quadrature_p = new fe::Quadrature(d_input_p->getQuadratureDeck());
+
+
   d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck());
   d_interiorFlags_p =
       new geometry::InteriorFlags(d_input_p->getInteriorFlagsDeck());
@@ -70,6 +76,8 @@ void model::FDModel::init() {
   size_t nnodes = d_mesh_p->getNumNodes();
   size_t ndofs = d_mesh_p->getNumDofs();
   size_t dim = d_mesh_p->getDimension();
+
+  return;
 
   // initialize major simulation data
   d_u = std::vector<util::Point3>(nnodes, util::Point3());

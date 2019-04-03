@@ -14,6 +14,7 @@ rw::reader::MshReader::MshReader(const std::string &filename)
 void rw::reader::MshReader::readMesh(size_t dim,
                                      std::vector<util::Point3> *nodes,
                                      size_t &element_type,
+                                     size_t &num_elem,
                                      std::vector<size_t> *enc,
                                      std::vector<std::vector<size_t>> *nec,
                                      std::vector<double> *volumes, bool is_fd) {
@@ -215,6 +216,9 @@ void rw::reader::MshReader::readMesh(size_t dim,
               mesh >> node_id;
           }
         } // element loop
+
+        // write the number of elements
+        num_elem = elem_counter;
 
         // read the $ENDELM delimiter
         std::getline(mesh, line);

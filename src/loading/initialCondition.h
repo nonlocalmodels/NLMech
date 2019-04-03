@@ -3,8 +3,8 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef INITIALCONDITION_H
-#define INITIALCONDITION_H
+#ifndef LOADING_INITIALCONDITION_H
+#define LOADING_INITIALCONDITION_H
 
 #include <string>
 #include <vector>
@@ -16,7 +16,12 @@ struct InitialConditionDeck;
 
 namespace loading {
 
-/*! @brief Methods and database associated to the mesh */
+/*!
+ * @brief A class to apply initial condition
+ *
+ * This class processes input data and provides method to apply initial
+ * condition.
+ */
 class InitialCondition {
 
 public:
@@ -24,11 +29,11 @@ public:
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
    */
-  InitialCondition(inp::InitialConditionDeck *deck);
+  explicit InitialCondition(inp::InitialConditionDeck *deck);
 
 private:
   /**
-   * \defgroup Mesh related data
+   * @name Internal data
    */
   /**@{*/
 
@@ -40,4 +45,4 @@ private:
 
 } // namespace loading
 
-#endif // NEIGHBOR_H
+#endif // LOADING_INITIALCONDITION_H

@@ -3,8 +3,8 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef INITIALCONDITIONDECK_H
-#define INITIALCONDITIONDECK_H
+#ifndef INP_INITIALCONDITIONDECK_H
+#define INP_INITIALCONDITIONDECK_H
 
 #include <string>
 #include <vector>
@@ -15,19 +15,20 @@ namespace inp {
 struct ICData {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
-  /*! @brief Filename from which initial velocity/displacement will
-   * be read
-   */
+  /*! @brief Filename (if any) to read velocity/displacement */
   std::string d_file;
 
-  /*! @brief Tag which specifies the type of formula to be used in
-   * computing initial condition.
-   * E.g. d_type = "constant" (for constant function), d_type = "file" (if
-   * read from file)
+  /*!
+   * @brief Tag specifying the formula to compute initial displacement and
+   * velocity
+   *
+   * Example:
+   *
+   * - \a constant -- for constant function
    */
   std::string d_type;
 
@@ -42,11 +43,16 @@ struct ICData {
   ICData() = default;
 };
 
+/**
+ * \ingroup Input
+ */
+/**@{*/
+
 /*! @brief Structure to read and store policy data */
 struct InitialConditionDeck {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
@@ -63,5 +69,9 @@ struct InitialConditionDeck {
    */
   InitialConditionDeck() : d_uICData(), d_vICData(){};
 };
+
+/** @}*/
+
 } // namespace inp
-#endif // INITIALCONDITIONDECK_H
+
+#endif // INP_INITIALCONDITIONDECK_H

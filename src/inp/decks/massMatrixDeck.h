@@ -10,17 +10,25 @@
 
 namespace inp {
 
+/**
+ * \ingroup Input
+ */
+/**@{*/
+
 /*! @brief Structure to read and store mass matrix related input data */
 struct MassMatrixDeck {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
-  /*! @brief Mass matrix approximation type.
-   * List of allowed values are: "exact" (no approximation), "lumped"
-   * (lumping of mass matrix)
+  /*!
+   * @brief Mass matrix approximation type
+   *
+   * List of allowed values are:
+   * - \a exact -- no approximation
+   * - \a lumped -- lumping of mass matrix
    */
   std::string d_MApproxType;
 
@@ -32,5 +40,8 @@ struct MassMatrixDeck {
   MassMatrixDeck() = default;
 };
 
+/** @}*/
+
 } // namespace inp
+
 #endif // INP_MASSMATRIXDECK_H

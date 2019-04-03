@@ -4,5 +4,3 @@
 // (See accompanying file LICENSE.txt)
 
 #include "writer.h"
-
-rw::Writer::Writer(){};

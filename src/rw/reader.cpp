@@ -58,21 +58,23 @@ void rw::reader::readCsvFile(const std::string& filename, size_t dim,
 
 void rw::reader::readVtuFile(const std::string &filename, size_t dim,
                  std::vector<util::Point3> *nodes, size_t &element_type,
-                 std::vector<size_t> *enc, std::vector<std::vector<size_t>> *nec,
+                 size_t &num_elem, std::vector<size_t> *enc,
+                 std::vector<std::vector<size_t>> *nec,
                  std::vector<double> *volumes, bool is_fd) {
 
   // call vtk reader
   rw::reader::VtkReader rdr = rw::reader::VtkReader(filename);
-  rdr.readMesh(dim, nodes, element_type, enc, nec, volumes, is_fd);
+  rdr.readMesh(dim, nodes, element_type, num_elem, enc, nec, volumes, is_fd);
   rdr.close();
 }
 
 void rw::reader::readMshFile(const std::string &filename, size_t dim,
-                             std::vector<util::Point3> *nodes, size_t &element_type,
-                             std::vector<size_t> *enc, std::vector<std::vector<size_t>> *nec,
-                             std::vector<double> *volumes, bool is_fd) {
+                 std::vector<util::Point3> *nodes, size_t &element_type,
+                 size_t &num_elem, std::vector<size_t> *enc,
+                 std::vector<std::vector<size_t>> *nec,
+                 std::vector<double> *volumes, bool is_fd) {
 
   // call vtk reader
   rw::reader::MshReader rdr = rw::reader::MshReader(filename);
-  rdr.readMesh(dim, nodes, element_type, enc, nec, volumes, is_fd);
+  rdr.readMesh(dim, nodes, element_type, num_elem, enc, nec, volumes, is_fd);
 }

@@ -3,34 +3,53 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef MODELDECK_H
-#define MODELDECK_H
+#ifndef INP_MODELDECK_H
+#define INP_MODELDECK_H
 
 #include <string>
 
 namespace inp {
 
+/**
+ * \ingroup Input
+ */
+/**@{*/
+
 /*! @brief Structure to read and store model related data input */
 struct ModelDeck {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
-  /*! @brief Simulation type.
-   * List of allowed values are: "", "explicit", "implicit"
+  /*!
+   * @brief Simulation type
+   *
+   * List of allowed values are:
+   * - \a explicit
+   * - \a implicit
    */
   std::string d_simType;
 
-  /*! @brief Tag for spatial discretization.
-   * List of allowed values are: "", "finite_difference",
-   * "weak_finite_element", "nodal_finite_element", "truss_finite_element"
+  /*!
+   * @brief Tag for spatial discretization
+   *
+   * List of allowed values are:
+   * - \a finite_difference
+   * - \a weak_finite_element
+   * - \a nodal_finite_element
+   * - \a truss_finite_element
    */
   std::string d_spatialDiscretization;
 
-  /*! @brief Tag for time discretization.
-   * List of allowed values are: "", "central_difference", "velocity_verlet"
+  /*!
+   * @brief Tag for time discretization
+   *
+   * List of allowed values are:
+   * - "" -- none
+   * - \a central_difference
+   * - \a velocity_verlet
    */
   std::string d_timeDiscretization;
 
@@ -49,8 +68,10 @@ struct ModelDeck {
   /*! @brief Horizon */
   double d_horizon;
 
-  /*! @brief Ratio of Horizon to mesh size.
-   * E.g. ratio = 4 means mesh size is 1/4th of horizon
+  /*!
+   * @brief Ratio of Horizon to mesh size
+   *
+   * E.g. ratio = 4 means mesh size is 1/4th of horizon.
    */
   int d_rh;
 
@@ -67,6 +88,8 @@ struct ModelDeck {
         d_h(0.){};
 };
 
+/** @}*/
+
 } // namespace inp
 
-#endif // MODELDECK_H
+#endif // INP_MODELDECK_H

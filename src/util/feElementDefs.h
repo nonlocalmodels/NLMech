@@ -8,6 +8,16 @@
 
 namespace util {
 
+/**
+ * \defgroup GlobalVars GlobalVars
+ */
+/**@{*/
+
+/**
+ * @name VTK Element types
+ */
+/**@{*/
+
 //*! @brief Element type (for vtk)  */
 //#define VTK_VERTEX 1                    // 1-node vertex
 //#define VTK_POLY_VERTEX 2               // n-node polygonal vertex no edges
@@ -40,6 +50,14 @@ static const int vtk_type_hexahedron = 12;
 static const int vtk_type_wedge = 13;
 static const int vtk_type_pyramid = 14;
 
+/*! @brief Map from element type to number of nodes (for vtk) */
+static int vtk_map_element_to_num_nodes[16] = {0, 1, -1, 2, -1, 3, -1, -1,
+                                               4, 4, 4,  8, 8,  6, 5,  -1};
+
+/**
+ * @name Gmsh Element types
+ */
+/**@{*/
 
 //*! @brief Element type (for gmsh)  */
 //#define MSH_LINE 1                      // 2-node line
@@ -67,6 +85,16 @@ static const int msh_type_traingle_second_order = 9;
 static const int msh_type_quadrangle_second_order = 10;
 static const int msh_type_vertex = 15;
 
+/*! @brief Map from element type to number of nodes (for msh) */
+static int msh_map_element_to_num_nodes[16] = {0, 2, 3,  4, 4, 8, 6, 5,
+                                               3, 6, 10, 0, 0, 0, 0, 1};
+
+/** @}*/
+
+/**
+ * @name Fixity mask
+ */
+/**@{*/
 
 /*! @brief boundary condition mask  */
 #define FREE_MASK 0x000
@@ -74,13 +102,10 @@ static const int msh_type_vertex = 15;
 #define FIX_Y_MASK 0x002
 #define FIX_Z_MASK 0x004
 
-/*! @brief Map from element type to number of nodes (for vtk) */
-static int vtk_map_element_to_num_nodes[16] = {0, 1, -1, 2, -1, 3, -1, -1, 4,
-                                               4, 4, 8, 8, 6, 5, -1};
+/** @}*/
 
-/*! @brief Map from element type to number of nodes (for msh) */
-static int msh_map_element_to_num_nodes[16] = {0, 2, 3, 4, 4, 8, 6, 5, 3,
-                                               6, 10, 0, 0, 0, 0, 1};
+/** @}*/
 
-}
-#endif // GLOBALDEFS_H
+} // namespace util
+
+#endif // UTIL_GLOBALDEFS_H

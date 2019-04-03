@@ -3,8 +3,8 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef LOADING_H
-#define LOADING_H
+#ifndef LOADING_LOADING_H
+#define LOADING_LOADING_H
 
 #include <string>
 #include <vector>
@@ -14,9 +14,27 @@ namespace inp {
 struct LoadingDeck;
 }
 
+/*!
+ * @brief Collection of methods and database related to loading
+ *
+ * This namespace provides methods and data members specific to application
+ * of displacement and force boundary condition and also initial condition.
+ *
+ * @sa Loading, InitialCondition
+ */
 namespace loading {
 
-/*! @brief Methods and database associated to the mesh */
+/*!
+ * @brief A class to apply displacement and force boundary condition
+ *
+ * In this class we process input data and apply complex boundary condition.
+ * The boundary conditions can be specified in multiple sets, and in each set
+ * one can specify the region where the boundary condition is to be applied,
+ * and the type of function to be used.
+ *
+ * This class also provides method to set the fixity of nodes as fixed if the
+ * displacement is specified on the dof of the node.
+ */
 class Loading {
 
 public:
@@ -28,7 +46,7 @@ public:
 
 private:
   /**
-   * \defgroup Mesh related data
+   * @name Internal data
    */
   /**@{*/
 
@@ -40,4 +58,4 @@ private:
 
 } // namespace loading
 
-#endif // NEIGHBOR_H
+#endif // LOADING_LOADING_H

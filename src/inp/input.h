@@ -8,7 +8,20 @@
 
 #include <string>
 
-//! Collection of methods performing read and write operations
+/*!
+ * @brief Collection of methods and database related to input
+ *
+ * This namespace provides methods and data members specific to reading input
+ * data. It provides struct definitions to read and store data. Each struct
+ * is unique and is used in initialization of higher level objects such as
+ * fe::Mesh, geometry::Fracture, material::Material, loading::Loading, etc.
+ *
+ * The namespace consists of Input and Policy member classes. Input class is
+ * the main class responsible of creating struct data and reading input file
+ * into those structs.
+ *
+ * @sa Input, Policy
+ */
 namespace inp {
 
 // forward declarations of decks
@@ -26,112 +39,123 @@ struct PolicyDeck;
 struct QuadratureDeck;
 struct SolverDeck;
 
-/*! @brief Class to read and store input data */
+/**
+ * \defgroup Input Input
+ *
+ * Group which reads and stores input data
+ */
+/**@{*/
+
+/*!
+ * @brief A class to read input file
+ *
+ * In this class we create struct data types, and read input file and store
+ * in the respective structs. The class depends on the YAML library.
+ */
 class Input {
 
 public:
   /*!
    * @brief Constructor
-   * @param Filename of input file
+   * @param filename of input file
    */
   explicit Input(const std::string &filename);
 
   /**
-   * \defgroup Accessor methods
+   * @name Accessor methods
    */
   /**@{*/
 
   /*!
-   * @brief Return the pointer to fracture deck
+   * @brief Get the pointer to fracture deck
    * @return Pointer to FractureDeck
    */
   inp::FractureDeck *getFractureDeck();
 
   /*!
-   * @brief Return the pointer to initial condition deck
+   * @brief Get the pointer to initial condition deck
    * @return Pointer to InitialConditionDeck
    */
   inp::InitialConditionDeck *getInitialConditionDeck();
 
   /*!
-   * @brief Return the pointer to interior flags deck
+   * @brief Get the pointer to interior flags deck
    * @return Pointer to InteriorFlagsDeck
    */
   inp::InteriorFlagsDeck *getInteriorFlagsDeck();
 
   /*!
-   * @brief Return the pointer to loading deck
+   * @brief Get the pointer to loading deck
    * @return Pointer to LoadingDeck
    */
   inp::LoadingDeck *getLoadingDeck();
 
   /*!
-   * @brief Return the pointer to mass matrix deck
+   * @brief Get the pointer to mass matrix deck
    * @return Pointer to MassMatrixDeck
    */
   inp::MassMatrixDeck *getMassMatrixDeck();
 
   /*!
-   * @brief Return the pointer to material deck
+   * @brief Get the pointer to material deck
    * @return Pointer to MaterialDeck
    */
   inp::MaterialDeck *getMaterialDeck();
 
   /*!
-   * @brief Return the pointer to mesh deck
+   * @brief Get the pointer to mesh deck
    * @return Pointer to GeometryDeck
    */
   inp::MeshDeck *getMeshDeck();
 
   /*!
-   * @brief Return the pointer to model deck
+   * @brief Get the pointer to model deck
    * @return Pointer to ModelDeck
    */
   inp::ModelDeck *getModelDeck();
 
   /*!
-   * @brief Return the pointer to neighbor list deck
+   * @brief Get the pointer to neighbor list deck
    * @return Pointer to NeighborDeck
    */
   inp::NeighborDeck *getNeighborDeck();
 
   /*!
-   * @brief Return the pointer to output deck
+   * @brief Get the pointer to output deck
    * @return Pointer to OutputDeck
    */
   inp::OutputDeck *getOutputDeck();
 
   /*!
-   * @brief Return the pointer to policy info deck
+   * @brief Get the pointer to policy info deck
    * @return Pointer to PolicyDeck
    */
   inp::PolicyDeck *getPolicyDeck();
 
   /*!
-   * @brief Return the pointer to quadrature deck
+   * @brief Get the pointer to quadrature deck
    * @return Pointer to QuadratureDeck
    */
   inp::QuadratureDeck *getQuadratureDeck();
 
   /*!
-   * @brief Return the pointer to solver deck
+   * @brief Get the pointer to solver deck
    * @return Pointer to SolverDeck
    */
   inp::SolverDeck *getSolverDeck();
 
-  /** @}*/
-
-  /**
-   * \defgroup Accessor methods which give a peak into the data of higher
-   * level data members
-   */
-  /**@{*/
 
   /*!
-   * @brief Return the name of spatial discretization.
-   * Return value can be of four kind: "finite_difference",
-   * "weak_finite_element", "nodal_finite_element", "truss_finite_element"
-   * @return Tag of spatial discretization
+   * @brief Get the name of spatial discretization
+   *
+   * Return value can be of four kind:
+   * - "" (none)
+   * - finite_difference
+   * - weak_finite_element
+   * - nodal_finite_element
+   * - truss_finite_element
+   *
+   * @return Tag
    */
   const std::string getSpatialDiscretization();
 
@@ -139,8 +163,9 @@ public:
 
 private:
   /**
-   * \defgroup Setter methods. Reads input file and fills the higher level
-   * objects
+   * @name Setter methods
+   *
+   * Reads input file into the respective structs
    */
   /**@{*/
 
@@ -212,7 +237,7 @@ private:
   /** @}*/
 
   /**
-   * \defgroup Internal data
+   * @name Internal data
    */
   /**@{*/
 
@@ -222,74 +247,101 @@ private:
   /** @}*/
 
   /**
-   * \defgroup Modular struct data containing input data
+   * @name Struct data
    */
   /**@{*/
 
-  /*! @brief Pointer to deck holding fracture related data.
+  /*!
+   * @brief Pointer to deck holding fracture related data
+   *
    * E.g. pre-crack location and orientation, crack-path update frequency,
    * etc
    */
   inp::FractureDeck *d_fractureDeck_p;
 
-  /*! @brief Pointer to deck holding initial condition related data.
+  /*!
+   * @brief Pointer to deck holding initial condition related data
+   *
    * E.g. initial condition function type for velocity and displacement,
    * parameters to compute initial condition function, projection method or
    * interpolation method, etc
    */
   inp::InitialConditionDeck *d_initialConditionDeck_p;
 
-  /*! @brief Pointer to deck holding interior flags information */
+  /*!
+   * @brief Pointer to deck holding interior flags information
+   */
   inp::InteriorFlagsDeck *d_interiorFlagsDeck_p;
 
-  /*! @brief Pointer to deck holding loading related data.
+  /*!
+   * @brief Pointer to deck holding loading related data.
+   *
    * E.g. displacement loading information, force loading information, etc
    */
   inp::LoadingDeck *d_loadingDeck_p;
 
-  /*! @brief Pointer to deck holding mass matrix calculation related data.
+  /*!
+   * @brief Pointer to deck holding mass matrix calculation related data
+   *
    * E.g. mass matrix approximation type
    */
   inp::MassMatrixDeck *d_massMatrixDeck_p;
 
-  /*! @brief Pointer to deck holding material related data.
+  /*!
+   * @brief Pointer to deck holding material related data
+   *
    * E.g. type of material, influence function information, parameters, etc
    */
   inp::MaterialDeck *d_materialDeck_p;
 
-  /*! @brief Pointer to deck holding geometry related data.
+  /*!
+   * @brief Pointer to deck holding geometry related data
+   *
    * E.g. dimension, discretization type, mesh file, etc
    */
   inp::MeshDeck *d_geometryDeck_p;
 
-  /*! @brief Pointer to deck holding problem related data.
+  /*!
+   * @brief Pointer to deck holding problem related data
+   *
    * E.g. type of simulation (central-difference, velocity-verlet, implicit)
    * etc
    */
   inp::ModelDeck *d_modelDeck_p;
 
-  /*! @brief Pointer to deck holding neighbor list related data.
+  /*!
+   * @brief Pointer to deck holding neighbor list related data
+   *
    * E.g. factor of safety, volume correction, etc
    */
   inp::NeighborDeck *d_neighborDeck_p;
 
-  /*! @brief Pointer to deck holding output related data.
+  /*!
+   * @brief Pointer to deck holding output related data
+   *
    * E.g. output frequency, output file format, output element-node
    * connectivity flag, etc
    */
   inp::OutputDeck *d_outputDeck_p;
 
-  /*! @brief Pointer to deck holding policy related data.
+  /*!
+   * @brief Pointer to deck holding policy related data
+   *
    * E.g. level of restriction in memory allocation, etc
    */
   inp::PolicyDeck *d_policyDeck_p;
 
-  /*! @brief Pointer to deck holding quadrature point approximation related
-   * data. E.g. order of approximation, order of approximation for mass matrix
+  /*!
+   * @brief Pointer to deck holding quadrature point approximation related
+   * data
+   *
+   * E.g. order of approximation, order of approximation for mass matrix
    */
   inp::QuadratureDeck *d_quadratureDeck_p;
 
-  /*! @brief Pointer to deck holding solver related data.
+  /*!
+   * @brief Pointer to deck holding solver related data
+   *
    * E.g. solver parameters like tolerance, maximum iterations, solver type,
    * etc
    */
@@ -297,6 +349,8 @@ private:
 
   /** @}*/
 };
+
+/** @}*/
 
 } // namespace inp
 

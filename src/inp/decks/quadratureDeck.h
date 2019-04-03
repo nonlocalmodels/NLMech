@@ -8,19 +8,25 @@
 
 namespace inp {
 
+/**
+ * \ingroup Input
+ */
+/**@{*/
+
 /*! @brief Structure to read and store quadrature point related input data */
 struct QuadratureDeck {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
   /*! @brief Order of quadrature point integration approximation */
   int d_quadOrder;
 
-  /*! @brief Order of quadrature point integration approximation for
-   * computation of mass matrix
+  /*!
+   * @brief Order of quadrature point integration approximation for
+   * mass matrix
    */
   int d_quadOrderM;
 
@@ -32,5 +38,8 @@ struct QuadratureDeck {
   QuadratureDeck() : d_quadOrder(0), d_quadOrderM(0){};
 };
 
+/** @}*/
+
 } // namespace inp
+
 #endif // INP_QUADRATUREDECK_H

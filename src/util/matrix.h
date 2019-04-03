@@ -12,35 +12,35 @@ namespace util {
 struct Matrix3 {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
-  /**< @brief the xx component */
+  /*! @brief the xx component */
   float d_xx;
 
-  /**< @brief the xy component */
+  /*! @brief the xy component */
   float d_xy;
 
-  /**< @brief the xz component */
+  /*! @brief the xz component */
   float d_xz;
 
-  /**< @brief the yx component */
+  /*! @brief the yx component */
   float d_yx;
 
   /**< @brief the yy component */
   float d_yy;
 
-  /**< @brief the yz component */
+  /*! @brief the yz component */
   float d_yz;
 
-  /**< @brief the zx component */
+  /*! @brief the zx component */
   float d_zx;
 
-  /**< @brief the zy component */
+  /*! @brief the zy component */
   float d_zy;
 
-  /**< @brief the zz component */
+  /*! @brief the zz component */
   float d_zz;
 
   /** @}*/
@@ -57,26 +57,26 @@ struct Matrix3 {
 struct SymMatrix3 {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
-  /**< @brief the xx component */
+  /*! @brief the xx component */
   float d_xx;
 
-  /**< @brief the yy component */
+  /*! @brief the yy component */
   float d_yy;
 
-  /**< @brief the zz component */
+  /*! @brief the zz component */
   float d_zz;
 
-  /**< @brief the xy (yx) component */
+  /*! @brief the xy (yx) component */
   float d_xy;
 
-  /**< @brief the xz (zx) component */
+  /*! @brief the xz (zx) component */
   float d_xz;
 
-  /**< @brief the yz (zy) component */
+  /*! @brief the yz (zy) component */
   float d_yz;
 
   /** @}*/
@@ -89,4 +89,4 @@ struct SymMatrix3 {
 
 } // namespace util
 
-#endif
+#endif // UTIL_MATRIX_H

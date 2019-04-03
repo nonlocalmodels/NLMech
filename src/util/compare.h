@@ -3,8 +3,8 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef COMPARE_H
-#define COMPARE_H
+#ifndef UTIL_COMPARE_H
+#define UTIL_COMPARE_H
 
 // Assign tolerance for comparison
 #define COMPARE_EPS 1e-5
@@ -54,4 +54,4 @@ bool definitelyLessThan(const double &a, const double &b);
 
 } // namespace util
 
-#endif
+#endif // UTIL_COMPARE_H

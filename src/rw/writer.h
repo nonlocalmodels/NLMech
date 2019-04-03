@@ -8,13 +8,14 @@
 
 namespace rw {
 
-class Writer {
-public:
-  Writer();
-
-private:
-  int a;
-};
+/*!
+ * @brief Collection of methods and database related to writing
+ *
+ * This namespace provides methods and data members specific to wiriting of
+ * the mesh data and simulation data. Currently, .vtu is supported.
+ */
+namespace writer {} // namespace writer
 
 } // namespace rw
-#endif // WRITER_H
+
+#endif // RW_WRITER_H

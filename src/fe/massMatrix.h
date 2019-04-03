@@ -3,10 +3,6 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-//
-// Created by prashant on 4/1/19.
-//
-
 #ifndef FE_MASSMATRIX_H
 #define FE_MASSMATRIX_H
 
@@ -18,6 +14,23 @@ struct MassMatrixDeck;
 }
 
 namespace fe {
+
+/*! @brief A class for mass matrix
+ *
+ * In this class we compute and store inverse of a mass matrix. We can either
+ * compute exact mass matrix and its inverse (using Blaze library) or we can
+ * use row-sum approximation (lumping) to approximate the matrix as diagonal
+ * matrix.
+ *
+ * User can specify the order of quadrature approximation in computation of
+ * elements of mass matrix.
+ *
+ * @note This class is needed only when the discretization is of
+ * weak_finite_element type. It depends on the Mesh::d_gMap and Mesh::d_gInvMap
+ * of Mesh class.
+ *
+ */
+
 class MassMatrix {
 
 public:
@@ -28,20 +41,31 @@ public:
   explicit MassMatrix(inp::MassMatrixDeck *deck);
 
 private:
+  /*! @brief Mass matrix deck
+   *
+   * Deck contains information such as order of quadrature approximation and
+   * type of approximation to be used for mass matrix.
+   *
+   * @sa inp::MassMatrixDeck
+   * */
+  inp::MassMatrixDeck *d_massMatrixDeck_p;
+
   /**
-   * \defgroup Mass matrix
+   * @name Mass matrix
    */
   /**@{*/
 
-  /*! @brief Mass matrix deck */
-  inp::MassMatrixDeck *d_massMatrixDeck_p;
-
-  /*! @brief Inverse of diagonal mass matrix stored in a vector */
+  /*! @brief Inverse of a diagonal mass matrix stored in a vector */
   std::vector<double> d_invMDiag;
 
-  /*! @brief Inverse of exact mass matrix stored in a Blaze matrix data type.
-   * We store data in float to reduce memory load. However if results appear
-   * to be not so accurate, this should be changed to double
+  /*! @brief Inverse of exact mass matrix stored
+   *
+   * We use Blaze matrix data type.
+   *
+   * Currently we use float for each element of matrix to reduce the memory
+   * load.
+   *
+   * @sa util::SymMatrixFij
    */
   util::SymMatrixFij d_invM;
 

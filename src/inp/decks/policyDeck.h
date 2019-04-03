@@ -3,22 +3,32 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef POLICYDECK_H
-#define POLICYDECK_H
+#ifndef INP_POLICYDECK_H
+#define INP_POLICYDECK_H
 
 #include <vector>
 
 namespace inp {
 
+/**
+ * \ingroup Input
+ */
+/**@{*/
+
 /*! @brief Structure to read and store policy related input data */
 struct PolicyDeck {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
-  /*! @brief Flag which indicates level of memory control to be enforced */
+  /*!
+   * @brief Flag which indicates level of memory control to be enforced
+   *
+   * Default is 0 which means no control. Max at present is 2 which means as
+   * much control as possible.
+   */
   int d_memControlFlag;
 
   /** @}*/
@@ -29,5 +39,8 @@ struct PolicyDeck {
   PolicyDeck() : d_memControlFlag(0){};
 };
 
+/** @}*/
+
 } // namespace inp
-#endif // POLICYDECK_H
+
+#endif // INP_POLICYDECK_H

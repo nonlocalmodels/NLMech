@@ -3,27 +3,28 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef INTERIORFLAGSDECK_H
-#define INTERIORFLAGSDECK_H
+#ifndef INP_INTERIORFLAGSDECK_H
+#define INP_INTERIORFLAGSDECK_H
 
 namespace inp {
 
-/*! @brief Structure to read and store interior flags (no-fail region) related
- * input data
+/**
+ * \ingroup Input
  */
+/**@{*/
+
+/*! @brief Structure to read and store interior flags (no-fail region) */
 struct InteriorFlagsDeck {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
   /*! @brief Flag which indicates if no-fail region is active */
   bool d_noFailActive;
 
-  /*! @brief Tolerance to compare which nodes fall in interior and which
-   * fall in exterior
-   */
+  /*! @brief Tolerance to decide if the point is in interior/exterior */
   double d_noFailTol;
 
   /** @}*/
@@ -34,5 +35,8 @@ struct InteriorFlagsDeck {
   InteriorFlagsDeck() : d_noFailActive(false), d_noFailTol(0.){};
 };
 
+/** @}*/
+
 } // namespace inp
-#endif // INTERIORFLAGSDECK_H
+
+#endif // INP_INTERIORFLAGSDECK_H

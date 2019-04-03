@@ -3,38 +3,41 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef MODEL_ABSTRACTIONS_H
-#define MODEL_ABSTRACTIONS_H
+#ifndef MODEL_MODEL_H
+#define MODEL_MODEL_H
 
 #include <cstdlib>
 #include <hpx/config.hpp>
 #include <vector>
 
-#include "../util/matrix.h"
-#include "../util/point.h"
+#include "../util/matrix.h" // definition of SymMatrix3
+#include "../util/point.h"  // definition of Point3
 
-// namespace util {
-//
-// forward declaration
-// struct Point3;
-// struct SymMatrix3;
-//}
-
-//! Collection of models
+/*!
+ * @brief Collection of Peridynamic models
+ *
+ * This namespace provides collection of Peridynamic models. Depending on the
+ * spatial discretization, e.g. finite difference, weak finite element, nodal
+ * finite element, and truss finite element, we get different implementation
+ * of model.
+ *
+ * E.g., in FDModel we implement finite difference discretization with
+ * explicit time integration of Peridynamic equation.
+ *
+ * @sa FDModel
+ */
 namespace model {
 
-/*! @brief Abstraction of a model */
+/*!
+ * @brief A base class for different models
+ *
+ * This class provides a base for specific models, such as FDModel.
+ */
 class Model {
 
 public:
-  //  /*!
-  //   * @brief Constructor
-  //   * @param deck The input deck
-  //   */
-  //  Model();
-
   /**
-   * \defgroup Common methods
+   * @name Common methods
    */
   /**@{*/
 
@@ -54,7 +57,21 @@ public:
 
 protected:
   /**
-   * \defgroup Major simulation data
+   * @name Major simulation data
+   *
+   * Major simulation data are those which play direct role in the simulation
+   * and without declaring these simulation will not work. For Peridynamics,
+   * displacement at current time, velocity at current time, and total force
+   * are the major simulation data.
+   *
+   * For state-based peridynamics, we also need hydrostatic strain at current
+   * time. If we choose we can remove this data from major simulation list,
+   * however, this will increase the computational load.
+   *
+   * In addition to major simulation data listed here, there are data in
+   * other classes, for example nodal data fe::Mesh::d_nodes in fe::Mesh,
+   * which are also necessary for the simulation.
+   *
    */
   /**@{*/
 
@@ -76,9 +93,11 @@ protected:
   /** @}*/
 
   /**
-   * \defgroup Minor simulation data
-   * These data are postprocessing data and have no role in simulation.
-   * Use "float" to store values.
+   * @name Minor simulation data
+   *
+   * These datas are postprocessing data and have no role in simulation.
+   * Since they do not play direct role in simulation, we can compromise in
+   * their accuracy and use 'float' instead of 'double'.
    */
   /**@{*/
 
@@ -88,10 +107,10 @@ protected:
   /*! @brief Work done on each of the nodes */
   std::vector<float> d_w;
 
-  /*! @brief Damage function \phi at the nodes */
+  /*! @brief Damage function \f$ \phi \f$ at the nodes */
   std::vector<float> d_phi;
 
-  /*! @brief Damage function Z at the nodes */
+  /*! @brief Damage function \f$ Z \f$ at the nodes */
   std::vector<float> d_Z;
 
   /*! @brief Fracture energy of the nodes */
@@ -126,4 +145,4 @@ protected:
 
 } // namespace model
 
-#endif
+#endif // MODEL_MODEL_H

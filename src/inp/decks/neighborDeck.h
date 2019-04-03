@@ -3,23 +3,32 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef NEIGHBORDECK_H
-#define NEIGHBORDECK_H
+#ifndef INP_NEIGHBORDECK_H
+#define INP_NEIGHBORDECK_H
 
 namespace inp {
+
+/**
+ * \ingroup Input
+ */
+/**@{*/
 
 /*! @brief Structure to read and store neighbor list related input data */
 struct NeighborDeck {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
   /*! @brief Safety factor for neighbor list calculation */
   double d_safetyFactor;
 
-  /*! @brief Flag which specifies if the partially inside nodes (elements if
+  /*!
+   * @brief Flag to include partially inside nodes in neighbor list
+   *
+   *
+   * Flag which specifies if the partially inside nodes (elements if
    * the discretization is weak finite element) should be included in the
    * neighbor list
    */
@@ -33,5 +42,8 @@ struct NeighborDeck {
   NeighborDeck() : d_safetyFactor(1.0), d_addPartialElems(false){};
 };
 
+/** @}*/
+
 } // namespace inp
-#endif // NEIGHBORDECK_H
+
+#endif // INP_NEIGHBORDECK_H

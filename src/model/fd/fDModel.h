@@ -3,8 +3,8 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef FDMODEL_H
-#define FDMODEL_H
+#ifndef MODEL_FDMODEL_H
+#define MODEL_FDMODEL_H
 
 #include <hpx/config.hpp>
 #include <vector>
@@ -39,11 +39,38 @@ class Loading;
 
 namespace material {
 class Material;
-}
+} // namespace material
 
 namespace model {
 
-/*! @brief Implements finite difference discretization of Peridynamics */
+/**
+ * \defgroup Explicit Explicit
+ */
+/**@{*/
+
+/*! @brief A class for \a finite \a difference \a approximation of
+ * \b Peridynamics
+ *
+ * In this class we implement the \a finite \a difference \a approximation of
+ * \b peridynamics.
+ *
+ * We consider \a explicit \a scheme such as \a central \a difference and
+ * \a velocity \a verlet for time integration.
+ *
+ * This class acts as a link to lower rank classes, such as Mesh, Loading,
+ * InitialCondition, Fracture, etc, and uses the methods and data of the
+ * lower rank classes to run simulations.
+ *
+ * @note 1. We can run finite difference on any finite element mesh as long as
+ * mesh consists of only one type of elements. Therefore, we are restricted
+ * to run finite difference simulation only on uniform grids. User can
+ * prepare a mesh using \b Gmsh and use its .msh file to run the finite
+ * difference approximation.
+ *
+ * @note 2. Currently only dimension 2 is supported.
+ *
+ * @note 3. Either triangle or quadrangle element mesh are supported.
+ */
 class FDModel : public Model {
 
 public:
@@ -54,7 +81,7 @@ public:
   explicit FDModel(inp::Input *deck);
 
   /**
-   * \defgroup Method providing view of the state of the Model
+   * @name Common methods
    */
   /**@{*/
 
@@ -74,7 +101,7 @@ public:
 
 private:
   /**
-   * \defgroup Methods to initialize the data
+   * @name Methods to initialize the data
    */
   /**@{*/
 
@@ -91,7 +118,7 @@ private:
   /** @}*/
 
   /**
-   * \defgroup Methods to implement explicit time integration
+   * @name Methods to implement explicit time integration
    */
   /**@{*/
 
@@ -113,11 +140,12 @@ private:
   /** @}*/
 
   /**
-   * \defgroup Methods to apply boundary condition and initial condition
+   * @name Methods to apply boundary condition and initial condition
    */
   /**@{*/
 
-  /*! @brief Performs setup of boundary condition, such as filling node ids
+  /*!
+   * @brief Performs setup of boundary condition, such as filling node ids
    * in loading object and setting of fixity of nodes
    */
   void setupBoundaryCondition();
@@ -140,7 +168,7 @@ private:
   /** @}*/
 
   /**
-   * \defgroup Methods to handle output and debug
+   * @name Methods to handle output and debug
    */
   /**@{*/
 
@@ -151,7 +179,7 @@ private:
 
   /*!
    * @brief Performs debug operations and outputs message to the screen
-   * @param Energy at previous time step
+   * @param e_old at previous time step
    */
   void debug(float e_old);
 
@@ -159,67 +187,86 @@ private:
 
 private:
   /**
-   * \defgroup High level objects as member data
+   * @name Data: High level objects
    */
   /**@{*/
 
-  /*! @brief Pointer to Mass matrix object containing mass matrix (if any) */
+  /*!
+   * @brief Pointer to Mass matrix object containing mass matrix (if any)
+   *
+   * @sa MassMatrix
+   */
   fe::MassMatrix *d_massMatrix_p;
 
-  /*! @brief Pointer to Mesh object containing list of node,
-   * element-node connectivity and other fem related information
+  /*!
+   * @brief Pointer to Mesh object
+   *
+   * @sa Mesh
    */
   fe::Mesh *d_mesh_p;
 
-  /*! @brief Pointer to Quadrature object providing methods for quadrature
-   * point approximation of integration */
+  /*!
+   * @brief Pointer to Quadrature object
+   *
+   * @sa Quadrature
+   */
   fe::Quadrature *d_quadrature_p;
 
-  /*! @brief Pointer to Fracture object containing fracture state
-   * information of each interacting bond
+  /*!
+   * @brief Pointer to Fracture object
+   *
+   * @sa Fracture
    */
   geometry::Fracture *d_fracture_p;
 
-  /*! @brief Pointer to Neighbor object containing list of neighboring nodes
-   * for each node
+  /*!
+   * @brief Pointer to Neighbor object
+   *
+   * @sa Neighbor
    */
   geometry::Neighbor *d_neighbor_p;
 
-  /*! @brief Pointer to InteriorFlags object containing flags indicating
-   * whether the nodes are in the interior or near the boundary
+  /*! @brief Pointer to InteriorFlags object
+   *
+   * @sa InteriorFlags
    */
   geometry::InteriorFlags *d_interiorFlags_p;
 
-  /*! @brief Pointer to Input object containing all data specified in input
-   * files
+  /*! @brief Pointer to Input object
+   *
+   * @sa Input
    */
   inp::Input *d_input_p;
 
-  /*! @brief Pointer to Policy object which implements the policies in the
-   * code. E.g. whether to allocate space for minor simulation data, whether
-   * to allocate space for interior flags, etc
+  /*! @brief Pointer to Policy object
+   *
+   * @sa Policy
    */
   inp::Policy *d_policy_p;
 
-  /*! @brief Pointer to InitialCondition object which handles application of
-   * initial condition to velocity and displacement
+  /*! @brief Pointer to InitialCondition object
+   *
+   * @sa InitialCondition
    */
   loading::InitialCondition *d_initialCondition_p;
 
-  /*! @brief Pointer to Loading object which handles application of
-   * displacement and force boundary conditions
+  /*! @brief Pointer to Loading object
+   *
+   * @sa Loading
    */
   loading::Loading *d_loading_p;
 
-  /*! @brief Pointer to Material object which provides the method to compute
-   * forces between interacting bonds (bond-based peridynamics), and forces due
-   * to the hydrostatic strain (state-based peridynamic)
+  /*! @brief Pointer to Material object
+   *
+   * @sa Material
    */
   material::Material *d_material_p;
 
   /** @}*/
 };
 
+/** @}*/
+
 } // namespace model
 
-#endif // FDMODEL_H
+#endif // MODEL_FDMODEL_H

@@ -3,19 +3,24 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef SOLVERDECK_H
-#define SOLVERDECK_H
+#ifndef INP_SOLVERDECK_H
+#define INP_SOLVERDECK_H
 
 #include <iostream> // error handling
 #include <vector>
 
 namespace inp {
 
+/**
+ * \ingroup Input
+ */
+/**@{*/
+
 /*! @brief Structure to read and store solver related input data */
 struct SolverDeck {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
@@ -36,5 +41,8 @@ struct SolverDeck {
   SolverDeck() : d_maxIters(0), d_tol(0.){};
 };
 
+/** @}*/
+
 } // namespace inp
-#endif // SOLVERDECK_H
+
+#endif // INP_SOLVERDECK_H

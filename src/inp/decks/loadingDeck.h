@@ -3,8 +3,8 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef LOADINGDECK_H
-#define LOADINGDECK_H
+#ifndef INP_LOADINGDECK_H
+#define INP_LOADINGDECK_H
 
 #include <iostream> // error handling
 #include <vector>
@@ -15,26 +15,41 @@ namespace inp {
 struct BCData {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
-  /*! @brief Tag specifying the type of region over which the bc will be
-   * applied.
-   * List of allowed values are: "rectangle" and "angled_rectangle"
+  /*!
+   * @brief Type of region over which the bc will be applied
+   *
+   * List of allowed values are:
+   *
+   * - \a rectangle
+   * - \a angled_rectangle
    */
   std::string d_regionType;
 
-  /*! @brief Tag which specifies the formula of boundary condition with
-   * respect to time.
-   * List of allowed values are: "", "constant", "linear", "linear_step",
-   * "linear_slow_fast"
+  /*!
+   * @brief Name of the formula with respect to time
+   *
+   * List of allowed values are:
+   * - "" (none)
+   * - \a constant
+   * - \a linear
+   * - \a linear_step
+   * - \a linear_slow_fast
    */
   std::string d_timeFnType;
 
-  /*! @brief Tag which specifies the formula of boundary condition with
-   * respect to spatial coordinate.
-   * List of allowed values are: "", "constant", "hat_x", "hat_y", "sin"
+  /*!
+   * @brief Name of the formula of with respect to spatial coordinate
+   *
+   * List of allowed values are:
+   * - "" (none)
+   * - \a constant
+   * - \a hat_x
+   * - \a hat_y
+   * - \a sin
    */
   std::string d_spatialFnType;
 
@@ -50,15 +65,15 @@ struct BCData {
   /*! @brief Y coordinate of right-top point of rectangle/angled rectangle */
   double d_y2;
 
-  /*! @brief Angle of the rectangle in case the region is of angled rectangle
-   * type
-   */
+  /*! @brief Angle of the rectangle (for angled rectangle) */
   double d_theta;
 
-  /*! @brief List of dofs on which this bc will be applied.
+  /*!
+   * @brief List of dofs on which this bc will be applied
+   *
    * E.g. if bc is only applied on x-component, d_direction will be 1. If
    * bc is applied on x- and y-component, d_direction will be vector with
-   * elements 1 and 2
+   * elements 1 and 2.
    */
   std::vector<int> d_direction;
 
@@ -76,11 +91,16 @@ struct BCData {
   BCData() : d_x1(0.), d_y1(0.), d_x2(0.), d_y2(0.), d_theta(0.){};
 };
 
+/**
+ * \ingroup Input
+ */
+/**@{*/
+
 /*! @brief Structure to read and store policy data */
 struct LoadingDeck {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
@@ -98,5 +118,8 @@ struct LoadingDeck {
   LoadingDeck() = default;
 };
 
+/** @}*/
+
 } // namespace inp
-#endif // LOADINGDECK_H
+
+#endif // INP_LOADINGDECK_H

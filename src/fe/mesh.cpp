@@ -7,8 +7,10 @@
 #include "../inp/decks/meshDeck.h"
 #include "../inp/policy.h"
 #include "../rw/reader.h"
+#include "../util/feElementDefs.h"
 #include <fstream>
 #include <iostream>
+#include <stdint.h>
 
 fe::Mesh::Mesh(inp::MeshDeck *deck)
     : d_numNodes(0), d_numElems(0), d_eType(0), d_eNumVertex(0), d_numDofs(0) {
@@ -41,16 +43,16 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
 
   // update policy for data population
   if (d_spatialDiscretization == "weak_finite_element")
-    inp::Policy::getInstance()->addToTags(1, "Geometry_d_vol");
+    inp::Policy::getInstance()->addToTags(1, "Mesh_d_vol");
 
   // read mesh data from file
-  readFile(d_filename);
+  createData(d_filename);
 };
 
 //
 // Utility functions
 //
-void fe::Mesh::readFile(std::string filename) {
+void fe::Mesh::createData(std::string filename) {
 
   int file_type = -1;
 
@@ -69,6 +71,7 @@ void fe::Mesh::readFile(std::string filename) {
     exit(1);
   }
 
+  //
   bool is_fd = false;
   if (d_spatialDiscretization == "finite_difference")
     is_fd = true;
@@ -76,26 +79,34 @@ void fe::Mesh::readFile(std::string filename) {
   if (file_type == 0)
     rw::reader::readCsvFile(filename, d_dim, &d_nodes, &d_vol);
   else if (file_type == 1)
-    rw::reader::readVtuFile(filename, d_dim, &d_nodes, d_eType, &d_enc, &d_nec,
-                            &d_vol, is_fd);
+    rw::reader::readVtuFile(filename, d_dim, &d_nodes, d_eType, d_numElems,
+        &d_enc, &d_nec, &d_vol, is_fd);
   else if (file_type == 2)
-    rw::reader::readMshFile(filename, d_dim, &d_nodes, d_eType, &d_enc, &d_nec,
-                            &d_vol, is_fd);
+    rw::reader::readMshFile(filename, d_dim, &d_nodes, d_eType, d_numElems,
+        &d_enc, &d_nec, &d_vol, is_fd);
 
-  //  std::cout<<"Num nodes = "<<d_nodes.size()<<" "<<d_enc.size()<<" "
-  //                                                                ""<<d_nec
-  //                                                                .size()<<"\n";
-  //
-  // std::cout<<d_nodes[0].d_x<<" "<<d_nodes[0].d_y<<" "<<d_nodes[0].d_z<<"\n";
-  //  std::cout<<d_nodes[9].d_x<<" "<<d_nodes[9].d_y<<" "<<d_nodes[9].d_z<<"\n";
-  //
-  //    std::ofstream myfile("nodes.csv");
-  //  myfile.precision(6);
-  //  for (size_t i=0; i<10; i++)
-  //    myfile << i <<","<< d_nodes[i].d_x << "," << d_nodes[i].d_y << "," <<
-  //    d_nodes[i].d_z <<"\n";
-  //  myfile.close();
+  // get number of vertex in a given element
+  d_eNumVertex = util::vtk_map_element_to_num_nodes[d_eType];
+
+  // assign default values to fixity
+  d_fix = std::vector<uint8_t>(d_nodes.size(), FREE_MASK);
+
+  // check if we need to compute nodal volumes
+  bool compute_vol = false;
+  if (is_fd and d_vol.empty())
+    compute_vol = true;
+
+  // if this is weak finite element simulation then check from policy if
+  // volume is to be computed
+  if (d_spatialDiscretization == "weak_finite_element"
+      and !inp::Policy::getInstance()->populateData("Mesh_d_vol"))
+    compute_vol = false;
+
+  if (compute_vol)
+    computeVol();
 }
+
+void fe::Mesh::computeVol() {};
 
 //
 // Accessor functions
@@ -106,11 +117,18 @@ size_t fe::Mesh::getNumNodes() { return d_numNodes; }
 
 size_t fe::Mesh::getNumDofs() { return d_numDofs; }
 
+size_t fe::Mesh::getElementType() { return d_eType; }
+
 util::Point3 fe::Mesh::getNode(size_t i) { return d_nodes[i]; }
 
 std::vector<util::Point3> fe::Mesh::getNodes() { return d_nodes; }
 
 const std::vector<util::Point3> *fe::Mesh::getNodesP() { return &d_nodes; }
+
+std::vector<size_t> fe::Mesh::getElementConnectivity(size_t i) {
+  return std::vector<size_t>(d_enc.begin() + d_eNumVertex * i, d_enc.begin
+  () + d_eNumVertex * i + d_eNumVertex);
+}
 
 //
 // Setter functions

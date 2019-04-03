@@ -33,6 +33,7 @@ rw::reader::VtkReader::VtkReader(const std::string &filename) {
 void rw::reader::VtkReader::readMesh(size_t dim,
                                      std::vector<util::Point3> *nodes,
                                      size_t &element_type,
+                                     size_t &num_elem,
                                      std::vector<size_t> *enc,
                                      std::vector<std::vector<size_t>> *nec,
                                      std::vector<double> *volumes, bool is_fd) {
@@ -56,7 +57,8 @@ void rw::reader::VtkReader::readMesh(size_t dim,
 
   // check if file contains nodal volumes
   bool has_volume = true;
-  if (p_field->HasArray("Node_Volume") == 0 or p_field->HasArray("Volume") == 0)
+  if (p_field->HasArray("Node_Volume") == 0 and p_field->HasArray("Volume")
+  == 0)
     has_volume = false;
   vtkDataArray *vol_array;
   if (has_volume) {
@@ -113,6 +115,7 @@ void rw::reader::VtkReader::readMesh(size_t dim,
   // read elements
   // to resize element-node connectivity, we need to know the number of
   // vertex in the given element type
+  num_elem = num_elems;
 
   // resize node-element connectivity
   nec->resize(num_nodes);
@@ -139,8 +142,8 @@ void rw::reader::VtkReader::readMesh(size_t dim,
 
       nds_per_el = util::vtk_map_element_to_num_nodes[element_type];
 
-      std::cout << "nodes per element = " << nds_per_el << "\n";
-      std::cout << "Num elements = " << num_elems << "\n";
+//      std::cout << "nodes per element = " << nds_per_el << "\n";
+//      std::cout << "Num elements = " << num_elems << "\n";
 
       // resize the element-node connectivity
       enc->resize(nds_per_el * num_elems);

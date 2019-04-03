@@ -10,20 +10,30 @@
 
 namespace inp {
 
-/*! @brief Structure to read and store geometry related input data */
+/**
+ * \ingroup Input
+ */
+/**@{*/
+
+/*! @brief Structure to read and store mesh related input data */
 struct MeshDeck {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
   /*! @brief Dimension */
   size_t d_dim;
 
-  /*! @brief Tag for spatial discretization.
-   * List of allowed values are: "", "finite_difference",
-   * "weak_finite_element", "nodal_finite_element", "truss_finite_element"
+  /*!
+   * @brief Tag for spatial discretization
+   *
+   * List of allowed values are:
+   * - \a finite_difference
+   * - \a weak_finite_element
+   * - \a nodal_finite_element
+   * - \a truss_finite_element
    */
   std::string d_spatialDiscretization;
 
@@ -38,5 +48,8 @@ struct MeshDeck {
   MeshDeck() : d_dim(0){};
 };
 
+/** @}*/
+
 } // namespace inp
+
 #endif // INP_MESHDECK_H

@@ -15,26 +15,24 @@ namespace rw {
 
 namespace reader {
 
+/*!
+ * @brief A class to read Gmsh (msh) mesh files
+ */
 class MshReader {
 
 public:
-
-    /*!
+  /*!
    * @brief Constructor
    * @param filename name of mesh file
    */
   explicit MshReader(const std::string &filename);
-
-  /**
-   * \defgroup Methods
-   */
-  /**@{*/
 
   /*!
    * @brief Reads mesh data into node file and element file
    * @param dim Dimension
    * @param nodes vector of nodes data
    * @param element_type type of element
+   * @param num_elem number of elements
    * @param enc vector holding element-node connectivity
    * @param nec vector holding node-element connectivity
    * @param volumes vector holding volume of the nodes
@@ -42,16 +40,13 @@ public:
    * simulation
    */
   void readMesh(size_t dim, std::vector<util::Point3> *nodes,
-                size_t &element_type, std::vector<size_t> *enc,
-                std::vector<std::vector<size_t>> *nec,
+                size_t &element_type, size_t &num_elem,
+                std::vector<size_t> *enc, std::vector<std::vector<size_t>> *nec,
                 std::vector<double> *volumes, bool is_fd = false);
-
-
-  /** @}*/
 
 private:
   /**
-   * \defgroup Data
+   * @name Internal data
    */
   /**@{*/
 

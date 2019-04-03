@@ -3,14 +3,14 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef TRANSFORMATION_H
-#define TRANSFORMATION_H
+#ifndef UTIL_TRANSFORMATION_H
+#define UTIL_TRANSFORMATION_H
 
 #include <vector>
 
 namespace util {
 
-/*! @brief Provides comparison of floating point values  */
+/*! @brief Provides geometrical methods such rotation of a vector */
 namespace transformation {
 
 /*!
@@ -34,4 +34,4 @@ std::vector<double> rotateACW2D(const std::vector<double> x,
 
 } // namespace util
 
-#endif
+#endif // UTIL_TRANSFORMATION_H

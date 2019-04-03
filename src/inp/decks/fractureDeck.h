@@ -3,10 +3,11 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef FRACTUREDECK_H
-#define FRACTUREDECK_H
+#ifndef INP_FRACTUREDECK_H
+#define INP_FRACTUREDECK_H
 
 #include <vector>
+#include <cstdlib>     // definition of siz_t
 
 namespace inp {
 
@@ -14,61 +15,65 @@ namespace inp {
 struct EdgeCrack {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
-  /**< @brief Orientation of crack.
-   * Value 1 for orientation along horizontal axis (x-axis),
-   * value -1 for orientation along vertical axis (y-axis),
-   * value 0 for any crack which makes nonzero angle with the horizontal axis
+  /*!
+   * @brief Orientation of crack
+   *
+   * - 1 for orientation along horizontal axis (x-axis),
+   * - -1 for orientation along vertical axis (y-axis),
+   * - 0 for any crack which makes nonzero angle with the horizontal axis
    */
   int d_o;
 
-  /**< @brief Angle the edge crack makes with the horizontal axis.
-   * Value 0 if orientation = 1,
-   * Value PI/2 if orientation = -1
-   * Any given value for orientation = 0
+  /*!
+   * @brief Angle the edge crack makes with the horizontal axis
+   *
+   * - 0 if orientation = 1,
+   * - \f$ \pi/2 \f$ if orientation = -1
+   * - Value for orientation = 0
    */
   double d_theta;
 
-  /**< @brief Total current length of crack */
+  /*! @brief Total current length of crack */
   double d_l;
 
-  /**< @brief Current length of crack on top side (right side) */
+  /*! @brief Current length of crack on top side (right side) */
   double d_lt;
 
-  /**< @brief Current length of crack on bottom side (left side) */
+  /*! @brief Current length of crack on bottom side (left side) */
   double d_lb;
 
-  /**< @brief Velocity of top (right) crack tip */
+  /*! @brief Velocity of top (right) crack tip */
   std::vector<double> d_vt;
 
-  /**< @brief Velocity of bottom (left) crack tip */
+  /*! @brief Velocity of bottom (left) crack tip */
   std::vector<double> d_vb;
 
-  /**< @brief Closest id of node to top (right) crack tip */
+  /*! @brief Closest id of node to top (right) crack tip */
   int d_it;
 
-  /**< @brief Closest id of node to bottom (left) crack tip */
+  /*! @brief Closest id of node to bottom (left) crack tip */
   int d_ib;
 
-  /**< @brief Closest id of node to old top (right) crack tip */
+  /*! @brief Closest id of node to old top (right) crack tip */
   int d_iot;
 
-  /**< @brief Closest id of node to old bottom (left) crack tip */
+  /*! @brief Closest id of node to old bottom (left) crack tip */
   int d_iob;
 
-  /**< @brief Top (right) crack tip location */
+  /*! @brief Top (right) crack tip location */
   std::vector<double> d_pt;
 
-  /**< @brief Bottom (left) crack tip location */
+  /*! @brief Bottom (left) crack tip location */
   std::vector<double> d_pb;
 
-  /**< @brief Old top (right) crack tip location */
+  /*! @brief Old top (right) crack tip location */
   std::vector<double> d_pot;
 
-  /**< @brief Old bottom (left) crack tip location */
+  /*! @brief Old bottom (left) crack tip location */
   std::vector<double> d_pob;
 
   /** @}*/
@@ -84,11 +89,16 @@ struct EdgeCrack {
         d_pob(std::vector<double>(3, 0.)){};
 };
 
+/**
+ * \ingroup Input
+ */
+/**@{*/
+
 /*! @brief Structure to read and store fracture related input data */
 struct FractureDeck {
 
   /**
-   * \defgroup Data members
+   * @name Data members
    */
   /**@{*/
 
@@ -98,7 +108,9 @@ struct FractureDeck {
   /*! @brief Flag which indicates if pre-crack is present */
   bool d_crackActive;
 
-  /*! @brief Output interval.
+  /*!
+   * @brief Output interval
+   *
    * I.e. code perform crack data output every N number of steps, when N is
    * given by this data
    */
@@ -112,5 +124,8 @@ struct FractureDeck {
   FractureDeck() : d_crackActive(false), d_crackOutput(0){};
 };
 
+/** @}*/
+
 } // namespace inp
-#endif // FRACTUREDECK_H
+
+#endif // INP_FRACTUREDECK_H
