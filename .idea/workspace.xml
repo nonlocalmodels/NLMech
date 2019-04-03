@@ -25,52 +25,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52b6175d-7e8c-4d1c-853b-d71d66d49617" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/conf.doxy" beforeDir="false" afterPath="$PROJECT_DIR$/docs/conf.doxy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notes/debug_function.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/notes/debug_function.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fe/massMatrix.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/massMatrix.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fe/mesh.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/mesh.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fe/mesh.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/mesh.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fe/quadrature.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/quadrature.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fe/quadrature.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/quadrature.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geometry/fracture.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/fracture.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geometry/interiorFlags.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/interiorFlags.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geometry/neighbor.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/neighbor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/fractureDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/fractureDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/initialConditionDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/initialConditionDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/interiorFlagsDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/interiorFlagsDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/loadingDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/loadingDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/massMatrixDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/massMatrixDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/materialDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/materialDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/meshDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/meshDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/modelDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/modelDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/neighborDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/neighborDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/outputDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/outputDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/policyDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/policyDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/quadratureDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/quadratureDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/solverDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/solverDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/input.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/input.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/policy.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/policy.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loading/initialCondition.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/loading/initialCondition.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loading/loading.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/loading/loading.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/material.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/material.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/fd/fDModel.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/model.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/model.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rw/mshReader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/mshReader.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rw/mshReader.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/mshReader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rw/reader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/reader.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rw/reader.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/reader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rw/vtkReader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/vtkReader.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rw/vtkReader.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/vtkReader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rw/writer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/writer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rw/writer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/writer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/compare.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/compare.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/feElementDefs.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/feElementDefs.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/matrix.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/matrix.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/matrixBlaze.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/matrixBlaze.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/point.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/point.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/transfomation.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/transfomation.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -131,8 +87,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/fe/quadrature.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="509">
-                  <caret line="86" column="32" selection-start-line="86" selection-start-column="32" selection-end-line="86" selection-end-column="32" />
+                <state relative-caret-position="195">
+                  <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
                   <folding>
                     <element signature="e#150#173#0" expanded="true" />
                   </folding>
@@ -173,8 +129,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/fe/quadrature.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="194">
-                  <caret line="197" column="41" selection-start-line="197" selection-start-column="41" selection-end-line="197" selection-end-column="41" />
+                <state relative-caret-position="427">
+                  <caret line="283" column="2" selection-start-line="283" selection-start-column="2" selection-end-line="283" selection-end-column="2" />
                   <folding>
                     <element signature="e#199#216#0" expanded="true" />
                   </folding>
@@ -283,8 +239,8 @@
         <option value="$PROJECT_DIR$/src/model/fd/fDModel.cpp" />
         <option value="$PROJECT_DIR$/src/fe/mesh.h" />
         <option value="$PROJECT_DIR$/src/fe/mesh.cpp" />
-        <option value="$PROJECT_DIR$/src/fe/quadrature.cpp" />
         <option value="$PROJECT_DIR$/src/fe/quadrature.h" />
+        <option value="$PROJECT_DIR$/src/fe/quadrature.cpp" />
       </list>
     </option>
   </component>
@@ -495,12 +451,12 @@
       <workItem from="1554136415539" duration="10124000" />
       <workItem from="1554148486943" duration="8000" />
       <workItem from="1554148508613" duration="20337000" />
-      <workItem from="1554185548434" duration="46498000" />
+      <workItem from="1554185548434" duration="47112000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="168383000" />
+    <option name="totallyTimeSpent" value="168997000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -518,7 +474,7 @@
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.20977485" />
       <window_info id="Structure" order="1" sideWeight="0.50152904" side_tool="true" weight="0.20757826" />
       <window_info id="Favorites" order="2" sideWeight="0.50083196" side_tool="true" weight="0.2539913" />
-      <window_info anchor="bottom" id="Messages" order="0" sideWeight="0.49854863" weight="0.3282365" />
+      <window_info active="true" anchor="bottom" id="Messages" order="0" sideWeight="0.49854863" visible="true" weight="0.3282365" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3282365" />
       <window_info anchor="bottom" id="Terminal" order="2" weight="0.3282365" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32925585" />
@@ -896,22 +852,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/quadrature.cpp">
+    <entry file="file://$PROJECT_DIR$/src/fe/quadrature.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="509">
-          <caret line="86" column="32" selection-start-line="86" selection-start-column="32" selection-end-line="86" selection-end-column="32" />
+        <state relative-caret-position="427">
+          <caret line="283" column="2" selection-start-line="283" selection-start-column="2" selection-end-line="283" selection-end-column="2" />
           <folding>
-            <element signature="e#150#173#0" expanded="true" />
+            <element signature="e#199#216#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/quadrature.h">
+    <entry file="file://$PROJECT_DIR$/src/fe/quadrature.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="194">
-          <caret line="197" column="41" selection-start-line="197" selection-start-column="41" selection-end-line="197" selection-end-column="41" />
+        <state relative-caret-position="195">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
           <folding>
-            <element signature="e#199#216#0" expanded="true" />
+            <element signature="e#150#173#0" expanded="true" />
           </folding>
         </state>
       </provider>

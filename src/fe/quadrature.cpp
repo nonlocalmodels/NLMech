@@ -8,11 +8,9 @@
 #include <cmath>
 #include <util/feElementDefs.h>
 
-int fe::Quadrature::d_debug = 0;
-
 fe::Quadrature::Quadrature(inp::QuadratureDeck *deck, size_t element_type)
     : d_quadOrder(0), d_quadOrderM(0), d_numQuadPts(0), d_numQuadPtsM(0),
-      d_eType(element_type) {
+      d_eType(element_type), d_debug(0) {
 
   d_quadOrder = deck->d_quadOrder;
   d_quadOrderM = deck->d_quadOrderM;
@@ -55,7 +53,7 @@ fe::Quadrature::getQuadPointsTriangle(const std::vector<util::Point3> &nodes,
   // triangle.
   //
   // Caller needs to ensure that order does not go higher than 5.
-  std::vector<fe::QuadData> qds = d_quads[order];
+  std::vector<fe::QuadData> qds = Quadrature::d_quads;
 
   // Since mapping will leave values of shape function unchanged, we only
   // need to modify the positions of quad points in qds and map it to the
@@ -92,20 +90,21 @@ std::vector<std::vector<double>> fe::Quadrature::getTriDerShapes() {
   return r;
 }
 
-double fe::Quadrature::mapRefTriToTri(util::Point3 &p, const std::vector<double> &shapes,
-                      const std::vector<std::vector<double>> &der_shapes,
-                      const std::vector<util::Point3> &nodes) {
+double fe::Quadrature::mapRefTriToTri(
+    util::Point3 &p, const std::vector<double> &shapes,
+    const std::vector<std::vector<double>> &der_shapes,
+    const std::vector<util::Point3> &nodes) {
 
   //
   // see function descriptor for details
   //
   p.d_x = shapes[0] * nodes[0].d_x + shapes[1] * nodes[1].d_x +
-      shapes[2] * nodes[2].d_x;
+          shapes[2] * nodes[2].d_x;
   p.d_y = shapes[0] * nodes[0].d_y + shapes[1] * nodes[1].d_y +
-      shapes[2] * nodes[2].d_y;
+          shapes[2] * nodes[2].d_y;
 
   return (nodes[1].d_x - nodes[0].d_x) * (nodes[2].d_y - nodes[0].d_y) -
-      (nodes[2].d_x - nodes[1].d_x) * (nodes[1].d_y - nodes[0].d_y);
+         (nodes[2].d_x - nodes[1].d_x) * (nodes[1].d_y - nodes[0].d_y);
 }
 
 std::vector<double> fe::Quadrature::getQuadShapes(const util::Point3 &p) {
@@ -119,7 +118,8 @@ std::vector<double> fe::Quadrature::getQuadShapes(const util::Point3 &p) {
       0.25 * (1. + p.d_x) * (1. + p.d_y), 0.25 * (1. - p.d_x) * (1. + p.d_y)};
 }
 
-std::vector<std::vector<double>> fe::Quadrature::getQuadDerShapes(const util::Point3 &p) {
+std::vector<std::vector<double>>
+fe::Quadrature::getQuadDerShapes(const util::Point3 &p) {
 
   // N1 = (1 - xi)(1 - eta)/4
   // --> d N1/d xi = -(1 - eta)/4, d N1/d eta = -(1 - xi)/4

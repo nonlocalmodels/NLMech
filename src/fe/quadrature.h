@@ -275,13 +275,13 @@ private:
   size_t d_eType;
 
   /*! @brief Quadrature data collection */
-  static std::vector<fe::QuadData> d_quads;
+  std::vector<fe::QuadData> d_quads;
 
   /*! @brief Quadrature data collection for mass matrix */
-  static std::vector<fe::QuadData> d_quadsM;
+  std::vector<fe::QuadData> d_quadsM;
 
   /*! @brief Debug flag (0-off, 1-on) */
-  static int d_debug;
+  int d_debug;
 };
 
 } // namespace fe
