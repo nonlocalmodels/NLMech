@@ -18,7 +18,7 @@
 namespace fe {
 class MassMatrix;
 class Mesh;
-class Quadrature;
+//class Quadrature;
 } // namespace fe
 
 namespace geometry {
@@ -210,7 +210,7 @@ private:
    *
    * @sa Quadrature
    */
-  fe::Quadrature *d_quadrature_p;
+//  fe::Quadrature *d_quadrature_p;
 
   /*!
    * @brief Pointer to Fracture object

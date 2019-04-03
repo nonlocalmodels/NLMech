@@ -49,8 +49,8 @@ void model::FDModel::initHObjects() {
 
   d_mesh_p = new fe::Mesh(d_input_p->getMeshDeck());
 
-  d_quadrature_p = new fe::Quadrature(d_input_p->getQuadratureDeck(),
-      d_mesh_p->getElementType());
+//  d_quadrature_p = new fe::Quadrature(d_input_p->getQuadratureDeck(),
+//      d_mesh_p->getElementType());
 
   d_massMatrix_p = new fe::MassMatrix(d_input_p->getMassMatrixDeck());
 
