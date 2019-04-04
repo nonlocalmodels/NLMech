@@ -85,6 +85,9 @@ void fe::Mesh::createData(std::string filename) {
     rw::reader::readMshFile(filename, d_dim, &d_nodes, d_eType, d_numElems,
         &d_enc, &d_nec, &d_vol, is_fd);
 
+  // d_numElems must be set by writer above (check!)
+  d_numElems = d_enc.size()/d_eNumVertex;
+
   // get number of vertex in a given element
   d_eNumVertex = util::vtk_map_element_to_num_nodes[d_eType];
 

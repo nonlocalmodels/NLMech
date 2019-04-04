@@ -1,0 +1,109 @@
+.TH "util::compare" 3 "Thu Apr 4 2019" "NLMech" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+util::compare \- Provides comparison of floating point values\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "bool \fBapproximatelyEqual\fP (const double &a, const double &b)"
+.br
+.RI "\fICompares if a is approximately equal to b\&. \fP"
+.ti -1c
+.RI "bool \fBessentiallyEqual\fP (const double &a, const double &b)"
+.br
+.RI "\fICompares if a is essentially equal to b\&. \fP"
+.ti -1c
+.RI "bool \fBdefinitelyGreaterThan\fP (const double &a, const double &b)"
+.br
+.RI "\fICompares if a > to b\&. \fP"
+.ti -1c
+.RI "bool \fBdefinitelyLessThan\fP (const double &a, const double &b)"
+.br
+.RI "\fICompares if a is < to b\&. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Provides comparison of floating point values\&. 
+.SH "Function Documentation"
+.PP 
+.SS "bool util::compare::approximatelyEqual (const double & a, const double & b)"
+
+.PP
+Compares if a is approximately equal to b\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIa\fP Value a 
+.br
+\fIb\fP Value b 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Result true if approximately equal else false 
+.RE
+.PP
+
+.SS "bool util::compare::definitelyGreaterThan (const double & a, const double & b)"
+
+.PP
+Compares if a > to b\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIa\fP Value a 
+.br
+\fIb\fP Value b 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Result true if a is definitely greater than b 
+.RE
+.PP
+
+.SS "bool util::compare::definitelyLessThan (const double & a, const double & b)"
+
+.PP
+Compares if a is < to b\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIa\fP Value a 
+.br
+\fIb\fP Value b 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Result true if a is definitely less than b 
+.RE
+.PP
+
+.SS "bool util::compare::essentiallyEqual (const double & a, const double & b)"
+
+.PP
+Compares if a is essentially equal to b\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIa\fP Value a 
+.br
+\fIb\fP Value b 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Result true if essentially equal else false 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for NLMech from the source code\&.

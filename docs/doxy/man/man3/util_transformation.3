@@ -1,0 +1,67 @@
+.TH "util::transformation" 3 "Thu Apr 4 2019" "NLMech" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+util::transformation \- Provides geometrical methods such rotation of a vector\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "std::vector< double > \fBrotateCW2D\fP (const std::vector< double > x, const double theta)"
+.br
+.RI "\fIRotates a vector in xy-plane in clockwise direction\&. \fP"
+.ti -1c
+.RI "std::vector< double > \fBrotateACW2D\fP (const std::vector< double > x, const double theta)"
+.br
+.RI "\fIRotates a vector in xy-plane in anti-clockwise direction\&. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Provides geometrical methods such rotation of a vector\&. 
+.SH "Function Documentation"
+.PP 
+.SS "std::vector< double > util::transformation::rotateACW2D (const std::vector< double > x, const double theta)"
+
+.PP
+Rotates a vector in xy-plane in anti-clockwise direction\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIx\fP Point 
+.br
+\fItheta\fP Angle 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Point after rotation 
+.RE
+.PP
+
+.SS "std::vector< double > util::transformation::rotateCW2D (const std::vector< double > x, const double theta)"
+
+.PP
+Rotates a vector in xy-plane in clockwise direction\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIx\fP Point 
+.br
+\fItheta\fP Angle 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Point after rotation 
+.RE
+.PP
+
+.PP
+Referenced by rotateACW2D()\&.
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for NLMech from the source code\&.

@@ -68,6 +68,10 @@ include_directories(src)
 link_directories(${HPX_LIBRARY_DIR})
 
 # Add subdirectories
+#if(${PHPX_Test})
+#    add_subdirectory(src/test)
+#endif()
+
 add_subdirectory(src/util)
 add_subdirectory(src/rw)
 add_subdirectory(src/inp)
@@ -76,7 +80,13 @@ add_subdirectory(src/loading)
 add_subdirectory(src/geometry)
 add_subdirectory(src/fe)
 add_subdirectory(src/model)
-add_subdirectory(docs)
+
+# add test directory
+add_subdirectory(src/test)
+
+# include test directory
+set(PHPX_Test FALSE CACHE BOOL "Build the test cases")
+set(PHPX_2D_QUASI_TESTS FALSE CACHE BOOL "Runs the 2D quasistatic test cases")
 
 # Build executable
 add_hpx_executable(NLMech SOURCES src/main.cpp DEPENDENCIES Util IO

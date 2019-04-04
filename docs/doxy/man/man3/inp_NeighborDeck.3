@@ -1,0 +1,52 @@
+.TH "inp::NeighborDeck" 3 "Thu Apr 4 2019" "NLMech" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+inp::NeighborDeck \- Structure to read and store neighbor list related input data\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <neighborDeck\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBNeighborDeck\fP ()"
+.br
+.RI "\fIConstructor\&. \fP"
+.in -1c
+.SS "Data Fields"
+
+.PP
+.RI "\fBData members\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "double \fBd_safetyFactor\fP"
+.br
+.RI "\fISafety factor for neighbor list calculation\&. \fP"
+.ti -1c
+.RI "bool \fBd_addPartialElems\fP"
+.br
+.RI "\fIFlag to include partially inside nodes in neighbor list\&. \fP"
+.in -1c
+.in -1c
+.SH "Detailed Description"
+.PP 
+Structure to read and store neighbor list related input data\&. 
+.SH "Field Documentation"
+.PP 
+.SS "bool inp::NeighborDeck::d_addPartialElems"
+
+.PP
+Flag to include partially inside nodes in neighbor list\&. Flag which specifies if the partially inside nodes (elements if the discretization is weak finite element) should be included in the neighbor list 
+.PP
+Referenced by inp::Input::setNeighborDeck()\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for NLMech from the source code\&.

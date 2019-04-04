@@ -1,0 +1,68 @@
+.TH "inp::OutputDeck" 3 "Thu Apr 4 2019" "NLMech" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+inp::OutputDeck \- Structure to read and store output data\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <outputDeck\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBOutputDeck\fP ()"
+.br
+.RI "\fIConstructor\&. \fP"
+.in -1c
+.SS "Data Fields"
+
+.PP
+.RI "\fBData members\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "std::string \fBd_outFormat\fP"
+.br
+.RI "\fIOutput format: currently supports vtk output\&. \fP"
+.ti -1c
+.RI "std::string \fBd_path\fP"
+.br
+.RI "\fIOutput Path where the files will be written\&. \fP"
+.ti -1c
+.RI "std::vector< std::string > \fBd_outTags\fP"
+.br
+.RI "\fIList of tags of data to be dumped\&. \fP"
+.ti -1c
+.RI "size_t \fBd_dtOut\fP"
+.br
+.RI "\fISize of time steps (or frequency) for output operation\&. \fP"
+.ti -1c
+.RI "size_t \fBd_debug\fP"
+.br
+.RI "\fIFlag specifying debug level\&. \fP"
+.ti -1c
+.RI "bool \fBd_performFEOut\fP"
+.br
+.RI "\fIFlag specifying if element-node connectivity should not be dumped\&. \fP"
+.in -1c
+.in -1c
+.SH "Detailed Description"
+.PP 
+Structure to read and store output data\&. 
+.SH "Field Documentation"
+.PP 
+.SS "bool inp::OutputDeck::d_performFEOut"
+
+.PP
+Flag specifying if element-node connectivity should not be dumped\&. for large mesh, writing element-node connectivity using vtk writer creates problem\&. 
+.PP
+Referenced by inp::Input::setOutputDeck()\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for NLMech from the source code\&.

@@ -1,0 +1,86 @@
+.TH "TestFe" 3 "Thu Apr 4 2019" "NLMech" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+TestFe \- TestFe
+.SS "Functions"
+
+.in +1c
+.ti -1c
+.RI "void \fBtestTriRef\fP (size_t n)"
+.br
+.RI "\fIPerform test on quadrature points on reference triangle\&. \fP"
+.ti -1c
+.RI "double \fBgetExactIntegrationRefTri\fP (size_t alpha, size_t beta)"
+.br
+.RI "\fIComputes integration of polynomial exactly over reference triangle\&. \fP"
+.ti -1c
+.RI "double \fBgetNChooseR\fP (size_t n, size_t r)"
+.br
+.RI "\fIComputes $ {n\choose r}$ 'n choose r'\&. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+
+.SH "Function Documentation"
+.PP 
+.SS "double getExactIntegrationRefTri (size_t alpha, size_t beta)"
+
+.PP
+Computes integration of polynomial exactly over reference triangle\&. Given $ f(s,t) = s^\alpha\, t^\beta $, the exact integration is given by \[ I_{exact} = \int_0^1 \int_0^{1-s} s^\alpha\, t^\beta \, dt\, ds = \sum_{i=0}^{\beta+1} (-1)^i \frac{{{\beta + 1} \choose i}}{(\alpha + i +1) (\beta + 1)}, \] where \[ {a \choose b} = \frac{a (a-1) (a-2) ... (a-b+1)}{1*2*3 ... *b}. \] We have $ {a \choose 0} = 1 $ so that term for $ i=0$ is not zero\&. Above formula gives the exact value of integral of $ f(s,t) = s^\alpha\, t^\beta $ over reference triangle\&.
+.PP
+\fBParameters:\fP
+.RS 4
+\fIalpha\fP Polynomial order in variable s 
+.br
+\fIbeta\fP Polynomial order in variable t 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+I Exact integration of $ f(s,t) = s^\alpha\, t^\beta $ 
+.RE
+.PP
+
+.PP
+Referenced by testTriRef()\&.
+.SS "double getNChooseR (size_t n, size_t r)"
+
+.PP
+Computes $ {n\choose r}$ 'n choose r'\&. Computes formula \[ {a \choose b} = \frac{a (a-1) (a-2) ... (a-b+1)}{1*2*3 ... *b}. \]
+.PP
+\fBParameters:\fP
+.RS 4
+\fIn\fP Number 
+.br
+\fIr\fP Number which is smaller or equal to n 
+.RE
+.PP
+\fBReturns:\fP
+.RS 4
+Value Value of 'n choose r' 
+.RE
+.PP
+
+.PP
+Referenced by getExactIntegrationRefTri()\&.
+.SS "void testTriRef (size_t n)"
+
+.PP
+Perform test on quadrature points on reference triangle\&. This function performs accuracy test of the quadrature points for integration over reference triangle with vertices at {(0,0), (1,0), (0,1)}\&. List of tests are as follows:
+.PP
+.IP "1." 4
+Computes quadrature points of the given order, writes them to the file, and checks if the sum of quadrature weights is equal to 0\&.5 (area of reference triangl)\&.
+.IP "2." 4
+Tests exactness of the integration of the polynomial upto given order\&. Suppose $ n$ is the order of quadrature point, then we test if the integration of the function $ f(s,t) = s^\alpha\, t^\beta $ is exact for $ \alpha $ and $ \beta $ such that $ \alpha+\beta \leq n $\&. The exact integration of function $ f$ over reference triangle is \[ I_{exact} = \int_0^1 \int_0^{1-s} s^\alpha\, t^\beta \, dt\, ds = \sum_{i=0}^{\beta+1} (-1)^i \frac{{{\beta + 1} \choose i}}{(\alpha + i +1) (\beta + 1)}, \] where \[ {a \choose b} = \frac{a (a-1) (a-2) ... (a-b+1)}{1*2*3 ... *b}. \] We have $ {a \choose 0} = 1 $ so that term for $ i=0$ is not zero\&. Above formula gives the exact value of integral of $ f(s,t) = s^\alpha\, t^\beta $ over reference triangle\&. Approximation by quadrature point is as follows \[ I_{approx} = \sum_{q=1}^{Q} w_q f(s_q, t_q) \] where $Q$ is the total number of quad points, $ w_q$ and $(s_q, t_q)$ are the $ q^{th} $ quad weight and point\&. In this test, we compare $ I_{exact} $ and $ I_{approx} $ and report problem if both do not match\&.
+.PP
+.PP
+\fBParameters:\fP
+.RS 4
+\fIn\fP Order of quadrature point approximation 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for NLMech from the source code\&.

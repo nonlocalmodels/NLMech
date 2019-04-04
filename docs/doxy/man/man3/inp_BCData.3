@@ -1,0 +1,137 @@
+.TH "inp::BCData" 3 "Thu Apr 4 2019" "NLMech" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+inp::BCData \- Structure for displacement/force boundary condition data\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <loadingDeck\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBBCData\fP ()"
+.br
+.RI "\fIConstructor\&. \fP"
+.in -1c
+.SS "Data Fields"
+
+.PP
+.RI "\fBData members\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "std::string \fBd_regionType\fP"
+.br
+.RI "\fIType of region over which the bc will be applied\&. \fP"
+.ti -1c
+.RI "std::string \fBd_timeFnType\fP"
+.br
+.RI "\fIName of the formula with respect to time\&. \fP"
+.ti -1c
+.RI "std::string \fBd_spatialFnType\fP"
+.br
+.RI "\fIName of the formula of with respect to spatial coordinate\&. \fP"
+.ti -1c
+.RI "double \fBd_x1\fP"
+.br
+.RI "\fIX coordinate of left-bottom point of rectangle/angled rectangle\&. \fP"
+.ti -1c
+.RI "double \fBd_y1\fP"
+.br
+.RI "\fIY coordinate of left-bottom point of rectangle/angled rectangle\&. \fP"
+.ti -1c
+.RI "double \fBd_x2\fP"
+.br
+.RI "\fIX coordinate of right-top point of rectangle/angled rectangle\&. \fP"
+.ti -1c
+.RI "double \fBd_y2\fP"
+.br
+.RI "\fIY coordinate of right-top point of rectangle/angled rectangle\&. \fP"
+.ti -1c
+.RI "double \fBd_theta\fP"
+.br
+.RI "\fIAngle of the rectangle (for angled rectangle) \fP"
+.ti -1c
+.RI "std::vector< int > \fBd_direction\fP"
+.br
+.RI "\fIList of dofs on which this bc will be applied\&. \fP"
+.ti -1c
+.RI "std::vector< double > \fBd_timeFnParams\fP"
+.br
+.RI "\fIList of parameters for function wrt time\&. \fP"
+.ti -1c
+.RI "std::vector< double > \fBd_spatialFnParams\fP"
+.br
+.RI "\fIList of parameters for function wrt spatial coordinate\&. \fP"
+.in -1c
+.in -1c
+.SH "Detailed Description"
+.PP 
+Structure for displacement/force boundary condition data\&. 
+.SH "Field Documentation"
+.PP 
+.SS "std::vector<int> inp::BCData::d_direction"
+
+.PP
+List of dofs on which this bc will be applied\&. E\&.g\&. if bc is only applied on x-component, d_direction will be 1\&. If bc is applied on x- and y-component, d_direction will be vector with elements 1 and 2\&. 
+.PP
+Referenced by inp::Input::setLoadingDeck()\&.
+.SS "std::string inp::BCData::d_regionType"
+
+.PP
+Type of region over which the bc will be applied\&. List of allowed values are:
+.PP
+.IP "\(bu" 2
+\fIrectangle\fP 
+.IP "\(bu" 2
+\fIangled_rectangle\fP 
+.PP
+
+.PP
+Referenced by inp::Input::setLoadingDeck()\&.
+.SS "std::string inp::BCData::d_spatialFnType"
+
+.PP
+Name of the formula of with respect to spatial coordinate\&. List of allowed values are:
+.IP "\(bu" 2
+'' (none)
+.IP "\(bu" 2
+\fIconstant\fP 
+.IP "\(bu" 2
+\fIhat_x\fP 
+.IP "\(bu" 2
+\fIhat_y\fP 
+.IP "\(bu" 2
+\fIsin\fP 
+.PP
+
+.PP
+Referenced by inp::Input::setLoadingDeck()\&.
+.SS "std::string inp::BCData::d_timeFnType"
+
+.PP
+Name of the formula with respect to time\&. List of allowed values are:
+.IP "\(bu" 2
+'' (none)
+.IP "\(bu" 2
+\fIconstant\fP 
+.IP "\(bu" 2
+\fIlinear\fP 
+.IP "\(bu" 2
+\fIlinear_step\fP 
+.IP "\(bu" 2
+\fIlinear_slow_fast\fP 
+.PP
+
+.PP
+Referenced by inp::Input::setLoadingDeck()\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for NLMech from the source code\&.

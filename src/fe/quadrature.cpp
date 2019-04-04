@@ -4,8 +4,7 @@
 // (See accompanying file LICENSE.txt)
 
 #include "quadrature.h"
-#include "quadElem.h" // TriElem class
-#include "triElem.h"  // QuadElem class
+#include <iostream>
 
 template <class T> fe::Quadrature<T>::Quadrature(size_t order) {
 
@@ -49,3 +48,10 @@ double fe::Quadrature<T>::mapRefElemToElem(
     const std::vector<util::Point3> &nodes) {
   return d_element_p->mapRefElemToElem(p, shapes, der_shapes, nodes);
 }
+
+/*!
+ * Important: Need to explicitly instantiate the template for the Quadrature
+ * class to work
+ */
+template class fe::Quadrature<fe::TriElem>;
+template class fe::Quadrature<fe::QuadElem>;

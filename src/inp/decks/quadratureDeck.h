@@ -22,13 +22,13 @@ struct QuadratureDeck {
   /**@{*/
 
   /*! @brief Order of quadrature point integration approximation */
-  int d_quadOrder;
+  size_t d_quadOrder;
 
   /*!
    * @brief Order of quadrature point integration approximation for
    * mass matrix
    */
-  int d_quadOrderM;
+  size_t d_quadOrderM;
 
   /** @}*/
 

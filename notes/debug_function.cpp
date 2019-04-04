@@ -114,6 +114,29 @@ std::cout << "z is fixed "<<d_fix[i]<<"\n";
 }
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+// MESH 3 Output mesh in csv file
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+std::ofstream writeCsv;
+writeCsv.open("meshFeTest.csv");
+writeCsv<<d_nodes.size()<<"\n";
+for (auto nd : d_nodes)
+writeCsv<<nd.d_x<<","<<","<<nd.d_y<<","<<nd.d_z<<"\n";
+d_numElems = d_enc.size()/d_eNumVertex;
+writeCsv<<d_numElems<<"\n";
+for (size_t e=0; e< d_numElems; e++) {
+for (size_t i=0; i<d_eNumVertex; i++) {
+writeCsv << d_enc[d_eNumVertex*e + i];
+if (i == d_eNumVertex - 1) {
+if (e < d_numElems-1)
+writeCsv << "\n";
+}
+else
+writeCsv<<",";
+}
+}
+writeCsv.close();
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 // Debug bitwise operations
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 // Example program

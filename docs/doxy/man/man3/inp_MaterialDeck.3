@@ -1,0 +1,106 @@
+.TH "inp::MaterialDeck" 3 "Thu Apr 4 2019" "NLMech" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+inp::MaterialDeck \- Structure to read and store material related data\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <materialDeck\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMaterialDeck\fP ()"
+.br
+.RI "\fIConstructor\&. \fP"
+.in -1c
+.SS "Data Fields"
+
+.PP
+.RI "\fBData members\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "std::string \fBd_2DType\fP"
+.br
+.RI "\fI2D type \fP"
+.ti -1c
+.RI "std::string \fBd_materialType\fP"
+.br
+.RI "\fIMaterial type\&. \fP"
+.ti -1c
+.RI "size_t \fBd_bondPotentialType\fP"
+.br
+.RI "\fIType of pairwise (bond-based) potential\&. \fP"
+.ti -1c
+.RI "size_t \fBd_statePotentialType\fP"
+.br
+.RI "\fIType of hydrostatic (state-based) potential\&. \fP"
+.ti -1c
+.RI "size_t \fBd_influenceFnType\fP"
+.br
+.RI "\fIType of influence function\&. \fP"
+.ti -1c
+.RI "std::vector< double > \fBd_bondPotentialParams\fP"
+.br
+.RI "\fIList of parameters for pairwise potential\&. \fP"
+.ti -1c
+.RI "std::vector< double > \fBd_statePotentialParams\fP"
+.br
+.RI "\fIList of parameters for hydrostatic potential\&. \fP"
+.ti -1c
+.RI "std::vector< double > \fBd_influenceFnParams\fP"
+.br
+.RI "\fIList of parameters for influence function\&. \fP"
+.ti -1c
+.RI "bool \fBd_irreversibleBondBreak\fP"
+.br
+.RI "\fIFlag for irreversible breaking of bonds\&. \fP"
+.ti -1c
+.RI "bool \fBd_stateContributionFromBrokenBond\fP"
+.br
+.RI "\fIFlag for contribution to hydrostatic force from the broken bond\&. \fP"
+.ti -1c
+.RI "double \fBd_checkScFactor\fP"
+.br
+.RI "\fIFactor to check if bond is broken\&. \fP"
+.ti -1c
+.RI "bool \fBd_computeParamsFromElastic\fP"
+.br
+.RI "\fICompute Peridynamic material properties from elastic properties\&. \fP"
+.ti -1c
+.RI "\fBinp::MatData\fP \fBd_matData\fP"
+.br
+.RI "\fIList of elastic and fracture properties\&. \fP"
+.in -1c
+.in -1c
+.SH "Detailed Description"
+.PP 
+Structure to read and store material related data\&. 
+.SH "Field Documentation"
+.PP 
+.SS "std::string inp::MaterialDeck::d_2DType"
+
+.PP
+2D type 
+.IP "\(bu" 2
+\fIplane-stress\fP -- thin material
+.IP "\(bu" 2
+\fIplane-strain\fP -- thick material 
+.PP
+
+.SS "bool inp::MaterialDeck::d_irreversibleBondBreak"
+
+.PP
+Flag for irreversible breaking of bonds\&. True means bond breaking is irreversible\&. 
+.PP
+Referenced by inp::Input::setMaterialDeck()\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for NLMech from the source code\&.

@@ -1,0 +1,69 @@
+.TH "geometry::InteriorFlags" 3 "Thu Apr 4 2019" "NLMech" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+geometry::InteriorFlags \- A class to store interior/exterior flags of node\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <interiorFlags\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBInteriorFlags\fP (\fBinp::InteriorFlagsDeck\fP *deck)"
+.br
+.RI "\fIConstructor\&. \fP"
+.in -1c
+.SS "Private Attributes"
+
+.in +1c
+.ti -1c
+.RI "\fBinp::InteriorFlagsDeck\fP * \fBd_interiorFlagsDeck_p\fP"
+.br
+.RI "\fIInterior flags deck\&. \fP"
+.ti -1c
+.RI "std::vector< char > \fBd_intFlags\fP"
+.br
+.RI "\fIVector of flags\&. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+A class to store interior/exterior flags of node\&. 
+
+In this class we store the the flag which indicates if the node is inside the material domain or it is near the boundary\&. This is useful when we implement \fIno-fail\fP \fIregion\fP in \fBPeridynamics\fP\&. 
+.SH "Constructor & Destructor Documentation"
+.PP 
+.SS "geometry::InteriorFlags::InteriorFlags (\fBinp::InteriorFlagsDeck\fP * deck)\fC [explicit]\fP"
+
+.PP
+Constructor\&. 
+.PP
+\fBParameters:\fP
+.RS 4
+\fIdeck\fP Input deck which contains user-specified information 
+.RE
+.PP
+
+.SH "Field Documentation"
+.PP 
+.SS "std::vector<char> geometry::InteriorFlags::d_intFlags\fC [private]\fP"
+
+.PP
+Vector of flags\&. Since char data provides 4 bits, we club flags of 4 nodes as one store the flags in char data\&.
+.PP
+Given node \fIi\fP, to find the interior flag, we proceed as follows:
+.PP
+.IP "\(bu" 2
+Location in vector d_intFlags: \fIj\fP = \fIi/4\fP 
+.IP "\(bu" 2
+Bit location: \fIb\fP = \fIi%4\fP 
+.PP
+.PP
+Now we check bit at location \fIb\fP of d_intFlags[ \fIj\fP ]\&. If that bit is \fI0\fP, then the node \fIi\fP is in the interior, otherwise it is in the exterior\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for NLMech from the source code\&.

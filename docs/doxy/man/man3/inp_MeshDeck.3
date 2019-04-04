@@ -1,0 +1,66 @@
+.TH "inp::MeshDeck" 3 "Thu Apr 4 2019" "NLMech" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+inp::MeshDeck \- Structure to read and store mesh related input data\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <meshDeck\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBMeshDeck\fP ()"
+.br
+.RI "\fIConstructor\&. \fP"
+.in -1c
+.SS "Data Fields"
+
+.PP
+.RI "\fBData members\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "size_t \fBd_dim\fP"
+.br
+.RI "\fIDimension\&. \fP"
+.ti -1c
+.RI "std::string \fBd_spatialDiscretization\fP"
+.br
+.RI "\fITag for spatial discretization\&. \fP"
+.ti -1c
+.RI "std::string \fBd_filename\fP"
+.br
+.RI "\fIFilename to read mesh data\&. \fP"
+.in -1c
+.in -1c
+.SH "Detailed Description"
+.PP 
+Structure to read and store mesh related input data\&. 
+.SH "Field Documentation"
+.PP 
+.SS "std::string inp::MeshDeck::d_spatialDiscretization"
+
+.PP
+Tag for spatial discretization\&. List of allowed values are:
+.IP "\(bu" 2
+\fIfinite_difference\fP 
+.IP "\(bu" 2
+\fIweak_finite_element\fP 
+.IP "\(bu" 2
+\fInodal_finite_element\fP 
+.IP "\(bu" 2
+\fItruss_finite_element\fP 
+.PP
+
+.PP
+Referenced by fe::Mesh::Mesh(), and inp::Input::setMeshDeck()\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for NLMech from the source code\&.

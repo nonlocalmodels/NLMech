@@ -1,0 +1,59 @@
+\form#0:\[ e*d\_eNumVertex + 0 \]
+\form#1:\[e*d\_eNumVertex + d\_eNumVertex - 1\]
+\form#2:$ i^{th} $
+\form#3:$ h^2 $
+\form#4:$ h^3$
+\form#5:$ h$
+\form#6:$ (-1,-1), \, (1,-1), \, (1,1), \, (-1,1) $
+\form#7:\[N_1(\xi, \eta) = \frac{(1- \xi)(1 - \eta)}{4}, \, N_2(\xi, \eta) = \frac{(1+ \xi)(1 - \eta)}{4}, \]
+\form#8:\[ N_3(\xi, \eta) = \frac{(1+ \xi)(1 + \eta)}{4}, N_4(\xi, \eta) = \frac{(1- \xi)(1 + \eta)}{4}. \]
+\form#9:\[\frac{d N_1(\xi, \eta)}{d\xi} = \frac{-(1 - \eta)}{4}, \, \frac{d N_1 (\xi, \eta)}{d\eta} = \frac{-(1 - \xi)}{4}, \]
+\form#10:\[\frac{d N_2(\xi, \eta)}{d\xi} = \frac{(1 - \eta)}{4}, \, \frac{d N_2 (\xi, \eta)}{d\eta} = \frac{-(1 + \xi)}{4}, \]
+\form#11:\[\frac{d N_3(\xi, \eta)}{d\xi} = \frac{(1 + \eta)}{4}, \, \frac{d N_3 (\xi, \eta)}{d\eta} = \frac{(1 + \xi)}{4}, \]
+\form#12:\[\frac{d N_4(\xi, \eta)}{d\xi} = \frac{-(1 + \eta)}{4}, \, \frac{d N_4 (\xi, \eta)}{d\eta} = \frac{(1 - \xi)}{4}. \]
+\form#13:$ (\xi, \eta) $
+\form#14:$ (x,y) $
+\form#15:\[ x = N_1(\xi, \eta) x_1 + N_2(\xi, \eta) x_2 + N_3(\xi, \eta) x_3,\]
+\form#16:\[ y = N_1(\xi, \eta) y_1 + N_2(\xi, \eta) y_2 + N_3(\xi, \eta) y_3,\]
+\form#17:$ N_1, N_2, N_3 $
+\form#18:$ (x_1, y_1), (x_2,y_2), (x_3,y_3) $
+\form#19:\[ J = [\frac{dx}{d\xi},\frac{dy}{d\xi}; \frac{dx}{d\eta}, \frac{dy}{d\eta}] \]
+\form#20:\[ det(J) = \frac{dx}{d\xi} \times \frac{dy}{d\eta} - \frac{dy}{d\xi}\times \frac{dx}{d\eta}. \]
+\form#21:\[ \frac{dx}{d\xi} = x_2 - x_1, \frac{dx}{d\eta} = x_3 - x_1, \]
+\form#22:\[ \frac{dy}{d\xi} = y_2 - y_1, \frac{dy}{d\eta} = y_3 - y_1. \]
+\form#23:\[ det(J) = (x_2 - x_1)(y_3 - y_1) - (y_2 - y_1)(x_3 - x_1).\]
+\form#24:$ (0,0), \, (1,0), \, (0,1) $
+\form#25:\[N_1(\xi, \eta) = 1- \xi - \eta, \, N_2(\xi, \eta) = \xi, \, N_3(\xi, \eta) = \eta. \]
+\form#26:\[\frac{d N_1(\xi, \eta)}{d\xi} = -1, \, \frac{d N_1(\xi, \eta)}{d\eta} = -1, \]
+\form#27:\[\frac{d N_2(\xi, \eta)}{d\xi} = 1, \, \frac{d N_2(\xi, \eta)}{d\eta} = 0, \]
+\form#28:\[\frac{d N_3(\xi, \eta)}{d\xi} = 0, \, \frac{d N_3(\xi, \eta)}{d\eta} = 1. \]
+\form#29:$ \pi/2 $
+\form#30:$ \phi $
+\form#31:$ Z $
+\form#32:$ n$
+\form#33:$ f(s,t) = s^i t^j $
+\form#34:$ i$
+\form#35:$ j$
+\form#36:$ i+j \leq n $
+\form#37:\[ I = \int_0^1 \int_0^{1-s} s^i\, t^j \, dt ds \]
+\form#38:$ f(s,t) = s^\alpha\, t^\beta $
+\form#39:$ \alpha $
+\form#40:$ \beta $
+\form#41:$ \alpha+\beta \leq n $
+\form#42:$ f$
+\form#43:\[ I = \int_0^1 \int_0^{1-s} s^\alpha\, t^\beta \, dt\, ds = \sum_{i=0}^{\beta+1} (-1)^i \frac{{{\beta + 1} \choose i}}{(\alpha + i +1) (\beta + 1)} \]
+\form#44:\[ I_{exact} = \int_0^1 \int_0^{1-s} s^\alpha\, t^\beta \, dt\, ds = \sum_{i=0}^{\beta+1} (-1)^i \frac{{{\beta + 1} \choose i}}{(\alpha + i +1) (\beta + 1)}, \]
+\form#45:\[ {a \choose b} = \frac{a (a-1) (a-2) ... (a-b+1)}{b!} \]
+\form#46:$ b! $
+\form#47:$ {a \choose 0} = 1 $
+\form#48:$ i=0$
+\form#49:\[ I_{approx} = \sum_{q=1}^{Q} w_q f(s_q, t_q) \]
+\form#50:$ w_q$
+\form#51:$(s_q, t_q)$
+\form#52:$ q^{th} $
+\form#53:$ I_{exact} $
+\form#54:$ I_{approx} $
+\form#55:$Q$
+\form#56:\[ {a \choose b} = \frac{a (a-1) (a-2) ... (a-b+1)}{1*2*3 ... b}. \]
+\form#57:\[ {a \choose b} = \frac{a (a-1) (a-2) ... (a-b+1)}{1*2*3 ... *b}. \]
+\form#58:$ {n\choose r}$

@@ -1,0 +1,106 @@
+.TH "inp" 3 "Thu Apr 4 2019" "NLMech" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+inp \- Collection of methods and database related to input\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBBCData\fP"
+.br
+.RI "\fIStructure for displacement/force boundary condition data\&. \fP"
+.ti -1c
+.RI "struct \fBEdgeCrack\fP"
+.br
+.RI "\fIA structure to edge crack of any orientation\&. \fP"
+.ti -1c
+.RI "struct \fBFractureDeck\fP"
+.br
+.RI "\fIStructure to read and store fracture related input data\&. \fP"
+.ti -1c
+.RI "struct \fBICData\fP"
+.br
+.RI "\fIStructure for initial condition data\&. \fP"
+.ti -1c
+.RI "struct \fBInitialConditionDeck\fP"
+.br
+.RI "\fIStructure to read and store policy data\&. \fP"
+.ti -1c
+.RI "class \fBInput\fP"
+.br
+.RI "\fIA class to read input file\&. \fP"
+.ti -1c
+.RI "struct \fBInteriorFlagsDeck\fP"
+.br
+.RI "\fIStructure to read and store interior flags (no-fail region) \fP"
+.ti -1c
+.RI "struct \fBLoadingDeck\fP"
+.br
+.RI "\fIStructure to read and store policy data\&. \fP"
+.ti -1c
+.RI "struct \fBMassMatrixDeck\fP"
+.br
+.RI "\fIStructure to read and store mass matrix related input data\&. \fP"
+.ti -1c
+.RI "struct \fBMatData\fP"
+.br
+.RI "\fIStructure for elastic properties and fracture properties\&. \fP"
+.ti -1c
+.RI "struct \fBMaterialDeck\fP"
+.br
+.RI "\fIStructure to read and store material related data\&. \fP"
+.ti -1c
+.RI "struct \fBMeshDeck\fP"
+.br
+.RI "\fIStructure to read and store mesh related input data\&. \fP"
+.ti -1c
+.RI "struct \fBModelDeck\fP"
+.br
+.RI "\fIStructure to read and store model related data input\&. \fP"
+.ti -1c
+.RI "struct \fBNeighborDeck\fP"
+.br
+.RI "\fIStructure to read and store neighbor list related input data\&. \fP"
+.ti -1c
+.RI "struct \fBOutputDeck\fP"
+.br
+.RI "\fIStructure to read and store output data\&. \fP"
+.ti -1c
+.RI "class \fBPolicy\fP"
+.br
+.RI "\fIA class to enforce certain policies to reduce memory loads\&. \fP"
+.ti -1c
+.RI "struct \fBPolicyDeck\fP"
+.br
+.RI "\fIStructure to read and store policy related input data\&. \fP"
+.ti -1c
+.RI "struct \fBQuadratureDeck\fP"
+.br
+.RI "\fIStructure to read and store quadrature point related input data\&. \fP"
+.ti -1c
+.RI "struct \fBSolverDeck\fP"
+.br
+.RI "\fIStructure to read and store solver related input data\&. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Collection of methods and database related to input\&. 
+
+This namespace provides methods and data members specific to reading input data\&. It provides struct definitions to read and store data\&. Each struct is unique and is used in initialization of higher level objects such as \fBfe::Mesh\fP, \fBgeometry::Fracture\fP, \fBmaterial::Material\fP, \fBloading::Loading\fP, etc\&.
+.PP
+The namespace consists of \fBInput\fP and \fBPolicy\fP member classes\&. \fBInput\fP class is the main class responsible of creating struct data and reading input file into those structs\&.
+.PP
+\fBSee also:\fP
+.RS 4
+\fBInput\fP, \fBPolicy\fP 
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for NLMech from the source code\&.

@@ -1,0 +1,5 @@
+<map id="testTriRef" name="testTriRef">
+<area shape="rect" id="node2" href="$classfe_1_1Quadrature.html#a4f07150114e1232b562ba7371dabf5f3" title="Get vector of quadrature data. " alt="" coords="133,5,332,32"/>
+<area shape="rect" id="node3" href="$group__TestFe.html#ga0d2fbcda42a00681d6d0662a3448499d" title="Computes integration of polynomial exactly over reference triangle. " alt="" coords="147,56,318,83"/>
+<area shape="rect" id="node4" href="$group__TestFe.html#gabc46e3e179805f6b30e0324f3a9aaea3" title="Computes &#160;&quot;n choose r&quot;. " alt="" coords="380,56,485,83"/>
+</map>

@@ -6,7 +6,11 @@
 #ifndef FE_QUADRATURE_H
 #define FE_QUADRATURE_H
 
+#include <hpx/config.hpp>
 #include <vector>
+
+#include "quadElem.h" // TriElem class
+#include "triElem.h"  // QuadElem class
 
 #include "../util/point.h" // definition of point
 #include "quadData.h"      // definition of QuadData

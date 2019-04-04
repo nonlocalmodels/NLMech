@@ -1,0 +1,61 @@
+.TH "inp::ICData" 3 "Thu Apr 4 2019" "NLMech" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+inp::ICData \- Structure for initial condition data\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <initialConditionDeck\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBICData\fP ()=default"
+.br
+.RI "\fIConstructor\&. \fP"
+.in -1c
+.SS "Data Fields"
+
+.PP
+.RI "\fBData members\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "std::string \fBd_file\fP"
+.br
+.RI "\fIFilename (if any) to read velocity/displacement\&. \fP"
+.ti -1c
+.RI "std::string \fBd_type\fP"
+.br
+.RI "\fITag specifying the formula to compute initial displacement and velocity\&. \fP"
+.ti -1c
+.RI "std::vector< double > \fBd_params\fP"
+.br
+.RI "\fIList of parameters\&. \fP"
+.in -1c
+.in -1c
+.SH "Detailed Description"
+.PP 
+Structure for initial condition data\&. 
+.SH "Field Documentation"
+.PP 
+.SS "std::string inp::ICData::d_type"
+
+.PP
+Tag specifying the formula to compute initial displacement and velocity\&. Example:
+.PP
+.IP "\(bu" 2
+\fIconstant\fP -- for constant function 
+.PP
+
+.PP
+Referenced by inp::Input::setInitialConditionDeck()\&.
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for NLMech from the source code\&.

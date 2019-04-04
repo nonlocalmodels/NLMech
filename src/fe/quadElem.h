@@ -30,7 +30,7 @@ public:
    * @brief Constructor for quadrangle element
    * @param order Order of quadrature point approximation
    */
-  explicit QuadElem(const size_t &order);
+  explicit QuadElem(size_t order);
 
   /*!
    * @brief Get vector of quadrature data

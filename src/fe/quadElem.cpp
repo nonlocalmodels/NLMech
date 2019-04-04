@@ -6,7 +6,7 @@
 #include "quadElem.h"
 #include "../util/feElementDefs.h" // global definition of elements
 
-fe::QuadElem::QuadElem(const size_t &order)
+fe::QuadElem::QuadElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_quad) {
 
   // compute quad data

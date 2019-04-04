@@ -29,7 +29,7 @@ public:
    * @brief Constructor for triangle element
    * @param order Order of quadrature point approximation
    */
-  explicit TriElem(const size_t &order);
+  explicit TriElem(size_t order);
 
   /*!
    * @brief Get vector of quadrature data

@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE.txt)
 
 #include "fDModel.h"
-#include <iostream>
+#include <fstream>
 
 // utils
 #include "../../util/matrix.h"
@@ -23,12 +23,13 @@
 #include "../../loading/loading.h"
 #include "../../material/material.h"
 
-model::FDModel::FDModel(inp::Input *deck) {
+model::FDModel::FDModel(inp::Input *deck)
+    : d_massMatrix_p(nullptr), d_mesh_p(nullptr), d_fracture_p(nullptr),
+      d_neighbor_p(nullptr), d_interiorFlags_p(nullptr), d_input_p(deck),
+      d_policy_p(nullptr), d_initialCondition_p(nullptr), d_loading_p(nullptr),
+      d_material_p(nullptr) {
 
   std::cout << "Here\n";
-
-  // store pointer to the input data
-  d_input_p = deck;
 
   // first initialize all the high level data
   initHObjects();
@@ -49,11 +50,10 @@ void model::FDModel::initHObjects() {
 
   d_mesh_p = new fe::Mesh(d_input_p->getMeshDeck());
 
-//  d_quadrature_p = new fe::Quadrature(d_input_p->getQuadratureDeck(),
-//      d_mesh_p->getElementType());
+  //  d_quadrature_p = new fe::Quadrature(d_input_p->getQuadratureDeck(),
+  //      d_mesh_p->getElementType());
 
   d_massMatrix_p = new fe::MassMatrix(d_input_p->getMassMatrixDeck());
-
 
   d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck());
   d_interiorFlags_p =

@@ -1,0 +1,44 @@
+.TH "inp::LoadingDeck" 3 "Thu Apr 4 2019" "NLMech" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+inp::LoadingDeck \- Structure to read and store policy data\&.  
+
+.SH SYNOPSIS
+.br
+.PP
+.PP
+\fC#include <loadingDeck\&.h>\fP
+.SS "Public Member Functions"
+
+.in +1c
+.ti -1c
+.RI "\fBLoadingDeck\fP ()=default"
+.br
+.RI "\fIConstructor\&. \fP"
+.in -1c
+.SS "Data Fields"
+
+.PP
+.RI "\fBData members\fP"
+.br
+
+.in +1c
+.in +1c
+.ti -1c
+.RI "std::vector< \fBinp::BCData\fP > \fBd_uBCData\fP"
+.br
+.RI "\fIList of displacement bcs\&. \fP"
+.ti -1c
+.RI "std::vector< \fBinp::BCData\fP > \fBd_fBCData\fP"
+.br
+.RI "\fIList of force bcs\&. \fP"
+.in -1c
+.in -1c
+.SH "Detailed Description"
+.PP 
+Structure to read and store policy data\&. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for NLMech from the source code\&.

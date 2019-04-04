@@ -6,7 +6,7 @@
 #include "triElem.h"
 #include "../util/feElementDefs.h" // global definition of elements
 
-fe::TriElem::TriElem(const size_t &order)
+fe::TriElem::TriElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_triangle) {
 
   // compute quad data
@@ -109,19 +109,19 @@ void fe::TriElem::init() {
     d_quads.clear();
     fe::QuadData qd;
     // point 1
-    qd.d_w = 1. / 3.;
+    qd.d_w = 1. / 6.;
     qd.d_p = util::Point3(1. / 6., 1. / 6., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 2
-    qd.d_w = 1. / 3.;
+    qd.d_w = 1. / 6.;
     qd.d_p = util::Point3(2. / 3., 1. / 6., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 3
-    qd.d_w = 1. / 3.;
+    qd.d_w = 1. / 6.;
     qd.d_p = util::Point3(1. / 6., 2. / 3., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
@@ -135,25 +135,25 @@ void fe::TriElem::init() {
     d_quads.clear();
     fe::QuadData qd;
     // point 1
-    qd.d_w = -27. / 48.;
+    qd.d_w = -27. / 96.;
     qd.d_p = util::Point3(1. / 3., 1. / 3., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 2
-    qd.d_w = 25. / 48.;
+    qd.d_w = 25. / 96.;
     qd.d_p = util::Point3(1. / 5., 3. / 5., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 3
-    qd.d_w = 25. / 48.;
+    qd.d_w = 25. / 96.;
     qd.d_p = util::Point3(1. / 5., 1. / 5., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 4
-    qd.d_w = 25. / 48.;
+    qd.d_w = 25. / 96.;
     qd.d_p = util::Point3(3. / 5., 1. / 5., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
@@ -167,37 +167,37 @@ void fe::TriElem::init() {
     d_quads.clear();
     fe::QuadData qd;
     // point 1
-    qd.d_w = 0.22338158967801;
+    qd.d_w = 0.5 * 0.22338158967801;
     qd.d_p = util::Point3(0.44594849091597, 0.44594849091597, 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 2
-    qd.d_w = 0.22338158967801;
+    qd.d_w = 0.5 * 0.22338158967801;
     qd.d_p = util::Point3(0.44594849091597, 0.10810301816807, 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 3
-    qd.d_w = 0.22338158967801;
+    qd.d_w = 0.5 * 0.22338158967801;
     qd.d_p = util::Point3(0.10810301816807, 0.44594849091597, 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 4
-    qd.d_w = 0.10995174365532;
+    qd.d_w = 0.5 * 0.10995174365532;
     qd.d_p = util::Point3(0.09157621350977, 0.09157621350977, 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 5
-    qd.d_w = 0.10995174365532;
+    qd.d_w = 0.5 * 0.10995174365532;
     qd.d_p = util::Point3(0.09157621350977, 0.81684757298046, 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 6
-    qd.d_w = 0.10995174365532;
+    qd.d_w = 0.5 * 0.10995174365532;
     qd.d_p = util::Point3(0.81684757298046, 0.09157621350977, 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
@@ -211,43 +211,43 @@ void fe::TriElem::init() {
     d_quads.clear();
     fe::QuadData qd;
     // point 1
-    qd.d_w = 0.22500000000000;
+    qd.d_w = 0.5 * 0.22500000000000;
     qd.d_p = util::Point3(0.33333333333333, 0.33333333333333, 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 2
-    qd.d_w = 0.13239415278851;
+    qd.d_w = 0.5 * 0.13239415278851;
     qd.d_p = util::Point3(0.47014206410511, 0.47014206410511, 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 3
-    qd.d_w = 0.13239415278851;
+    qd.d_w = 0.5 * 0.13239415278851;
     qd.d_p = util::Point3(0.47014206410511, 0.05971587178977, 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 4
-    qd.d_w = 0.13239415278851;
+    qd.d_w = 0.5 * 0.13239415278851;
     qd.d_p = util::Point3(0.05971587178977, 0.47014206410511, 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 5
-    qd.d_w = 0.12593918054483;
+    qd.d_w = 0.5 * 0.12593918054483;
     qd.d_p = util::Point3(0.10128650732346, 0.10128650732346, 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 6
-    qd.d_w = 0.12593918054483;
+    qd.d_w = 0.5 * 0.12593918054483;
     qd.d_p = util::Point3(0.10128650732346, 0.79742698535309, 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     d_quads.push_back(qd);
     // point 7
-    qd.d_w = 0.12593918054483;
+    qd.d_w = 0.5 * 0.12593918054483;
     qd.d_p = util::Point3(0.79742698535309, 0.10128650732346, 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
