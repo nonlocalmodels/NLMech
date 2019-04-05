@@ -88,12 +88,16 @@ public:
    * @brief Maps the point on reference quadrangle to given quadrangle and
    * returns determinant of Jacobian
    *
-   * For linear triangle element, the map from \f$ (\xi, \eta) \f$ to \f$ (x,y)
+   * For bi-linear quadrangle element, the map from \f$ (\xi, \eta) \f$ to \f$
+   * (x,y)
    * \f$ coordinate is given by
-   * \f[ x = N_1(\xi, \eta) x_1 + N_2(\xi, \eta) x_2 + N_3(\xi, \eta) x_3,\f]
-   * \f[ y = N_1(\xi, \eta) y_1 + N_2(\xi, \eta) y_2 + N_3(\xi, \eta) y_3,\f]
-   * where \f$ N_1, N_2, N_3 \f$ are described in getTriShapes() and \f$ (x_1,
-   * y_1), (x_2,y_2), (x_3,y_3) \f$ are vertices of given triangle.
+   * \f[ x = N_1(\xi, \eta) x_1 + N_2(\xi, \eta) x_2 + N_3(\xi, \eta) x_3 +
+   * N_4(\xi, \eta) x_4,\f]
+   * \f[ y = N_1(\xi, \eta) y_1 + N_2(\xi, \eta) y_2 + N_3(\xi, \eta) y_3 +
+   * N_4(\xi, \eta) y_4,\f]
+   * where \f$ N_1, N_2, N_3, N_4 \f$ are described in QuadElem::getShapes() and
+   * \f$ (x_1,y_1), (x_2,y_2), (x_3,y_3), (x_4,y_4) \f$ are vertices of given
+   * quadrangle.
    *
    * Jacobian of this map is a matrix
    * \f[ J = [\frac{dx}{d\xi},\frac{dy}{d\xi}; \frac{dx}{d\eta},
@@ -102,11 +106,8 @@ public:
    * \f[ det(J) = \frac{dx}{d\xi} \times \frac{dy}{d\eta} -
    * \frac{dy}{d\xi}\times \frac{dx}{d\eta}. \f]
    *
-   * It can be easily checked than for linear triangle elements, we simply have
-   * \f[ \frac{dx}{d\xi} = x_2 - x_1, \frac{dx}{d\eta} = x_3 - x_1, \f]
-   * \f[ \frac{dy}{d\xi} = y_2 - y_1, \frac{dy}{d\eta} = y_3 - y_1. \f]
-   * Therefore,
-   * \f[ det(J) = (x_2 - x_1)(y_3 - y_1) - (y_2 - y_1)(x_3 - x_1).\f]
+   * Using the derivatives of shape function (see QuadElem::getDerShapes())
+   * we can compute the Jacobian.
    *
    * @param p Given point in reference triangle which is to be mapped
    * @param shapes Vector shape functions evaluated at the point p

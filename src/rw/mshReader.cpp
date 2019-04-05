@@ -41,22 +41,8 @@ void rw::reader::MshReader::readMesh(size_t dim,
   volumes->clear();
 
   // specify type of element to read
-  unsigned int el_type_read;
   unsigned int num_nodes_con;
-  if (dim == 2) {
-
-    // element type (we use vtk type definition globally). In 2-d we
-    // currently only read triangle element
-    element_type = util::vtk_type_triangle;
-
-    // element type for local .msh file read. In 2-d we currently only read
-    // triangle element
-    el_type_read = util::msh_type_triangle;
-
-    // number of vertex per element. Requires three node ids for connectivity.
-    // num_nodes_con should be 3 if not then check feElementDefs.h
-    num_nodes_con = util::msh_map_element_to_num_nodes[util::msh_type_triangle];
-  } else {
+  if (dim != 2){
 
     std::cerr << "Error: MshReader currently only supports reading of triangle "
                  "elements in dimension 2.\n";
@@ -146,6 +132,10 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
         // read the elements
         size_t elem_counter = 0;
+        bool found_tri = false;
+        bool found_quad = false;
+        int init_tri = -1;
+        int init_quad = -1;
         for (unsigned int iel = 0; iel < num_elem; ++iel) {
 
           unsigned int id;
@@ -175,7 +165,53 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
           // read element type we desire and for other element type
           // perform dummy read
-          if (type == el_type_read) {
+          if (type == util::msh_type_triangle) {
+
+            if (init_tri == -1) {
+              found_tri = true;
+              element_type = util::vtk_type_triangle;
+              num_nodes_con =
+                  util::msh_map_element_to_num_nodes[util::msh_type_triangle];
+              init_tri = 0;
+            }
+
+            std::vector<size_t> ids;
+
+            // read vertex of this element
+            for (unsigned int i = 0; i < num_nodes_con; i++) {
+
+              mesh >> node_id;
+
+              // add to the element-node connectivity
+              // substract 1 to correct the numbering convention
+              enc->push_back(node_id - 1);
+
+              // also store it to perform check
+              ids.push_back(node_id - 1);
+
+              // fill the node-element connectivity table
+              (*nec)[node_id - 1].push_back(elem_counter);
+            }
+
+            // check
+            for (size_t k=0; k<ids.size(); k++)
+              if ((*enc)[num_nodes_con * elem_counter + k] != ids[k]) {
+                std::cerr << "Error: Element-node connectivity data does not "
+                             "pass check.\n";
+                exit(1);
+              }
+
+            // increment the element counter
+            elem_counter++;
+          } if (type == util::msh_type_quadrangle) {
+
+            if (init_quad == -1) {
+              found_quad = true;
+              element_type = util::vtk_type_quad;
+              num_nodes_con =
+                  util::msh_map_element_to_num_nodes[util::msh_type_quadrangle];
+              init_quad = 0;
+            }
 
             std::vector<size_t> ids;
 
@@ -214,6 +250,15 @@ void rw::reader::MshReader::readMesh(size_t dim,
             // dummy read
             for (unsigned int i = 0; i < n; i++)
               mesh >> node_id;
+          }
+
+          // check if mesh with both triangle and quadrangle elements
+          if (found_quad and found_tri) {
+
+            std::cerr << "Error: Check mesh file. It appears to have both "
+                         "quadrangle elements and triangle elements. "
+                         "Currently we only support one kind of elements.\n";
+            exit(1);
           }
         } // element loop
 

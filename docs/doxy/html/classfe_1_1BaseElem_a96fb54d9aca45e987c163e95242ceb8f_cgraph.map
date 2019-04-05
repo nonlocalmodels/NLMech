@@ -1,7 +1,0 @@
-<map id="fe::BaseElem::getNumQuadPoints" name="fe::BaseElem::getNumQuadPoints">
-<area shape="rect" id="node2" href="$classfe_1_1BaseElem.html#acef766f6ccc02980d64f494b780bc5f1" title="Get vector of quadrature data. " alt="" coords="240,5,435,32"/>
-<area shape="rect" id="node3" href="$classfe_1_1BaseElem.html#a8e56277e94c97dd990cf78a904470da6" title="Returns the values of shape function at point p. " alt="" coords="252,56,423,83"/>
-<area shape="rect" id="node4" href="$classfe_1_1BaseElem.html#a2e2bd60d90c6669e10d89eb181f812a3" title="Returns the values of derivative of shape function. " alt="" coords="241,107,433,133"/>
-<area shape="rect" id="node5" href="$classfe_1_1BaseElem.html#ae486960ff68082378fb2540e42a296e3" title="Maps the point on reference element to given element and returns the determinant of Jacobian..." alt="" coords="245,158,430,199"/>
-<area shape="rect" id="node6" href="$classfe_1_1BaseElem.html#af2498f912dad68fa83c7a65bd2afce4d" title="Compute the quadrature points. " alt="" coords="274,224,401,251"/>
-</map>

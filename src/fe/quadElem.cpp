@@ -27,9 +27,11 @@ fe::QuadElem::getQuadPoints(const std::vector<util::Point3> &nodes) {
   // Since mapping will leave values of shape function unchanged, we only
   // need to modify the positions of quad points in qds and map it to the
   // given triangle, and we also need to modify the weights.
-  for (auto qd : qds) {
+  for (auto &i : qds) {
 
-    qd.d_w *= mapRefElemToElem(qd.d_p, qd.d_shapes, qd.d_derShapes, nodes);
+    fe::QuadData *qd = &i;
+    qd->d_w = qd->d_w *
+              mapRefElemToElem(qd->d_p, qd->d_shapes, qd->d_derShapes, nodes);
   }
 
   return qds;
@@ -69,7 +71,6 @@ fe::QuadElem::getDerShapes(const util::Point3 &p) {
   return r;
 }
 
-// TODO
 double fe::QuadElem::mapRefElemToElem(
     util::Point3 &p, const std::vector<double> &shapes,
     const std::vector<std::vector<double>> &der_shapes,
@@ -79,12 +80,18 @@ double fe::QuadElem::mapRefElemToElem(
   // see function descriptor for details
   //
   p.d_x = shapes[0] * nodes[0].d_x + shapes[1] * nodes[1].d_x +
-          shapes[2] * nodes[2].d_x;
+          shapes[2] * nodes[2].d_x + shapes[3] * nodes[3].d_x;
   p.d_y = shapes[0] * nodes[0].d_y + shapes[1] * nodes[1].d_y +
-          shapes[2] * nodes[2].d_y;
+          shapes[2] * nodes[2].d_y + shapes[3] * nodes[3].d_y;
 
-  return (nodes[1].d_x - nodes[0].d_x) * (nodes[2].d_y - nodes[0].d_y) -
-         (nodes[2].d_x - nodes[1].d_x) * (nodes[1].d_y - nodes[0].d_y);
+  return (der_shapes[0][0] * nodes[0].d_x + der_shapes[1][0] * nodes[1].d_x +
+            der_shapes[2][0] * nodes[2].d_x + der_shapes[3][0] * nodes[3].d_x)
+       * (der_shapes[0][1] * nodes[0].d_y + der_shapes[1][1] * nodes[1].d_y +
+            der_shapes[2][1] * nodes[2].d_y + der_shapes[3][1] * nodes[3].d_y)
+       - (der_shapes[0][0] * nodes[0].d_y + der_shapes[1][0] * nodes[1].d_y +
+           der_shapes[2][0] * nodes[2].d_y + der_shapes[3][0] * nodes[3].d_y)
+       * (der_shapes[0][1] * nodes[0].d_x + der_shapes[1][1] * nodes[1].d_x +
+            der_shapes[2][1] * nodes[2].d_x + der_shapes[3][1] * nodes[3].d_x);
 }
 
 void fe::QuadElem::init() {

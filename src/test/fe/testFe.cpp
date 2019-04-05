@@ -12,9 +12,13 @@ int main() {
   // test quadrature method for triangle
   //
   {
-    // test quad data for reference triangle (so mapping is identical mapping)
+    // test quad data for triangle element
     for (size_t i=1; i<6; i++)
-      testTriRef(i);
+      testTriElem(i);
+
+    // test quad data for quadrangle element
+    for (size_t i=1; i<6; i++)
+      testQuadElem(i);
 
   }
 

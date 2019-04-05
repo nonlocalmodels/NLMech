@@ -1,5 +1,0 @@
-<map id="rw::reader::VtkReader::readMesh" name="rw::reader::VtkReader::readMesh">
-<area shape="rect" id="node2" href="$namespacerw_1_1reader.html#a06f5f2e42c7507cb34b9b7f4817af82b" title="Reads mesh data into node file and element file. " alt="" coords="204,13,359,39"/>
-<area shape="rect" id="node3" href="$classfe_1_1Mesh.html#a8b55aafd64acff577fb9285ce473bdb0" title="Reads mesh data from file and populates other data. " alt="" coords="407,13,552,39"/>
-<area shape="rect" id="node4" href="$classfe_1_1Mesh.html#a0041afbb7d7e94bfb01c108e460196fb" title="Constructor. " alt="" coords="600,13,713,39"/>
-</map>

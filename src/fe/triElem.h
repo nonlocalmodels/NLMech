@@ -6,8 +6,8 @@
 #ifndef FE_TRIELEM_H
 #define FE_TRIELEM_H
 
-#include "baseElem.h"     // base class BaseElem
-#include "quadData.h"     // definition of QuadData
+#include "baseElem.h" // base class BaseElem
+#include "quadData.h" // definition of QuadData
 
 namespace fe {
 
@@ -85,7 +85,8 @@ public:
    * \f$ coordinate is given by
    * \f[ x = N_1(\xi, \eta) x_1 + N_2(\xi, \eta) x_2 + N_3(\xi, \eta) x_3,\f]
    * \f[ y = N_1(\xi, \eta) y_1 + N_2(\xi, \eta) y_2 + N_3(\xi, \eta) y_3,\f]
-   * where \f$ N_1, N_2, N_3 \f$ are described in getTriShapes() and \f$ (x_1,
+   * where \f$ N_1, N_2, N_3 \f$ are described in TriElem::getShapes() and \f$
+   * (x_1,
    * y_1), (x_2,y_2), (x_3,y_3) \f$ are vertices of given triangle.
    *
    * Jacobian of this map is a matrix
@@ -107,10 +108,9 @@ public:
    * @param nodes Coordinates of vertices of a given element   *
    * @return det(J) Determinant of the Jacobian
    */
-  double mapRefElemToElem(util::Point3 &p, const std::vector<double>
-  &shapes,
-                                  const std::vector<std::vector<double>> &der_shapes,
-                                  const std::vector<util::Point3> &nodes) override;
+  double mapRefElemToElem(util::Point3 &p, const std::vector<double> &shapes,
+                          const std::vector<std::vector<double>> &der_shapes,
+                          const std::vector<util::Point3> &nodes) override;
 
 private:
   /*!

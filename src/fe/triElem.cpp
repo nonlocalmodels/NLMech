@@ -6,6 +6,8 @@
 #include "triElem.h"
 #include "../util/feElementDefs.h" // global definition of elements
 
+#include <iostream>
+
 fe::TriElem::TriElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_triangle) {
 
@@ -22,14 +24,16 @@ fe::TriElem::getQuadPoints(const std::vector<util::Point3> &nodes) {
   // triangle.
   //
   // Caller needs to ensure that order does not go higher than 5.
-  std::vector<fe::QuadData> qds = d_quads;
+  auto qds = d_quads;
 
   // Since mapping will leave values of shape function unchanged, we only
   // need to modify the positions of quad points in qds and map it to the
   // given triangle, and we also need to modify the weights.
-  for (auto qd : qds) {
+  for (auto &i : qds) {
 
-    qd.d_w *= mapRefElemToElem(qd.d_p, qd.d_shapes, qd.d_derShapes, nodes);
+    fe::QuadData *qd = &i;
+    qd->d_w = qd->d_w *
+              mapRefElemToElem(qd->d_p, qd->d_shapes, qd->d_derShapes, nodes);
   }
 
   return qds;
@@ -68,7 +72,7 @@ double fe::TriElem::mapRefElemToElem(
           shapes[2] * nodes[2].d_y;
 
   return (nodes[1].d_x - nodes[0].d_x) * (nodes[2].d_y - nodes[0].d_y) -
-         (nodes[2].d_x - nodes[1].d_x) * (nodes[1].d_y - nodes[0].d_y);
+         (nodes[2].d_x - nodes[0].d_x) * (nodes[1].d_y - nodes[0].d_y);
 }
 
 void fe::TriElem::init() {

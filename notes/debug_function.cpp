@@ -116,12 +116,13 @@ std::cout << "z is fixed "<<d_fix[i]<<"\n";
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 // MESH 3 Output mesh in csv file
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+std::cout<<"Num elems = "<<d_numElems<<"\n";
+
 std::ofstream writeCsv;
 writeCsv.open("meshFeTest.csv");
 writeCsv<<d_nodes.size()<<"\n";
 for (auto nd : d_nodes)
-writeCsv<<nd.d_x<<","<<","<<nd.d_y<<","<<nd.d_z<<"\n";
-d_numElems = d_enc.size()/d_eNumVertex;
+writeCsv<<nd.d_x<<","<<nd.d_y<<","<<nd.d_z<<"\n";
 writeCsv<<d_numElems<<"\n";
 for (size_t e=0; e< d_numElems; e++) {
 for (size_t i=0; i<d_eNumVertex; i++) {
@@ -135,6 +136,76 @@ writeCsv<<",";
 }
 }
 writeCsv.close();
+
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+// MESH 4 Debug quadrature
+//+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
+  // debug print
+  std::ofstream writeCsv;
+  std::string writeFile = "triMesh_quads_ex2_" + std::to_string(n) + ".csv";
+  writeCsv.open(writeFile.c_str());
+  for (size_t e = 0; e < num_elems; e++) {
+    std::vector<util::Point3> enodes = {nodes[elements[num_vertex * e + 0]],
+                                        nodes[elements[num_vertex * e + 1]],
+                                        nodes[elements[num_vertex * e + 2]]};
+
+    std::cout << "*** e = " << e << " nodes = "
+              <<enodes[0].d_x << "," << enodes[0].d_y << ","
+              <<enodes[1].d_x << "," << enodes[1].d_y << ","
+              <<enodes[2].d_x << "," << enodes[2].d_y << "\n";
+
+    std::vector<fe::QuadData> qds = quad.getQuadPoints(enodes);
+    double sum = 0.;
+    for (auto qd : qds) {
+      writeCsv << qd.d_w << "," << qd.d_p.d_x << "," << qd.d_p.d_y << "\n";
+      sum += qd.d_w;
+
+      std::cout << "  quads = " << qd.d_w << "," << qd.d_p.d_x << "," << qd.d_p.d_y << "\n";
+    }
+//    if (std::abs(sum - 0.125) > tol)
+//      std::cout << "Error: Sum of quad points do not match the area of "
+//                   "elements.\n";
+  }
+  writeCsv.close();
+
+//++++
+
+    //
+    // Check quad points for triangle {(1,0), (2,0), (0,2)}
+    //
+    nodes = {util::Point3(1., 0., 0.), util::Point3(2., 0., 0.),
+             util::Point3(0., 2., 0.)};
+    qds = quad.getQuadPoints(nodes);
+    std::cout<<"Check quads on new triangle\n";
+    for (auto qd: qds)
+      std::cout<< qd.d_w << "," << qd.d_p.d_x << "," << qd.d_p.d_y << "\n";
+
+    if (n==1) {
+      fe::TriElem *triE = new fe::TriElem(n);
+      util::Point3 p = util::Point3();
+      std::vector<double> shapes = {1. - 1./3. - 1./3., 1./3., 1./3.};
+      std::vector<std::vector<double>> der_shapes;
+      double j = triE->mapRefElemToElem(p, shapes, der_shapes, nodes);
+
+      std::cout<< j*qds[0].d_w << "," << p.d_x << "," << p.d_y << "\n";
+    }
+
+// ++++++++
+
+std::string filename = "tri_quads_" + std::to_string(n) + ".txt";
+std::ofstream myfile(filename.c_str());
+myfile.precision(10);
+size_t counter = 0;
+double sum = 0.;
+for (auto qd : qds) {
+myfile << ++counter << " " << qd.d_p.d_x << " " << qd.d_p.d_y << " "
+<< qd.d_w << " " << qd.d_shapes[0] << " " << qd.d_shapes[1] << " "
+<< qd.d_shapes[2] << " " << qd.d_derShapes[0][0] << " "
+<< qd.d_derShapes[0][1] << " " << qd.d_derShapes[1][0] << " "
+<< qd.d_derShapes[0][1] << " " << qd.d_derShapes[2][0] << " "
+<< qd.d_derShapes[2][1] << "\n";
+sum += qd.d_w;
+}
 
 //+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++//
 // Debug bitwise operations
