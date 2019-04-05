@@ -17,6 +17,10 @@
 
 namespace fe {
 
+//class BaseQuadrature {
+//
+//};
+
 /*!
  * @brief A class for quadrature related operations
  *

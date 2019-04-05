@@ -11,7 +11,7 @@ enable_testing()
 # Add own cmake scripts
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
-#cmake_policy(SET CMP0023 OLD)
+cmake_policy(SET CMP0023 OLD)
 
 # Find dependencies
 
@@ -67,11 +67,10 @@ include_directories(${HPX_INCLUDE_DIRS})
 include_directories(src)
 link_directories(${HPX_LIBRARY_DIR})
 
-# Add subdirectories
-#if(${PHPX_Test})
-#    add_subdirectory(src/test)
-#endif()
+# Enable HPX inside blaze
+add_definitions(-DBLAZE_USE_HPX_THREADS)
 
+# subdirectories
 add_subdirectory(src/util)
 add_subdirectory(src/rw)
 add_subdirectory(src/inp)
@@ -84,10 +83,6 @@ add_subdirectory(src/model)
 # add test directory
 add_subdirectory(src/test)
 
-# include test directory
-set(PHPX_Test FALSE CACHE BOOL "Build the test cases")
-set(PHPX_2D_QUASI_TESTS FALSE CACHE BOOL "Runs the 2D quasistatic test cases")
-
 # Build executable
 add_hpx_executable(NLMech SOURCES src/main.cpp DEPENDENCIES Util IO
-        Material Loading Geometry Model ${YAML_CPP_LIB} ${VTK_LIBRARIES})
+        Material FE Loading Geometry Model ${YAML_CPP_LIB} ${VTK_LIBRARIES})

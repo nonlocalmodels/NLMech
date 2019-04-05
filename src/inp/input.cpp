@@ -251,10 +251,8 @@ void inp::Input::setFractureDeck() {
                      "elements.\n";
         exit(1);
       }
-      crack.d_pb[0] = locs[0];
-      crack.d_pb[1] = locs[1];
-      crack.d_pt[0] = locs[2];
-      crack.d_pt[2] = locs[3];
+      crack.d_pb = util::Point3(locs[0], locs[1], 0.);
+      crack.d_pt = util::Point3(locs[2], locs[3], 0.);
     } else {
       std::cerr << "Error: Need Line data for complete specification of "
                    "pre-crack.\n";

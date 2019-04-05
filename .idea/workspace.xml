@@ -5,6 +5,7 @@
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
+      <config projectName="NLMech" targetName="TestGeom_exe" />
       <config projectName="NLMech" targetName="Geometry" />
       <config projectName="NLMech" targetName="FE" />
       <config projectName="NLMech" targetName="RW" />
@@ -19,33 +20,32 @@
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
     <configurations>
-      <configuration PROFILE_NAME="Debug_1" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Default" GENERATION_OPTIONS="-DCMAKE_BUILD_TYPE=Release -DHPX_DIR=/home/prashant/Softwares/local/hpx/hpx-1.1.0/lib/cmake/HPX -DYAML_CPP_DIR=/home/prashant/Softwares/local/yaml-cpp/yaml-cpp-0.5.3 -DVTK_DIR=/home/prashant/Softwares/local/vtk/vtk-8.0.1/lib/cmake/vtk-8.0 -DPHPX_Test=1 -DCMAKE_INSTALL_PREFIX=." GENERATION_DIR="build" />
+      <configuration PROFILE_NAME="Debug_1" CONFIG_NAME="Debug" TOOLCHAIN_NAME="SoftwareLocal" GENERATION_OPTIONS="-DCMAKE_BUILD_TYPE=Release -DHPX_DIR=/home/prashant/Softwares/local/hpx/hpx-1.1.0/lib/cmake/HPX -DYAML_CPP_DIR=/home/prashant/Softwares/local/yaml-cpp/yaml-cpp-0.5.3 -DVTK_DIR=/home/prashant/Softwares/local/vtk/vtk-8.0.1/lib/cmake/vtk-8.0 -DCMAKE_INSTALL_PREFIX=." GENERATION_DIR="build" />
     </configurations>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52b6175d-7e8c-4d1c-853b-d71d66d49617" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doxy/def/doxygen.def" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doxy/def/doxygen.def" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doxy/html/classfe_1_1Quadrature_a4f07150114e1232b562ba7371dabf5f3_icgraph.map" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doxy/html/classfe_1_1Quadrature_a4f07150114e1232b562ba7371dabf5f3_icgraph.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doxy/html/classfe_1_1Quadrature_a4f07150114e1232b562ba7371dabf5f3_icgraph.md5" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doxy/html/classfe_1_1Quadrature_a4f07150114e1232b562ba7371dabf5f3_icgraph.md5" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doxy/html/formula.repository" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doxy/html/formula.repository" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doxy/html/group__TestFe_ga3a17653f7c5c8ed593c3067ebf4bdedd_cgraph.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doxy/html/group__TestFe_ga3a17653f7c5c8ed593c3067ebf4bdedd_cgraph.md5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doxy/man/man3/TestFe.3" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doxy/man/man3/TestFe.3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doxy/man/man3/fe_QuadData.3" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doxy/man/man3/fe_QuadData.3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doxy/man/man3/fe_QuadElem.3" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doxy/man/man3/fe_QuadElem.3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doxy/man/man3/fe_Quadrature.3" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doxy/man/man3/fe_Quadrature.3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/doxy/man/man3/fe_TriElem.3" beforeDir="false" afterPath="$PROJECT_DIR$/docs/doxy/man/man3/fe_TriElem.3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/notes/debug_function.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/notes/debug_function.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fe/mesh.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/mesh.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fe/quadElem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/quadElem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fe/quadElem.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/quadElem.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fe/triElem.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/triElem.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fe/triElem.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/triElem.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fe/mesh.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/mesh.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fe/quadrature.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/quadrature.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geometry/fracture.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/fracture.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geometry/fracture.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/fracture.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geometry/neighbor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/neighbor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/geometry/neighbor.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/neighbor.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/decks/fractureDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/fractureDeck.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/input.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/input.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/fd/fDModel.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/model.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/model.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rw/mshReader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/mshReader.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/fe/testFe.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/fe/testFe.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/fe/testFeLib.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/fe/testFeLib.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/fe/testFeLib.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/fe/testFeLib.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rw/writer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/writer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/CMakeLists.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/point.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/point.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/transfomation.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/transfomation.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/transformation.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/transformation.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -80,29 +80,108 @@
     <favorites_list name="NLMech" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fe/mesh.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="91" selection-start-line="91" selection-end-line="91" />
-              <folding>
-                <element signature="e#150#167#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/notes/debug_function.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="488">
-              <caret line="137" column="17" selection-start-line="137" selection-start-column="17" selection-end-line="137" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/geometry/fracture.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="90">
+                  <caret line="51" column="5" lean-forward="true" selection-start-line="51" selection-start-column="5" selection-end-line="51" selection-end-column="5" />
+                  <folding>
+                    <element signature="e#199#234#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/test/geometry/testGeomLib.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="734">
+                  <caret line="68" column="52" lean-forward="true" selection-start-line="68" selection-start-column="52" selection-end-line="68" selection-end-column="52" />
+                  <folding>
+                    <element signature="e#150#174#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/fe/mesh.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-8">
+                  <caret line="123" column="4" selection-start-line="123" selection-start-column="4" selection-end-line="123" selection-end-column="4" />
+                  <folding>
+                    <element signature="e#187#212#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="120">
+                  <caret line="50" selection-start-line="50" selection-end-line="50" />
+                  <folding>
+                    <element signature="e#150#170#0" expanded="true" />
+                    <element signature="e#200#230#0" expanded="true" />
+                    <element signature="e#303#335#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/test/fe/testFeLib.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="90">
+                  <caret line="291" column="3" selection-start-line="291" selection-start-column="3" selection-end-line="291" selection-end-column="3" />
+                  <folding>
+                    <element signature="e#150#172#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/notes/debug_function.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="398">
+                  <caret line="80" column="17" selection-start-line="75" selection-start-column="4" selection-end-line="80" selection-end-column="17" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/inp/decks/fractureDeck.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state>
+                  <caret line="178" column="17" selection-start-line="178" selection-start-column="17" selection-end-line="178" selection-end-column="17" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/geometry/fracture.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="2370">
+                  <caret line="158" column="23" selection-start-line="158" selection-start-column="23" selection-end-line="158" selection-end-column="23" />
+                  <folding>
+                    <element signature="e#150#171#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -131,6 +210,7 @@
       <find>getDerShapes</find>
       <find>getDerShapes(</find>
       <find>order</find>
+      <find>PHPX_Test</find>
     </findStrings>
     <replaceStrings>
       <replace>fe</replace>
@@ -149,57 +229,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/inp/decks/modelDeck.h" />
-        <option value="$PROJECT_DIR$/src/inp/decks/neighborDeck.h" />
-        <option value="$PROJECT_DIR$/src/inp/decks/outputDeck.h" />
-        <option value="$PROJECT_DIR$/src/inp/decks/policyDeck.h" />
-        <option value="$PROJECT_DIR$/src/inp/decks/solverDeck.h" />
-        <option value="$PROJECT_DIR$/src/loading/loading.h" />
-        <option value="$PROJECT_DIR$/src/loading/initialCondition.h" />
-        <option value="$PROJECT_DIR$/src/rw/reader.h" />
-        <option value="$PROJECT_DIR$/src/rw/writer.cpp" />
-        <option value="$PROJECT_DIR$/src/rw/writer.h" />
-        <option value="$PROJECT_DIR$/src/rw/vtkReader.h" />
-        <option value="$PROJECT_DIR$/src/rw/mshReader.h" />
-        <option value="$PROJECT_DIR$/src/util/transfomation.h" />
-        <option value="$PROJECT_DIR$/src/util/compare.h" />
-        <option value="$PROJECT_DIR$/src/util/matrix.h" />
-        <option value="$PROJECT_DIR$/src/util/matrixBlaze.h" />
-        <option value="$PROJECT_DIR$/src/model/model.h" />
-        <option value="$PROJECT_DIR$/src/inp/input.h" />
-        <option value="$PROJECT_DIR$/src/inp/policy.h" />
-        <option value="$PROJECT_DIR$/src/material/material.h" />
-        <option value="$PROJECT_DIR$/src/util/feElementDefs.h" />
-        <option value="$PROJECT_DIR$/src/util/point.h" />
-        <option value="$PROJECT_DIR$/docs/conf.doxy" />
-        <option value="$PROJECT_DIR$/src/inp/decks/materialDeck.h" />
-        <option value="$PROJECT_DIR$/src/util/quadData.h" />
-        <option value="$PROJECT_DIR$/src/fe/mesh.h" />
-        <option value="$PROJECT_DIR$/src/fe/quadData.h" />
-        <option value="$PROJECT_DIR$/src/model/fd/fDModel.h" />
         <option value="$PROJECT_DIR$/src/fe/baseElem.cpp" />
         <option value="$PROJECT_DIR$/src/inp/decks/quadratureDeck.h" />
-        <option value="$PROJECT_DIR$/src/test/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/src/test/testFe.cpp" />
         <option value="$PROJECT_DIR$/src/fe/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/test/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/test/fe/testFe.cpp" />
-        <option value="$PROJECT_DIR$/src/fe/quadrature.h" />
         <option value="$PROJECT_DIR$/src/fe/quadrature.cpp" />
-        <option value="$PROJECT_DIR$/src/model/fd/fDModel.cpp" />
-        <option value="$PROJECT_DIR$/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/src/test/fe/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/fe/baseElem.h" />
         <option value="$PROJECT_DIR$/src/test/fe/testFe.cpp" />
         <option value="$PROJECT_DIR$/src/fe/triElem.cpp" />
-        <option value="$PROJECT_DIR$/src/fe/triElem.h" />
-        <option value="$PROJECT_DIR$/src/fe/quadElem.h" />
         <option value="$PROJECT_DIR$/src/fe/quadElem.cpp" />
         <option value="$PROJECT_DIR$/src/test/fe/testFeLib.h" />
         <option value="$PROJECT_DIR$/src/test/fe/testFeLib.cpp" />
-        <option value="$PROJECT_DIR$/src/rw/mshReader.cpp" />
-        <option value="$PROJECT_DIR$/src/fe/mesh.cpp" />
         <option value="$PROJECT_DIR$/notes/debug_function.cpp" />
+        <option value="$PROJECT_DIR$/src/rw/mshReader.cpp" />
+        <option value="$PROJECT_DIR$/src/fe/quadrature.h" />
+        <option value="$PROJECT_DIR$/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/fe/baseElem.h" />
+        <option value="$PROJECT_DIR$/src/fe/massMatrix.h" />
+        <option value="$PROJECT_DIR$/src/fe/quadData.h" />
+        <option value="$PROJECT_DIR$/src/fe/quadElem.h" />
+        <option value="$PROJECT_DIR$/src/fe/triElem.h" />
+        <option value="$PROJECT_DIR$/src/geometry/interiorFlags.h" />
+        <option value="$PROJECT_DIR$/src/inp/policy.h" />
+        <option value="$PROJECT_DIR$/src/inp/input.h" />
+        <option value="$PROJECT_DIR$/src/loading/loading.h" />
+        <option value="$PROJECT_DIR$/src/loading/initialCondition.h" />
+        <option value="$PROJECT_DIR$/src/material/material.h" />
+        <option value="$PROJECT_DIR$/src/model/model.h" />
+        <option value="$PROJECT_DIR$/src/rw/mshReader.h" />
+        <option value="$PROJECT_DIR$/src/rw/reader.h" />
+        <option value="$PROJECT_DIR$/src/rw/vtkReader.h" />
+        <option value="$PROJECT_DIR$/src/rw/writer.h" />
+        <option value="$PROJECT_DIR$/src/main.cpp" />
+        <option value="$PROJECT_DIR$/src/fe/mesh.h" />
+        <option value="$PROJECT_DIR$/src/fe/mesh.cpp" />
+        <option value="$PROJECT_DIR$/src/util/point.h" />
+        <option value="$PROJECT_DIR$/src/model/fd/fDModel.h" />
+        <option value="$PROJECT_DIR$/src/geometry/neighbor.h" />
+        <option value="$PROJECT_DIR$/src/geometry/neighbor.cpp" />
+        <option value="$PROJECT_DIR$/src/inp/input.cpp" />
+        <option value="$PROJECT_DIR$/src/util/transfomation.h" />
+        <option value="$PROJECT_DIR$/src/util/transformation.cpp" />
+        <option value="$PROJECT_DIR$/src/inp/decks/fractureDeck.h" />
+        <option value="$PROJECT_DIR$/src/model/fd/fDModel.cpp" />
+        <option value="$PROJECT_DIR$/src/test/CMakeLists.txt" />
+        <option value="$PROJECT_DIR$/src/test/geometry/testGeom.cpp" />
+        <option value="$PROJECT_DIR$/src/geometry/fracture.h" />
+        <option value="$PROJECT_DIR$/src/geometry/fracture.cpp" />
+        <option value="$PROJECT_DIR$/src/test/geometry/testGeomLib.h" />
+        <option value="$PROJECT_DIR$/src/test/geometry/testGeomLib.cpp" />
       </list>
     </option>
   </component>
@@ -242,13 +322,21 @@
               <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="test" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="test" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="fe" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="rw" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="test" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="geometry" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -333,7 +421,7 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="NLMech_exe" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i input_2d_new.yaml --hpx:threads=1" WORKING_DIR="file://$PROJECT_DIR$/build/imp" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="NLMech_exe" CONFIG_NAME="Debug_1" RUN_TARGET_PROJECT_NAME="NLMech" RUN_TARGET_NAME="NLMech_exe">
+    <configuration name="NLMech_exe" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i input_2d_new.yaml --hpx:threads=1" WORKING_DIR="file://$PROJECT_DIR$/build/imp" PASS_PARENT_ENVS_2="true" CONFIG_NAME="Debug_1" RUN_TARGET_PROJECT_NAME="NLMech" RUN_TARGET_NAME="NLMech_exe" EXPLICIT_BUILD_TARGET_NAME="all">
       <method v="2" />
     </configuration>
     <configuration name="RW" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="RW" CONFIG_NAME="Debug_1">
@@ -342,6 +430,11 @@
       </method>
     </configuration>
     <configuration name="TestFE_exe" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="TestFE_exe" CONFIG_NAME="Debug_1" RUN_TARGET_PROJECT_NAME="NLMech" RUN_TARGET_NAME="TestFE_exe">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestGeom_exe" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="TestGeom_exe" CONFIG_NAME="Debug_1" RUN_TARGET_PROJECT_NAME="NLMech" RUN_TARGET_NAME="TestGeom_exe">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -361,6 +454,7 @@
       <item itemvalue="CMake Application.Model" />
       <item itemvalue="CMake Application.RW" />
       <item itemvalue="CMake Application.TestFE_exe" />
+      <item itemvalue="CMake Application.TestGeom_exe" />
       <item itemvalue="CMake Application.Util" />
     </list>
   </component>
@@ -392,12 +486,13 @@
       <workItem from="1554397865201" duration="3082000" />
       <workItem from="1554400962780" duration="48000" />
       <workItem from="1554401023046" duration="30000" />
-      <workItem from="1554410110481" duration="15425000" />
+      <workItem from="1554410110481" duration="27940000" />
+      <workItem from="1554442384608" duration="6921000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="211860000" />
+    <option name="totallyTimeSpent" value="231296000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -412,13 +507,13 @@
     <frame x="52" y="-11" width="1869" height="1092" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.22954421" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.23228996" />
       <window_info id="Structure" order="1" sideWeight="0.50152904" side_tool="true" weight="0.20757826" />
       <window_info id="Favorites" order="2" sideWeight="0.50083196" side_tool="true" weight="0.2539913" />
       <window_info anchor="bottom" id="Messages" order="0" sideWeight="0.49854863" weight="0.3282365" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3282365" />
       <window_info anchor="bottom" id="Terminal" order="2" weight="0.3282365" />
-      <window_info anchor="bottom" id="Run" order="3" visible="true" weight="0.32925585" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.32925585" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.39959225" />
       <window_info anchor="bottom" id="Database Changes" order="5" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32925585" />
@@ -466,142 +561,21 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.log" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/initialConditionDeck.h">
+    <entry file="file://$PROJECT_DIR$/src/rw/reader.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-301" />
+        <state relative-caret-position="-624" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/quadratureDeck.h">
+    <entry file="file://$PROJECT_DIR$/src/rw/mshReader.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="390">
-          <caret line="26" column="5" lean-forward="true" selection-start-line="26" selection-start-column="5" selection-end-line="26" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/policyDeck.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/outputDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-91" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/neighborDeck.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/modelDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-586" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/meshDeck.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/materialDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2146">
-          <caret line="10" column="17" lean-forward="true" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
-          <folding>
-            <element signature="e#205#221#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/massMatrixDeck.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/loadingDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-990" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/solverDeck.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/input.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2385" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/policy.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="36" column="50" selection-start-line="36" selection-start-column="50" selection-end-line="36" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/interiorFlagsDeck.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/src/test/fe/CTestTestfile.cmake">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" lean-forward="true" selection-start-line="6" selection-end-line="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/CTestTestfile.cmake">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/cmake_install.cmake">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/testFe.cpp" />
-    <entry file="file://$PROJECT_DIR$/build/src/test/Makefile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2340" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/src/test/cmake_install.cmake">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/src/test/CTestTestfile.cmake">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="64" lean-forward="true" selection-start-line="4" selection-start-column="64" selection-end-line="4" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/test/CMakeLists.txt" />
-    <entry file="file://$PROJECT_DIR$/test/testFe.cpp" />
-    <entry file="file://$PROJECT_DIR$/src/test/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="5" column="20" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" selection-start-line="9" selection-end-line="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/model.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="9" column="25" lean-forward="true" selection-start-line="9" selection-start-column="25" selection-end-line="9" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/quadrature.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="12" column="39" selection-start-line="12" selection-start-column="39" selection-end-line="12" selection-end-column="39" />
+        <state relative-caret-position="224">
+          <caret line="253" lean-forward="true" selection-start-line="253" selection-end-line="253" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fe/quadrature.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
+        <state relative-caret-position="210">
           <caret line="15" column="39" selection-start-line="15" selection-start-column="39" selection-end-line="15" selection-end-column="39" />
           <folding>
             <element signature="e#150#173#0" expanded="true" />
@@ -609,135 +583,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/inp/decks/fractureDeck.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="441">
-          <caret line="126" selection-start-line="126" selection-end-line="126" selection-end-column="8" />
-          <folding>
-            <element signature="e#205#222#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+    <entry file="file://$PROJECT_DIR$/build/CMakeCache.txt">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.h">
+    <entry file="file://$PROJECT_DIR$/src/fe/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" selection-start-line="8" selection-end-line="8" selection-end-column="25" />
-          <folding>
-            <element signature="e#199#224#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Softwares/local/hpx/hpx-1.1.0/include/hpx/hpx_init.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="47" column="8" selection-start-line="47" selection-start-column="8" selection-end-line="47" selection-end-column="8" />
+        <state relative-caret-position="165">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
-          <caret line="79" column="30" lean-forward="true" selection-start-line="79" selection-start-column="30" selection-end-line="79" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="22" selection-start-line="6" selection-start-column="22" selection-end-line="6" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/fe/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/mesh.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1530" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/baseElem.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-          <folding>
-            <element signature="e#150#171#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/point.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="137" column="13" lean-forward="true" selection-start-line="137" selection-start-column="13" selection-end-line="137" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/baseElem.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
-          <caret line="91" column="32" selection-start-line="91" selection-start-column="32" selection-end-line="91" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/fe/testFe.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="21" lean-forward="true" selection-start-line="16" selection-start-column="21" selection-end-line="16" selection-end-column="21" />
-          <folding>
-            <element signature="e#150#177#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docs/doxy/html/doxygen.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="1051" column="87" selection-start-line="1051" selection-start-column="87" selection-end-line="1051" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/fe/testFeLib.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="37">
-          <caret line="106" lean-forward="true" selection-start-line="106" selection-end-line="106" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/quadElem.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="817">
-          <caret line="109" column="33" selection-start-line="109" selection-start-column="33" selection-end-line="109" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/triElem.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="71" column="35" selection-start-line="71" selection-start-column="35" selection-end-line="71" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/triElem.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="87" column="59" selection-start-line="87" selection-start-column="59" selection-end-line="87" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/fe/testFeLib.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="232">
-          <caret line="410" column="25" lean-forward="true" selection-start-line="410" selection-start-column="25" selection-end-line="410" selection-end-column="25" />
-          <folding>
-            <element signature="e#150#172#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-246">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
         </state>
       </provider>
     </entry>
@@ -751,38 +610,359 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/quadrature.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" selection-start-line="19" selection-start-column="2" selection-end-line="21" selection-end-column="4" />
+          <folding>
+            <element signature="e#199#224#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/material/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/baseElem.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="104">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+          <folding>
+            <element signature="e#195#253#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/massMatrix.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/quadData.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/quadElem.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#196#240#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/geometry/interiorFlags.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="8" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/writer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/vtkReader.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+          <folding>
+            <element signature="e#197#225#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/reader.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#190#216#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/mshReader.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+          <folding>
+            <element signature="e#220#237#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/model.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#196#214#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/material/material.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/loading/initialCondition.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#222#239#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/loading/loading.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+          <folding>
+            <element signature="e#204#221#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/input.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/policy.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+          <folding>
+            <element signature="e#191#208#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/point.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="68" column="3" lean-forward="true" selection-start-line="68" selection-start-column="3" selection-end-line="68" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="30" column="17" selection-start-line="30" selection-start-column="17" selection-end-line="30" selection-end-column="17" />
+          <folding>
+            <element signature="e#199#224#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/decks/modelDeck.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/mesh.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="26" lean-forward="true" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="225">
+          <caret line="54" selection-start-line="54" selection-start-column="2" selection-end-line="70" selection-end-column="28" />
+          <folding>
+            <element signature="e#150#202#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/triElem.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+          <folding>
+            <element signature="e#193#237#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/triElem.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="877">
+          <caret line="71" column="35" selection-start-line="71" selection-start-column="35" selection-end-line="71" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/input.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="254" column="54" lean-forward="true" selection-start-line="254" selection-start-column="54" selection-end-line="254" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/feElementDefs.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/transfomation.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="31" selection-start-line="31" selection-end-line="31" selection-end-column="12" />
+          <folding>
+            <element signature="e#211#229#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/mesh.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-8">
+          <caret line="123" column="4" selection-start-line="123" selection-start-column="4" selection-end-line="123" selection-end-column="4" />
+          <folding>
+            <element signature="e#187#212#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/transformation.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" lean-forward="true" selection-start-line="25" selection-end-line="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/decks/fractureDeck.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="178" column="17" selection-start-line="178" selection-start-column="17" selection-end-line="178" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/geometry/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="20" selection-start-line="7" selection-start-column="12" selection-end-line="7" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/geometry/neighbor.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="25" lean-forward="true" selection-start-line="6" selection-start-column="25" selection-end-line="6" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1035">
-          <caret line="70" column="29" selection-start-line="70" selection-start-column="29" selection-end-line="70" selection-end-column="29" />
+        <state relative-caret-position="120">
+          <caret line="50" selection-start-line="50" selection-end-line="50" />
           <folding>
             <element signature="e#150#170#0" expanded="true" />
+            <element signature="e#200#230#0" expanded="true" />
             <element signature="e#303#335#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/rw/mshReader.cpp">
+    <entry file="file://$PROJECT_DIR$/src/test/fe/testFeLib.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="186">
-          <caret line="272" column="16" lean-forward="true" selection-start-line="272" selection-start-column="16" selection-end-line="272" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/mesh.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="91" selection-start-line="91" selection-end-line="91" />
+        <state relative-caret-position="90">
+          <caret line="291" column="3" selection-start-line="291" selection-start-column="3" selection-end-line="291" selection-end-column="3" />
           <folding>
-            <element signature="e#150#167#0" expanded="true" />
+            <element signature="e#150#172#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/notes/debug_function.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="488">
-          <caret line="137" column="17" selection-start-line="137" selection-start-column="17" selection-end-line="137" selection-end-column="17" />
+        <state relative-caret-position="398">
+          <caret line="80" column="17" selection-start-line="75" selection-start-column="4" selection-end-line="80" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/geometry/fracture.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2370">
+          <caret line="158" column="23" selection-start-line="158" selection-start-column="23" selection-end-line="158" selection-end-column="23" />
+          <folding>
+            <element signature="e#150#171#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/geometry/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/geometry/testGeom.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="24" selection-start-line="6" selection-start-column="24" selection-end-line="6" selection-end-column="24" />
+          <folding>
+            <element signature="e#150#177#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/CMakeLists.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" selection-start-line="7" selection-end-line="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/geometry/testGeomLib.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" column="24" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
+          <folding>
+            <element signature="e#191#216#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/geometry/neighbor.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="89">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/geometry/fracture.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="51" column="5" lean-forward="true" selection-start-line="51" selection-start-column="5" selection-end-line="51" selection-end-column="5" />
+          <folding>
+            <element signature="e#199#234#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/geometry/testGeomLib.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="734">
+          <caret line="68" column="52" lean-forward="true" selection-start-line="68" selection-start-column="52" selection-end-line="68" selection-end-column="52" />
+          <folding>
+            <element signature="e#150#174#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

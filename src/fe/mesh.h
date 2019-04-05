@@ -6,6 +6,9 @@
 #ifndef FE_MESH_H
 #define FE_MESH_H
 
+#include <hpx/config.hpp>
+#include <algorithm>
+
 #include "util/point.h" // definition of struct Point3
 #include <string>
 #include <vector>
@@ -124,6 +127,14 @@ public:
    */
   std::vector<size_t> getElementConnectivity(size_t i);
 
+  /*!
+   * @brief Get the vertices of element
+   *
+   * @param i Id of an element
+   * @return Vec vector of vertices
+   */
+  std::vector<util::Point3> getElementConnectivityNodes(size_t i);
+
   /** @}*/
 
 private:
@@ -152,6 +163,11 @@ private:
    * @brief Compute the nodal volume
    *
    * This method uses finite element mesh and computes the nodal volume.
+   * Formula for volume of a node \f$ i\f$ is given by
+   * \f[ V_i = \sum_{e \in N_i} \int_{T_e} N_i(x) dx, \f]
+   * where \f$N_i\f$ is the list of elements which have node \f$ i\f$ as its
+   * vertex, \f$ T_e\f$ is the element domain, \f$ N_i\f$ is the shape
+   * function of the node \f$ i\f$.
    */
   void computeVol();
 

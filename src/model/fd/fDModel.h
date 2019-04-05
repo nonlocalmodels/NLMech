@@ -28,6 +28,7 @@ class Neighbor;
 } // namespace geometry
 
 namespace inp {
+struct ModelDeck;
 class Input;
 class Policy;
 } // namespace inp
@@ -186,6 +187,10 @@ private:
   /** @}*/
 
 private:
+
+  /*! @brief Model deck */
+  inp::ModelDeck *d_modelDeck_p;
+
   /**
    * @name Data: High level objects
    */

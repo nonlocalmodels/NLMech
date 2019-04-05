@@ -17,6 +17,7 @@
 #include "../../geometry/fracture.h"
 #include "../../geometry/interiorFlags.h"
 #include "../../geometry/neighbor.h"
+#include "../../inp/decks/modelDeck.h"
 #include "../../inp/input.h"
 #include "../../inp/policy.h"
 #include "../../loading/initialCondition.h"
@@ -30,6 +31,8 @@ model::FDModel::FDModel(inp::Input *deck)
       d_material_p(nullptr) {
 
   std::cout << "Here\n";
+
+  d_modelDeck_p = deck->getModelDeck();
 
   // first initialize all the high level data
   initHObjects();
@@ -48,17 +51,21 @@ float model::FDModel::getEnergy() { return d_te - d_tw + d_tk; }
 
 void model::FDModel::initHObjects() {
 
+  // read mesh data
   d_mesh_p = new fe::Mesh(d_input_p->getMeshDeck());
 
-  //  d_quadrature_p = new fe::Quadrature(d_input_p->getQuadratureDeck(),
-  //      d_mesh_p->getElementType());
+  // create neighbor list
+  d_neighbor_p = new geometry::Neighbor(d_modelDeck_p->d_horizon,
+      d_input_p->getNeighborDeck(), d_mesh_p->getNodesP());
 
-  d_massMatrix_p = new fe::MassMatrix(d_input_p->getMassMatrixDeck());
+  // create fracture data
+  d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck(),
+      d_mesh_p->getNodesP(), d_neighbor_p->getNeighborsP());
 
-  d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck());
+
   d_interiorFlags_p =
       new geometry::InteriorFlags(d_input_p->getInteriorFlagsDeck());
-  d_neighbor_p = new geometry::Neighbor(d_input_p->getNeighborDeck());
+
   d_initialCondition_p =
       new loading::InitialCondition(d_input_p->getInitialConditionDeck());
   d_loading_p = new loading::Loading(d_input_p->getLoadingDeck());

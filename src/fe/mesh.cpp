@@ -3,11 +3,15 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
+#include <hpx/include/parallel_algorithm.hpp>
+
 #include "mesh.h"
 #include "../inp/decks/meshDeck.h"
 #include "../inp/policy.h"
 #include "../rw/reader.h"
 #include "../util/feElementDefs.h"
+#include "quadrature.h"
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <stdint.h>
@@ -47,7 +51,7 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
 
   // read mesh data from file
   createData(d_filename);
-};
+}
 
 //
 // Utility functions
@@ -76,41 +80,106 @@ void fe::Mesh::createData(std::string filename) {
   if (d_spatialDiscretization == "finite_difference")
     is_fd = true;
 
+  //
+  // read node and elements
+  //
   if (file_type == 0)
     rw::reader::readCsvFile(filename, d_dim, &d_nodes, &d_vol);
   else if (file_type == 1)
     rw::reader::readVtuFile(filename, d_dim, &d_nodes, d_eType, d_numElems,
-        &d_enc, &d_nec, &d_vol, is_fd);
+                            &d_enc, &d_nec, &d_vol, is_fd);
   else if (file_type == 2)
     rw::reader::readMshFile(filename, d_dim, &d_nodes, d_eType, d_numElems,
-        &d_enc, &d_nec, &d_vol, is_fd);
+                            &d_enc, &d_nec, &d_vol, is_fd);
 
-  // d_numElems must be set by writer above (check!)
+  // compute data from mesh data
+  d_numNodes = d_nodes.size();
   d_eNumVertex = util::vtk_map_element_to_num_nodes[d_eType];
-  d_numElems = d_enc.size()/d_eNumVertex;
+  d_numDofs = d_numNodes * d_dim;
 
-  // get number of vertex in a given element
-  d_eNumVertex = util::vtk_map_element_to_num_nodes[d_eType];
-
+  //
   // assign default values to fixity
+  //
   d_fix = std::vector<uint8_t>(d_nodes.size(), FREE_MASK);
 
-  // check if we need to compute nodal volumes
+  //
+  // compute nodal volume if required
+  //
   bool compute_vol = false;
   if (is_fd and d_vol.empty())
     compute_vol = true;
 
   // if this is weak finite element simulation then check from policy if
   // volume is to be computed
-  if (d_spatialDiscretization == "weak_finite_element"
-      and !inp::Policy::getInstance()->populateData("Mesh_d_vol"))
+  if (d_spatialDiscretization == "weak_finite_element" and
+      !inp::Policy::getInstance()->populateData("Mesh_d_vol"))
     compute_vol = false;
 
   if (compute_vol)
     computeVol();
 }
 
-void fe::Mesh::computeVol() {};
+void fe::Mesh::computeVol(){
+
+  // initialize quadrature data
+  fe::BaseElem *quads;
+  if (d_eType == util::vtk_type_triangle)
+    quads = new fe::TriElem(2);
+  else if (d_eType == util::vtk_type_quad)
+    quads = new fe::QuadElem(2);
+
+  //
+  // compute nodal volume
+  //
+  d_vol.reserve(d_numNodes);
+  auto f = hpx::parallel::for_loop(
+      hpx::parallel::execution::par(hpx::parallel::execution::task),
+      0, this->d_numNodes, [this,quads](boost::uint64_t i)
+      {
+
+        double v = 0.0;
+
+        for (auto e : this->d_nec[i]) {
+
+          std::vector<size_t> e_ns = this->getElementConnectivity(e);
+
+          // locate global node i in local list of element el
+          int loc_i = -1;
+          for (size_t l=0; l<e_ns.size(); l++)
+            if (e_ns[l] == i)
+              loc_i = l;
+
+          if (loc_i == -1) {
+            std::cerr<<"Error: Check node element connectivity.\n";
+            exit(1);
+          }
+
+          // get quad data
+          std::vector<util::Point3> e_nodes;
+          for (auto k : e_ns)
+            e_nodes.emplace_back(this->d_nodes[k]);
+
+          std::vector<fe::QuadData> qds = quads->getQuadPoints(e_nodes);
+
+          // compute V_e and add it to volume
+          for (auto qd : qds)
+            v += qd.d_shapes[loc_i] * qd.d_w;
+        } // loop over elements
+
+        // update
+        this->d_vol[i] = v;
+      }
+  ); //end of parallel for loop
+
+  f.get();
+//
+//  std::ofstream myfile("nodes.csv");
+//  myfile.precision(6);
+//  for (size_t i=0; i<d_numNodes; i++)
+//    myfile << i <<","<< d_nodes[i].d_x << "," << d_nodes[i].d_y << "," <<
+//           d_nodes[i].d_z << "," << d_vol[i] <<"\n";
+//  myfile.close();
+}
 
 //
 // Accessor functions
@@ -130,8 +199,15 @@ std::vector<util::Point3> fe::Mesh::getNodes() { return d_nodes; }
 const std::vector<util::Point3> *fe::Mesh::getNodesP() { return &d_nodes; }
 
 std::vector<size_t> fe::Mesh::getElementConnectivity(size_t i) {
-  return std::vector<size_t>(d_enc.begin() + d_eNumVertex * i, d_enc.begin
-  () + d_eNumVertex * i + d_eNumVertex);
+  return std::vector<size_t>(d_enc.begin() + d_eNumVertex * i,
+                             d_enc.begin() + d_eNumVertex * i + d_eNumVertex);
+}
+
+std::vector<util::Point3> fe::Mesh::getElementConnectivityNodes(size_t i) {
+  std::vector<util::Point3> nds;
+  for (size_t k=0; k<d_eNumVertex; k++)
+    nds.emplace_back(d_nodes[d_enc[d_eNumVertex*i + k]]);
+  return nds;
 }
 
 //

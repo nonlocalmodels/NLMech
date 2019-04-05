@@ -6,6 +6,8 @@
 #ifndef UTIL_TRANSFORMATION_H
 #define UTIL_TRANSFORMATION_H
 
+#include "point.h"      // definition of point
+
 #include <vector>
 
 namespace util {
@@ -22,12 +24,29 @@ namespace transformation {
 std::vector<double> rotateCW2D(const std::vector<double> x, const double theta);
 
 /*!
+ * @brief Rotates a vector in xy-plane in clockwise direction
+ * @param x Point
+ * @param theta Angle
+ * @return Point after rotation
+ */
+util::Point3 rotateCW2D(const util::Point3 x, const double theta);
+
+/*!
  * @brief Rotates a vector in xy-plane in anti-clockwise direction
  * @param x Point
  * @param theta Angle
  * @return Point after rotation
  */
 std::vector<double> rotateACW2D(const std::vector<double> x,
+                                const double theta);
+
+/*!
+ * @brief Rotates a vector in xy-plane in anti-clockwise direction
+ * @param x Point
+ * @param theta Angle
+ * @return Point after rotation
+ */
+util::Point3 rotateACW2D(const util::Point3 x,
                                 const double theta);
 
 } // namespace transformation

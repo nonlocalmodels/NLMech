@@ -6,6 +6,7 @@
 #ifndef GEOM_NEIGHBOR_H
 #define GEOM_NEIGHBOR_H
 
+#include "util/point.h"         // definition of Point3
 #include <string>
 #include <vector>
 
@@ -30,9 +31,27 @@ class Neighbor {
 public:
   /*!
    * @brief Constructor
+   * @param horizon Horizon
    * @param deck Input deck which contains user-specified information
+   * @param nodes Pointer to nodal positions
    */
-  explicit Neighbor(inp::NeighborDeck *deck);
+  Neighbor(const double &horizon, inp::NeighborDeck *deck,
+      const std::vector<util::Point3> *nodes);
+
+  /*!
+   * @brief Get neighbor list of node i (element i incase of
+   * weak_finite_element)
+   *
+   * @param i Id of node
+   * @return Vec vector of neighboring nodes
+   */
+  const std::vector<size_t> &getNeighbors(const size_t &i);
+
+  /*!
+   * @brief Get pointer to full neighbor list
+   * @return Vec Neighborlist
+   */
+  const std::vector<std::vector<size_t>> *getNeighborsP();
 
 private:
   /*! @brief Interior flags deck */

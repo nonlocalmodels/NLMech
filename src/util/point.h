@@ -58,6 +58,16 @@ struct Point3 {
    */
   double dot(Point3 b) { return d_x * b.d_x + d_y * b.d_y + d_z * b.d_z; }
 
+  /*!
+   * @brief Computes the distance between a given point from this point
+   * @param b Another point
+   * @return Value Distance between the two points
+   */
+  double dist(Point3 b) {
+    return std::sqrt((d_x - b.d_x) * (d_x - b.d_x) +
+                     (d_y - b.d_y) * (d_z - b.d_z));
+  }
+
   /**
    * @name Group operators
    */

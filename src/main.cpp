@@ -6,9 +6,12 @@
 #include <hpx/hpx_main.hpp> // Need main source file
 
 #include "inp/input.h"        // Input class
+#include "model/model.h" // Model class
 #include "model/fd/fDModel.h" // Model class
+#include "fe/mesh.h"          // Mesh class
 #include <iostream>
 
+#include <algorithm>
 #include <boost/program_options.hpp> // program options
 
 //! Main driver
@@ -48,6 +51,24 @@ int main(int argc, char *argv[]) {
   // check which model to run
   //  if (deck->getSpatialDiscretization() == "finite_difference")
   model::FDModel fdModel(deck);
+
+//  //
+//  // compute nodal volume
+//  //
+//  std::vector<double> a(1000,0);
+//  auto f = hpx::parallel::for_loop(
+//      hpx::parallel::execution::par(hpx::parallel::execution::task),
+//      0, a.size(), [&a](boost::uint64_t i)
+//      {
+//
+//        a[i] = double(i);
+//      }
+//  ); //end of parallel for loop
+//
+//  f.get();
+//
+//  for (size_t i=0; i<10; i++)
+//    std::cout<<a[i]<<"\n";
 
   // get time elapsed
   //  std::uint64_t elapsed = hpx::util::high_resolution_clock::now() - t;

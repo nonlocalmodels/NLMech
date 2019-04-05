@@ -7,7 +7,6 @@
 #define MODEL_MODEL_H
 
 #include <cstdlib>
-#include <hpx/config.hpp>
 #include <vector>
 
 #include "../util/matrix.h" // definition of SymMatrix3

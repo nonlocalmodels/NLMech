@@ -6,6 +6,7 @@
 #ifndef RW_WRITER_H
 #define RW_WRITER_H
 
+
 namespace rw {
 
 /*!
