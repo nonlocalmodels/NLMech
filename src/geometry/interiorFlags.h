@@ -49,8 +49,6 @@ private:
    * exterior.
    */
   std::vector<char> d_intFlags;
-
-  /** @}*/
 };
 
 } // namespace geometry

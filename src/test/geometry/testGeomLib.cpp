@@ -57,19 +57,39 @@ void testFracture() {
   auto *fracture = new geometry::Fracture(deck, &nodes,
                                          &neighbor_list);
 
-  // print bonds as bits
-  printBits("bonds_1.csv", nodes, fracture);
+  //  // print bonds as bits
+  //  printBits("bonds_1.csv", nodes, fracture);
+  size_t error_check = 0;
 
-  // now set the bit of neighbors of even node
-  for (size_t i=0; i<nodes.size(); i+=2){
+  // now set the bit of neighbors of even node as fixed
+  for (size_t i=0; i<nodes.size(); i++){
     for (size_t k=0; k<neighbor_list[i].size(); k++) {
-      fracture->setBondState(i, k, true);
+      if (fracture->getBondState(i,k))
+        error_check++;
 
-      if (!fracture->getBondState(i,k))
-        std::cout<<"Error in setting bond state.\n";
+      if (i%2 == 0)
+        fracture->setBondState(i, k, true);
+
+      if (i%2 == 0 and !fracture->getBondState(i,k))
+        error_check++;
+      }
+  }
+
+  // now set the bit of neighbors of even node as free and odd node as fixed
+  for (size_t i=0; i<nodes.size(); i++){
+    for (size_t k=0; k<neighbor_list[i].size(); k++) {
+      fracture->setBondState(i, k, i % 2 != 0);
+
+      if (i%2 == 0 and fracture->getBondState(i,k))
+        error_check++;
+      if (i%2 == 1 and !fracture->getBondState(i,k))
+        error_check++;
     }
   }
-  printBits("bonds_2.csv", nodes, fracture);
 
+  std::cout << "**********************************\n";
+  std::cout << "Fracture Class Test\n";
+  std::cout << "**********************************\n";
+  std::cout << (error_check == 0 ? "TEST 1 : PASS. \n" : "TEST 1 : FAIL. \n");
 }
 

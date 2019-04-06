@@ -21,4 +21,6 @@
  */
 void testFracture();
 
+/** @}*/
+
 #endif // TEST_GEOMLIB_H

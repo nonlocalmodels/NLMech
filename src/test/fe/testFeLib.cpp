@@ -423,9 +423,5 @@ void testQuadElem(size_t n) {
     std::cout << "TEST 1 : PASS. ";
   else
     std::cout << "TEST 1 : FAIL. ";
-  if (error_test_2 == 0)
-    std::cout << "TEST 2 : PASS. ";
-  else
-    std::cout << "TEST 2 : FAIL. ";
-  std::cout << "\n";
+  std::cout << (error_test_2 == 0 ? "TEST 2 : PASS. \n" : "TEST 2 : FAIL. \n");
 }

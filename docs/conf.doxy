@@ -794,15 +794,12 @@ INPUT                  = ../src/main.cpp \
                          ../src/fe \
                          ../src/geometry \
                          ../src/inp \
-                         ../src/inp/decks \
                          ../src/loading \
                          ../src/material \
                          ../src/model \
-                         ../src/model/fd \
                          ../src/rw \
                          ../src/util \
                          ../src/test \
-                         ../src/test/fe \
                          ../README.md
 
 # This tag can be used to specify the character encoding of the source files
@@ -877,7 +874,7 @@ FILE_PATTERNS          = *.c \
 # be searched for input files as well.
 # The default value is: NO.
 
-RECURSIVE              = NO
+RECURSIVE              = YES
 
 # The EXCLUDE tag can be used to specify files and/or directories that should be
 # excluded from the INPUT source files. This way you can easily exclude a

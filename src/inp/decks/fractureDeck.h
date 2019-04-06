@@ -136,12 +136,11 @@ struct EdgeCrack {
   /*!
    * @brief Checks if point lies on left(top) or right(bottom) of crack
    * @param p Point p to check
-   * @param o Orientation of crack
    * @param pb Bottom (left) point of crack line
    * @param pt Top (right) point of crack line
    * @return true if lies on left(top)
    */
-  bool ptLeftside(util::Point3 p, int o, util::Point3 pb, util::Point3 pt) {
+  bool ptLeftside(util::Point3 p, util::Point3 pb, util::Point3 pt) {
 
     // algorithm is same for any orientation of crack
     //            pt
@@ -164,14 +163,13 @@ struct EdgeCrack {
   /*!
    * @brief Checks if point lies on left(top) or right(bottom) of crack
    * @param p Point p to check
-   * @param o Orientation of crack
    * @param pb Bottom (left) point of crack line
    * @param pt Top (right) point of crack line
    * @return true if lies on right(bottom)
    */
-  bool ptRightside(util::Point3 p, int o, util::Point3 pb, util::Point3 pt) {
+  bool ptRightside(util::Point3 p, util::Point3 pb, util::Point3 pt) {
 
-    return !this->ptLeftside(p, o, pb, pt);
+    return !this->ptLeftside(p, pb, pt);
   }
 };
 

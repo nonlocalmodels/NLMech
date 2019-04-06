@@ -20,8 +20,7 @@ util::transformation::rotateCW2D(const util::Point3 x,
                                  const double theta) {
 
   return {x.d_x * std::cos(theta) + x.d_y * std::sin(theta),
-                             -x.d_x * std::sin(theta) + x.d_y * std::cos(theta),
-                             0.0};
+          -x.d_x * std::sin(theta) + x.d_y * std::cos(theta), 0.0};
 }
 
 std::vector<double>

@@ -62,7 +62,7 @@ void model::FDModel::initHObjects() {
   d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck(),
       d_mesh_p->getNodesP(), d_neighbor_p->getNeighborsP());
 
-
+  // create interior flags
   d_interiorFlags_p =
       new geometry::InteriorFlags(d_input_p->getInteriorFlagsDeck());
 
