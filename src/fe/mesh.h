@@ -135,6 +135,12 @@ public:
    */
   std::vector<util::Point3> getElementConnectivityNodes(size_t i);
 
+  /*!
+   * @brief Get the bounding box of the mesh
+   * @return Box Bounding box
+   */
+  std::pair<std::vector<double>, std::vector<double>> getBoundingBox();
+
   /** @}*/
 
 private:

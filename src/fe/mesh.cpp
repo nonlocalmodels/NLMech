@@ -210,6 +210,10 @@ std::vector<util::Point3> fe::Mesh::getElementConnectivityNodes(size_t i) {
   return nds;
 }
 
+std::pair<std::vector<double>, std::vector<double>> fe::Mesh::getBoundingBox() {
+  return d_bbox;
+}
+
 //
 // Setter functions
 //

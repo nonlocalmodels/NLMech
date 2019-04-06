@@ -24,6 +24,10 @@ struct InteriorFlagsDeck {
   /*! @brief Flag which indicates if no-fail region is active */
   bool d_noFailActive;
 
+  /*! @brief Flag which indicates if we compute the flag inline instead of
+   * storing it. This is effective only if d_noFailActive is set to true. */
+  bool d_computeAndNotStoreFlag;
+
   /*! @brief Tolerance to decide if the point is in interior/exterior */
   double d_noFailTol;
 
@@ -32,7 +36,9 @@ struct InteriorFlagsDeck {
   /*!
    * @brief Constructor
    */
-  InteriorFlagsDeck() : d_noFailActive(false), d_noFailTol(0.){};
+  InteriorFlagsDeck()
+      : d_noFailActive(false), d_computeAndNotStoreFlag(false),
+        d_noFailTol(0.){};
 };
 
 /** @}*/

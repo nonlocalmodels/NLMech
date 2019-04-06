@@ -64,7 +64,8 @@ void model::FDModel::initHObjects() {
 
   // create interior flags
   d_interiorFlags_p =
-      new geometry::InteriorFlags(d_input_p->getInteriorFlagsDeck());
+      new geometry::InteriorFlags(d_input_p->getInteriorFlagsDeck(),
+          d_mesh_p->getNodesP(), d_mesh_p->getBoundingBox());
 
   d_initialCondition_p =
       new loading::InitialCondition(d_input_p->getInitialConditionDeck());
