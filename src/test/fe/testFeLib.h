@@ -103,6 +103,19 @@ void testTriElem(size_t n);
  */
 void testQuadElem(size_t n);
 
+/*!
+ * @brief Computes the time needed when quad data for elements are stored and
+ * when they are computed as and when needed
+ *
+ * This function allocates dummy elements and test how much time it is
+ * required to do computation when the quad data are stored for each element
+ * and when the quad data are computed.
+ *
+ * @param n Order of quadrature point approximation
+ * @param N Number of elements on which this test is performed
+ */
+void testTriElemTime(size_t n, size_t N);
+
 /** @}*/
 
 /*!

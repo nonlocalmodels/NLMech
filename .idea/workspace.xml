@@ -25,14 +25,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52b6175d-7e8c-4d1c-853b-d71d66d49617" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/fe/mesh.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/mesh.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fe/mesh.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/mesh.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geometry/fracture.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/fracture.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geometry/interiorFlags.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/interiorFlags.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geometry/interiorFlags.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/interiorFlags.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/interiorFlagsDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/interiorFlagsDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/input.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/input.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/fe/testFe.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/fe/testFe.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/fe/testFeLib.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/fe/testFeLib.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/fe/testFeLib.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/fe/testFeLib.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -62,12 +58,59 @@
     <option name="testRunner" value="GRADLE" />
     <option name="delegatedBuild" value="true" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug_1" />
   <component name="FavoritesManager">
     <favorites_list name="NLMech" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <splitter split-orientation="horizontal" split-proportion="0.5">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/fe/quadData.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state>
+                  <caret line="8" selection-start-line="8" selection-end-line="8" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/test/fe/testFe.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="210">
+                  <caret line="15" column="30" lean-forward="true" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/test/fe/testFeLib.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state>
+                  <caret line="116" column="39" selection-start-line="116" selection-start-column="39" selection-end-line="116" selection-end-column="39" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/test/fe/testFeLib.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="659">
+                  <caret line="483" column="32" selection-start-line="483" selection-start-column="32" selection-end-line="483" selection-end-column="32" />
+                  <folding>
+                    <element signature="e#150#172#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -121,10 +164,8 @@
         <option value="$PROJECT_DIR$/test/fe/testFe.cpp" />
         <option value="$PROJECT_DIR$/src/fe/quadrature.cpp" />
         <option value="$PROJECT_DIR$/src/test/fe/CMakeLists.txt" />
-        <option value="$PROJECT_DIR$/src/test/fe/testFe.cpp" />
         <option value="$PROJECT_DIR$/src/fe/triElem.cpp" />
         <option value="$PROJECT_DIR$/src/fe/quadElem.cpp" />
-        <option value="$PROJECT_DIR$/src/test/fe/testFeLib.h" />
         <option value="$PROJECT_DIR$/notes/debug_function.cpp" />
         <option value="$PROJECT_DIR$/src/rw/mshReader.cpp" />
         <option value="$PROJECT_DIR$/src/fe/quadrature.h" />
@@ -152,7 +193,6 @@
         <option value="$PROJECT_DIR$/src/util/transfomation.h" />
         <option value="$PROJECT_DIR$/src/test/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/src/test/geometry/testGeom.cpp" />
-        <option value="$PROJECT_DIR$/src/test/fe/testFeLib.cpp" />
         <option value="$PROJECT_DIR$/src/test/geometry/testGeomLib.cpp" />
         <option value="$PROJECT_DIR$/src/util/transformation.cpp" />
         <option value="$PROJECT_DIR$/src/inp/decks/fractureDeck.h" />
@@ -166,6 +206,9 @@
         <option value="$PROJECT_DIR$/src/model/fd/fDModel.cpp" />
         <option value="$PROJECT_DIR$/src/fe/mesh.h" />
         <option value="$PROJECT_DIR$/src/fe/mesh.cpp" />
+        <option value="$PROJECT_DIR$/src/test/fe/testFeLib.h" />
+        <option value="$PROJECT_DIR$/src/test/fe/testFe.cpp" />
+        <option value="$PROJECT_DIR$/src/test/fe/testFeLib.cpp" />
       </list>
     </option>
   </component>
@@ -197,43 +240,38 @@
             <path>
               <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="build" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="cmake" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="data" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="data" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="test" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="docs" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="notes" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="fe" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="geometry" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="inp" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="inp" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="decks" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="util" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -287,7 +325,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="CMake Application.NLMech_exe">
+  <component name="RunManager" selected="Python tests.Unittests in test">
     <configuration name="FE" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="FE" CONFIG_NAME="Debug_1">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
@@ -341,6 +379,20 @@
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="Unittests in test" type="tests" factoryName="Unittests" nameIsGenerated="true">
+      <module name="NLMech" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/src/test&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="CMake Application.NLMech_exe" />
       <item itemvalue="CMake Application.FE" />
@@ -353,6 +405,7 @@
       <item itemvalue="CMake Application.TestFE_exe" />
       <item itemvalue="CMake Application.TestGeom_exe" />
       <item itemvalue="CMake Application.Util" />
+      <item itemvalue="Python tests.Unittests in test" />
     </list>
   </component>
   <component name="StructureViewFactory">
@@ -389,11 +442,13 @@
       <workItem from="1554514899062" duration="103000" />
       <workItem from="1554515104506" duration="743000" />
       <workItem from="1554533002270" duration="6257000" />
+      <workItem from="1554595778650" duration="3772000" />
+      <workItem from="1554609749968" duration="439000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="242100000" />
+    <option name="totallyTimeSpent" value="246311000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -407,10 +462,10 @@
   <component name="ToolWindowManager">
     <frame x="52" y="-11" width="1869" height="1092" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.24327293" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.24876441" />
       <window_info id="Structure" order="1" sideWeight="0.50152904" side_tool="true" weight="0.20757826" />
       <window_info id="Favorites" order="2" sideWeight="0.50083196" side_tool="true" weight="0.2539913" />
-      <window_info anchor="bottom" id="Messages" order="0" sideWeight="0.49854863" weight="0.3282365" />
+      <window_info active="true" anchor="bottom" id="Messages" order="0" sideWeight="0.49854863" visible="true" weight="0.3282365" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3282365" />
       <window_info anchor="bottom" id="Terminal" order="2" weight="0.3282365" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.32925585" />
@@ -461,16 +516,6 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.log" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/build/CMakeCache.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-246">
@@ -505,13 +550,6 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fe/massMatrix.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/quadData.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" selection-start-line="8" selection-end-line="8" />
@@ -741,16 +779,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/fe/testFeLib.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="412" column="7" selection-start-line="412" selection-start-column="7" selection-end-line="412" selection-end-column="7" />
-          <folding>
-            <element signature="e#150#172#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/geometry/testGeomLib.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="315">
@@ -864,6 +892,37 @@
           <folding>
             <element signature="e#193#237#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/quadData.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/fe/testFeLib.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret line="116" column="39" selection-start-line="116" selection-start-column="39" selection-end-line="116" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/fe/testFeLib.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="659">
+          <caret line="483" column="32" selection-start-line="483" selection-start-column="32" selection-end-line="483" selection-end-column="32" />
+          <folding>
+            <element signature="e#150#172#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/fe/testFe.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="15" column="30" lean-forward="true" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
         </state>
       </provider>
     </entry>

@@ -42,3 +42,8 @@ build
 
 # ide directory
 .idea
+
+
+# build directory
+docs/doxy
+docs/doxy.log

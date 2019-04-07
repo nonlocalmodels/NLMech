@@ -20,6 +20,17 @@ int main() {
     for (size_t i=1; i<6; i++)
       testQuadElem(i);
 
+    // test additional time in computing quad points instead of storing it
+    for (size_t i=1; i<6; i++) {
+      testTriElemTime(i, 1000);
+
+      testTriElemTime(i, 10000);
+
+      testTriElemTime(i, 100000);
+
+      testTriElemTime(i, 1000000);
+    }
+
   }
 
   return EXIT_SUCCESS;
