@@ -52,11 +52,24 @@ struct Point3 {
   double length() { return std::sqrt(d_x * d_x + d_y * d_y + d_z * d_z); }
 
   /*!
+   * @brief Computes the Euclidean length of the vector
+   * @return Length Euclidean length of the vector
+   */
+  double length() const { return std::sqrt(d_x * d_x + d_y * d_y + d_z * d_z); }
+
+  /*!
    * @brief Computes the dot product of this vector with another point
    * @param b Another vector
    * @return Value a dot product
    */
   double dot(Point3 b) { return d_x * b.d_x + d_y * b.d_y + d_z * b.d_z; }
+
+  /*!
+   * @brief Computes the dot product of this vector with another point
+   * @param b Another vector
+   * @return Value a dot product
+   */
+  double dot(Point3 b) const { return d_x * b.d_x + d_y * b.d_y + d_z * b.d_z; }
 
   /*!
    * @brief Computes the distance between a given point from this point
@@ -66,6 +79,16 @@ struct Point3 {
   double dist(Point3 b) {
     return std::sqrt((d_x - b.d_x) * (d_x - b.d_x) +
                      (d_y - b.d_y) * (d_z - b.d_z));
+  }
+
+  /*!
+   * @brief Computes the distance between a given point from this point
+   * @param b Another point
+   * @return Value Distance between the two points
+   */
+  double dist(Point3 b) const {
+    return std::sqrt((d_x - b.d_x) * (d_x - b.d_x) +
+        (d_y - b.d_y) * (d_z - b.d_z));
   }
 
   /**

@@ -8,10 +8,16 @@
 
 #include <string>
 #include <vector>
+#include "util/point.h"
 
 // forward declaration of initial condition deck
 namespace inp {
 struct InitialConditionDeck;
+}
+
+// forward declaration
+namespace fe {
+class Mesh;
 }
 
 namespace loading {
@@ -31,16 +37,33 @@ public:
    */
   explicit InitialCondition(inp::InitialConditionDeck *deck);
 
-private:
-  /**
-   * @name Internal data
+  /*!
+   * @brief Applies initial condition to displacement and velocity
+   * @param u Vector nodal displacements
+   * @param v Vector nodal velocities
+   * @param mesh Mesh object
    */
-  /**@{*/
+  void apply(std::vector<util::Point3> *u,
+             std::vector<util::Point3> *v, fe::Mesh *mesh);
 
-  /*! @brief Vector of initial (reference) coordinates of nodes */
-  //  std::vector<double> d_nd;
+private:
 
-  /** @}*/
+  /*!
+   * @brief Computes the formula specified by input file
+   * @param fn_type Type of function in formula
+   * @param params List of required parameters
+   * @param x Coordinate of point
+   * @param dof Degree of freedom (0 for X, 1 for Y, 2 for Z)
+   * @param dim Dimension
+   * @return Value Value of formula at the point
+   */
+  double getICFormula(const std::string &fn_type, const std::vector<double>
+      &params, const util::Point3 &x, const size_t &dof, const size_t &dim);
+
+
+  /*! @brief Initial condition deck */
+  inp::InitialConditionDeck *d_deck_p;
+
 };
 
 } // namespace loading

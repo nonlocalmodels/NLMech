@@ -37,6 +37,7 @@ struct NeighborDeck;
 struct OutputDeck;
 struct PolicyDeck;
 struct QuadratureDeck;
+struct RestartDeck;
 struct SolverDeck;
 
 /**
@@ -139,6 +140,12 @@ public:
   inp::QuadratureDeck *getQuadratureDeck();
 
   /*!
+   * @brief Get the pointer to restart deck
+   * @return Pointer to RestartDeck
+   */
+  inp::RestartDeck *getRestartDeck();
+
+  /*!
    * @brief Get the pointer to solver deck
    * @return Pointer to SolverDeck
    */
@@ -230,6 +237,11 @@ private:
   void setQuadratureDeck();
 
   /*!
+   * @brief Read data into restart deck and store its pointer
+   */
+  void setRestartDeck();
+
+  /*!
    * @brief Read data into solver deck and store its pointer
    */
   void setSolverDeck();
@@ -299,7 +311,7 @@ private:
    *
    * E.g. dimension, discretization type, mesh file, etc
    */
-  inp::MeshDeck *d_geometryDeck_p;
+  inp::MeshDeck *d_meshDeck_p;
 
   /*!
    * @brief Pointer to deck holding problem related data
@@ -338,6 +350,12 @@ private:
    * E.g. order of approximation, order of approximation for mass matrix
    */
   inp::QuadratureDeck *d_quadratureDeck_p;
+
+  /*!
+   * @brief Pointer to deck holding restart related data such as restart
+   * filename and restart time step
+   */
+  inp::RestartDeck *d_restartDeck_p;
 
   /*!
    * @brief Pointer to deck holding solver related data

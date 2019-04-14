@@ -130,12 +130,12 @@ void geometry::Fracture::computeFracturedBondFd(
 } // computeFracturedBondFd
 
 void geometry::Fracture::setBondState(const size_t &i, const size_t &j,
-                                      bool state) {
+                                      const bool &state) {
 
   // to set i^th bit as true of integer a,
   // a |= 1UL << (i % 8)
 
-  // to set i^th bit as flase of integer a,
+  // to set i^th bit as false of integer a,
   // a &= ~(1UL << (i % 8))
 
   state ? (d_fracture[i][j / 8] |= 1UL << (j % 8))

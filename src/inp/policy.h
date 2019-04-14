@@ -71,7 +71,7 @@ public:
    * @param level Level of tag list
    * @param tag Tag to be appended to list
    */
-  void addToTags(size_t level, const std::string &tag);
+  void addToTags(const size_t &level, const std::string &tag);
 
   /** @}*/
 
@@ -93,6 +93,12 @@ public:
    */
   int getMemoryControlFlag();
 
+  /*!
+   * @brief Returns true if postprocessing computation is to be done
+   * @return Flag
+   */
+  bool enablePostProcessing();
+
   /** @}*/
 
 private:
@@ -105,7 +111,7 @@ private:
    * @brief Private constructor
    * @param deck Input deck which contains user-specified information
    */
-  Policy(inp::PolicyDeck *deck);
+  explicit Policy(inp::PolicyDeck *deck);
 
   /*! @brief Private operator */
   Policy(Policy const &);

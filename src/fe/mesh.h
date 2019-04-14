@@ -91,23 +91,38 @@ public:
   size_t getElementType();
 
   /*!
+   * @brief Get the mesh size
+   * @return h Mesh size
+   */
+  double getMeshSize();
+
+  /*!
    * @brief Get coordinates of node i
    * @param i Id of the node
    * @return Coordinates
    */
-  util::Point3 getNode(size_t i);
+  util::Point3 getNode(const size_t &i);
 
   /*!
-   * @brief Get nodes data
-   * @return nodes vector of nodal coordinates
+   * @brief Get nodal volume of node i
+   * @param i Id of the node
+   * @return Volume
    */
-  std::vector<util::Point3> getNodes();
+  double getNodalVolume(const size_t &i);
 
   /*!
    * @brief Get the pointer to nodes data
    * @return Pointer to nodes data
    */
   const std::vector<util::Point3> *getNodesP();
+
+  /*!
+   * @brief Return true if node is free
+   * @param i Id of node
+   * @param dof Dof to check for
+   * @return Value True if dof is free else false
+   */
+  bool isNodeFree(const size_t &i, const unsigned int &dof);
 
   /*!
    * @brief Get the connectivity of element
@@ -125,7 +140,7 @@ public:
    * @param i Id of an element
    * @return Vec vector of nodal ids
    */
-  std::vector<size_t> getElementConnectivity(size_t i);
+  const std::vector<size_t> getElementConnectivity(const size_t &i);
 
   /*!
    * @brief Get the vertices of element
@@ -133,13 +148,28 @@ public:
    * @param i Id of an element
    * @return Vec vector of vertices
    */
-  std::vector<util::Point3> getElementConnectivityNodes(size_t i);
+  const std::vector<util::Point3> getElementConnectivityNodes(const size_t &i);
 
   /*!
    * @brief Get the bounding box of the mesh
    * @return Box Bounding box
    */
   std::pair<std::vector<double>, std::vector<double>> getBoundingBox();
+
+  /** @}*/
+
+  /**
+   * @name Setter methods
+   */
+  /**@{*/
+
+  /*!
+   * @brief Set the fixity to free (0) or fixed (1)
+   * @param i Id of node
+   * @param dof Dof which is affected
+   * @param flag Set to true (1) or false(0)
+   */
+  void setFixity(const size_t &i, const unsigned int &dof, const bool &flag);
 
   /** @}*/
 
@@ -163,7 +193,7 @@ private:
    *
    * @param filename Name of the mesh file
    * */
-  void createData(std::string filename);
+  void createData(const std::string& filename);
 
   /*!
    * @brief Compute the nodal volume
@@ -176,6 +206,14 @@ private:
    * function of the node \f$ i\f$.
    */
   void computeVol();
+
+  /*!
+   * @brief Compute the mesh size
+   *
+   * This method searches for minimum distance between any two mesh nodes and
+   * stores it as a mesh size.
+   */
+  void computeMeshSize();
 
   /** @}*/
 
@@ -296,6 +334,9 @@ private:
 
   /*! @brief Bounding box */
   std::pair<std::vector<double>, std::vector<double>> d_bbox;
+
+  /*! @brief Mesh size */
+  double d_h;
 };
 
 } // namespace fe

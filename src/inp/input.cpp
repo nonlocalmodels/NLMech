@@ -12,13 +12,14 @@
 #include "decks/loadingDeck.h"
 #include "decks/massMatrixDeck.h"
 #include "decks/materialDeck.h"
+#include "inp/decks/meshDeck.h"
 #include "decks/modelDeck.h"
 #include "decks/neighborDeck.h"
 #include "decks/outputDeck.h"
 #include "decks/policyDeck.h"
 #include "decks/quadratureDeck.h"
+#include "decks/restartDeck.h"
 #include "decks/solverDeck.h"
-#include "inp/decks/meshDeck.h"
 #include "input.h"
 
 static inline bool definitelyGreaterThan(const double &a, const double &b) {
@@ -27,7 +28,7 @@ static inline bool definitelyGreaterThan(const double &a, const double &b) {
 }
 
 inp::Input::Input(const std::string &filename)
-    : d_fractureDeck_p(nullptr), d_geometryDeck_p(nullptr),
+    : d_fractureDeck_p(nullptr), d_meshDeck_p(nullptr),
       d_initialConditionDeck_p(nullptr), d_interiorFlagsDeck_p(nullptr),
       d_loadingDeck_p(nullptr), d_materialDeck_p(nullptr),
       d_neighborDeck_p(nullptr), d_outputDeck_p(nullptr),
@@ -37,6 +38,7 @@ inp::Input::Input(const std::string &filename)
 
   // follow the order of reading
   setModelDeck();
+  setRestartDeck();
   setMeshDeck();
   setMassMatrixDeck();
   setQuadratureDeck();
@@ -72,7 +74,7 @@ inp::MassMatrixDeck *inp::Input::getMassMatrixDeck() {
 
 inp::MaterialDeck *inp::Input::getMaterialDeck() { return d_materialDeck_p; }
 
-inp::MeshDeck *inp::Input::getMeshDeck() { return d_geometryDeck_p; }
+inp::MeshDeck *inp::Input::getMeshDeck() { return d_meshDeck_p; }
 
 inp::ModelDeck *inp::Input::getModelDeck() { return d_modelDeck_p; }
 
@@ -85,6 +87,8 @@ inp::PolicyDeck *inp::Input::getPolicyDeck() { return d_policyDeck_p; }
 inp::QuadratureDeck *inp::Input::getQuadratureDeck() {
   return d_quadratureDeck_p;
 }
+
+inp::RestartDeck *inp::Input::getRestartDeck() { return d_restartDeck_p; }
 
 inp::SolverDeck *inp::Input::getSolverDeck() { return d_solverDeck_p; }
 
@@ -132,7 +136,8 @@ void inp::Input::setModelDeck() {
 
     if (!config["Model"]["Horizon_h_Ratio"] or !config["Model"]["Mesh_Size"]) {
 
-      std::cerr << "Error: Need both Horizon_h_Ratio and Mesh_Size to compute "
+      std::cerr << "Error: Horizon is not provided. In this case "
+                   "Horizon_h_Ratio and Mesh_Size are necessary to compute "
                    "horizon.\n";
       exit(1);
     }
@@ -157,29 +162,60 @@ void inp::Input::setModelDeck() {
   }
 
   d_modelDeck_p->d_dt = d_modelDeck_p->d_tFinal / d_modelDeck_p->d_Nt;
+
+  // check if this is restart problem
+  if (config["Restart"])
+    d_modelDeck_p->d_isRestartActive = true;
 } // setModelDeck
 
+void inp::Input::setRestartDeck() {
+  d_restartDeck_p = new inp::RestartDeck();
+  YAML::Node config = YAML::LoadFile(d_inputFilename);
+
+  // read restart file
+  if (config["Restart"]["File"])
+    d_restartDeck_p->d_file = config["Restart"]["File"].as<std::string>();
+  else {
+    std::cerr << "Error: Please specify the file for restart.\n";
+    exit(1);
+  }
+
+  // read time step from which to begin
+  if (config["Restart"]["Step"])
+    d_restartDeck_p->d_step = config["Restart"]["Step"].as<size_t>();
+  else {
+    std::cerr << "Error: Please specify the time step from which to restart "
+                 "the simulation.\n";
+    exit(1);
+  }
+} // setRestartDeck
+
 void inp::Input::setMeshDeck() {
-  d_geometryDeck_p = new inp::MeshDeck();
+  d_meshDeck_p = new inp::MeshDeck();
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   // read dimension
   if (config["Model"]["Dimension"])
-    d_geometryDeck_p->d_dim = config["Model"]["Dimension"].as<size_t>();
+    d_meshDeck_p->d_dim = config["Model"]["Dimension"].as<size_t>();
 
   // read spatial discretization type
   if (config["Model"]["Discretization_Type"]["Spatial"])
-    d_geometryDeck_p->d_spatialDiscretization =
+    d_meshDeck_p->d_spatialDiscretization =
         config["Model"]["Discretization_Type"]["Spatial"].as<std::string>();
 
   // read mesh filename
   if (config["Mesh"]["File"])
-    d_geometryDeck_p->d_filename = config["Mesh"]["File"].as<std::string>();
+    d_meshDeck_p->d_filename = config["Mesh"]["File"].as<std::string>();
   else {
 
     std::cerr << "Error: Please specify mesh filename.\n";
     exit(1);
   }
+
+  if (d_modelDeck_p->d_h < 1.0E-12)
+    d_meshDeck_p->d_computeMeshSize = true;
+  else
+    d_meshDeck_p->d_h = d_modelDeck_p->d_h;
 } // setMeshDeck
 
 void inp::Input::setMassMatrixDeck() {
@@ -329,7 +365,7 @@ void inp::Input::setLoadingDeck() {
   // reading of both
   std::vector<std::string> vtags = {"Displacement_BC", "Force_BC"};
 
-  for (auto tag : vtags) {
+  for (const auto& tag : vtags) {
 
     // read boundary condition data
     if (config[tag]) {
@@ -488,6 +524,14 @@ void inp::Input::setMaterialDeck() {
       for (auto j : f["Parameters"])
         d_materialDeck_p->d_influenceFnParams.push_back(j.as<double>());
   }
+
+  // read density
+  if (e["Density"])
+    d_materialDeck_p->d_density = e["Density"].as<double>();
+  else {
+    std::cerr << "Error: Please specify the density of the material.\n";
+    exit(1);
+  }
 } // setMaterialDeck
 
 void inp::Input::setOutputDeck() {
@@ -518,6 +562,9 @@ void inp::Input::setPolicyDeck() {
   if (config["Policy"]["Memory_Consumption_Flag"])
     d_policyDeck_p->d_memControlFlag =
         config["Policy"]["Memory_Consumption_Flag"].as<int>();
+  if (config["Policy"]["Enable_PostProcessing"])
+    d_policyDeck_p->d_enablePostProcessing =
+        config["Policy"]["Enable_PostProcessing"].as<bool>();
 } // setPolicyDeck
 
 void inp::Input::setSolverDeck() {

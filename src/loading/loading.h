@@ -12,6 +12,7 @@
 // forward declaration of loading deck
 namespace inp {
 struct LoadingDeck;
+struct BCData;
 }
 
 /*!
@@ -25,15 +26,12 @@ struct LoadingDeck;
 namespace loading {
 
 /*!
- * @brief A class to apply displacement and force boundary condition
+ * @brief A base class to apply displacement and force boundary condition
  *
- * In this class we process input data and apply complex boundary condition.
- * The boundary conditions can be specified in multiple sets, and in each set
- * one can specify the region where the boundary condition is to be applied,
- * and the type of function to be used.
- *
- * This class also provides method to set the fixity of nodes as fixed if the
- * displacement is specified on the dof of the node.
+ * Base class which provides method and database for application of boundary
+ * conditions in the form of displacement or force. Later temperature
+ * boundary condition or other type of boundary condition can also be
+ * implemented using this base class.
  */
 class Loading {
 
@@ -42,16 +40,19 @@ public:
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
    */
-  Loading(inp::LoadingDeck *deck);
+  Loading() = default;
 
-private:
+protected:
   /**
    * @name Internal data
    */
   /**@{*/
 
-  /*! @brief Vector of initial (reference) coordinates of nodes */
-  //  std::vector<double> d_nd;
+  /*! @brief List of displacement bcs */
+  std::vector<inp::BCData> d_bcData;
+
+  /*! @brief List of nodal ids on which bc is to be applied */
+  std::vector<std::vector<size_t>> d_bcNodes;
 
   /** @}*/
 };

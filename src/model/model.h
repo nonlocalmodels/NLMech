@@ -35,6 +35,12 @@ namespace model {
 class Model {
 
 public:
+  /*!
+   * @brief Constructor
+   * @param deck The input deck
+   */
+  Model();
+
   /**
    * @name Common methods
    */
@@ -88,6 +94,9 @@ protected:
 
   /*! @brief Current time step */
   size_t d_n;
+
+  /*! @brief Current time */
+  double d_time;
 
   /** @}*/
 

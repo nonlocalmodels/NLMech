@@ -1,0 +1,47 @@
+// Copyright (c) 2019    Prashant K. Jha
+//
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+// (See accompanying file LICENSE.txt)
+
+#ifndef UTIL_GEOMETRY_H
+#define UTIL_GEOMETRY_H
+
+#include "point.h" // definition of point
+
+#include <vector>
+
+namespace util {
+
+/*! @brief Provides geometrical methods such as point inside rectangle */
+namespace geometry {
+
+/*!
+ * @brief Checks if point is inside a rectangle
+ * @param x Point
+ * @param x_min X coordinate of left-bottom corner point
+ * @param x_max X coordinate of right-top corner point
+ * @param y_min Y coordinate of left-bottom corner point
+ * @param y_max Y coordinate of right-top corner point
+ * @param bool True if point inside rectangle, else false
+ */
+bool isPointInsideRectangle(util::Point3 x, double x_min, double x_max,
+                            double y_min, double y_max);
+
+/*!
+ * @brief Checks if point is inside an angled rectangle
+ * @param x Point
+ * @param x_min X coordinate of left-bottom corner point
+ * @param x_max X coordinate of right-top corner point
+ * @param y_min Y coordinate of left-bottom corner point
+ * @param y_max Y coordinate of right-top corner point
+ * @param theta Angle of orientation of rectangle from x-axis
+ * @param bool True if point inside rectangle, else false
+ */
+bool isPointInsideAngledRectangle(util::Point3 x, double x_min, double x_max,
+                            double y_min, double y_max, double theta);
+
+} // namespace geometry
+
+} // namespace util
+
+#endif // UTIL_GEOMETRY_H

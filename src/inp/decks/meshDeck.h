@@ -40,12 +40,18 @@ struct MeshDeck {
   /*! @brief Filename to read mesh data */
   std::string d_filename;
 
+  /*! @brief Flag which indicates if mesh size is to be computed */
+  bool d_computeMeshSize;
+
+  /*! @brief Mesh size */
+  double d_h;
+
   /** @}*/
 
   /*!
    * @brief Constructor
    */
-  MeshDeck() : d_dim(0){};
+  MeshDeck() : d_dim(0), d_computeMeshSize(false), d_h(0.){};
 };
 
 /** @}*/

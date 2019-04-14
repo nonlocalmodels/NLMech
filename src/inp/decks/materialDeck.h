@@ -191,6 +191,9 @@ struct MaterialDeck {
   /*! @brief List of elastic and fracture properties */
   inp::MatData d_matData;
 
+  /*! @brief Density of material */
+  double d_density;
+
   /** @}*/
 
   /*!
@@ -199,7 +202,8 @@ struct MaterialDeck {
   MaterialDeck()
       : d_bondPotentialType(0), d_statePotentialType(0), d_influenceFnType(0),
         d_irreversibleBondBreak(true), d_stateContributionFromBrokenBond(true),
-        d_checkScFactor(1.), d_computeParamsFromElastic(true), d_matData(){};
+        d_checkScFactor(1.), d_computeParamsFromElastic(true), d_matData(),
+        d_density(1.){};
 };
 
 /** @}*/

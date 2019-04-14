@@ -32,6 +32,9 @@ struct ModelDeck {
    */
   std::string d_simType;
 
+  /*! @brief Flag indicating if this restart problem */
+  bool d_isRestartActive;
+
   /*!
    * @brief Tag for spatial discretization
    *
@@ -84,8 +87,8 @@ struct ModelDeck {
    * @brief Constructor
    */
   ModelDeck()
-      : d_dim(0), d_tFinal(0.), d_dt(0.), d_Nt(0), d_horizon(0.), d_rh(0),
-        d_h(0.){};
+      : d_dim(0), d_isRestartActive(false), d_tFinal(0.), d_dt(0.), d_Nt(0),
+        d_horizon(0.), d_rh(0), d_h(0.){};
 };
 
 /** @}*/

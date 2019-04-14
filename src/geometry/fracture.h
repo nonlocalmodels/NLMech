@@ -50,17 +50,17 @@ public:
    * @brief Sets the bond state
    *
    * @param i Nodal id
-   * @param j Local id of bond in neighborlist of i
+   * @param j Local id of bond in neighbor list of i
    * @param state State which is applied to the bond
    */
-  void setBondState(const size_t &i, const size_t &j, bool state);
+  void setBondState(const size_t &i, const size_t &j, const bool &state);
 
   /*!
    * @brief Sets the bond state
    *
    * @param i Nodal id
-   * @param j Local id of bond in neighborlist of i
-   * @return state Current state of the bond
+   * @param j Local id of bond in neighbor list of i
+   * @return state True if bond is fractured otherwise false
    */
   bool getBondState(const size_t &i, const size_t &j);
 

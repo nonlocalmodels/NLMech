@@ -29,17 +29,22 @@ class Neighbor;
 
 namespace inp {
 struct ModelDeck;
+struct RestartDeck;
+struct OutputDeck;
 class Input;
 class Policy;
 } // namespace inp
 
 namespace loading {
 class InitialCondition;
-class Loading;
+class ULoading;
+class FLoading;
 } // namespace loading
 
 namespace material {
+namespace pd {
 class Material;
+}
 } // namespace material
 
 namespace model {
@@ -101,6 +106,31 @@ public:
   /** @}*/
 
 private:
+  /*!
+   * @brief Main driver to simulate
+   */
+  void run(inp::Input *deck);
+
+  /*!
+   * @brief Restarts the simulation from previous state
+   */
+  void restart(inp::Input *deck);
+
+  /*!
+   * @brief Computes peridynamic forces
+   */
+  void computeForces();
+
+  /*!
+   * @brief Computes hydrostatic strains for force calculation
+   */
+  void computeHydrostaticStrains();
+
+  /*!
+   * @brief Computes postprocessing quantities
+   */
+  void computePostProcFields();
+
   /**
    * @name Methods to initialize the data
    */
@@ -130,41 +160,28 @@ private:
 
   /*!
    * @brief Perform time integration using central-difference scheme
+   *
+   * Central difference scheme
+   * \f [ u_{new} = \Delta t^2 (f_{int} + f_{ext}) / \rho  +
+   * \Delta t v_{old} + u_{old} \f]
+   * \f[ v_{new} = \frac{u_{new} - u_{old}}{\Delta t}. \f]
    */
   void integrateCD();
 
   /*!
    * @brief Perform time integration using velocity-verlet scheme
+   *
+   * Velocity verlet scheme
+   * 1. \f$ v_{mid} = v_{old} + \frac{\Delta t}{2} (f_{int,old} + f_{ext,
+   * old}) / \rho
+   * \f$
+   *
+   * 2. \f$ u_{new} = u_{old} + \Delta t * v_{mid} \f$
+   *
+   * 3. \f$ v_{new} = v_{mid} +  \frac{\Delta t}{2} (f_{int,new} + f_{ext,
+   * new}) / \rho \f$
    */
   void integrateVerlet();
-
-  /** @}*/
-
-  /**
-   * @name Methods to apply boundary condition and initial condition
-   */
-  /**@{*/
-
-  /*!
-   * @brief Performs setup of boundary condition, such as filling node ids
-   * in loading object and setting of fixity of nodes
-   */
-  void setupBoundaryCondition();
-
-  /*!
-   * @brief Apply displacement boundary condition to current position
-   */
-  void applyDisplacementBC();
-
-  /*!
-   * @brief Apply external loading to the nodes
-   */
-  void applyForceBC();
-
-  /*! @brief Writes the initial condition to the current position and current
-   * velocity
-   */
-  void applyInitialCondition();
 
   /** @}*/
 
@@ -178,18 +195,18 @@ private:
    */
   void output();
 
-  /*!
-   * @brief Performs debug operations and outputs message to the screen
-   * @param e_old at previous time step
-   */
-  void debug(float e_old);
-
   /** @}*/
 
 private:
 
   /*! @brief Model deck */
   inp::ModelDeck *d_modelDeck_p;
+
+  /*! @brief Restart deck */
+  inp::RestartDeck *d_restartDeck_p;
+
+  /*! @brief Output deck */
+  inp::OutputDeck *d_outputDeck_p;
 
   /**
    * @name Data: High level objects
@@ -255,17 +272,23 @@ private:
    */
   loading::InitialCondition *d_initialCondition_p;
 
-  /*! @brief Pointer to Loading object
+  /*! @brief Pointer to displacement Loading object
    *
-   * @sa Loading
+   * @sa ULoading
    */
-  loading::Loading *d_loading_p;
+  loading::ULoading *d_uLoading_p;
+
+  /*! @brief Pointer to force Loading object
+   *
+   * @sa FLoading
+   */
+  loading::FLoading *d_fLoading_p;
 
   /*! @brief Pointer to Material object
    *
    * @sa Material
    */
-  material::Material *d_material_p;
+  material::pd::Material *d_material_p;
 
   /** @}*/
 };

@@ -112,7 +112,7 @@ public:
    * @param p Given point in reference triangle which is to be mapped
    * @param shapes Vector shape functions evaluated at the point p
    * @param der_shapes Vector of derivative of shape functions at point p
-   * @param nodes Coordinates of vertices of a given element   *
+   * @param nodes Coordinates of vertices of a given element
    * @return det(J) Determinant of the Jacobian
    */
   double mapRefElemToElem(util::Point3 &p, const std::vector<double> &shapes,

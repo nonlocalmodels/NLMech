@@ -39,7 +39,7 @@ public:
       const std::vector<util::Point3> *nodes);
 
   /*!
-   * @brief Get neighbor list of node i (element i incase of
+   * @brief Get neighbor list of node i (element i in case of
    * weak_finite_element)
    *
    * @param i Id of node

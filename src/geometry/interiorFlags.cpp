@@ -119,3 +119,8 @@ geometry::InteriorFlags::InteriorFlags(
     d_interior_p = new geometry::BaseInterior(deck, bbox);
 
 }
+
+bool geometry::InteriorFlags::getInteriorFlag(const size_t &i,
+                                              const util::Point3 &x) {
+  return d_interior_p->getInteriorFlag(i, x);
+}

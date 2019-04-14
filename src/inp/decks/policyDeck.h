@@ -31,12 +31,19 @@ struct PolicyDeck {
    */
   int d_memControlFlag;
 
+  /*!
+   * @brief Enable post-processing calculation
+   *
+   * Default is true.
+   */
+  bool d_enablePostProcessing;
+
   /** @}*/
 
   /*!
    * @brief Constructor
    */
-  PolicyDeck() : d_memControlFlag(0){};
+  PolicyDeck() : d_memControlFlag(0), d_enablePostProcessing(true) {};
 };
 
 /** @}*/

@@ -132,6 +132,14 @@ public:
                 const std::vector<util::Point3> *nodes,
                 const std::pair<std::vector<double>, std::vector<double>>& bbox);
 
+  /*!
+   * @brief Returns true for all the nodes
+   * @param i Nodal id
+   * @param x Nodal coordinate
+   * @return Flag True if node is in interior otherwise false
+   */
+  bool getInteriorFlag(const size_t &i, const util::Point3 &x);
+
 private:
   /*! @brief Class providing interior flags and method */
   BaseInterior *d_interior_p;

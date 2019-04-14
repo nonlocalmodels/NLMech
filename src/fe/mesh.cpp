@@ -5,11 +5,11 @@
 
 #include <hpx/include/parallel_algorithm.hpp>
 
-#include "mesh.h"
 #include "../inp/decks/meshDeck.h"
 #include "../inp/policy.h"
 #include "../rw/reader.h"
 #include "../util/feElementDefs.h"
+#include "mesh.h"
 #include "quadrature.h"
 #include <cstdint>
 #include <fstream>
@@ -17,12 +17,9 @@
 #include <stdint.h>
 
 fe::Mesh::Mesh(inp::MeshDeck *deck)
-    : d_numNodes(0), d_numElems(0), d_eType(0), d_eNumVertex(0), d_numDofs(0) {
-
-  //  d_meshDeck_p = deck;
-  d_dim = deck->d_dim;
-  d_spatialDiscretization = deck->d_spatialDiscretization;
-  d_filename = deck->d_filename;
+    : d_numNodes(0), d_numElems(0), d_eType(0), d_eNumVertex(0), d_numDofs(0)
+    , d_h(deck->d_h), d_dim(deck->d_dim), d_spatialDiscretization(
+        deck->d_spatialDiscretization), d_filename(deck->d_filename) {
 
   // perform check on input data
   if (d_spatialDiscretization != "finite_difference" and
@@ -51,12 +48,16 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
 
   // read mesh data from file
   createData(d_filename);
+
+  // check if we need to compute mesh size
+  if (deck->d_computeMeshSize)
+    computeMeshSize();
 }
 
 //
 // Utility functions
 //
-void fe::Mesh::createData(std::string filename) {
+void fe::Mesh::createData(const std::string& filename) {
 
   int file_type = -1;
 
@@ -119,7 +120,7 @@ void fe::Mesh::createData(std::string filename) {
     computeVol();
 }
 
-void fe::Mesh::computeVol(){
+void fe::Mesh::computeVol() {
 
   // initialize quadrature data
   fe::BaseElem *quads;
@@ -133,10 +134,8 @@ void fe::Mesh::computeVol(){
   //
   d_vol.reserve(d_numNodes);
   auto f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task),
-      0, this->d_numNodes, [this,quads](boost::uint64_t i)
-      {
-
+      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      this->d_numNodes, [this, quads](boost::uint64_t i) {
         double v = 0.0;
 
         for (auto e : this->d_nec[i]) {
@@ -145,12 +144,12 @@ void fe::Mesh::computeVol(){
 
           // locate global node i in local list of element el
           int loc_i = -1;
-          for (size_t l=0; l<e_ns.size(); l++)
+          for (size_t l = 0; l < e_ns.size(); l++)
             if (e_ns[l] == i)
               loc_i = l;
 
           if (loc_i == -1) {
-            std::cerr<<"Error: Check node element connectivity.\n";
+            std::cerr << "Error: Check node element connectivity.\n";
             exit(1);
           }
 
@@ -168,17 +167,35 @@ void fe::Mesh::computeVol(){
 
         // update
         this->d_vol[i] = v;
-      }
-  ); //end of parallel for loop
+      }); // end of parallel for loop
 
   f.get();
-//
-//  std::ofstream myfile("nodes.csv");
-//  myfile.precision(6);
-//  for (size_t i=0; i<d_numNodes; i++)
-//    myfile << i <<","<< d_nodes[i].d_x << "," << d_nodes[i].d_y << "," <<
-//           d_nodes[i].d_z << "," << d_vol[i] <<"\n";
-//  myfile.close();
+  //
+  //  std::ofstream myfile("nodes.csv");
+  //  myfile.precision(6);
+  //  for (size_t i=0; i<d_numNodes; i++)
+  //    myfile << i <<","<< d_nodes[i].d_x << "," << d_nodes[i].d_y << "," <<
+  //           d_nodes[i].d_z << "," << d_vol[i] <<"\n";
+  //  myfile.close();
+}
+
+void fe::Mesh::computeMeshSize() {
+  double guess = std::abs(d_bbox.second[0] - d_bbox.first[0]);
+  if (d_dim > 1 && guess > std::abs(d_bbox.second[1] - d_bbox.first[1]))
+    guess = std::abs(d_bbox.second[1] - d_bbox.first[1]);
+
+  if (d_dim > 2 && guess > std::abs(d_bbox.second[2] - d_bbox.first[2]))
+    guess = std::abs(d_bbox.second[2] - d_bbox.first[2]);
+
+  for (size_t i = 0; i < d_nodes.size(); i++)
+    for (size_t j = 0; j < d_nodes.size(); j++)
+      if (i != j) {
+        double val = d_nodes[i].dist(d_nodes[j]);
+        if (val < guess)
+          guess = val;
+      }
+
+  d_h = guess;
 }
 
 //
@@ -192,21 +209,24 @@ size_t fe::Mesh::getNumDofs() { return d_numDofs; }
 
 size_t fe::Mesh::getElementType() { return d_eType; }
 
-util::Point3 fe::Mesh::getNode(size_t i) { return d_nodes[i]; }
+double fe::Mesh::getMeshSize() { return d_h; }
 
-std::vector<util::Point3> fe::Mesh::getNodes() { return d_nodes; }
+util::Point3 fe::Mesh::getNode(const size_t &i) { return d_nodes[i]; }
+
+double fe::Mesh::getNodalVolume(const size_t &i) { return d_vol[i]; }
 
 const std::vector<util::Point3> *fe::Mesh::getNodesP() { return &d_nodes; }
 
-std::vector<size_t> fe::Mesh::getElementConnectivity(size_t i) {
+const std::vector<size_t> fe::Mesh::getElementConnectivity(const size_t &i) {
   return std::vector<size_t>(d_enc.begin() + d_eNumVertex * i,
                              d_enc.begin() + d_eNumVertex * i + d_eNumVertex);
 }
 
-std::vector<util::Point3> fe::Mesh::getElementConnectivityNodes(size_t i) {
+const std::vector<util::Point3> fe::Mesh::getElementConnectivityNodes(const
+size_t &i) {
   std::vector<util::Point3> nds;
-  for (size_t k=0; k<d_eNumVertex; k++)
-    nds.emplace_back(d_nodes[d_enc[d_eNumVertex*i + k]]);
+  for (size_t k = 0; k < d_eNumVertex; k++)
+    nds.emplace_back(d_nodes[d_enc[d_eNumVertex * i + k]]);
   return nds;
 }
 
@@ -214,6 +234,26 @@ std::pair<std::vector<double>, std::vector<double>> fe::Mesh::getBoundingBox() {
   return d_bbox;
 }
 
+bool fe::Mesh::isNodeFree(const size_t &i, const unsigned int &dof) {
+
+  // below checks if d_fix has 1st bit (if dof=0), 2nd bit (if dof=1), 3rd
+  // bit (if dof=2) is set to 1 or 0. If set to 1, then it means it is fixed,
+  // and therefore it returns false
+  return !(d_fix[i] >> dof & 1UL);
+}
+
 //
 // Setter functions
 //
+void fe::Mesh::setFixity(const size_t &i, const unsigned int &dof, const bool
+&flag) {
+
+  // to set i^th bit as true of integer a,
+  // a |= 1UL << (i % 8)
+
+  // to set i^th bit as false of integer a,
+  // a &= ~(1UL << (i % 8))
+
+  flag ? (d_fix[i] |= 1UL << dof)
+       : (d_fix[i] &= ~(1UL << dof) );
+}

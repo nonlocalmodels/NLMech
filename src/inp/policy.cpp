@@ -70,7 +70,7 @@ void inp::Policy::init() {
   }
 }
 
-void inp::Policy::addToTags(size_t level, const std::string &tag) {
+void inp::Policy::addToTags(const size_t &level, const std::string &tag) {
 
   if (level == 0)
     addTag(d_l0Tags, tag);
@@ -133,3 +133,6 @@ bool inp::Policy::populateData(const std::string &tag) {
 int inp::Policy::getMemoryControlFlag() {
   return d_policyDeck_p->d_memControlFlag;
 }
+
+bool inp::Policy::enablePostProcessing() { return
+d_policyDeck_p->d_enablePostProcessing;}
