@@ -160,8 +160,38 @@ void rw::reader::VtkReader::readMesh(size_t dim,
   }
 }
 
+void rw::reader::VtkReader::readPointData(std::string name,
+                                          std::vector<util::Point3> *data) {
+
+  // read point field data
+  vtkPointData * p_field = d_grid_p->GetPointData();
+
+  // handle for displacement, fixity and node element connectivity
+  if (p_field->HasArray(name.c_str()) == 0) {
+    std::cerr<<"Error: VTK input data does not contain "<<name<<" data.\n";
+    exit(1);
+  }
+  vtkDataArray * array = p_field->GetArray(name.c_str());
+
+  // Below is not efficient. Later this can be improved.
+  // declare another array data to hold the ux,uy,uz
+  auto data_a = vtkSmartPointer < vtkDoubleArray > ::New();
+  data_a->SetNumberOfComponents(3);
+  data_a->Allocate(3, 1); // allocate memory
+
+  for (size_t i=0; i<array->GetNumberOfTuples(); i++) {
+
+    array->GetTuples(i,i,data_a);
+
+    util::Point3 d = util::Point3();
+    for (size_t j=0; j<3; j++)
+      d[j] = data_a->GetValue(j);
+
+    (*data).push_back(d);
+  }
+}
+
 void rw::reader::VtkReader::close() {
   // delete d_reader_p;
   // delete d_grid_p;
-  return;
 }

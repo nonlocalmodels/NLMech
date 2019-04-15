@@ -63,7 +63,7 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
           util::geometry::isPointInsideRectangle(mesh->getNode(i), bc.d_x1,
                                                  bc.d_x2, bc.d_y1, bc.d_y2)) {
         // loop over direction and set fixity
-        for (int dof : bc.d_direction) {
+        for (auto dof : bc.d_direction) {
           // pass 0 for x, 1 for y, and 2 for z dof
           mesh->setFixity(i, dof - 1, true);
         }
@@ -75,7 +75,7 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
                      mesh->getNode(i), bc.d_x1, bc.d_x2, bc.d_y1, bc.d_y2,
                      bc.d_theta)) {
         // loop over direction and set fixity
-        for (int dof : bc.d_direction) {
+        for (auto dof : bc.d_direction) {
           // pass 0 for x, 1 for y, and 2 for z dof
           mesh->setFixity(i, dof - 1, true);
         }

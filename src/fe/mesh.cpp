@@ -217,6 +217,10 @@ double fe::Mesh::getNodalVolume(const size_t &i) { return d_vol[i]; }
 
 const std::vector<util::Point3> *fe::Mesh::getNodesP() { return &d_nodes; }
 
+const std::vector<uint8_t> *fe::Mesh::getFixityP() { return &d_fix; }
+
+const std::vector<double> *fe::Mesh::getNodalVolumeP() { return &d_vol; }
+
 const std::vector<size_t> fe::Mesh::getElementConnectivity(const size_t &i) {
   return std::vector<size_t>(d_enc.begin() + d_eNumVertex * i,
                              d_enc.begin() + d_eNumVertex * i + d_eNumVertex);

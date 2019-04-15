@@ -47,6 +47,13 @@ public:
                 std::vector<size_t> *enc, std::vector<std::vector<size_t>> *nec,
                 std::vector<double> *volumes, bool is_fd = false);
 
+  /*!
+   * @brief reads point data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   */
+  void readPointData(std::string name, std::vector<util::Point3> *data);
+
   /*! @brief Close the file */
   void close();
 

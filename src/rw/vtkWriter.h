@@ -3,36 +3,20 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef RW_WRITER_H
-#define RW_WRITER_H
+#ifndef RW_VTKWRITER_H
+#define RW_VTKWRITER_H
 
-#include "util/point.h"
-#include <string>
-#include <vector>
+#include <vtkSmartPointer.h>
+#include <vtkUnstructuredGrid.h>
+#include <vtkXMLUnstructuredGridWriter.h>
 
-// forward declaration
-namespace rw {
-namespace writer {
-class VtkWriter;
-}
-} // namespace rw
+#include "../util/point.h"
 
 namespace rw {
 
-/*!
- * @brief Collection of methods and database related to writing
- *
- * This namespace provides methods and data members specific to wiriting of
- * the mesh data and simulation data. Currently, .vtu is supported.
- */
 namespace writer {
 
-/*!
- * @brief A interface class writing data using vtk writer
- *
- * This interface separates the caller from vtk library.
- */
-class VtkWriterInterface {
+class VtkWriter {
 
 public:
   /*!
@@ -43,7 +27,7 @@ public:
    *
    * @param filename Name of file which will be created
    */
-  explicit VtkWriterInterface(const std::string &filename);
+  explicit VtkWriter(const std::string &filename);
 
   /**
    * @name Mesh data
@@ -165,12 +149,15 @@ public:
   void close();
 
 private:
-  /*! @brief Pointer to the vtk writer class */
-  rw::writer::VtkWriter *d_vtkWriter_p;
+  /*! @brief XML unstructured grid writer */
+  vtkSmartPointer<vtkXMLUnstructuredGridWriter> d_writer_p;
+
+  /*! @brief Unstructured grid */
+  vtkSmartPointer<vtkUnstructuredGrid> d_grid_p;
 };
 
 } // namespace writer
 
 } // namespace rw
 
-#endif // RW_WRITER_H
+#endif // RW_VTKWRITER_H

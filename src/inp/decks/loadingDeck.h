@@ -75,7 +75,7 @@ struct BCData {
    * bc is applied on x- and y-component, d_direction will be vector with
    * elements 1 and 2.
    */
-  std::vector<int> d_direction;
+  std::vector<size_t> d_direction;
 
   /*! @brief List of parameters for function wrt time */
   std::vector<double> d_timeFnParams;

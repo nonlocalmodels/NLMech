@@ -117,6 +117,18 @@ public:
   const std::vector<util::Point3> *getNodesP();
 
   /*!
+   * @brief Get the pointer to fixity data
+   * @return Pointer to fixity data
+   */
+  const std::vector<uint8_t> *getFixityP();
+
+  /*!
+   * @brief Get the pointer to nodal volume data
+   * @return Pointer to nodal volume data
+   */
+  const std::vector<double> *getNodalVolumeP();
+
+  /*!
    * @brief Return true if node is free
    * @param i Id of node
    * @param dof Dof to check for

@@ -8,6 +8,9 @@
 #include <inp/decks/restartDeck.h>
 
 // utils
+#include "../../rw/reader.h"
+#include "../../rw/writer.h"
+#include "../../util/fastMethods.h"
 #include "../../util/matrix.h"
 #include "../../util/point.h"
 
@@ -75,7 +78,11 @@ void model::FDModel::restart(inp::Input *deck) {
   d_n = d_restartDeck_p->d_step;
   d_time = double(d_n) * d_modelDeck_p->d_dt;
 
-  // read displacement and velocities from restart file
+  // read displacement and velocity from restart file
+  rw::reader::readVtuFileRestart(d_restartDeck_p->d_file, &d_u, &d_v);
+
+  // integrate in time
+  integrate();
 }
 
 void model::FDModel::initHObjects() {
@@ -184,7 +191,8 @@ void model::FDModel::integrate() {
     else if (d_modelDeck_p->d_timeDiscretization == "velocity_verlet")
       integrateVerlet();
 
-    if (d_n % d_outputDeck_p->d_dtOut && d_n >= d_outputDeck_p->d_dtOut) {
+    if ((d_n % d_outputDeck_p->d_dtOut == 0) && (d_n >=
+    d_outputDeck_p->d_dtOut)) {
       if (d_policy_p->enablePostProcessing())
         computePostProcFields();
 
@@ -347,8 +355,6 @@ void model::FDModel::integrateVerlet() {
   f.get();
 }
 
-void model::FDModel::output() {}
-
 void model::FDModel::computeForces() {
 
   if (d_material_p->isStateActive())
@@ -453,7 +459,6 @@ void model::FDModel::computeHydrostaticStrains() {
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       d_mesh_p->getNumNodes(),
       [this](boost::uint64_t i) {
-
         // local variable to hold strain
         double hydro_strain_i = 0.;
 
@@ -486,8 +491,8 @@ void model::FDModel::computeHydrostaticStrains() {
           // compute the contribution of bond to hydrostatic strain at i
           if (d_material_p->addBondContribToState(Sji, rji)) {
 
-            hydro_strain_i += volj * d_material_p->getBondContribToHydroStrain
-                (Sji, rji);
+            hydro_strain_i +=
+                volj * d_material_p->getBondContribToHydroStrain(Sji, rji);
           }
         } // loop over neighboring nodes
 
@@ -502,16 +507,31 @@ void model::FDModel::computeHydrostaticStrains() {
 
 void model::FDModel::computePostProcFields() {
 
+  // if work done is to be computed, get the external forces
+  std::vector<util::Point3> fext(d_mesh_p->getNumNodes(), util::Point3());
+  if (d_policy_p->populateData("Model_d_w"))
+    d_fLoading_p->apply(d_time, &fext, d_mesh_p);
+
+  // local data for kinetic energy
+  std::vector<float> vec_ke(d_mesh_p->getNumNodes(), 0.);
+
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       d_mesh_p->getNumNodes(),
-      [this](boost::uint64_t i) {
-        // local variable to hold force
-        util::Point3 force_i = util::Point3();
+      [this, fext, &vec_ke](boost::uint64_t i) {
+        // local variable
+        double energy_i = 0.0;
+        double hydro_energy_i = 0.0;
+        double a = 0.; // for damage
+        double b = 0.; // for damage
+        double z = 0.; // for damage
 
         // reference coordinate and displacement at the node
         util::Point3 xi = this->d_mesh_p->getNode(i);
         util::Point3 ui = this->d_u[i];
+
+        // get volume of node i
+        double voli = this->d_mesh_p->getNodalVolume(i);
 
         // get hydrostatic energy and force
         std::pair<double, double> gi;
@@ -560,38 +580,211 @@ void model::FDModel::computePostProcFields() {
           std::pair<double, double> ef =
               this->d_material_p->getBondEF(rji, Sji, fs, break_bonds);
 
-          // update the fractured state of bond
-          this->d_fracture_p->setBondState(i, j, fs);
+          // energy
+          energy_i += ef.first * volj;
 
-          // compute the contribution of bond force to force at i
-          double scalar_f = ef.second * volj / rji;
+          // parameters for damage function \phi
+          if (!fs)
+            a += volj;
+          b += volj;
 
-          force_i.d_x += scalar_f * xji.d_x;
-          force_i.d_y += scalar_f * xji.d_y;
-          force_i.d_z += scalar_f * xji.d_z;
-
-          // compute state-based contribution
-          if (d_material_p->isStateActive() &&
-              d_material_p->addBondContribToState(Sji, rji)) {
-
-            // Compute gj while noting that gi is already computed
-            std::pair<double, double> gj =
-                d_material_p->getStateEF(this->d_hS[j_id]);
-
-            double scalar_g =
-                d_material_p->getStateForce(gi.second + gj.second, rji) / rji;
-
-            force_i.d_x += scalar_g * xji.d_x;
-            force_i.d_y += scalar_g * xji.d_y;
-            force_i.d_z += scalar_g * xji.d_z;
-          }
+          // parameters for damage function Z
+          double sr = 0.;
+          if (util::compare::definitelyGreaterThan(rji, 1.0E-12))
+            sr = std::abs(Sji) / this->d_material_p->getSc(rji);
+          if (util::compare::definitelyLessThan(z, sr))
+            z = sr;
         } // loop over neighboring nodes
 
-        // update force and energy
-        this->d_f[i] = force_i;
+        // compute hydrostatic energy
+        if (this->d_material_p->isStateActive())
+          hydro_energy_i =
+              gi.first / (d_modelDeck_p->d_horizon * d_modelDeck_p->d_horizon);
+
+        if (this->d_policy_p->populateData("Model_d_e"))
+          this->d_e[i] = (energy_i + hydro_energy_i) * voli;
+
+        if (this->d_policy_p->populateData("Model_d_w"))
+          this->d_w[i] = ui.dot(fext[i]);
+
+        if (this->d_policy_p->populateData("Model_d_eFB") &&
+            util::compare::definitelyGreaterThan(z, 1.0 - 1.0E-10))
+          this->d_eFB[i] = energy_i * voli;
+
+        if (this->d_policy_p->populateData("Model_d_eF") &&
+            util::compare::definitelyGreaterThan(z, 1.0 - 1.0E-10))
+          this->d_eF[i] = (energy_i + hydro_energy_i) * voli;
+
+        if (this->d_policy_p->populateData("Model_d_phi"))
+          this->d_phi[i] = 1. - a / b;
+
+        if (this->d_policy_p->populateData("Model_d_Z"))
+          this->d_phi[i] = z;
+
+        // compute kinetic energy
+        vec_ke[i] = 0.5 * this->d_material_p->getDensity() *
+                    this->d_v[i].dot(this->d_v[i]);
       } // loop over nodes
 
   ); // end of parallel for loop
 
   f.get();
+
+  // add energies to get total energy
+  if (this->d_policy_p->populateData("Model_d_e"))
+    d_te = util::methods::add(d_e);
+  if (this->d_policy_p->populateData("Model_d_w"))
+    d_tw = util::methods::add(d_w);
+  if (this->d_policy_p->populateData("Model_d_eF"))
+    d_teF = util::methods::add(d_eF);
+  if (this->d_policy_p->populateData("Model_d_eFB"))
+    d_teFB = util::methods::add(d_eFB);
+
+  d_tk = util::methods::add(vec_ke);
+}
+
+void model::FDModel::output() {
+
+  std::cout << "Output: time step = " << this->d_n << "\n";
+
+  //
+  // List of data that we need to output
+  //
+  // Major simulation data
+  // 1. Displacement (vector)
+  // 2. Velocity (vector)
+  // 3. Force (vector)
+  // 4. time (single data)
+  //
+  // Minor simulation data (if these are computed)
+  // 1. Force_Density (vector)
+  // 2. Strain_Energy (scalar)
+  // 3. Energy (scalar)
+  // 4. Work_Done (scalar)
+  // 5. Fixity (scalar)
+  // 6. Node_Volume (scalar)
+  // 7. Damage (scalar)
+  // 8. Damage Z (scalar)
+  // 9. Fracture_Perienergy_Bond (scalar)
+  // 10. Fracture_Perienergy_Total (scalar) if StateFracture material
+  // 11. Total energy (single data)
+  // 12. Total fracture energy bond (single data)
+  // 13. Total fracture energy total if StateFracture material (single data)
+  //
+
+  // filename
+  std::string filename = d_outputDeck_p->d_path + "output_" +
+                         std::to_string(d_n / d_outputDeck_p->d_dtOut);
+
+  // open
+  auto writer = rw::writer::VtkWriterInterface(filename);
+
+  // write mesh
+  writer.appendNodes(d_mesh_p->getNodesP(), &d_u);
+
+  //
+  // major simulation data
+  //
+  std::string tag = "Displacement";
+  writer.appendPointData(tag, &d_u);
+
+  tag = "Velocity";
+  writer.appendPointData(tag, &d_v);
+
+  tag = "Force";
+  if (d_outputDeck_p->isTagInOutput(tag)) {
+
+    std::vector<util::Point3> force(d_mesh_p->getNumNodes(), util::Point3());
+
+    for (size_t i = 0; i < d_f.size(); i++)
+      force[i] = d_f[i] * d_mesh_p->getNodalVolume(i);
+
+    writer.appendPointData(tag, &force);
+  }
+
+  tag = "time";
+  writer.addTimeStep(d_time);
+
+  //
+  // minor simulation data
+  //
+  if (!d_policy_p->enablePostProcessing()) {
+    writer.close();
+    return;
+  }
+
+  tag = "Force_Density";
+  if (d_outputDeck_p->isTagInOutput(tag))
+    writer.appendPointData(tag, &d_f);
+
+  tag = "Strain_Energy";
+  if (d_outputDeck_p->isTagInOutput(tag) &&
+      d_policy_p->populateData("Model_d_e"))
+    writer.appendPointData(tag, &d_e);
+
+  tag = "Strain_Energy";
+  if (d_outputDeck_p->isTagInOutput(tag) &&
+      d_policy_p->populateData("Model_d_e"))
+    writer.appendPointData(tag, &d_e);
+
+  tag = "Work_Done";
+  if (d_outputDeck_p->isTagInOutput(tag) &&
+      d_policy_p->populateData("Model_d_w"))
+    writer.appendPointData(tag, &d_w);
+
+  tag = "Fixity";
+  if (d_outputDeck_p->isTagInOutput(tag))
+    writer.appendPointData(tag, d_mesh_p->getFixityP());
+
+  tag = "Node_Volume";
+  if (d_outputDeck_p->isTagInOutput(tag))
+    writer.appendPointData(tag, d_mesh_p->getFixityP());
+
+  tag = "Damage";
+  if (d_outputDeck_p->isTagInOutput(tag) &&
+      d_policy_p->populateData("Model_d_phi"))
+    writer.appendPointData(tag, &d_phi);
+
+  tag = "Damage_Phi";
+  if (d_outputDeck_p->isTagInOutput(tag) &&
+      d_policy_p->populateData("Model_d_phi"))
+    writer.appendPointData(tag, &d_phi);
+
+  tag = "Damage_Z";
+  if (d_outputDeck_p->isTagInOutput(tag) &&
+      d_policy_p->populateData("Model_d_Z"))
+    writer.appendPointData(tag, &d_Z);
+
+  tag = "Fracture_Perienergy_Bond";
+  if (d_outputDeck_p->isTagInOutput(tag) &&
+      d_policy_p->populateData("Model_d_eFB"))
+    writer.appendPointData(tag, &d_eFB);
+
+  tag = "Fracture_Perienergy_Total";
+  if (d_outputDeck_p->isTagInOutput(tag) &&
+      d_policy_p->populateData("Model_d_eF"))
+    writer.appendPointData(tag, &d_eF);
+
+  tag = "Total_Energy";
+  double te = d_te - d_tw + d_tk;
+  if (d_outputDeck_p->isTagInOutput(tag) &&
+      d_policy_p->populateData("Model_d_e"))
+    writer.appendFieldData(tag, te);
+
+  tag = "Total_Strain_Energy";
+  if (d_outputDeck_p->isTagInOutput(tag) &&
+      d_policy_p->populateData("Model_d_e"))
+    writer.appendFieldData(tag, d_te);
+
+  tag = "Total_Fracture_Perienergy_Bond";
+  if (d_outputDeck_p->isTagInOutput(tag) &&
+      d_policy_p->populateData("Model_d_eFB"))
+    writer.appendFieldData(tag, d_teFB);
+
+  tag = "Total_Fracture_Perienergy_Total";
+  if (d_outputDeck_p->isTagInOutput(tag) &&
+      d_policy_p->populateData("Model_d_eF"))
+    writer.appendFieldData(tag, d_teF);
+
+  writer.close();
 }

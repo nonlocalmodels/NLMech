@@ -78,6 +78,16 @@ void readMshFile(const std::string &filename, size_t dim,
                  std::vector<std::vector<size_t>> *nec,
                  std::vector<double> *volumes, bool is_fd = false);
 
+/*!
+ * @brief Reads mesh data into node file and element file
+ * @param filename name of mesh file
+ * @param u Pointer to vector of nodal displacement
+ * @param v Pointer to vector of nodal velocity
+ */
+void readVtuFileRestart(const std::string &filename,
+                 std::vector<util::Point3> *u,
+                 std::vector<util::Point3> *v);
+
 } // namespace reader
 
 } // namespace rw

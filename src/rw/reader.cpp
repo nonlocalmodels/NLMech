@@ -78,3 +78,13 @@ void rw::reader::readMshFile(const std::string &filename, size_t dim,
   rw::reader::MshReader rdr = rw::reader::MshReader(filename);
   rdr.readMesh(dim, nodes, element_type, num_elem, enc, nec, volumes, is_fd);
 }
+
+void rw::reader::readVtuFileRestart(const std::string &filename,
+                        std::vector<util::Point3> *u,
+                        std::vector<util::Point3> *v) {
+  // call vtk reader
+  rw::reader::VtkReader rdr = rw::reader::VtkReader(filename);
+  rdr.readPointData("Displacement", u);
+  rdr.readPointData("Velocity", v);
+  rdr.close();
+}

@@ -173,20 +173,22 @@ void inp::Input::setRestartDeck() {
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   // read restart file
-  if (config["Restart"]["File"])
-    d_restartDeck_p->d_file = config["Restart"]["File"].as<std::string>();
-  else {
-    std::cerr << "Error: Please specify the file for restart.\n";
-    exit(1);
-  }
+  if (config["Restart"]) {
+    if (config["Restart"]["File"])
+      d_restartDeck_p->d_file = config["Restart"]["File"].as<std::string>();
+    else {
+      std::cerr << "Error: Please specify the file for restart.\n";
+      exit(1);
+    }
 
-  // read time step from which to begin
-  if (config["Restart"]["Step"])
-    d_restartDeck_p->d_step = config["Restart"]["Step"].as<size_t>();
-  else {
-    std::cerr << "Error: Please specify the time step from which to restart "
-                 "the simulation.\n";
-    exit(1);
+    // read time step from which to begin
+    if (config["Restart"]["Step"])
+      d_restartDeck_p->d_step = config["Restart"]["Step"].as<size_t>();
+    else {
+      std::cerr << "Error: Please specify the time step from which to restart "
+                   "the simulation.\n";
+      exit(1);
+    }
   }
 } // setRestartDeck
 
@@ -429,7 +431,7 @@ void inp::Input::setLoadingDeck() {
 
         // read direction
         for (auto j : e["Direction"])
-          bc.d_direction.push_back(j.as<int>());
+          bc.d_direction.push_back(j.as<size_t>());
 
         // read time function type
         if (e["Time_Function"]) {
