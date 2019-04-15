@@ -25,6 +25,7 @@ geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
 
             // loop over all the nodes and check which nodes are
             // within the horizon ball of i_node
+            std::vector<size_t> neighs;
             for (size_t j = 0; j < nodes->size(); j++) {
 
               if (j == i)
@@ -32,8 +33,10 @@ geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
 
               if (util::compare::definitelyLessThan(xi.dist((*nodes)[j]),
                   horizon + 1.0E-10))
-                this->d_neighbors[i].push_back(j);
+                neighs.push_back(j);
             } // loop over nodes j
+
+            this->d_neighbors[i] = neighs;
           }
       ); //end of parallel for loop
 

@@ -399,8 +399,9 @@ void model::FDModel::computeForces() {
           util::Point3 xj = this->d_mesh_p->getNode(j_id);
           util::Point3 uj = this->d_u[j_id];
           util::Point3 xji = xj - xi;
+          util::Point3 uji = uj - ui;
           double rji = xji.length();
-          double Sji = this->d_material_p->getS(xji, uj - ui);
+          double Sji = this->d_material_p->getS(xji, uji);
 
           // get corrected volume of node j
           double volj = this->d_mesh_p->getNodalVolume(j_id);
@@ -619,7 +620,7 @@ void model::FDModel::computePostProcFields() {
           this->d_phi[i] = 1. - a / b;
 
         if (this->d_policy_p->populateData("Model_d_Z"))
-          this->d_phi[i] = z;
+          this->d_Z[i] = z;
 
         // compute kinetic energy
         vec_ke[i] = 0.5 * this->d_material_p->getDensity() *
