@@ -4,14 +4,14 @@
 // (See accompanying file LICENSE.txt)
 
 #include "vtkWriter.h"
-#include <vtkDoubleArray.h>
-#include <vtkPoints.h>
-#include <vtkPointData.h>
-#include <vtkCellData.h>
 #include <vtkCellArray.h>
+#include <vtkCellData.h>
+#include <vtkDoubleArray.h>
 #include <vtkIdList.h>
-#include <vtkUnsignedIntArray.h>
 #include <vtkIntArray.h>
+#include <vtkPointData.h>
+#include <vtkPoints.h>
+#include <vtkUnsignedIntArray.h>
 
 rw::writer::VtkWriter::VtkWriter(const std::string &filename) {
 
@@ -195,7 +195,7 @@ void rw::writer::VtkWriter::appendPointData(
   array->SetComponentName(2, "z");
 
   double value[3];
-  for (const auto & i : *data) {
+  for (const auto &i : *data) {
     value[0] = i.d_x;
     value[1] = i.d_y;
     value[2] = i.d_z;

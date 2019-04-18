@@ -3,8 +3,8 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#include <hpx/hpx_main.hpp>
 #include "testGeomLib.h"
+#include <hpx/hpx_main.hpp>
 
 int main() {
 

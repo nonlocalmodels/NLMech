@@ -6,7 +6,7 @@
 #ifndef RW_READER_H
 #define RW_READER_H
 
-#include "../util/point.h"
+#include "util/point.h"           // definition of Point3
 #include <vector>
 
 /*!
@@ -85,8 +85,8 @@ void readMshFile(const std::string &filename, size_t dim,
  * @param v Pointer to vector of nodal velocity
  */
 void readVtuFileRestart(const std::string &filename,
-                 std::vector<util::Point3> *u,
-                 std::vector<util::Point3> *v);
+                        std::vector<util::Point3> *u,
+                        std::vector<util::Point3> *v);
 
 } // namespace reader
 

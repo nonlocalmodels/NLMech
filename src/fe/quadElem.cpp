@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE.txt)
 
 #include "quadElem.h"
-#include "../util/feElementDefs.h" // global definition of elements
+#include "util/feElementDefs.h"     // global definition of elements
 
 fe::QuadElem::QuadElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_quad) {
@@ -85,13 +85,17 @@ double fe::QuadElem::mapRefElemToElem(
           shapes[2] * nodes[2].d_y + shapes[3] * nodes[3].d_y;
 
   return (der_shapes[0][0] * nodes[0].d_x + der_shapes[1][0] * nodes[1].d_x +
-            der_shapes[2][0] * nodes[2].d_x + der_shapes[3][0] * nodes[3].d_x)
-       * (der_shapes[0][1] * nodes[0].d_y + der_shapes[1][1] * nodes[1].d_y +
-            der_shapes[2][1] * nodes[2].d_y + der_shapes[3][1] * nodes[3].d_y)
-       - (der_shapes[0][0] * nodes[0].d_y + der_shapes[1][0] * nodes[1].d_y +
-           der_shapes[2][0] * nodes[2].d_y + der_shapes[3][0] * nodes[3].d_y)
-       * (der_shapes[0][1] * nodes[0].d_x + der_shapes[1][1] * nodes[1].d_x +
-            der_shapes[2][1] * nodes[2].d_x + der_shapes[3][1] * nodes[3].d_x);
+          der_shapes[2][0] * nodes[2].d_x + der_shapes[3][0] * nodes[3].d_x) *
+             (der_shapes[0][1] * nodes[0].d_y +
+              der_shapes[1][1] * nodes[1].d_y +
+              der_shapes[2][1] * nodes[2].d_y +
+              der_shapes[3][1] * nodes[3].d_y) -
+         (der_shapes[0][0] * nodes[0].d_y + der_shapes[1][0] * nodes[1].d_y +
+          der_shapes[2][0] * nodes[2].d_y + der_shapes[3][0] * nodes[3].d_y) *
+             (der_shapes[0][1] * nodes[0].d_x +
+              der_shapes[1][1] * nodes[1].d_x +
+              der_shapes[2][1] * nodes[2].d_x +
+              der_shapes[3][1] * nodes[3].d_x);
 }
 
 void fe::QuadElem::init() {

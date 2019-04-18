@@ -4,9 +4,7 @@
 // (See accompanying file LICENSE.txt)
 
 #include "triElem.h"
-#include "../util/feElementDefs.h" // global definition of elements
-
-#include <iostream>
+#include "util/feElementDefs.h"       // global definition of elements
 
 fe::TriElem::TriElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_triangle) {

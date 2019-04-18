@@ -6,8 +6,8 @@
 #ifndef MATERIAL_PD_INFLUENCEFN_H
 #define MATERIAL_PD_INFLUENCEFN_H
 
-#include <vector>
 #include <cstring>
+#include <vector>
 
 namespace material {
 
@@ -53,7 +53,7 @@ public:
    * @param r Reference (initial) bond length
    * @return Value Influence function at r
    */
-  double getInfFn(const double &r) override ;
+  double getInfFn(const double &r) override;
 
   /*!
    * @brief Returns the moment of influence function
@@ -64,10 +64,9 @@ public:
    * @param i ith moment
    * @return Value Moment
    */
-  double getMoment(const size_t &i) override ;
+  double getMoment(const size_t &i) override;
 
 private:
-
   /*! @brief Constant such that J(r) = Constant */
   double d_a0;
 };
@@ -88,7 +87,7 @@ public:
    * @param r Reference (initial) bond length
    * @return Value Influence function at r
    */
-  double getInfFn(const double &r) override ;
+  double getInfFn(const double &r) override;
 
   /*!
    * @brief Returns the moment of influence function
@@ -99,10 +98,9 @@ public:
    * @param i ith moment
    * @return Value Moment
    */
-  double getMoment(const size_t &i) override ;
+  double getMoment(const size_t &i) override;
 
 private:
-
   /*! @brief Constants such that J(r) = d_a0 + d_a1 * r */
   double d_a0;
 
@@ -126,7 +124,7 @@ public:
    * @param r Reference (initial) bond length
    * @return Value Influence function at r
    */
-  double getInfFn(const double &r) override ;
+  double getInfFn(const double &r) override;
 
   /*!
    * @brief Returns the moment of influence function
@@ -137,10 +135,9 @@ public:
    * @param i ith moment
    * @return Value Moment
    */
-  double getMoment(const size_t &i) override ;
+  double getMoment(const size_t &i) override;
 
 private:
-
   /*! @brief Constants */
   double d_alpha;
 

@@ -6,8 +6,8 @@
 #ifndef LOADING_ULOADING_H
 #define LOADING_ULOADING_H
 
-#include "loading.h"    // base class Loading
-#include "util/point.h" // definition of Point3
+#include "loading.h"        // base class Loading
+#include "util/point.h"     // definition of Point3
 
 // forward declaration
 namespace fe {

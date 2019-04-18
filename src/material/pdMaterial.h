@@ -6,7 +6,7 @@
 #ifndef MATERIAL_PD_MATERIAL_H
 #define MATERIAL_PD_MATERIAL_H
 
-#include "util/point.h"
+#include "util/point.h"         // definition of Point3
 #include <string>
 #include <vector>
 
@@ -73,8 +73,8 @@ public:
    * modified (needed to implement \a no-fail region
    * @return Value Pair of energy and force
    */
-  std::pair<double, double> getBondEF(const double &r, const double &s, bool
-  &fs, const bool &break_bonds);
+  std::pair<double, double> getBondEF(const double &r, const double &s,
+                                      bool &fs, const bool &break_bonds);
 
   /*!
    * @brief Returns hydrostatic energy and force

@@ -10,7 +10,7 @@
 #include <vtkUnstructuredGrid.h>
 #include <vtkXMLUnstructuredGridWriter.h>
 
-#include "../util/point.h"
+#include "util/point.h"           // definition of Point3
 
 namespace rw {
 

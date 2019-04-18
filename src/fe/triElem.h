@@ -6,8 +6,8 @@
 #ifndef FE_TRIELEM_H
 #define FE_TRIELEM_H
 
-#include "baseElem.h" // base class BaseElem
-#include "quadData.h" // definition of QuadData
+#include "baseElem.h"       // base class BaseElem
+#include "quadData.h"       // definition of QuadData
 
 namespace fe {
 

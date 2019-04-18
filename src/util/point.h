@@ -9,7 +9,6 @@
 #include <cmath>
 #include <iomanip>
 #include <stdlib.h>
-#include <vector>
 
 /*!
  * @brief Collection of methods useful in simulation
@@ -186,83 +185,6 @@ struct Point3 {
 
   /** @}*/
 };
-
-/*!
- * @brief Adds point b to point a inplace
- * @param a Point a
- * @param b Point b
- */
-static inline void addInplace(std::vector<util::Point3> &a,
-                              std::vector<util::Point3> b) {
-
-  for (size_t i = 0; i < a.size(); i++) {
-
-    a[i].d_x = a[i].d_x + b[i].d_x;
-    a[i].d_y = a[i].d_y + b[i].d_y;
-    a[i].d_z = a[i].d_z + b[i].d_z;
-  }
-}
-
-/*!
- * @brief Subtracts point b to point a inplace
- * @param a Point a
- * @param b Point b
- */
-static inline void subInplace(std::vector<util::Point3> &a,
-                              std::vector<util::Point3> b) {
-
-  for (size_t i = 0; i < a.size(); i++) {
-
-    a[i].d_x = a[i].d_x - b[i].d_x;
-    a[i].d_y = a[i].d_y - b[i].d_y;
-    a[i].d_z = a[i].d_z - b[i].d_z;
-  }
-}
-
-/*!
- * @brief Copys vector's a content to b
- * @param a vector of points
- * @param b vector of points
- */
-inline void copy(std::vector<util::Point3> a, std::vector<util::Point3> &b) {
-
-  b.clear();
-  std::copy(a.begin(), a.end(), std::back_inserter(b));
-}
-
-/*!
- * @brief Adds vector of points b to vector of points a in a element wise
- * manner
- * @param a vector of points
- * @param b vector of points
- * @return Vector vector of point after element wise addition
- */
-inline std::vector<util::Point3> add(std::vector<util::Point3> a,
-                                     std::vector<util::Point3> b) {
-
-  std::vector<util::Point3> res;
-  for (size_t i = 0; i < a.size(); i++)
-    res.push_back(a[i] + b[i]);
-
-  return res;
-}
-
-/*!
- * @brief Subtracts vector of points b to vector of points a in a
- * element-wise manner
- * @param a Point a
- * @param b Point b
- * @return Vector vector of points after element-wise subtraction
- */
-inline std::vector<util::Point3> subb(std::vector<util::Point3> a,
-                                      std::vector<util::Point3> b) {
-
-  std::vector<util::Point3> res;
-  for (size_t i = 0; i < a.size(); i++)
-    res.push_back(a[i] - b[i]);
-
-  return res;
-}
 
 } // namespace util
 

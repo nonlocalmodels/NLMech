@@ -13,8 +13,7 @@ rw::reader::MshReader::MshReader(const std::string &filename)
 
 void rw::reader::MshReader::readMesh(size_t dim,
                                      std::vector<util::Point3> *nodes,
-                                     size_t &element_type,
-                                     size_t &num_elems,
+                                     size_t &element_type, size_t &num_elems,
                                      std::vector<size_t> *enc,
                                      std::vector<std::vector<size_t>> *nec,
                                      std::vector<double> *volumes, bool is_fd) {
@@ -42,7 +41,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
   // specify type of element to read
   unsigned int num_nodes_con;
-  if (dim != 2){
+  if (dim != 2) {
 
     std::cerr << "Error: MshReader currently only supports reading of triangle "
                  "elements in dimension 2.\n";
@@ -194,7 +193,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
             }
 
             // check
-            for (size_t k=0; k<ids.size(); k++)
+            for (size_t k = 0; k < ids.size(); k++)
               if ((*enc)[num_nodes_con * elem_counter + k] != ids[k]) {
                 std::cerr << "Error: Element-node connectivity data does not "
                              "pass check.\n";
@@ -203,7 +202,8 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
             // increment the element counter
             elem_counter++;
-          } if (type == util::msh_type_quadrangle) {
+          }
+          if (type == util::msh_type_quadrangle) {
 
             if (init_quad == -1) {
               found_quad = true;
@@ -232,7 +232,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
             }
 
             // check
-            for (size_t k=0; k<ids.size(); k++)
+            for (size_t k = 0; k < ids.size(); k++)
               if ((*enc)[num_nodes_con * elem_counter + k] != ids[k]) {
                 std::cerr << "Error: Element-node connectivity data does not "
                              "pass check.\n";

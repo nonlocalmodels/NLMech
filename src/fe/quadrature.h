@@ -6,18 +6,14 @@
 #ifndef FE_QUADRATURE_H
 #define FE_QUADRATURE_H
 
-#include <hpx/config.hpp>
+#include "quadElem.h"       // TriElem class
+#include "triElem.h"        // QuadElem class
+#include "util/point.h"     // definition of point
 #include <vector>
-
-#include "quadElem.h" // TriElem class
-#include "triElem.h"  // QuadElem class
-
-#include "../util/point.h" // definition of point
-#include "quadData.h"      // definition of QuadData
 
 namespace fe {
 
-//class BaseQuadrature {
+// class BaseQuadrature {
 //
 //};
 
@@ -74,8 +70,7 @@ public:
    * @param p Location of point
    * @return Vector of derivative of shape functions
    */
-  std::vector<std::vector<double>>
-  getDerShapes(const util::Point3 &p);
+  std::vector<std::vector<double>> getDerShapes(const util::Point3 &p);
 
   /*!
    * @brief Maps the point on reference element to given element and
@@ -87,10 +82,9 @@ public:
    * @param nodes Coordinates of vertices of a given element
    * @return det(J) Determinant of the Jacobian
    */
-  double
-  mapRefElemToElem(util::Point3 &p, const std::vector<double> &shapes,
-                   const std::vector<std::vector<double>> &der_shapes,
-                   const std::vector<util::Point3> &nodes);
+  double mapRefElemToElem(util::Point3 &p, const std::vector<double> &shapes,
+                          const std::vector<std::vector<double>> &der_shapes,
+                          const std::vector<util::Point3> &nodes);
 
   /*!
    * @brief Get vector of quadrature data

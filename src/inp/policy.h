@@ -3,8 +3,8 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef IO_POLICY_H
-#define IO_POLICY_H
+#ifndef INP_POLICY_H
+#define INP_POLICY_H
 
 #include <string>
 #include <vector>

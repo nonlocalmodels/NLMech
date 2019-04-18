@@ -43,7 +43,7 @@ struct PolicyDeck {
   /*!
    * @brief Constructor
    */
-  PolicyDeck() : d_memControlFlag(0), d_enablePostProcessing(true) {};
+  PolicyDeck() : d_memControlFlag(0), d_enablePostProcessing(true){};
 };
 
 /** @}*/

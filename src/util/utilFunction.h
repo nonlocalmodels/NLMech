@@ -6,7 +6,8 @@
 #ifndef UTIL_FUNCTION_H
 #define UTIL_FUNCTION_H
 
-#include "point.h"
+#include "point.h"              // definition of Point3
+#include <vector>
 
 namespace util {
 
@@ -63,9 +64,8 @@ double hatFunction(const double &x, const double &x_min, const double &x_max);
  * @param x_max Right side point in real line
  * @param value Evaluation of hat function at x
  */
-double hatFunctionQuick(const double &x, const double &x_min, const double
-&x_max);
-
+double hatFunctionQuick(const double &x, const double &x_min,
+                        const double &x_max);
 
 /*!
  * @brief Compute linear step function
@@ -124,8 +124,8 @@ double gaussian(const double &r, const double &a, const double &beta);
  * @param dof Component of guassian function
  * @return value Component of guassian 2-d vector function along dof
  */
-double gaussian2d(const util::Point3 &x, const size_t &dof, const
-std::vector<double> &params);
+double gaussian2d(const util::Point3 &x, const size_t &dof,
+                  const std::vector<double> &params);
 
 /*!
  * @brief Compute sum of two gaussian function in 2-d
@@ -141,8 +141,8 @@ std::vector<double> &params);
  * @param dof Component of guassian function
  * @return value Component of guassian 2-d vector function along dof
  */
-double doubleGaussian2d(const util::Point3 &x, const size_t &dof, const
-std::vector<double> &params);
+double doubleGaussian2d(const util::Point3 &x, const size_t &dof,
+                        const std::vector<double> &params);
 
 } // namespace function
 

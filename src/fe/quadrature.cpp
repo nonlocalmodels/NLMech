@@ -4,7 +4,6 @@
 // (See accompanying file LICENSE.txt)
 
 #include "quadrature.h"
-#include <iostream>
 
 template <class T> fe::Quadrature<T>::Quadrature(size_t order) {
 

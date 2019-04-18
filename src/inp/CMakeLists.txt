@@ -6,5 +6,5 @@
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 AUX_SOURCE_DIRECTORY(./decks SOURCES)
 
-add_library(IO ${SOURCES})
-target_link_libraries(IO Util ${YAML_CPP_LIB} ${VTK_LIBRARIES})
+add_library(Inp ${SOURCES})
+target_link_libraries(Inp Util ${YAML_CPP_LIB})

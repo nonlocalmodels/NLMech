@@ -6,10 +6,10 @@
 #ifndef INP_FRACTUREDECK_H
 #define INP_FRACTUREDECK_H
 
-#include "../../util/point.h"           // definition of Point3
-#include "../../util/compare.h"         // compare utility
-#include "../../util/transfomation.h"   // rotation of point
-#include <cstdlib>                      // definition of siz_t
+#include "../../util/compare.h"       // compare utility
+#include "../../util/point.h"         // definition of Point3
+#include "../../util/transfomation.h" // rotation of point
+#include <cstdlib>                    // definition of siz_t
 #include <vector>
 
 namespace inp {
@@ -153,8 +153,8 @@ struct EdgeCrack {
     //     /
     //    o
     //    pb
-    double a = 0.5 *( (pt.d_x - pb.d_x)*(p.d_y - pb.d_y)
-                    - (p.d_x - pb.d_x)*(pt.d_y - pb.d_y));
+    double a = 0.5 * ((pt.d_x - pb.d_x) * (p.d_y - pb.d_y) -
+                      (p.d_x - pb.d_x) * (pt.d_y - pb.d_y));
 
     // crack is closer to left nodes
     return !util::compare::definitelyLessThan(a, 0.0);

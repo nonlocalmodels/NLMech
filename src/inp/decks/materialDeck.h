@@ -7,8 +7,8 @@
 #define INP_MATERIALDECK_H
 
 #include <cmath>
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace inp {
 

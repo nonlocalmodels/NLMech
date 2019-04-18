@@ -4,13 +4,13 @@
 // (See accompanying file LICENSE.txt)
 
 #include "reader.h"
-#include "vtkReader.h"
-#include "mshReader.h"
 #include "../external/csv.h"
+#include "mshReader.h"
+#include "vtkReader.h"
 
-void rw::reader::readCsvFile(const std::string& filename, size_t dim,
-    std::vector<util::Point3>* nodes,
-                 std::vector<double>* volumes) {
+void rw::reader::readCsvFile(const std::string &filename, size_t dim,
+                             std::vector<util::Point3> *nodes,
+                             std::vector<double> *volumes) {
 
   nodes->clear();
   volumes->clear();
@@ -19,7 +19,8 @@ void rw::reader::readCsvFile(const std::string& filename, size_t dim,
     io::CSVReader<3> in(filename);
     in.read_header(io::ignore_extra_column, "id", "x", "volume");
 
-    double x; double volume;
+    double x;
+    double volume;
     int id;
     while (in.read_row(id, x, volume)) {
       volumes->emplace_back(volume);
@@ -38,7 +39,6 @@ void rw::reader::readCsvFile(const std::string& filename, size_t dim,
       volumes->emplace_back(volume);
       nodes->emplace_back(util::Point3(x, y, 0.));
     }
-
   }
 
   if (dim == 3) {
@@ -52,15 +52,15 @@ void rw::reader::readCsvFile(const std::string& filename, size_t dim,
       volumes->emplace_back(volume);
       nodes->emplace_back(util::Point3(x, y, z));
     }
-
   }
 }
 
 void rw::reader::readVtuFile(const std::string &filename, size_t dim,
-                 std::vector<util::Point3> *nodes, size_t &element_type,
-                 size_t &num_elem, std::vector<size_t> *enc,
-                 std::vector<std::vector<size_t>> *nec,
-                 std::vector<double> *volumes, bool is_fd) {
+                             std::vector<util::Point3> *nodes,
+                             size_t &element_type, size_t &num_elem,
+                             std::vector<size_t> *enc,
+                             std::vector<std::vector<size_t>> *nec,
+                             std::vector<double> *volumes, bool is_fd) {
 
   // call vtk reader
   rw::reader::VtkReader rdr = rw::reader::VtkReader(filename);
@@ -69,10 +69,11 @@ void rw::reader::readVtuFile(const std::string &filename, size_t dim,
 }
 
 void rw::reader::readMshFile(const std::string &filename, size_t dim,
-                 std::vector<util::Point3> *nodes, size_t &element_type,
-                 size_t &num_elem, std::vector<size_t> *enc,
-                 std::vector<std::vector<size_t>> *nec,
-                 std::vector<double> *volumes, bool is_fd) {
+                             std::vector<util::Point3> *nodes,
+                             size_t &element_type, size_t &num_elem,
+                             std::vector<size_t> *enc,
+                             std::vector<std::vector<size_t>> *nec,
+                             std::vector<double> *volumes, bool is_fd) {
 
   // call vtk reader
   rw::reader::MshReader rdr = rw::reader::MshReader(filename);
@@ -80,8 +81,8 @@ void rw::reader::readMshFile(const std::string &filename, size_t dim,
 }
 
 void rw::reader::readVtuFileRestart(const std::string &filename,
-                        std::vector<util::Point3> *u,
-                        std::vector<util::Point3> *v) {
+                                    std::vector<util::Point3> *u,
+                                    std::vector<util::Point3> *v) {
   // call vtk reader
   rw::reader::VtkReader rdr = rw::reader::VtkReader(filename);
   rdr.readPointData("Displacement", u);

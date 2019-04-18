@@ -73,8 +73,9 @@ public:
    * @param fs Bond fracture state
    * @return Value Pair of energy and force
    */
-  std::pair<double, double> getBondEF(const double &r, const double &s, const
-  double &influence, bool &fs) override;
+  std::pair<double, double> getBondEF(const double &r, const double &s,
+                                      const double &influence,
+                                      bool &fs) override;
 
   /*!
    * @brief Returns energy and force between bond for \a no-fail region
@@ -115,7 +116,7 @@ public:
    * @param r Reference length of bond
    * @return Value Critical strain
    */
-  double getSc(const double &r) override ;
+  double getSc(const double &r) override;
 
 private:
   /*!

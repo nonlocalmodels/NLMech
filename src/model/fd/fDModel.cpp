@@ -4,32 +4,34 @@
 // (See accompanying file LICENSE.txt)
 
 #include "fDModel.h"
-#include <fstream>
-#include <inp/decks/restartDeck.h>
 
 // utils
-#include "../../rw/reader.h"
-#include "../../rw/writer.h"
-#include "../../util/fastMethods.h"
-#include "../../util/matrix.h"
-#include "../../util/point.h"
+#include "rw/reader.h"
+#include "rw/writer.h"
+#include "util/fastMethods.h"
+#include "util/matrix.h"
+#include "util/point.h"
+#include "util/compare.h"
 
 // include high level class declarations
-#include "../../fe/massMatrix.h"
-#include "../../fe/mesh.h"
-#include "../../fe/quadrature.h"
-#include "../../geometry/fracture.h"
-#include "../../geometry/interiorFlags.h"
-#include "../../geometry/neighbor.h"
-#include "../../inp/decks/modelDeck.h"
-#include "../../inp/decks/outputDeck.h"
-#include "../../inp/decks/restartDeck.h"
-#include "../../inp/input.h"
-#include "../../inp/policy.h"
-#include "../../loading/fLoading.h"
-#include "../../loading/initialCondition.h"
-#include "../../loading/uLoading.h"
+#include "fe/massMatrix.h"
+#include "fe/mesh.h"
+#include "fe/quadrature.h"
+#include "geometry/fracture.h"
+#include "geometry/interiorFlags.h"
+#include "geometry/neighbor.h"
+#include "inp/decks/modelDeck.h"
+#include "inp/decks/outputDeck.h"
+#include "inp/decks/restartDeck.h"
+#include "inp/input.h"
+#include "inp/policy.h"
+#include "loading/fLoading.h"
+#include "loading/initialCondition.h"
+#include "loading/uLoading.h"
 #include "material/pdMaterial.h"
+
+// standard lib
+#include <fstream>
 
 model::FDModel::FDModel(inp::Input *deck)
     : d_massMatrix_p(nullptr), d_mesh_p(nullptr), d_fracture_p(nullptr),
@@ -160,10 +162,11 @@ void model::FDModel::init() {
 
 void model::FDModel::integrate() {
 
-  //  create_nodes(&nodes);
-  //  create_neighbors(&nodes, &neighbors);
-  //  create_fracture(&nodes, &neighbors, &fracture);
+  // apply initial loading
+  if (d_n == 0)
+    d_initialCondition_p->apply(&d_u, &d_v, d_mesh_p);
   d_uLoading_p->apply(d_time, &d_u, &d_v, d_mesh_p);
+  d_fLoading_p->apply(d_time, &d_f, d_mesh_p);
 
   // internal forces
   computeForces();
@@ -180,7 +183,10 @@ void model::FDModel::integrate() {
   size_t i = d_n;
   for (i; i < d_modelDeck_p->d_Nt; i++) {
 
-    integrateCD();
+    if (d_modelDeck_p->d_timeDiscretization == "central_difference")
+      integrateCD();
+    else if (d_modelDeck_p->d_timeDiscretization == "velocity_verlet")
+      integrateVerlet();
 
     if ((d_n % d_outputDeck_p->d_dtOut == 0) &&
         (d_n >= d_outputDeck_p->d_dtOut)) {
@@ -295,7 +301,7 @@ void model::FDModel::integrateVerlet() {
 
   // boundary condition
   d_uLoading_p->apply(d_time, &d_u, &d_v, d_mesh_p);
-  d_fLoading_p->apply(d_time, &d_fext, d_mesh_p);
+  d_fLoading_p->apply(d_time, &d_f, d_mesh_p);
 
   // internal forces
   computeForces();

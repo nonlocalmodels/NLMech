@@ -6,7 +6,7 @@
 #ifndef GEOM_INTERIORFLAGS_H
 #define GEOM_INTERIORFLAGS_H
 
-#include "util/point.h" // definition of point
+#include "util/point.h"           // definition of Point3
 #include <string>
 #include <vector>
 
@@ -128,9 +128,9 @@ public:
    * @param bbox Bounding box to determine the location of nodes relative to
    * the boundary
    */
-  InteriorFlags(inp::InteriorFlagsDeck *deck,
-                const std::vector<util::Point3> *nodes,
-                const std::pair<std::vector<double>, std::vector<double>>& bbox);
+  InteriorFlags(
+      inp::InteriorFlagsDeck *deck, const std::vector<util::Point3> *nodes,
+      const std::pair<std::vector<double>, std::vector<double>> &bbox);
 
   /*!
    * @brief Returns true for all the nodes

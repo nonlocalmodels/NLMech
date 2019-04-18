@@ -1,13 +1,11 @@
-#include <utility>
-
 // Copyright (c) 2019    Prashant K. Jha
 //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#include "../inp/decks/interiorFlagsDeck.h"
 #include "interiorFlags.h"
-#include "util/compare.h" // compare
+#include "inp/decks/interiorFlagsDeck.h"
+#include "util/compare.h"
 
 //
 // BaseInterior
@@ -108,7 +106,7 @@ bool geometry::DataInterior::getInteriorFlag(const size_t &i,
 
 geometry::InteriorFlags::InteriorFlags(
     inp::InteriorFlagsDeck *deck, const std::vector<util::Point3> *nodes,
-    const std::pair<std::vector<double>, std::vector<double>>& bbox) {
+    const std::pair<std::vector<double>, std::vector<double>> &bbox) {
 
   if (deck->d_noFailActive) {
     if (deck->d_computeAndNotStoreFlag)
@@ -117,7 +115,6 @@ geometry::InteriorFlags::InteriorFlags(
       d_interior_p = new geometry::DataInterior(deck, nodes, bbox);
   } else
     d_interior_p = new geometry::BaseInterior(deck, bbox);
-
 }
 
 bool geometry::InteriorFlags::getInteriorFlag(const size_t &i,

@@ -36,7 +36,7 @@ public:
    * @param nodes Pointer to nodal positions
    */
   Neighbor(const double &horizon, inp::NeighborDeck *deck,
-      const std::vector<util::Point3> *nodes);
+           const std::vector<util::Point3> *nodes);
 
   /*!
    * @brief Get neighbor list of node i (element i in case of
@@ -45,7 +45,7 @@ public:
    * @param i Id of node
    * @return Vec vector of neighboring nodes
    */
-  const std::vector<size_t> getNeighbors(const size_t &i);
+  const std::vector<size_t> &getNeighbors(const size_t &i);
 
   /*!
    * @brief Get pointer to full neighbor list

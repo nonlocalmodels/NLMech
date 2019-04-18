@@ -6,17 +6,16 @@
 #ifndef GEOM_FRACTURE_H
 #define GEOM_FRACTURE_H
 
-#include "inp/decks/fractureDeck.h"
-#include "util/feElementDefs.h"
-#include "util/point.h"
-#include <stdint.h>
-#include <string.h>
+#include "util/point.h"                   // definition of Point3
+#include <stdint.h>                       // uint8_t type
+#include <string.h>                       // size_t type
 #include <vector>
 
 // forward declaration of fracture deck
-// namespace inp {
-// struct FractureDeck;
-//}
+namespace inp {
+struct EdgeCrack;
+struct FractureDeck;
+}
 
 /*!
  * @brief Collection of methods and database related to geometry

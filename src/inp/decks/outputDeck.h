@@ -60,10 +60,10 @@ struct OutputDeck {
    * list
    * @param tag Tag to search
    */
-  bool isTagInOutput(const std::string& tag) {
+  bool isTagInOutput(const std::string &tag) {
 
     // search for tag in output tag list
-    for (const auto& type : d_outTags)
+    for (const auto &type : d_outTags)
       if (tag == type)
         return true;
 

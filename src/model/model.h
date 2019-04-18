@@ -6,11 +6,9 @@
 #ifndef MODEL_MODEL_H
 #define MODEL_MODEL_H
 
-#include <cstdlib>
+#include "util/matrix.h"    // definition of SymMatrix3
+#include "util/point.h"     // definition of Point3
 #include <vector>
-
-#include "../util/matrix.h" // definition of SymMatrix3
-#include "../util/point.h"  // definition of Point3
 
 /*!
  * @brief Collection of Peridynamic models
@@ -86,11 +84,8 @@ protected:
   /*! @brief Velocity of the nodes */
   std::vector<util::Point3> d_v;
 
-  /*! @brief Internal force on the nodes */
+  /*! @brief Total force on the nodes */
   std::vector<util::Point3> d_f;
-
-  /*! @brief External force on the nodes */
-  std::vector<util::Point3> d_fext;
 
   /*! @brief Hydrostatic strains at the nodes */
   std::vector<double> d_hS;

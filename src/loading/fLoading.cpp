@@ -6,9 +6,9 @@
 #include "fLoading.h"
 #include "../inp/decks/loadingDeck.h"
 #include "fe/mesh.h"
-#include "util/utilGeom.h"
-#include "util/utilFunction.h"
 #include "util/compare.h"
+#include "util/utilFunction.h"
+#include "util/utilGeom.h"
 
 loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
@@ -82,9 +82,9 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
                                                  bc.d_x2, bc.d_y1, bc.d_y2))
         fix_nodes.push_back(i);
       else if (bc.d_regionType == "angled_rectangle" &&
-                 util::geometry::isPointInsideAngledRectangle(
-                     mesh->getNode(i), bc.d_x1, bc.d_x2, bc.d_y1, bc.d_y2,
-                     bc.d_theta))
+               util::geometry::isPointInsideAngledRectangle(
+                   mesh->getNode(i), bc.d_x1, bc.d_x2, bc.d_y1, bc.d_y2,
+                   bc.d_theta))
         fix_nodes.push_back(i);
     } // loop over nodes
 
@@ -122,20 +122,19 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
         //                                        /
         //    loc_x_min                 loc_x_max
         //
-        fmax = bc.d_spatialFnParams[0] * util::function::hatFunction(x.d_x,
-            bc.d_x1, bc.d_x2);
-      }
-      else if (bc.d_spatialFnType == "hat_y") {
-        fmax = bc.d_spatialFnParams[0] * util::function::hatFunction(x.d_y,
-            bc.d_y1, bc.d_y2);
+        fmax = bc.d_spatialFnParams[0] *
+               util::function::hatFunction(x.d_x, bc.d_x1, bc.d_x2);
+      } else if (bc.d_spatialFnType == "hat_y") {
+        fmax = bc.d_spatialFnParams[0] *
+               util::function::hatFunction(x.d_y, bc.d_y1, bc.d_y2);
       }
 
       // apply time function
       if (bc.d_timeFnType == "linear")
         fmax *= bc.d_timeFnParams[1] * time;
       else if (bc.d_timeFnType == "linear_step")
-        fmax *= util::function::linearStepFunc(time, bc.d_timeFnParams[1], bc
-        .d_timeFnParams[2]);
+        fmax *= util::function::linearStepFunc(time, bc.d_timeFnParams[1],
+                                               bc.d_timeFnParams[2]);
       else if (bc.d_timeFnType == "linear_slow_fast") {
         if (util::compare::definitelyGreaterThan(time, bc.d_timeFnParams[1]))
           fmax *= bc.d_timeFnParams[2] * time;

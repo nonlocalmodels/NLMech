@@ -7,4 +7,4 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 AUX_SOURCE_DIRECTORY(./fd SOURCES)
 
 add_library(Model ${SOURCES})
-target_link_libraries(Model Util IO Material Loading Geometry FE)
+target_link_libraries(Model Util Inp Material Loading Geometry FE)

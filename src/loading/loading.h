@@ -13,7 +13,7 @@
 namespace inp {
 struct LoadingDeck;
 struct BCData;
-}
+} // namespace inp
 
 /*!
  * @brief Collection of methods and database related to loading

@@ -6,10 +6,9 @@
 #ifndef RW_MSHREADER_H
 #define RW_MSHREADER_H
 
+#include "util/point.h"           // definition of Point3
 #include <string>
 #include <vector>
-
-#include "../util/point.h"
 
 namespace rw {
 

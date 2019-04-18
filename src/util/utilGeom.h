@@ -6,9 +6,7 @@
 #ifndef UTIL_GEOMETRY_H
 #define UTIL_GEOMETRY_H
 
-#include "point.h" // definition of point
-
-#include <vector>
+#include "point.h"              // definition of Point3
 
 namespace util {
 
@@ -38,7 +36,7 @@ bool isPointInsideRectangle(util::Point3 x, double x_min, double x_max,
  * @param bool True if point inside rectangle, else false
  */
 bool isPointInsideAngledRectangle(util::Point3 x, double x_min, double x_max,
-                            double y_min, double y_max, double theta);
+                                  double y_min, double y_max, double theta);
 
 } // namespace geometry
 

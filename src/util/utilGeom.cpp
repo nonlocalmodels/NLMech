@@ -6,7 +6,7 @@
 #include "utilGeom.h"
 #include "compare.h"
 #include "transfomation.h"
-#include <cmath> // definition of sin, cosine etc
+#include <cmath>                      // definition of sin, cosine etc
 
 bool util::geometry::isPointInsideRectangle(util::Point3 x, double x_min,
                                             double x_max, double y_min,

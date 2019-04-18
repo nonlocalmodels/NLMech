@@ -6,9 +6,9 @@
 #ifndef LOADING_INITIALCONDITION_H
 #define LOADING_INITIALCONDITION_H
 
+#include "util/point.h"          // definition of Point3
 #include <string>
 #include <vector>
-#include "util/point.h"
 
 // forward declaration of initial condition deck
 namespace inp {
@@ -43,11 +43,10 @@ public:
    * @param v Vector nodal velocities
    * @param mesh Mesh object
    */
-  void apply(std::vector<util::Point3> *u,
-             std::vector<util::Point3> *v, fe::Mesh *mesh);
+  void apply(std::vector<util::Point3> *u, std::vector<util::Point3> *v,
+             fe::Mesh *mesh);
 
 private:
-
   /*!
    * @brief Computes the formula specified by input file
    * @param fn_type Type of function in formula
@@ -57,13 +56,12 @@ private:
    * @param dim Dimension
    * @return Value Value of formula at the point
    */
-  double getICFormula(const std::string &fn_type, const std::vector<double>
-      &params, const util::Point3 &x, const size_t &dof, const size_t &dim);
-
+  double getICFormula(const std::string &fn_type,
+                      const std::vector<double> &params, const util::Point3 &x,
+                      const size_t &dof, const size_t &dim);
 
   /*! @brief Initial condition deck */
   inp::InitialConditionDeck *d_deck_p;
-
 };
 
 } // namespace loading

@@ -7,18 +7,14 @@
 #define MODEL_FDMODEL_H
 
 #include <hpx/config.hpp>
-#include <vector>
-
-// include model abstraction class
-#ifndef MODEL_ABSTRACTIONS_H
 #include "../model.h"
-#endif
+#include <vector>
 
 // forward declaration of class
 namespace fe {
 class MassMatrix;
 class Mesh;
-//class Quadrature;
+// class Quadrature;
 } // namespace fe
 
 namespace geometry {
@@ -198,7 +194,6 @@ private:
   /** @}*/
 
 private:
-
   /*! @brief Model deck */
   inp::ModelDeck *d_modelDeck_p;
 
@@ -232,7 +227,7 @@ private:
    *
    * @sa Quadrature
    */
-//  fe::Quadrature *d_quadrature_p;
+  //  fe::Quadrature *d_quadrature_p;
 
   /*!
    * @brief Pointer to Fracture object

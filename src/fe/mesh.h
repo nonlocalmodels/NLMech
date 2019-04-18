@@ -7,9 +7,7 @@
 #define FE_MESH_H
 
 #include <hpx/config.hpp>
-#include <algorithm>
-
-#include "util/point.h" // definition of struct Point3
+#include "util/point.h"       // definition of struct Point3
 #include <string>
 #include <vector>
 
@@ -205,7 +203,7 @@ private:
    *
    * @param filename Name of the mesh file
    * */
-  void createData(const std::string& filename);
+  void createData(const std::string &filename);
 
   /*!
    * @brief Compute the nodal volume
@@ -291,7 +289,8 @@ private:
    * check d_fix[i] & FIX_X_MASK and if it is true then x-dof is fixed.
    * Similarly we check for y-dof and z-dof using FIX_Y_MASK and FIX_Z_MASK.
    *
-   * We store data in uint8_t type which is 1 byte. Although we only need 3 bits.
+   * We store data in uint8_t type which is 1 byte. Although we only need 3
+   * bits.
    */
   std::vector<uint8_t> d_fix;
 

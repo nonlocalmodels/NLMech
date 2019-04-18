@@ -134,5 +134,6 @@ int inp::Policy::getMemoryControlFlag() {
   return d_policyDeck_p->d_memControlFlag;
 }
 
-bool inp::Policy::enablePostProcessing() { return
-d_policyDeck_p->d_enablePostProcessing;}
+bool inp::Policy::enablePostProcessing() {
+  return d_policyDeck_p->d_enablePostProcessing;
+}

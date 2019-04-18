@@ -4,9 +4,9 @@
 // (See accompanying file LICENSE.txt)
 
 #include "massMatrix.h"
-#include "../inp/decks/massMatrixDeck.h"
-#include "../inp/policy.h"
-#include <iostream>
+#include "inp/decks/massMatrixDeck.h"
+#include "inp/policy.h"                     // to check for constraints
+#include <iostream>                         // for std::cerr
 
 fe::MassMatrix::MassMatrix(inp::MassMatrixDeck *deck) {
   d_massMatrixDeck_p = deck;

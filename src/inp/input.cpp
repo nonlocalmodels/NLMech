@@ -2,10 +2,8 @@
 //
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
-#include <cmath>
-#include <iostream>
-#include <yaml-cpp/yaml.h>
 
+#include "input.h"
 #include "decks/fractureDeck.h"
 #include "decks/initialConditionDeck.h"
 #include "decks/interiorFlagsDeck.h"
@@ -20,7 +18,9 @@
 #include "decks/restartDeck.h"
 #include "decks/solverDeck.h"
 #include "inp/decks/meshDeck.h"
-#include "input.h"
+#include <cmath>
+#include <iostream>
+#include <yaml-cpp/yaml.h>
 
 static inline bool definitelyGreaterThan(const double &a, const double &b) {
   return (a - b) >

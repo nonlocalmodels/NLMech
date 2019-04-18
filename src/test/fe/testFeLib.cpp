@@ -434,25 +434,25 @@ void testTriElemTime(size_t n, size_t N) {
                                      util::Point3(4., 2., 0.),
                                      util::Point3(2., 4., 0.)};
   size_t num_vertex = 3;
-//  std::vector<size_t> elements;
-//  for (size_t i = 0; i < 3 * N; i++)
-//    elements.emplace_back(i % 2);
+  //  std::vector<size_t> elements;
+  //  for (size_t i = 0; i < 3 * N; i++)
+  //    elements.emplace_back(i % 2);
   std::vector<std::vector<size_t>> elements;
   for (size_t i = 0; i < N; i++)
-    elements.emplace_back(std::vector<size_t>{0,1,2});
-
+    elements.emplace_back(std::vector<size_t>{0, 1, 2});
 
   std::uint64_t t11 = hpx::util::high_resolution_clock::now();
   // method 1: Compute quad points on the fly
   // loop over elements and compute I_approx
   double sum = 0.;
   for (size_t e = 0; e < N; e++) {
-//    std::vector<util::Point3> enodes = {nodes[elements[num_vertex * e + 0]],
-//                                        nodes[elements[num_vertex * e + 1]],
-//                                        nodes[elements[num_vertex * e + 2]]};
-    std::vector<util::Point3> enodes = {nodes[elements[e][0]],
-                                        nodes[elements[e][1]],
-                                        nodes[elements[e][2]]};
+    //    std::vector<util::Point3> enodes = {nodes[elements[num_vertex * e +
+    //    0]],
+    //                                        nodes[elements[num_vertex * e +
+    //                                        1]], nodes[elements[num_vertex * e
+    //                                        + 2]]};
+    std::vector<util::Point3> enodes = {
+        nodes[elements[e][0]], nodes[elements[e][1]], nodes[elements[e][2]]};
     std::vector<fe::QuadData> qds = quad.getQuadPoints(enodes);
     for (auto qd : qds)
       sum += qd.d_w * (qd.d_shapes[0] + qd.d_shapes[1] + qd.d_shapes[2]);

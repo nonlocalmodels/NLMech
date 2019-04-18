@@ -84,5 +84,5 @@ add_subdirectory(src/model)
 add_subdirectory(src/test)
 
 # Build executable
-add_hpx_executable(NLMech SOURCES src/main.cpp DEPENDENCIES Util IO
+add_hpx_executable(NLMech SOURCES src/main.cpp DEPENDENCIES Inp
         Model ${YAML_CPP_LIB} ${VTK_LIBRARIES})

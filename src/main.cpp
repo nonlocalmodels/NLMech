@@ -3,20 +3,13 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#include <hpx/hpx_main.hpp> // Need main source file
+#include <hpx/hpx_main.hpp>                     // Need main source file
 #include <hpx/util/high_resolution_clock.hpp>
-
-//#include "fe/mesh.h"          // Mesh class
-#include "inp/input.h"        // Input class
-#include "model/fd/fDModel.h" // Model class
-#include "model/model.h"      // Model class
+#include "inp/input.h"                          // Input class
+#include "model/fd/fDModel.h"                   // Model class
 #include <iostream>
-
-#include <ctime>
-#include <algorithm>
 #include <boost/program_options.hpp> // program options
 
-//! Main driver
 int main(int argc, char *argv[]) {
 
   boost::program_options::options_description desc("Allowed options");

@@ -3,23 +3,23 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#include <hpx/include/parallel_algorithm.hpp>
-
-#include "../inp/decks/meshDeck.h"
-#include "../inp/policy.h"
-#include "../rw/reader.h"
-#include "../util/feElementDefs.h"
 #include "mesh.h"
+#include "inp/decks/meshDeck.h"
+#include "inp/policy.h"
+#include "rw/reader.h"
+#include "util/feElementDefs.h"
 #include "quadrature.h"
+#include <hpx/include/parallel_algorithm.hpp>
 #include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <stdint.h>
 
 fe::Mesh::Mesh(inp::MeshDeck *deck)
-    : d_numNodes(0), d_numElems(0), d_eType(0), d_eNumVertex(0), d_numDofs(0)
-    , d_h(deck->d_h), d_dim(deck->d_dim), d_spatialDiscretization(
-        deck->d_spatialDiscretization), d_filename(deck->d_filename) {
+    : d_numNodes(0), d_numElems(0), d_eType(0), d_eNumVertex(0), d_numDofs(0),
+      d_h(deck->d_h), d_dim(deck->d_dim),
+      d_spatialDiscretization(deck->d_spatialDiscretization),
+      d_filename(deck->d_filename) {
 
   // perform check on input data
   if (d_spatialDiscretization != "finite_difference" and
@@ -57,7 +57,7 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
 //
 // Utility functions
 //
-void fe::Mesh::createData(const std::string& filename) {
+void fe::Mesh::createData(const std::string &filename) {
 
   int file_type = -1;
 
@@ -219,8 +219,8 @@ const std::vector<size_t> fe::Mesh::getElementConnectivity(const size_t &i) {
                              d_enc.begin() + d_eNumVertex * i + d_eNumVertex);
 }
 
-const std::vector<util::Point3> fe::Mesh::getElementConnectivityNodes(const
-size_t &i) {
+const std::vector<util::Point3>
+fe::Mesh::getElementConnectivityNodes(const size_t &i) {
   std::vector<util::Point3> nds;
   for (size_t k = 0; k < d_eNumVertex; k++)
     nds.emplace_back(d_nodes[d_enc[d_eNumVertex * i + k]]);
@@ -242,8 +242,8 @@ bool fe::Mesh::isNodeFree(const size_t &i, const unsigned int &dof) {
 //
 // Setter functions
 //
-void fe::Mesh::setFixity(const size_t &i, const unsigned int &dof, const bool
-&flag) {
+void fe::Mesh::setFixity(const size_t &i, const unsigned int &dof,
+                         const bool &flag) {
 
   // to set i^th bit as true of integer a,
   // a |= 1UL << (i % 8)
@@ -251,6 +251,5 @@ void fe::Mesh::setFixity(const size_t &i, const unsigned int &dof, const bool
   // to set i^th bit as false of integer a,
   // a &= ~(1UL << (i % 8))
 
-  flag ? (d_fix[i] |= 1UL << dof)
-       : (d_fix[i] &= ~(1UL << dof) );
+  flag ? (d_fix[i] |= 1UL << dof) : (d_fix[i] &= ~(1UL << dof));
 }

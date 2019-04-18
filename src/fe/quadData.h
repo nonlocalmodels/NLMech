@@ -6,6 +6,8 @@
 #ifndef FE_QUADDATA_H
 #define FE_QUADDATA_H
 
+#include <vector>
+
 namespace fe {
 
 /*!

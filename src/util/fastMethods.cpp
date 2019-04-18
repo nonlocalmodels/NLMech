@@ -3,11 +3,10 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
+#include "fastMethods.h"
+#include "compare.h"
 #include <hpx/include/parallel_minmax.hpp>
 #include <hpx/include/parallel_reduce.hpp>
-
-#include "compare.h"
-#include "fastMethods.h"
 
 static bool compare_point(const util::Point3 &a, const util::Point3 &b) {
 

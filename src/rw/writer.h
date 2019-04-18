@@ -6,7 +6,7 @@
 #ifndef RW_WRITER_H
 #define RW_WRITER_H
 
-#include "util/point.h"
+#include "util/point.h"           // definition of Point3
 #include <string>
 #include <vector>
 

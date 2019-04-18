@@ -3,8 +3,8 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef INPUT_H
-#define INPUT_H
+#ifndef INP_INPUT_H
+#define INP_INPUT_H
 
 #include <string>
 
@@ -150,7 +150,6 @@ public:
    * @return Pointer to SolverDeck
    */
   inp::SolverDeck *getSolverDeck();
-
 
   /*!
    * @brief Get the name of spatial discretization

@@ -4,8 +4,7 @@
 // (See accompanying file LICENSE.txt)
 
 #include "fracture.h"
-#include "../inp/decks/fractureDeck.h"
-
+#include "inp/decks/fractureDeck.h"
 #include <hpx/include/parallel_algorithm.hpp>
 
 geometry::Fracture::Fracture(

@@ -6,8 +6,8 @@
 #ifndef FE_BASEELEM_H
 #define FE_BASEELEM_H
 
-#include "../util/point.h"         // definition of Point3
-#include "quadData.h"              // definition of QuadData
+#include "util/point.h" // definition of Point3
+#include "quadData.h"      // definition of QuadData
 
 namespace fe {
 

@@ -6,8 +6,8 @@
 #ifndef MATERIAL_PD_BASEMATERIAL_H
 #define MATERIAL_PD_BASEMATERIAL_H
 
-#include <vector>
 #include <cstring>
+#include <vector>
 
 namespace material {
 
@@ -39,8 +39,8 @@ public:
    * @return Value Pair of energy and force
    */
   virtual std::pair<double, double> getBondEF(const double &r, const double &s,
-                                              const double &influence, bool
-                                              &fs) {
+                                              const double &influence,
+                                              bool &fs) {
     return std::make_pair(0., 0.);
   };
 
@@ -52,8 +52,8 @@ public:
    * @param influence Value of influence function at r
    * @return Value Pair of energy and force
    */
-  virtual std::pair<double, double> getBondEFNoFail(const double &r, const
-  double &s, const double &influence) {
+  virtual std::pair<double, double>
+  getBondEFNoFail(const double &r, const double &s, const double &influence) {
     return std::make_pair(0., 0.);
   };
 
@@ -68,14 +68,15 @@ public:
   };
 
   /*!
- * @brief Returns hydrostatic force density
- *
- * @param g_prime Derivative of hydrostatic potential function
- * @param r Reference (initial) bond length
- * @return Value Force density
- */
-  virtual double getStateForce(const double &g_prime, const double &r)
-  { return 0.; };
+   * @brief Returns hydrostatic force density
+   *
+   * @param g_prime Derivative of hydrostatic potential function
+   * @param r Reference (initial) bond length
+   * @return Value Force density
+   */
+  virtual double getStateForce(const double &g_prime, const double &r) {
+    return 0.;
+  };
 
   /*!
    * @brief Returns contribution of bond to hydrostatic strain
@@ -84,8 +85,9 @@ public:
    * @param r Reference (initial) bond length
    * @return Value Contribution to hydrostatic strain
    */
-  virtual double getBondContribToHydroStrain(const double &S, const double
-  &r) { return 0.; };
+  virtual double getBondContribToHydroStrain(const double &S, const double &r) {
+    return 0.;
+  };
 
   /*!
    * @brief Returns critical bond strain

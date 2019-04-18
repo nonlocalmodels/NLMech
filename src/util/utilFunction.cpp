@@ -4,9 +4,9 @@
 // (See accompanying file LICENSE.txt)
 
 #include "utilFunction.h"
-#include "compare.h"    // compare functions
-#include <iostream>     // cerr
-#include <cmath>        // definition of sin, cosine etc
+#include "compare.h"              // compare functions
+#include <cmath>                  // definition of sin, cosine etc
+#include <iostream>               // cerr
 
 double util::function::hatFunction(const double &x, const double &x_min,
                                    const double &x_max) {

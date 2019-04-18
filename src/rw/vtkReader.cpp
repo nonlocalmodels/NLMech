@@ -32,8 +32,7 @@ rw::reader::VtkReader::VtkReader(const std::string &filename) {
 
 void rw::reader::VtkReader::readMesh(size_t dim,
                                      std::vector<util::Point3> *nodes,
-                                     size_t &element_type,
-                                     size_t &num_elem,
+                                     size_t &element_type, size_t &num_elem,
                                      std::vector<size_t> *enc,
                                      std::vector<std::vector<size_t>> *nec,
                                      std::vector<double> *volumes, bool is_fd) {
@@ -57,8 +56,8 @@ void rw::reader::VtkReader::readMesh(size_t dim,
 
   // check if file contains nodal volumes
   bool has_volume = true;
-  if (p_field->HasArray("Node_Volume") == 0 and p_field->HasArray("Volume")
-  == 0)
+  if (p_field->HasArray("Node_Volume") == 0 and
+      p_field->HasArray("Volume") == 0)
     has_volume = false;
   vtkDataArray *vol_array;
   if (has_volume) {
@@ -142,8 +141,8 @@ void rw::reader::VtkReader::readMesh(size_t dim,
 
       nds_per_el = util::vtk_map_element_to_num_nodes[element_type];
 
-//      std::cout << "nodes per element = " << nds_per_el << "\n";
-//      std::cout << "Num elements = " << num_elems << "\n";
+      //      std::cout << "nodes per element = " << nds_per_el << "\n";
+      //      std::cout << "Num elements = " << num_elems << "\n";
 
       // resize the element-node connectivity
       enc->resize(nds_per_el * num_elems);
@@ -164,27 +163,28 @@ void rw::reader::VtkReader::readPointData(std::string name,
                                           std::vector<util::Point3> *data) {
 
   // read point field data
-  vtkPointData * p_field = d_grid_p->GetPointData();
+  vtkPointData *p_field = d_grid_p->GetPointData();
 
   // handle for displacement, fixity and node element connectivity
   if (p_field->HasArray(name.c_str()) == 0) {
-    std::cerr<<"Error: VTK input data does not contain "<<name<<" data.\n";
+    std::cerr << "Error: VTK input data does not contain " << name
+              << " data.\n";
     exit(1);
   }
-  vtkDataArray * array = p_field->GetArray(name.c_str());
+  vtkDataArray *array = p_field->GetArray(name.c_str());
 
   // Below is not efficient. Later this can be improved.
   // declare another array data to hold the ux,uy,uz
-  auto data_a = vtkSmartPointer < vtkDoubleArray > ::New();
+  auto data_a = vtkSmartPointer<vtkDoubleArray>::New();
   data_a->SetNumberOfComponents(3);
   data_a->Allocate(3, 1); // allocate memory
 
-  for (size_t i=0; i<array->GetNumberOfTuples(); i++) {
+  for (size_t i = 0; i < array->GetNumberOfTuples(); i++) {
 
-    array->GetTuples(i,i,data_a);
+    array->GetTuples(i, i, data_a);
 
     util::Point3 d = util::Point3();
-    for (size_t j=0; j<3; j++)
+    for (size_t j = 0; j < 3; j++)
       d[j] = data_a->GetValue(j);
 
     (*data).push_back(d);
