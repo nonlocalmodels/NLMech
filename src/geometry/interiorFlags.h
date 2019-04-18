@@ -87,6 +87,12 @@ public:
   bool getInteriorFlag(const size_t &i, const util::Point3 &x) override;
 };
 
+/*!
+ * @brief A class to check if the node is in interior or exterior
+ *
+ * This class stores the interior flags of all nodes so that the flags are
+ * not computed every time it is needed.
+ */
 class DataInterior : public BaseInterior {
 public:
   /*!

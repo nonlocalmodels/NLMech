@@ -33,10 +33,7 @@ namespace model {
 class Model {
 
 public:
-  /*!
-   * @brief Constructor
-   * @param deck The input deck
-   */
+  /*! @brief Constructor */
   Model();
 
   /**

@@ -20,7 +20,7 @@ namespace geometry {
  * @param x_max X coordinate of right-top corner point
  * @param y_min Y coordinate of left-bottom corner point
  * @param y_max Y coordinate of right-top corner point
- * @param bool True if point inside rectangle, else false
+ * @return bool True if point inside rectangle, else false
  */
 bool isPointInsideRectangle(util::Point3 x, double x_min, double x_max,
                             double y_min, double y_max);
@@ -33,7 +33,7 @@ bool isPointInsideRectangle(util::Point3 x, double x_min, double x_max,
  * @param y_min Y coordinate of left-bottom corner point
  * @param y_max Y coordinate of right-top corner point
  * @param theta Angle of orientation of rectangle from x-axis
- * @param bool True if point inside rectangle, else false
+ * @return bool True if point inside rectangle, else false
  */
 bool isPointInsideAngledRectangle(util::Point3 x, double x_min, double x_max,
                                   double y_min, double y_max, double theta);

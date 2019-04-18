@@ -36,10 +36,7 @@ namespace loading {
 class Loading {
 
 public:
-  /*!
-   * @brief Constructor
-   * @param deck Input deck which contains user-specified information
-   */
+  /*! @brief Constructor */
   Loading() = default;
 
 protected:

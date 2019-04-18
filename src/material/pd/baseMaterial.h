@@ -24,7 +24,8 @@ class BaseMaterial {
 public:
   /*!
    * @brief Constructor
-   * @param deck Input deck which contains user-specified information
+   * @param dim Dimension
+   * @param horizon Horizon
    */
   BaseMaterial(const size_t &dim, const double &horizon)
       : d_horizon(horizon), d_dimension(dim){};

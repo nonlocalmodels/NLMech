@@ -158,7 +158,7 @@ private:
    * @brief Perform time integration using central-difference scheme
    *
    * Central difference scheme
-   * \f [ u_{new} = \Delta t^2 (f_{int} + f_{ext}) / \rho  +
+   * \f[ u_{new} = \Delta t^2 (f_{int} + f_{ext}) / \rho  +
    * \Delta t v_{old} + u_{old} \f]
    * \f[ v_{new} = \frac{u_{new} - u_{old}}{\Delta t}. \f]
    */

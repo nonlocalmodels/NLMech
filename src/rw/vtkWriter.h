@@ -16,6 +16,7 @@ namespace rw {
 
 namespace writer {
 
+/*! @brief A vtk writer for simple point data and complex fem mesh data */
 class VtkWriter {
 
 public:

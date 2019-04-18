@@ -35,7 +35,7 @@ namespace function {
  * @param x Point in real line
  * @param x_min Left side point in real line
  * @param x_max Right side point in real line
- * @param value Evaluation of hat function at x
+ * @return value Evaluation of hat function at x
  */
 double hatFunction(const double &x, const double &x_min, const double &x_max);
 
@@ -62,7 +62,7 @@ double hatFunction(const double &x, const double &x_min, const double &x_max);
  * @param x Point in real line
  * @param x_min Left side point in real line
  * @param x_max Right side point in real line
- * @param value Evaluation of hat function at x
+ * @return value Evaluation of hat function at x
  */
 double hatFunctionQuick(const double &x, const double &x_min,
                         const double &x_max);
@@ -88,7 +88,7 @@ double hatFunctionQuick(const double &x, const double &x_min,
  * @param x  Point in real line
  * @param x1 Point such that function is linear with slope 1 in [0, x1)
  * @param x2 Point such that function is constant in [x1, x1 + x2)
- * @param value Evaluation of step function at x
+ * @return value Evaluation of step function at x
  */
 double linearStepFunc(const double &x, const double &x1, const double &x2);
 

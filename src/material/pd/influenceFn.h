@@ -32,7 +32,7 @@ public:
    * @brief Returns the moment of influence function
    *
    * If \f$ J(r) \f$ is the influence function for \f$ r\in [0,1)\f$ then \f$
-   * i^\text{th}\f$ moment is given by \f[ M_i = \int_0^1 J(r) r^i dr. \f]
+   * i^{th} \f$ moment is given by \f[ M_i = \int_0^1 J(r) r^i dr. \f]
    *
    * @param i ith moment
    * @return Value Moment
@@ -59,7 +59,7 @@ public:
    * @brief Returns the moment of influence function
    *
    * If \f$ J(r) \f$ is the influence function for \f$ r\in [0,1)\f$ then \f$
-   * i^\text{th}\f$ moment is given by \f[ M_i = \int_0^1 J(r) r^i dr. \f]
+   * i^{th}\f$ moment is given by \f[ M_i = \int_0^1 J(r) r^i dr. \f]
    *
    * @param i ith moment
    * @return Value Moment
@@ -93,7 +93,7 @@ public:
    * @brief Returns the moment of influence function
    *
    * If \f$ J(r) \f$ is the influence function for \f$ r\in [0,1)\f$ then \f$
-   * i^\text{th}\f$ moment is given by \f[ M_i = \int_0^1 J(r) r^i dr. \f]
+   * i^{th}\f$ moment is given by \f[ M_i = \int_0^1 J(r) r^i dr. \f]
    *
    * @param i ith moment
    * @return Value Moment
@@ -130,7 +130,7 @@ public:
    * @brief Returns the moment of influence function
    *
    * If \f$ J(r) \f$ is the influence function for \f$ r\in [0,1)\f$ then \f$
-   * i^\text{th}\f$ moment is given by \f[ M_i = \int_0^1 J(r) r^i dr. \f]
+   * i^{th}\f$ moment is given by \f[ M_i = \int_0^1 J(r) r^i dr. \f]
    *
    * @param i ith moment
    * @return Value Moment

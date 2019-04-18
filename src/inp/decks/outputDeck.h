@@ -59,6 +59,7 @@ struct OutputDeck {
    * @brief Searches list of tags and returns true if the asked tag is in the
    * list
    * @param tag Tag to search
+   * @return True/false If tag is find return true or else false
    */
   bool isTagInOutput(const std::string &tag) {
 
