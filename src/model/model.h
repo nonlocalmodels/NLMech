@@ -86,8 +86,11 @@ protected:
   /*! @brief Velocity of the nodes */
   std::vector<util::Point3> d_v;
 
-  /*! @brief Total force on the nodes */
+  /*! @brief Internal force on the nodes */
   std::vector<util::Point3> d_f;
+
+  /*! @brief External force on the nodes */
+  std::vector<util::Point3> d_fext;
 
   /*! @brief Hydrostatic strains at the nodes */
   std::vector<double> d_hS;

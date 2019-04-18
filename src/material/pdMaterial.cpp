@@ -48,11 +48,11 @@ std::pair<double, double>
 material::pd::Material::getBondEF(const double &r, const double &s, bool &fs,
                                   const bool &break_bonds) {
   if (break_bonds)
-    return d_baseMaterial_p->getBondEF(r, s, d_baseInfluenceFn_p->getInfFn(r),
-                                       fs);
+    return d_baseMaterial_p->getBondEF(
+        r, s, d_baseInfluenceFn_p->getInfFn(r / d_horizon), fs);
   else
-    return d_baseMaterial_p->getBondEFNoFail(r, s,
-                                             d_baseInfluenceFn_p->getInfFn(r));
+    return d_baseMaterial_p->getBondEFNoFail(
+        r, s, d_baseInfluenceFn_p->getInfFn(r / d_horizon));
 }
 
 std::pair<double, double>
@@ -61,7 +61,7 @@ material::pd::Material::getStateEF(const double &theta) {
 }
 
 double material::pd::Material::getInfFn(const double &r) {
-  return d_baseInfluenceFn_p->getInfFn(r);
+  return d_baseInfluenceFn_p->getInfFn(r / d_horizon);
 }
 
 double material::pd::Material::getMoment(const size_t &i) {
@@ -70,7 +70,7 @@ double material::pd::Material::getMoment(const size_t &i) {
 
 double material::pd::Material::getS(const util::Point3 &dx,
                                     const util::Point3 &du) {
-  return du.dot(dx) / (dx.length() * dx.length());
+  return dx.dot(du) / dx.dot(dx);
 }
 
 double material::pd::Material::getDensity() { return d_density; }

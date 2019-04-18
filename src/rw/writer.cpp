@@ -12,6 +12,8 @@ rw::writer::VtkWriterInterface::VtkWriterInterface(const std::string &filename)
   d_vtkWriter_p = new rw::writer::VtkWriter(filename);
 }
 
+rw::writer::VtkWriterInterface::~VtkWriterInterface() {delete(d_vtkWriter_p);}
+
 void rw::writer::VtkWriterInterface::appendNodes(
     const std::vector<util::Point3> *nodes) {
   d_vtkWriter_p->appendNodes(nodes);

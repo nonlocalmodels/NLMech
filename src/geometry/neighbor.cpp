@@ -4,46 +4,43 @@
 // (See accompanying file LICENSE.txt)
 
 #include "neighbor.h"
-#include "util/compare.h"
 #include "../inp/decks/neighborDeck.h"
+#include "util/compare.h"
 
 #include <hpx/include/parallel_algorithm.hpp>
 
 geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
-                             const std::vector<util::Point3> *nodes) :
-                             d_neighborDeck_p(deck) {
+                             const std::vector<util::Point3> *nodes)
+    : d_neighborDeck_p(deck) {
 
   d_neighbors.resize(nodes->size());
 
-  auto f =
-      hpx::parallel::for_loop(
-          hpx::parallel::execution::par(hpx::parallel::execution::task),
-          0, nodes->size(), [this,horizon, nodes](boost::uint64_t i)
-          {
+  auto f = hpx::parallel::for_loop(
+      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      nodes->size(), [this, horizon, nodes](boost::uint64_t i) {
 
-            util::Point3 xi = (*nodes)[i];
+        util::Point3 xi = (*nodes)[i];
 
-            // loop over all the nodes and check which nodes are
-            // within the horizon ball of i_node
-            std::vector<size_t> neighs;
-            for (size_t j = 0; j < nodes->size(); j++) {
+        // loop over all the nodes and check which nodes are
+        // within the horizon ball of i_node
+        std::vector<size_t> neighs;
+        for (size_t j = 0; j < nodes->size(); j++) {
 
-              if (j == i)
-                continue;
+          if (j == i)
+            continue;
 
-              if (util::compare::definitelyLessThan(xi.dist((*nodes)[j]),
-                  horizon + 1.0E-10))
-                neighs.push_back(j);
-            } // loop over nodes j
+          if (util::compare::definitelyLessThan(xi.dist((*nodes)[j]),
+                                                horizon + 1.0E-10))
+            neighs.push_back(j);
+        } // loop over nodes j
 
-            this->d_neighbors[i] = neighs;
-          }
-      ); //end of parallel for loop
+        this->d_neighbors[i] = neighs;
+      }); // end of parallel for loop
 
   f.get();
 }
 
-const std::vector<size_t> &geometry::Neighbor::getNeighbors(const size_t &i) {
+const std::vector<size_t> geometry::Neighbor::getNeighbors(const size_t &i) {
   return d_neighbors[i];
 }
 const std::vector<std::vector<size_t>> *geometry::Neighbor::getNeighborsP() {

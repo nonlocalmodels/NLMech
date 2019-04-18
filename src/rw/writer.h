@@ -45,6 +45,9 @@ public:
    */
   explicit VtkWriterInterface(const std::string &filename);
 
+  /*! @brief Destructor */
+  ~VtkWriterInterface();
+
   /**
    * @name Mesh data
    */

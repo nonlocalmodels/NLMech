@@ -7,6 +7,7 @@
 #include "../inp/decks/loadingDeck.h"
 #include "fe/mesh.h"
 #include "util/utilGeom.h"
+#include <fstream>
 
 loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 

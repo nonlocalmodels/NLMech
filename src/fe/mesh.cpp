@@ -101,7 +101,7 @@ void fe::Mesh::createData(const std::string& filename) {
   //
   // assign default values to fixity
   //
-  d_fix = std::vector<uint8_t>(d_nodes.size(), FREE_MASK);
+  d_fix = std::vector<uint8_t>(d_nodes.size(), uint8_t(0));
 
   //
   // compute nodal volume if required
@@ -170,13 +170,6 @@ void fe::Mesh::computeVol() {
       }); // end of parallel for loop
 
   f.get();
-  //
-  //  std::ofstream myfile("nodes.csv");
-  //  myfile.precision(6);
-  //  for (size_t i=0; i<d_numNodes; i++)
-  //    myfile << i <<","<< d_nodes[i].d_x << "," << d_nodes[i].d_y << "," <<
-  //           d_nodes[i].d_z << "," << d_vol[i] <<"\n";
-  //  myfile.close();
 }
 
 void fe::Mesh::computeMeshSize() {

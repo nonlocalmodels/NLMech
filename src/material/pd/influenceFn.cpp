@@ -5,6 +5,7 @@
 
 #include "influenceFn.h"
 #include <cmath>
+#include <iostream>
 
 material::pd::ConstInfluenceFn::ConstInfluenceFn(const std::vector<double>
     &params, const size_t &dim)
@@ -28,13 +29,13 @@ material::pd::LinearInfluenceFn::LinearInfluenceFn(const std::vector<double>
     // choose a0, a1 = -a0 such that \int_0^1 J(r) r^d dr = 1
     // and J(r) = a0 (1 - r)
     if (dim == 1) {
-      d_a0 = 1. / 6.;
+      d_a0 = 6.;
       d_a1 = -d_a0;
     } else if (dim == 2) {
-      d_a0 = 1. / 12.;
+      d_a0 = 12.;
       d_a1 = -d_a0;
     } else if (dim == 3) {
-      d_a0 = 1. / 20.;
+      d_a0 = 20.;
       d_a1 = -d_a0;
     }
   } else {

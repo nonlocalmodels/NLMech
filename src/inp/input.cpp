@@ -12,7 +12,6 @@
 #include "decks/loadingDeck.h"
 #include "decks/massMatrixDeck.h"
 #include "decks/materialDeck.h"
-#include "inp/decks/meshDeck.h"
 #include "decks/modelDeck.h"
 #include "decks/neighborDeck.h"
 #include "decks/outputDeck.h"
@@ -20,6 +19,7 @@
 #include "decks/quadratureDeck.h"
 #include "decks/restartDeck.h"
 #include "decks/solverDeck.h"
+#include "inp/decks/meshDeck.h"
 #include "input.h"
 
 static inline bool definitelyGreaterThan(const double &a, const double &b) {
@@ -261,6 +261,9 @@ void inp::Input::setFractureDeck() {
 
   if (config["Fracture"]["Dt_Out"])
     d_fractureDeck_p->d_crackOutput = config["Fracture"]["Dt_Out"].as<size_t>();
+  else if (config["Output"]["Output_Interval"])
+    d_fractureDeck_p->d_crackOutput =
+        config["Output"]["Output_Interval"].as<size_t>();
 
   size_t ncracks = 0;
   if (config["Fracture"]["Cracks"]["Sets"])
@@ -306,6 +309,9 @@ void inp::Input::setFractureDeck() {
         exit(1);
       }
     }
+
+    // add crack data to list
+    d_fractureDeck_p->d_cracks.push_back(crack);
   }
 } // setFractureDeck
 
@@ -367,7 +373,7 @@ void inp::Input::setLoadingDeck() {
   // reading of both
   std::vector<std::string> vtags = {"Displacement_BC", "Force_BC"};
 
-  for (const auto& tag : vtags) {
+  for (const auto &tag : vtags) {
 
     // read boundary condition data
     if (config[tag]) {
@@ -542,7 +548,8 @@ void inp::Input::setOutputDeck() {
 
   if (config["Output"]) {
     auto e = config["Output"];
-    d_outputDeck_p->d_outFormat = e["Format"].as<std::string>();
+    if (e["Format"])
+      d_outputDeck_p->d_outFormat = e["Format"].as<std::string>();
     d_outputDeck_p->d_path = e["Path"].as<std::string>();
     if (e["Tags"])
       for (auto f : e["Tags"])

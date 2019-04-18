@@ -13,21 +13,20 @@ geometry::Fracture::Fracture(
     const std::vector<std::vector<size_t>> *neighbor_list) {
 
   d_fractureDeck_p = deck;
-
   d_fracture.resize(neighbor_list->size());
 
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       neighbor_list->size(), [this, nodes, neighbor_list](boost::uint64_t i) {
-        std::vector<size_t> ineighs = (*neighbor_list)[i];
+        auto ns = (*neighbor_list)[i];
 
-        size_t s = ineighs.size() / 8;
-        if (s * 8 < ineighs.size())
+        size_t s = ns.size() / 8;
+        if (s * 8 < ns.size())
           s++;
         d_fracture[i] = std::vector<uint8_t>(s, uint8_t(0));
 
         for (auto crack : d_fractureDeck_p->d_cracks)
-          this->computeFracturedBondFd(i, &crack, nodes, &ineighs);
+          this->computeFracturedBondFd(i, &crack, nodes, &ns);
       }); // end of parallel for loop
 
   f.get();
@@ -45,7 +44,7 @@ void geometry::Fracture::computeFracturedBondFd(
   //
   //                     pt = pr
   //
-  //								o
+  //                      o
   //                     /
   //         [ ]-----[ ]/----[ ]
   //          |       |/      |

@@ -78,7 +78,8 @@ struct Point3 {
    */
   double dist(Point3 b) {
     return std::sqrt((d_x - b.d_x) * (d_x - b.d_x) +
-                     (d_y - b.d_y) * (d_z - b.d_z));
+                     (d_y - b.d_y) * (d_y - b.d_y) +
+                     (d_z - b.d_z) * (d_z - b.d_z));
   }
 
   /*!
@@ -88,7 +89,8 @@ struct Point3 {
    */
   double dist(Point3 b) const {
     return std::sqrt((d_x - b.d_x) * (d_x - b.d_x) +
-        (d_y - b.d_y) * (d_z - b.d_z));
+                     (d_y - b.d_y) * (d_y - b.d_y) +
+                     (d_z - b.d_z) * (d_z - b.d_z));
   }
 
   /**

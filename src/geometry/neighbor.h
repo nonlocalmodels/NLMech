@@ -45,7 +45,7 @@ public:
    * @param i Id of node
    * @return Vec vector of neighboring nodes
    */
-  const std::vector<size_t> &getNeighbors(const size_t &i);
+  const std::vector<size_t> getNeighbors(const size_t &i);
 
   /*!
    * @brief Get pointer to full neighbor list

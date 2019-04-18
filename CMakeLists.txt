@@ -85,4 +85,4 @@ add_subdirectory(src/test)
 
 # Build executable
 add_hpx_executable(NLMech SOURCES src/main.cpp DEPENDENCIES Util IO
-        Material FE Loading Geometry Model ${YAML_CPP_LIB} ${VTK_LIBRARIES})
+        Model ${YAML_CPP_LIB} ${VTK_LIBRARIES})
