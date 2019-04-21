@@ -4,44 +4,23 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
-    <generated>
-      <config projectName="NLMech" targetName="Material" />
-      <config projectName="NLMech" targetName="Geometry" />
-      <config projectName="NLMech" targetName="TestGeom_exe" />
-      <config projectName="NLMech" targetName="Util" />
-      <config projectName="NLMech" targetName="NLMech_exe" />
-      <config projectName="NLMech" targetName="Model" />
-      <config projectName="NLMech" targetName="RW" />
-      <config projectName="NLMech" targetName="Inp" />
-      <config projectName="NLMech" targetName="FE" />
-      <config projectName="NLMech" targetName="TestFE_exe" />
-      <config projectName="NLMech" targetName="Loading" />
-    </generated>
+    <generated />
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
     <configurations>
-      <configuration PROFILE_NAME="Debug_1" CONFIG_NAME="Debug" TOOLCHAIN_NAME="SoftwareLocal" GENERATION_OPTIONS="-DCMAKE_BUILD_TYPE=Release -DHPX_DIR=/home/prashant/Softwares/local/hpx/hpx-1.1.0/lib/cmake/HPX -DYAML_CPP_DIR=/home/prashant/Softwares/local/yaml-cpp/yaml-cpp-0.5.3 -DVTK_DIR=/home/prashant/Softwares/local/vtk/vtk-8.0.1/lib/cmake/vtk-8.0 -DCMAKE_INSTALL_PREFIX=." GENERATION_DIR="build" />
+      <configuration PROFILE_NAME="Debug_2" CONFIG_NAME="Release" TOOLCHAIN_NAME="Default" GENERATION_OPTIONS="-DCMAKE_BUILD_TYPE=Release -DHPX_DIR=/home/prashant/Softwares/local/hpx/hpx-1.1.0/lib/cmake/HPX -DYAML_CPP_DIR=/home/prashant/Softwares/local/yaml-cpp/yaml-cpp-0.5.3 -DCMAKE_INSTALL_PREFIX=." GENERATION_DIR="build_2" />
+      <configuration PROFILE_NAME="Debug_1" CONFIG_NAME="Release" TOOLCHAIN_NAME="Default" GENERATION_OPTIONS="-DCMAKE_BUILD_TYPE=Release -DHPX_DIR=/home/prashant/Softwares/local/hpx/hpx-1.1.0/lib/cmake/HPX -DYAML_CPP_DIR=/home/prashant/Softwares/local/yaml-cpp/yaml-cpp-0.5.3 -DVTK_DIR=/home/prashant/Softwares/local/vtk/vtk-8.0.1/lib/cmake/vtk-8.0 -DCMAKE_INSTALL_PREFIX=." GENERATION_DIR="build" />
     </configurations>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52b6175d-7e8c-4d1c-853b-d71d66d49617" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/geometry/interiorFlags.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/geometry/interiorFlags.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/decks/outputDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/outputDeck.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/loading/loading.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/loading/loading.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/pd/baseMaterial.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/pd/baseMaterial.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/pd/influenceFn.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/pd/influenceFn.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/pdMaterial.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/pdMaterial.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/fd/fDModel.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/model.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/model.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rw/vtkWriter.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/vtkWriter.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/utilFunction.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/utilFunction.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/utilGeom.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/utilGeom.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/build/" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug_1/" />
     <ignored path="$PROJECT_DIR$/src/test/build/" />
+    <ignored path="$PROJECT_DIR$/build_2/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +45,6 @@
     <option name="testRunner" value="GRADLE" />
     <option name="delegatedBuild" value="true" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug_1" />
   <component name="FavoritesManager">
     <favorites_list name="NLMech" />
   </component>
@@ -203,53 +181,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope">
-        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
-          <expand>
-            <path>
-              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
-            </path>
-            <path>
-              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="docs" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="inp" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="material" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="material" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="pd" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-            <path>
-              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
-              <item name="~/work/nonlocal_methods_work/NLMech_v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
-              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="util" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
       <pane id="ProjectPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -258,7 +191,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="cf.advertisement.text.overridden" value="true" />
     <property name="full.screen.before.presentation.mode" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/inp/decks" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.stylelint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -270,7 +203,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="dynamic.analysis.tools.profiler" />
+    <property name="settings.editor.selected.configurable" value="CMakeSettings" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -299,32 +232,32 @@
     </option>
   </component>
   <component name="RunManager" selected="CMake Application.NLMech_exe">
-    <configuration name="FE" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="FE" CONFIG_NAME="Debug_1">
+    <configuration name="FE" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="FE" CONFIG_NAME="Debug_2">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Geometry" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Geometry" CONFIG_NAME="Debug_1">
+    <configuration name="Geometry" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Geometry" CONFIG_NAME="Debug_2">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Inp" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Inp" CONFIG_NAME="Debug_1">
+    <configuration name="Inp" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Inp" CONFIG_NAME="Debug_2">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Loading" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Loading" CONFIG_NAME="Debug_1">
+    <configuration name="Loading" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Loading" CONFIG_NAME="Debug_2">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Material" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Material" CONFIG_NAME="Debug_1">
+    <configuration name="Material" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Material" CONFIG_NAME="Debug_2">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Model" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Model" CONFIG_NAME="Debug_1">
+    <configuration name="Model" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Model" CONFIG_NAME="Debug_2">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -332,22 +265,22 @@
     <configuration name="NLMech_exe" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="-i input_2d.yaml --hpx:threads=1" WORKING_DIR="file://$PROJECT_DIR$/build/imp" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="NLMech_exe" CONFIG_NAME="Debug_1" RUN_TARGET_PROJECT_NAME="NLMech" RUN_TARGET_NAME="NLMech_exe">
       <method v="2" />
     </configuration>
-    <configuration name="RW" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="RW" CONFIG_NAME="Debug_1">
+    <configuration name="RW" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="RW" CONFIG_NAME="Debug_2">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestFE_exe" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="TestFE_exe" CONFIG_NAME="Debug_1" RUN_TARGET_PROJECT_NAME="NLMech" RUN_TARGET_NAME="TestFE_exe">
+    <configuration name="TestFE_exe" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="TestFE_exe" CONFIG_NAME="Debug_2" RUN_TARGET_PROJECT_NAME="NLMech" RUN_TARGET_NAME="TestFE_exe">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TestGeom_exe" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="TestGeom_exe" CONFIG_NAME="Debug_1" RUN_TARGET_PROJECT_NAME="NLMech" RUN_TARGET_NAME="TestGeom_exe">
+    <configuration name="TestGeom_exe" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="TestGeom_exe" CONFIG_NAME="Debug_2" RUN_TARGET_PROJECT_NAME="NLMech" RUN_TARGET_NAME="TestGeom_exe">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
-    <configuration name="Util" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Util" CONFIG_NAME="Debug_1">
+    <configuration name="Util" type="CMakeRunConfiguration" factoryName="Application" PASS_PARENT_ENVS_2="true" PROJECT_NAME="NLMech" TARGET_NAME="Util" CONFIG_NAME="Debug_2">
       <method v="2">
         <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
@@ -428,11 +361,12 @@
       <workItem from="1555452021196" duration="54549000" />
       <workItem from="1555603887662" duration="16449000" />
       <workItem from="1555622336331" duration="933000" />
+      <workItem from="1555808117623" duration="373000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="408264000" />
+    <option name="totallyTimeSpent" value="408637000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -444,9 +378,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="301" width="1920" height="1108" extended-state="0" />
+    <frame x="0" y="427" width="1920" height="1110" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.226254" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.2289221" />
       <window_info id="Structure" order="1" sideWeight="0.50152904" side_tool="true" weight="0.20757826" />
       <window_info id="Favorites" order="2" sideWeight="0.50083196" side_tool="true" weight="0.2539913" />
       <window_info active="true" anchor="bottom" id="Messages" order="0" sideWeight="0.49854863" visible="true" weight="0.1681592" />
@@ -458,7 +392,7 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3283582" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5010672" side_tool="true" weight="0.52139306" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32925585" />
-      <window_info anchor="bottom" id="CMake" order="9" weight="0.31090724" />
+      <window_info active="true" anchor="bottom" id="CMake" order="9" visible="true" weight="0.31090724" />
       <window_info anchor="bottom" id="Tail" order="10" />
       <window_info anchor="bottom" id="Message" order="11" />
       <window_info anchor="bottom" id="Cvs" order="12" weight="0.25" />
@@ -713,17 +647,17 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/build/test_fd_1/memory_and_time_record.md">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="36" column="29" lean-forward="true" selection-start-line="36" selection-start-column="29" selection-end-line="36" selection-end-column="29" />
+        </state>
+      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="150">
             <caret line="10" column="21" lean-forward="true" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="36" column="29" lean-forward="true" selection-start-line="36" selection-start-column="29" selection-end-line="36" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -815,9 +749,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docs/doxy.log">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/docs/doxy.log" />
     <entry file="file://$PROJECT_DIR$/src/util/utilFunction.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="218">
