@@ -25,9 +25,9 @@ endif ()
 
 list(APPEND CMAKE_MODULE_PATH "${HPX_PREFIX}/../cmake/")
 
-if (${HPX_FOUND})
-    message("${HPX_INCLUDE_DIRS}")
-endif ()
+#if (${HPX_FOUND})
+#    message("${HPX_INCLUDE_DIRS}")
+#endif ()
 
 # YAML
 find_package(YamlCpp REQUIRED)
@@ -84,5 +84,4 @@ add_subdirectory(src/model)
 add_subdirectory(src/test)
 
 # Build executable
-add_hpx_executable(NLMech SOURCES src/main.cpp DEPENDENCIES Inp
-        Model ${YAML_CPP_LIB} ${VTK_LIBRARIES})
+add_hpx_executable(NLMech SOURCES src/main.cpp DEPENDENCIES Inp Model)
