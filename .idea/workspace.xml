@@ -4,7 +4,19 @@
     <option name="SCOPE_TYPE" value="3" />
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
-    <generated />
+    <generated>
+      <config projectName="NLMech" targetName="TestGeom_exe" />
+      <config projectName="NLMech" targetName="Geometry" />
+      <config projectName="NLMech" targetName="Inp" />
+      <config projectName="NLMech" targetName="FE" />
+      <config projectName="NLMech" targetName="RW" />
+      <config projectName="NLMech" targetName="NLMech_exe" />
+      <config projectName="NLMech" targetName="TestFE_exe" />
+      <config projectName="NLMech" targetName="Material" />
+      <config projectName="NLMech" targetName="Util" />
+      <config projectName="NLMech" targetName="Loading" />
+      <config projectName="NLMech" targetName="Model" />
+    </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
     <configurations>
@@ -13,9 +25,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="52b6175d-7e8c-4d1c-853b-d71d66d49617" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="52b6175d-7e8c-4d1c-853b-d71d66d49617" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/build/" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug_1/" />
@@ -45,11 +55,25 @@
     <option name="testRunner" value="GRADLE" />
     <option name="delegatedBuild" value="true" />
   </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug_2" />
   <component name="FavoritesManager">
     <favorites_list name="NLMech" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/fe/baseElem.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="270">
+              <caret line="18" column="1" lean-forward="true" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+              <folding>
+                <element signature="e#150#171#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -182,7 +206,33 @@
     </navigator>
     <panes>
       <pane id="ProjectPane" />
-      <pane id="Scope" />
+      <pane id="Scope">
+        <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
+          <expand>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="build_2" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="fe" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -361,12 +411,12 @@
       <workItem from="1555452021196" duration="54549000" />
       <workItem from="1555603887662" duration="16449000" />
       <workItem from="1555622336331" duration="933000" />
-      <workItem from="1555808117623" duration="373000" />
+      <workItem from="1555808117623" duration="697000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="408637000" />
+    <option name="totallyTimeSpent" value="408961000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -379,20 +429,21 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="427" width="1920" height="1110" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.2289221" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.2289221" />
       <window_info id="Structure" order="1" sideWeight="0.50152904" side_tool="true" weight="0.20757826" />
       <window_info id="Favorites" order="2" sideWeight="0.50083196" side_tool="true" weight="0.2539913" />
-      <window_info active="true" anchor="bottom" id="Messages" order="0" sideWeight="0.49854863" visible="true" weight="0.1681592" />
+      <window_info anchor="bottom" id="Messages" order="0" sideWeight="0.49854863" weight="0.1681592" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.3282365" />
-      <window_info anchor="bottom" id="Terminal" order="2" weight="0.3273632" />
+      <window_info anchor="bottom" id="Terminal" order="2" visible="true" weight="0.32721713" />
       <window_info anchor="bottom" id="Run" order="3" weight="0.3283582" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.39900497" />
       <window_info anchor="bottom" id="Database Changes" order="5" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3283582" />
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5010672" side_tool="true" weight="0.52139306" />
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32925585" />
-      <window_info active="true" anchor="bottom" id="CMake" order="9" visible="true" weight="0.31090724" />
+      <window_info anchor="bottom" id="CMake" order="9" weight="0.31090724" />
       <window_info anchor="bottom" id="Tail" order="10" />
       <window_info anchor="bottom" id="Message" order="11" />
       <window_info anchor="bottom" id="Cvs" order="12" weight="0.25" />
@@ -435,13 +486,6 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.log" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/loading/initialCondition.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="56" lean-forward="true" selection-start-line="8" selection-start-column="56" selection-end-line="8" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/loading/fLoading.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="135">
@@ -795,6 +839,16 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="8" column="34" selection-start-line="8" selection-start-column="34" selection-end-line="8" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/baseElem.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="1" lean-forward="true" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
+          <folding>
+            <element signature="e#150#171#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
