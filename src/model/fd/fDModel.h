@@ -104,11 +104,13 @@ public:
 private:
   /*!
    * @brief Main driver to simulate
+   * @param deck Input deck
    */
   void run(inp::Input *deck);
 
   /*!
    * @brief Restarts the simulation from previous state
+   * @param deck Input deck
    */
   void restart(inp::Input *deck);
 

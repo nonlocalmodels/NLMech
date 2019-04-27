@@ -44,7 +44,11 @@ public:
 class ConstInfluenceFn : public BaseInfluenceFn {
 
 public:
-  /*! @brief Constructor */
+  /*!
+   * @brief Constructor
+   *  @param params List of parameters
+   *  @param dim Dimension
+   */
   ConstInfluenceFn(const std::vector<double> &params, const size_t &dim);
 
   /*!
@@ -78,7 +82,11 @@ private:
 class LinearInfluenceFn : public BaseInfluenceFn {
 
 public:
-  /*! @brief Constructor */
+    /*!
+     * @brief Constructor
+     *  @param params List of parameters
+     *  @param dim Dimension
+     */
   LinearInfluenceFn(const std::vector<double> &params, const size_t &dim);
 
   /*!
@@ -115,7 +123,11 @@ private:
 class GaussianInfluenceFn : public BaseInfluenceFn {
 
 public:
-  /*! @brief Constructor */
+    /*!
+     * @brief Constructor
+     *  @param params List of parameters
+     *  @param dim Dimension
+     */
   GaussianInfluenceFn(const std::vector<double> &params, const size_t &dim);
 
   /*!

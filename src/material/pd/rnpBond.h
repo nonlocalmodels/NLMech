@@ -130,20 +130,24 @@ private:
    * With lame parameters, we use following formula, see Equation (5.7) & (5
    * .8) of \b Lipton2016 **TODO** add links to paper
    * - if \f$ d=2 \f$
-   * \f[ \lambda = \mu = \frac{f'(0)}{4} \int_0^1 r^2 J(r) dr f]
+   * \f[ \lambda = \mu = \frac{f'(0)}{4} M_2, \qquad Gc = \frac{4
+   * f_{\infty}}{\pi} M_2. \f]
    * - if \f$ d=3\f$
-   * \f[ \lambda = \mu = \frac{f'(0)}{5} \int_0^1 r^3 J(r) dr \f]
-   * and
-   * - if \f$ d=2 \f$
-   * \f[ Gc = \frac{4 f_{\infty}}{\pi} \int_0^1 r^2 J(r) dr \f]
-   * - if \f$ d=3 \f$
-   * \f[ Gc = \frac{3 f_{\infty}}{2} \int_0^1 r^2 J(r) dr \f]
+   * \f[ \lambda = \mu = \frac{f'(0)}{5} M_3, \qquad Gc = \frac{3
+   * f_{\infty}}{2} M_3. \f]
+   *
+   * Where \f$M_2, M_3\f$ are defined by
+   * \f[ M_2 =\int_0^1 r^2 J(r) dr, \qquad M_3 = \int_0^1 r^3 J(r) dr. \f]
    *
    * For potential function \f$ f(r) = c ( 1-\exp[-\beta r])\f$, we have \f$
    * f'(0) = c\beta, f_{\infty} = c \f$. Thus, the values of \f$ c, \beta \f$
    * are given by
    * - if \f$ d=2 \f$
-   * \f[ c = \frac{}{} \f]
+   * \f[ c = \frac{\pi G_c}{4} \frac{1}{M_2}, \qquad
+   *     \beta = \frac{4 \lambda}{c} \frac{1}{M_2} .\f]
+   * - if \f$ d=3 \f$
+   * \f[ c = \frac{2 G_c}{3} \frac{1}{M_3}, \qquad
+   *     \beta = \frac{5 \lambda}{c} \frac{1}{M_3} .\f]
    * @param deck Input material deck
    * @param moment_inf Moment of influence function
    */

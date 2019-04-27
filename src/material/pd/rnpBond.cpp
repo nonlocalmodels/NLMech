@@ -94,7 +94,16 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
   deck->d_matData.d_mu = deck->d_matData.d_G;
 
   // compute peridynamic parameters
+  if (d_dimension == 2) {
+    d_C = M_PI * deck->d_matData.d_Gc / (4. * moment_inf);
+    d_beta = 4. * deck->d_matData.d_lambda / (d_C * moment_inf);
+  }
+  else if (d_dimension == 3) {
+    d_C = 2. * deck->d_matData.d_Gc / (3. * moment_inf);
+    d_beta = 5. * deck->d_matData.d_lambda / (d_C * moment_inf);
+  }
 
+  d_rbar = std::sqrt(0.5 / d_beta);
 }
 
 std::pair<double, double>

@@ -116,7 +116,10 @@ private:
   /*! @brief Private operator */
   Policy(Policy const &);
 
-  /*! @brief Private operator */
+  /*!
+   * @brief Private copy operator
+   * @return Policy object after copying
+   */
   const Policy &operator=(const Policy &);
 
   /*! @brief Private destructor */
