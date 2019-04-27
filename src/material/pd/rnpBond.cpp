@@ -6,6 +6,7 @@
 #include "rnpBond.h"
 #include "inp/decks/materialDeck.h"
 #include "util/compare.h"
+#include <iostream>
 
 material::pd::RNPBond::RNPBond(inp::MaterialDeck *deck, const size_t &dim,
                                const double &horizon, const double &moment_inf)
@@ -32,7 +33,69 @@ material::pd::RNPBond::RNPBond(inp::MaterialDeck *deck, const size_t &dim,
 }
 
 void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
-                                              const double &moment_inf) {}
+                                              const double &moment_inf) {
+  //
+  // Need following elastic and fracture properties
+  // 1. E or K
+  // 2. Gc or KIc
+  // For bond-based, Poisson's ratio is fixed to 1/4
+  //
+  if (deck->d_matData.d_E < 0. && deck->d_matData.d_K < 0.) {
+    std::cerr << "Error: Require either Young's modulus E or Bulk modulus K"
+                 " to compute the RNP bond-based peridynamic parameters.\n";
+    exit(1);
+  } else if (deck->d_matData.d_E > 0. && deck->d_matData.d_K > 0.) {
+    std::cout << "Warning: Both Young's modulus E and Bulk modulus K are "
+                 "provided.\n";
+    std::cout << "Warning: To compute the RNP bond-based peridynamic "
+                 "parameters, we only require one of those.\n";
+    std::cout << "Warning: Selecting Young's modulus to compute parameters.\n";
+  }
+
+  if (deck->d_matData.d_Gc < 0. && deck->d_matData.d_KIc < 0.) {
+    std::cerr << "Error: Require either critical energy release rate Gc or "
+                 "critical stress intensity factor KIc to compute the RNP "
+                 "bond-based peridynamic parameters.\n";
+    exit(1);
+  } else if (deck->d_matData.d_Gc > 0. && deck->d_matData.d_KIc > 0.) {
+    std::cout << "Warning: Both critical energy release rate Gc and critical "
+                 "stress intensity factor KIc are provided.\n";
+    std::cout << "Warning: To compute the RNP bond-based peridynamic "
+                 "parameters, we only require one of those.\n";
+    std::cout << "Warning: Selecting critical energy release rate Gc to "
+                 "compute parameters.\n";
+  }
+
+  // set Poisson's ratio to 1/4
+  deck->d_matData.d_nu = 0.25;
+
+  // compute E if not provided or K if not provided
+  if (deck->d_matData.d_E > 0.)
+    deck->d_matData.d_K =
+        deck->d_matData.toK(deck->d_matData.d_E, deck->d_matData.d_nu);
+
+  if (deck->d_matData.d_K > 0. && deck->d_matData.d_E < 0.)
+    deck->d_matData.d_E =
+        deck->d_matData.toE(deck->d_matData.d_K, deck->d_matData.d_nu);
+
+  if (deck->d_matData.d_Gc > 0.)
+    deck->d_matData.d_KIc = deck->d_matData.toKIc(
+        deck->d_matData.d_Gc, deck->d_matData.d_nu, deck->d_matData.d_E);
+
+  if (deck->d_matData.d_KIc > 0. && deck->d_matData.d_Gc < 0.)
+    deck->d_matData.d_Gc = deck->d_matData.toGc(
+        deck->d_matData.d_KIc, deck->d_matData.d_nu, deck->d_matData.d_E);
+
+  // compute lame parameter
+  deck->d_matData.d_lambda = deck->d_matData.toLambdaE(deck->d_matData.d_E,
+      deck->d_matData.d_nu);
+  deck->d_matData.d_G = deck->d_matData.toGE(deck->d_matData.d_E,
+                                                  deck->d_matData.d_nu);
+  deck->d_matData.d_mu = deck->d_matData.d_G;
+
+  // compute peridynamic parameters
+
+}
 
 std::pair<double, double>
 material::pd::RNPBond::getBondEF(const double &r, const double &s,

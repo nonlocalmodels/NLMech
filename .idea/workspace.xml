@@ -11,10 +11,10 @@
       <config projectName="NLMech" targetName="Util" />
       <config projectName="NLMech" targetName="NLMech_exe" />
       <config projectName="NLMech" targetName="Model" />
-      <config projectName="NLMech" targetName="TestFE_exe" />
+      <config projectName="NLMech" targetName="RW" />
       <config projectName="NLMech" targetName="Inp" />
       <config projectName="NLMech" targetName="FE" />
-      <config projectName="NLMech" targetName="RW" />
+      <config projectName="NLMech" targetName="TestFE_exe" />
       <config projectName="NLMech" targetName="Loading" />
     </generated>
   </component>
@@ -26,7 +26,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52b6175d-7e8c-4d1c-853b-d71d66d49617" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/inp/decks/materialDeck.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/decks/materialDeck.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/pd/rnpBond.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/pd/rnpBond.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/material/pd/rnpBond.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/pd/rnpBond.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -62,7 +64,7 @@
     <favorites_list name="NLMech" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -119,9 +121,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/fe/quadrature.cpp" />
-        <option value="$PROJECT_DIR$/src/fe/triElem.h" />
-        <option value="$PROJECT_DIR$/src/fe/triElem.cpp" />
         <option value="$PROJECT_DIR$/src/geometry/fracture.cpp" />
         <option value="$PROJECT_DIR$/src/geometry/fracture.h" />
         <option value="$PROJECT_DIR$/src/geometry/interiorFlags.cpp" />
@@ -170,6 +169,9 @@
         <option value="$PROJECT_DIR$/src/util/utilGeom.h" />
         <option value="$PROJECT_DIR$/src/material/pd/influenceFn.h" />
         <option value="$PROJECT_DIR$/src/material/pdMaterial.h" />
+        <option value="$PROJECT_DIR$/src/inp/decks/materialDeck.h" />
+        <option value="$PROJECT_DIR$/src/material/pd/rnpBond.cpp" />
+        <option value="$PROJECT_DIR$/src/material/pd/rnpBond.h" />
       </list>
     </option>
   </component>
@@ -180,7 +182,7 @@
   <component name="OCResolveContextSettings">
     <option name="configuration" value="0-RW" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="31" />
     <option name="y" value="427" />
     <option name="width" value="1869" />
@@ -194,7 +196,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
       <pane id="Scope">
         <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
           <expand>
@@ -207,10 +208,37 @@
               <item name="~/work/nonlocal_methods_work/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="inp" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="inp" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="decks" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="material" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nonlocal_methods_work/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="material" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="pd" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -400,11 +428,12 @@
       <workItem from="1556241818782" duration="259000" />
       <workItem from="1556242091556" duration="59000" />
       <workItem from="1556242164168" duration="790000" />
+      <workItem from="1556329041699" duration="5739000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="411877000" />
+    <option name="totallyTimeSpent" value="417616000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -416,9 +445,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="370" width="1920" height="1110" extended-state="6" />
+    <frame x="0" y="425" width="1920" height="1055" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.25292864" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.25559106" />
       <window_info id="Structure" order="1" sideWeight="0.50152904" side_tool="true" weight="0.20757826" />
       <window_info id="Favorites" order="2" sideWeight="0.50083196" side_tool="true" weight="0.2539913" />
       <window_info anchor="bottom" id="Messages" order="0" sideWeight="0.49854863" weight="0.1681592" />
@@ -473,43 +502,6 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.log" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/model/model.cpp">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rw/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rw/mshReader.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2565">
-          <caret line="171" column="14" lean-forward="true" selection-start-line="171" selection-start-column="14" selection-end-line="171" selection-end-column="14" />
-          <folding>
-            <element signature="e#150#172#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rw/reader.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="28" lean-forward="true" selection-start-line="6" selection-start-column="28" selection-end-line="6" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rw/mshReader.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="57" lean-forward="true" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rw/vtkReader.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" lean-forward="true" selection-start-line="12" selection-end-line="12" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/rw/reader.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -647,17 +639,17 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/build/test_fd_1/memory_and_time_record.md">
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="36" column="29" lean-forward="true" selection-start-line="36" selection-start-column="29" selection-end-line="36" selection-end-column="29" />
+        </state>
+      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="150">
             <caret line="10" column="21" lean-forward="true" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
           </first_editor>
           <second_editor />
-        </state>
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="36" column="29" lean-forward="true" selection-start-line="36" selection-start-column="29" selection-end-line="36" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -702,13 +694,6 @@
           <folding>
             <element signature="e#197#225#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/material/pd/baseMaterial.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="39" column="14" selection-start-line="39" selection-start-column="14" selection-end-line="39" selection-end-column="14" />
         </state>
       </provider>
     </entry>
@@ -774,16 +759,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/material/pdMaterial.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="111" column="5" lean-forward="true" selection-start-line="111" selection-start-column="5" selection-end-line="111" selection-end-column="5" />
-          <folding>
-            <element signature="e#213#268#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/material/pd/influenceFn.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="563">
@@ -831,6 +806,80 @@
           <caret line="25" column="30" lean-forward="true" selection-start-line="25" selection-start-column="30" selection-end-line="25" selection-end-column="30" />
           <folding>
             <element signature="e#150#222#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/material/pd/baseMaterial.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="819">
+          <caret line="39" column="14" selection-start-line="39" selection-start-column="14" selection-end-line="39" selection-end-column="14" />
+          <folding>
+            <element signature="e#221#239#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/decks/materialDeck.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="151" column="3" lean-forward="true" selection-start-line="151" selection-start-column="3" selection-end-line="151" selection-end-column="3" />
+          <folding>
+            <element signature="e#205#221#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/material/pdMaterial.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3969">
+          <caret line="189" column="30" lean-forward="true" selection-start-line="189" selection-start-column="30" selection-end-line="189" selection-end-column="30" />
+          <folding>
+            <element signature="e#213#268#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/input.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="481" column="58" selection-start-line="481" selection-start-column="58" selection-end-line="481" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/inp/decks/solverDeck.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="18" column="42" lean-forward="true" selection-start-line="18" selection-start-column="42" selection-end-line="18" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/material/pd/rnpBond.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="483">
+          <caret line="134" column="44" selection-start-line="134" selection-start-column="44" selection-end-line="134" selection-end-column="44" />
+          <folding>
+            <element signature="e#221#246#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/material/pdMaterial.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="36" column="22" selection-start-line="36" selection-start-column="22" selection-end-line="36" selection-end-column="22" />
+          <folding>
+            <element signature="e#150#173#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/material/pd/rnpBond.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="412">
+          <caret line="96" selection-start-line="96" selection-end-line="96" />
+          <folding>
+            <element signature="e#150#170#0" expanded="true" />
           </folding>
         </state>
       </provider>

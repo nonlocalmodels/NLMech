@@ -57,8 +57,8 @@ struct MatData {
    * @brief Constructor
    */
   MatData()
-      : d_E(0.), d_G(0.), d_K(0.), d_nu(0.), d_lambda(0.), d_mu(0.), d_KIc(0.),
-        d_Gc(0.){};
+      : d_E(-1.), d_G(-1.), d_K(-1.), d_nu(-1.), d_lambda(-1.), d_mu(-1.),
+        d_KIc(-1.), d_Gc(-1.){};
 
   /**
    * @name Conversion methods
@@ -71,7 +71,7 @@ struct MatData {
    * @param nu Poisson's ratio
    * @return E Young's modulus
    */
-  double toE(double K, double nu) { return K * (3.0 * (1 - 2.0 * nu)); }
+  double toE(double K, double nu) { return K * (3. * (1. - 2. * nu)); }
 
   /*!
    * @brief Compute Bulk modulus K from Young's modulus K and Poisson's ratio nu
@@ -79,18 +79,17 @@ struct MatData {
    * @param nu Poisson's ratio
    * @return K Bulk modulus
    */
-  double toK(double E, double nu) { return E / (3.0 * (1 - 2.0 * nu)); }
+  double toK(double E, double nu) { return E / (3. * (1. - 2. * nu)); }
 
   /*!
-   * @brief Compute Lame first parameter lambda from Young's modulus K
-   * and
-   * Poisson's ratio nu
+   * @brief Compute Lame first parameter lambda from Young's modulus E
+   * and Poisson's ratio nu
    * @param E Young's modulus
    * @param nu Poisson's ratio
    * @return lambda Lame first parameter
    */
   double toLambdaE(double E, double nu) {
-    return E * nu / ((1.0 + nu) * (1.0 - 2.0 * nu));
+    return E * nu / ((1. + nu) * (1. - 2. * nu));
   }
 
   /*!
@@ -100,7 +99,25 @@ struct MatData {
    * @param nu Poisson's ratio
    * @return lambda Lame first parameter
    */
-  double toLambdaK(double K, double nu) { return 3.0 * K * nu / (1.0 + nu); }
+  double toLambdaK(double K, double nu) { return 3. * K * nu / (1. + nu); }
+
+  /*!
+   * @brief Compute shear modulus from Young's modulus E and Poisson's ratio nu
+   * @param E Young's modulus
+   * @param nu Poisson's ratio
+   * @return G Shear modulus
+   */
+  double toGE(double E, double nu) { return E / (2. * (1. + nu)); }
+
+  /*!
+   * @brief Compute shear modulus from Bulk modulus K and Poisson's ratio nu
+   * @param K Bulk modulus
+   * @param nu Poisson's ratio
+   * @return G Shear modulus
+   */
+  double toGK(double K, double nu) {
+    return 3. * K * (1. - 2. * nu) / (2. * (1. + nu));
+  }
 
   /*!
    * @brief Compute critical energy release rate Gc from critical
