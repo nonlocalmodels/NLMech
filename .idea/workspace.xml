@@ -26,10 +26,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52b6175d-7e8c-4d1c-853b-d71d66d49617" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fe/mesh.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/mesh.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rw/mshReader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/mshReader.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -66,14 +63,33 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="273">
+            <state relative-caret-position="2399">
               <caret line="135" column="49" selection-start-line="135" selection-start-column="49" selection-end-line="135" selection-end-column="49" />
               <folding>
                 <element signature="e#181#203#0" expanded="true" />
+                <element signature="e#374#400#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/fe/mesh.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="231">
+              <caret line="94" column="59" lean-forward="true" selection-start-line="94" selection-start-column="59" selection-end-line="94" selection-end-column="59" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/rw/mshReader.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="286" column="12" selection-start-line="286" selection-start-column="12" selection-end-line="286" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -135,7 +151,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/inp/input.cpp" />
         <option value="$PROJECT_DIR$/src/inp/input.h" />
         <option value="$PROJECT_DIR$/src/inp/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/src/geometry/CMakeLists.txt" />
@@ -186,6 +201,7 @@
         <option value="$PROJECT_DIR$/src/geometry/fracture.cpp" />
         <option value="$PROJECT_DIR$/src/geometry/neighbor.cpp" />
         <option value="$PROJECT_DIR$/src/model/fd/fDModel.cpp" />
+        <option value="$PROJECT_DIR$/src/rw/mshReader.cpp" />
       </list>
     </option>
   </component>
@@ -196,7 +212,7 @@
   <component name="OCResolveContextSettings">
     <option name="configuration" value="0-RW" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="31" />
     <option name="y" value="427" />
     <option name="width" value="1869" />
@@ -265,6 +281,12 @@
               <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="model" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="fd" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nlmech_works/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="rw" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
           </expand>
           <select />
@@ -462,12 +484,12 @@
       <workItem from="1556329041699" duration="5739000" />
       <workItem from="1556346264044" duration="2235000" />
       <workItem from="1556499488418" duration="602000" />
-      <workItem from="1556504833728" duration="854000" />
+      <workItem from="1556504833728" duration="3994000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="421307000" />
+    <option name="totallyTimeSpent" value="424447000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -537,9 +559,6 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.log" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/util/matrixBlaze.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/util/point.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1005">
@@ -881,13 +900,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/mesh.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-7">
-          <caret line="120" column="51" selection-start-line="120" selection-start-column="51" selection-end-line="120" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/loading/uLoading.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="168">
@@ -924,11 +936,26 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="273">
+        <state relative-caret-position="2399">
           <caret line="135" column="49" selection-start-line="135" selection-start-column="49" selection-end-line="135" selection-end-column="49" />
           <folding>
             <element signature="e#181#203#0" expanded="true" />
+            <element signature="e#374#400#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/mesh.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="94" column="59" lean-forward="true" selection-start-line="94" selection-start-column="59" selection-end-line="94" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/mshReader.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="286" column="12" selection-start-line="286" selection-start-column="12" selection-end-line="286" selection-end-column="12" />
         </state>
       </provider>
     </entry>

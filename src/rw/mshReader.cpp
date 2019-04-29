@@ -17,6 +17,29 @@ void rw::reader::MshReader::readMesh(size_t dim,
                                      std::vector<size_t> *enc,
                                      std::vector<std::vector<size_t>> *nec,
                                      std::vector<double> *volumes, bool is_fd) {
+  std::string line;
+
+  // clear data
+  nodes->clear();
+  enc->clear();
+  nec->clear();
+  volumes->clear();
+
+  // specify type of element to read
+  unsigned int num_nodes_con = 0;
+  if (dim != 2) {
+
+    std::cerr << "Error: MshReader currently only supports reading of triangle "
+                 "elements in dimension 2.\n";
+    exit(1);
+  }
+
+  bool read_nodes = false;
+  bool read_elements = false;
+
+  // perform a mock read and find number of nodes, number of elements,
+  // element type
+  size_t num_nodes = 0;
 
   // open file
   std::ifstream mesh;
@@ -28,50 +51,152 @@ void rw::reader::MshReader::readMesh(size_t dim,
     exit(1);
   }
 
-  std::string line;
-  int format = 0;
-  int size = 0;
-  double version = 1.0;
-
-  // clear data
-  nodes->clear();
-  enc->clear();
-  nec->clear();
-  volumes->clear();
-
-  // specify type of element to read
-  unsigned int num_nodes_con;
-  if (dim != 2) {
-
-    std::cerr << "Error: MshReader currently only supports reading of triangle "
-                 "elements in dimension 2.\n";
-    exit(1);
-  }
-
-  bool read_nodes = false;
-  bool read_elements = false;
-
   while (true) {
 
     std::getline(mesh, line);
 
     if (mesh) {
-      // // read $MeshFormat block
-      //       if (line.find("$MeshFormat") ==
-      //       static_cast<std::string::size_type>(0)) {
+      // read $Nodes block
+      if (line.find("$NOD") == static_cast<std::string::size_type>(0) ||
+        line.find("$NOE") == static_cast<std::string::size_type>(0) ||
+        line.find("$Nodes") == static_cast<std::string::size_type>(0)) {
 
-      //          mesh >> version >> format >> size;
-      //          if ((version != 2.0) && (version != 2.1) && (version != 2.2))
-      //          {
-      //             std::cerr<<"Error: Unknown msh file version " <<
-      //             version<<"\n"; exit(1);
-      //          }
+        read_nodes = true;
 
-      //          if (format) {
-      //            std::cerr<<"Error: Unknown data format for mesh in Gmsh
-      //            reader.\n"; exit(1);
-      //          }
-      //       }
+        mesh >> num_nodes;
+
+        std::cout << "number of nodes = " << num_nodes << "\n";
+
+        // read in the nodal coordinates and form points.
+        double x, y, z;
+        unsigned int id;
+        for (unsigned int i = 0; i < num_nodes; ++i)
+          mesh >> id >> x >> y >> z;
+        // read the $ENDNOD delimiter
+        std::getline(mesh, line);
+      } // end of reading nodes
+      else if (line.find("$ELM") == static_cast<std::string::size_type>(0) ||
+        line.find("$Elements") ==
+          static_cast<std::string::size_type>(0)) {
+
+        read_elements = true;
+
+        unsigned int num_elem = 0;
+        unsigned int node_id = 0;
+
+        mesh >> num_elem;
+
+        std::cout << "number of elems (all kinds) = " << num_elem << "\n";
+
+        size_t elem_counter = 0;
+        bool found_tri = false;
+        bool found_quad = false;
+        int init_tri = -1;
+        int init_quad = -1;
+        for (unsigned int iel = 0; iel < num_elem; ++iel) {
+          unsigned int id;
+          unsigned int type;
+          unsigned int ntags;
+          int tag;
+
+          // read element id, type, and tags
+          mesh >> id >> type >> ntags;
+
+          // dummy read ntags
+          for (unsigned int j = 0; j < ntags; j++)
+            mesh >> tag;
+
+          // read element type we desire and for other element type
+          // perform dummy read
+          if (type == util::msh_type_triangle) {
+
+            if (init_tri == -1) {
+              found_tri = true;
+              element_type = util::vtk_type_triangle;
+              num_nodes_con =
+                util::msh_map_element_to_num_nodes[util::msh_type_triangle];
+              init_tri = 0;
+            }
+
+            // read vertex of this element
+            for (unsigned int i = 0; i < num_nodes_con; i++)
+              mesh >> node_id;
+
+            // increment the element counter
+            elem_counter++;
+          } else if (type == util::msh_type_quadrangle) {
+
+            if (init_quad == -1) {
+              found_quad = true;
+              element_type = util::vtk_type_quad;
+              num_nodes_con =
+                util::msh_map_element_to_num_nodes[util::msh_type_quadrangle];
+              init_quad = 0;
+            }
+
+            // read vertex of this element
+            for (unsigned int i = 0; i < num_nodes_con; i++)
+              mesh >> node_id;
+
+            // increment the element counter
+            elem_counter++;
+          } else {
+            // these are the type of elements we need to ignore
+            for (unsigned int i = 0; i < util::msh_map_element_to_num_nodes[type]; i++)
+              mesh >> node_id;
+          }
+
+          // check if mesh with both triangle and quadrangle elements
+          if (found_quad and found_tri) {
+
+            std::cerr << "Error: Check mesh file. It appears to have both "
+                         "quadrangle elements and triangle elements. "
+                         "Currently we only support one kind of elements.\n";
+            exit(1);
+          }
+        } // element loop
+
+        // write the number of elements
+        num_elems = elem_counter;
+
+        // read the $ENDELM delimiter
+        std::getline(mesh, line);
+      } // if $ELM
+    } // if mesh
+
+    // If !mesh, check to see if EOF was set.  If so, break out
+    // of while loop.
+    if (mesh.eof())
+      break;
+
+    if (read_nodes and read_elements)
+      break;
+  } // while true
+
+  // close file
+  mesh.close();
+
+  // resize data
+  nodes->resize(num_nodes);
+  nec->resize(num_nodes);
+  enc->resize(num_nodes_con*num_elems);
+
+  std::cout << "Num nodes = " << num_nodes << ", Num elems = " << num_elems
+  << ", element-node connectivity size = " << enc->size() << "\n";
+
+  // read mesh file again
+  mesh.open(d_filename.c_str());
+
+  if (!mesh) {
+
+    std::cerr << "Error: Can not read mesh file = " << d_filename << "\n";
+    exit(1);
+  }
+  while (true) {
+
+    std::getline(mesh, line);
+
+    if (mesh) {
       // read $Nodes block
       if (line.find("$NOD") == static_cast<std::string::size_type>(0) ||
           line.find("$NOE") == static_cast<std::string::size_type>(0) ||
@@ -79,12 +204,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
         read_nodes = true;
 
-        unsigned int num_nodes = 0;
         mesh >> num_nodes;
-
-        // nodes = new std::vector<util::point>(num_nodes, util::point());
-        nodes->resize(num_nodes);
-        nec->resize(num_nodes);
 
         // read in the nodal coordinates and form points.
         double x, y, z;
@@ -114,21 +234,6 @@ void rw::reader::MshReader::readMesh(size_t dim,
         // this includes point element, line element also
         mesh >> num_elem;
 
-        // As of version 2.2, the format for each element line is:
-        // elm-number elm-type number-of-tags < tag > ... node-number-list
-        // From the Gmsh docs:
-        // * the first tag is the number of the
-        //   physical entity to which the element belongs
-        // * the second is the number of the elementary geometrical
-        //   entity to which the element belongs
-        // * the third is the number of mesh partitions to which the element
-        //   belongs
-        // * The rest of the tags are the partition ids (negative
-        //   partition ids indicate ghost cells). A zero tag is
-        //   equivalent to no tag. Gmsh and most codes using the
-        //   MSH 2 format require at least the first two tags
-        //   (physical and elementary tags).
-
         // read the elements
         size_t elem_counter = 0;
         bool found_tri = false;
@@ -139,31 +244,16 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
           unsigned int id;
           unsigned int type;
-          unsigned int physical = 1;
-          unsigned int elementary = 1;
-          unsigned int nnodes = 0;
           unsigned int ntags;
-
-          // Note: tag has to be an int because it could be negative,
-          // see above.
           int tag;
 
           // read element id, type, and tags
           mesh >> id >> type >> ntags;
-
-          // dummy read ntags
-          for (unsigned int j = 0; j < ntags; j++) {
-
+          for (unsigned int j = 0; j < ntags; j++)
             mesh >> tag;
 
-            if (j == 0)
-              physical = tag;
-            else if (j == 1)
-              elementary = tag;
-          }
-
-          // read element type we desire and for other element type
-          // perform dummy read
+          // read element type we desire and for other element type perform
+          // dummy read
           if (type == util::msh_type_triangle) {
 
             if (init_tri == -1) {
@@ -178,18 +268,10 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
             // read vertex of this element
             for (unsigned int i = 0; i < num_nodes_con; i++) {
-
               mesh >> node_id;
-
-              // add to the element-node connectivity
-              // substract 1 to correct the numbering convention
-              enc->push_back(node_id - 1);
-
-              // also store it to perform check
-              ids.push_back(node_id - 1);
-
-              // fill the node-element connectivity table
+              (*enc)[num_nodes_con * elem_counter + i] = node_id - 1;
               (*nec)[node_id - 1].push_back(elem_counter);
+              ids.push_back(node_id - 1);
             }
 
             // check
@@ -202,8 +284,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
             // increment the element counter
             elem_counter++;
-          }
-          if (type == util::msh_type_quadrangle) {
+          } else if (type == util::msh_type_quadrangle) {
 
             if (init_quad == -1) {
               found_quad = true;
@@ -217,18 +298,10 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
             // read vertex of this element
             for (unsigned int i = 0; i < num_nodes_con; i++) {
-
               mesh >> node_id;
-
-              // add to the element-node connectivity
-              // substract 1 to correct the numbering convention
-              enc->push_back(node_id - 1);
-
-              // also store it to perform check
-              ids.push_back(node_id - 1);
-
-              // fill the node-element connectivity table
+              (*enc)[num_nodes_con * elem_counter + i] = node_id - 1;
               (*nec)[node_id - 1].push_back(elem_counter);
+              ids.push_back(node_id - 1);
             }
 
             // check
@@ -242,13 +315,8 @@ void rw::reader::MshReader::readMesh(size_t dim,
             // increment the element counter
             elem_counter++;
           } else {
-
             // these are the type of elements we need to ignore.
-
-            size_t n = util::msh_map_element_to_num_nodes[type];
-
-            // dummy read
-            for (unsigned int i = 0; i < n; i++)
+            for (unsigned int i = 0; i < util::msh_map_element_to_num_nodes[type]; i++)
               mesh >> node_id;
           }
 
@@ -262,14 +330,9 @@ void rw::reader::MshReader::readMesh(size_t dim,
           }
         } // element loop
 
-        // write the number of elements
-        num_elems = elem_counter;
-
         // read the $ENDELM delimiter
         std::getline(mesh, line);
-
       } // if $ELM
-
     } // if mesh
 
     // If !mesh, check to see if EOF was set.  If so, break out
@@ -279,17 +342,8 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
     if (read_nodes and read_elements)
       break;
-
-    // If !mesh and !mesh.eof(), stream is in a bad state!
-    // std::cerr<<"Error: Stream is bad! Perhaps the file does not exist?\n";
-    // exit(1);
-
   } // while true
 
-  // // for debug
-  // int num_nodes = nodes->size();
-  // int num_en_con = en_con->size();
-  // int num_ne_con = ne_con->size();
-
-  // std::cout<<"--> "<<num_nodes<<", "<<num_en_con<<", "<<num_ne_con<<"\n";
+  // close file
+  mesh.close();
 }
