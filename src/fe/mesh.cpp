@@ -84,6 +84,7 @@ void fe::Mesh::createData(const std::string &filename) {
   //
   // read node and elements
   //
+  std::cout << "Mesh: Reading mesh.\n";
   if (file_type == 0)
     rw::reader::readCsvFile(filename, d_dim, &d_nodes, &d_vol);
   else if (file_type == 1)
@@ -116,8 +117,10 @@ void fe::Mesh::createData(const std::string &filename) {
       !inp::Policy::getInstance()->populateData("Mesh_d_vol"))
     compute_vol = false;
 
-  if (compute_vol)
+  if (compute_vol) {
+    std::cout << "Mesh: Computing nodal volume.\n";
     computeVol();
+  }
 }
 
 void fe::Mesh::computeVol() {

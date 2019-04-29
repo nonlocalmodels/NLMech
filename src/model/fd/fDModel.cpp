@@ -86,34 +86,43 @@ void model::FDModel::restart(inp::Input *deck) {
 }
 
 void model::FDModel::initHObjects() {
-
+  std::cout << "FDModel: Initializing high level objects.\n";
   // read mesh data
+  std::cout << "FDModel: Creating mesh.\n";
   d_mesh_p = new fe::Mesh(d_input_p->getMeshDeck());
 
   // create neighbor list
+  std::cout << "FDModel: Creating neighbor list.\n";
   d_neighbor_p = new geometry::Neighbor(d_modelDeck_p->d_horizon,
                                         d_input_p->getNeighborDeck(),
                                         d_mesh_p->getNodesP());
 
   // create fracture data
+  std::cout << "FDModel: Creating edge crack if any and modifying the "
+               "fracture state of bonds.\n";
   d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck(),
                                         d_mesh_p->getNodesP(),
                                         d_neighbor_p->getNeighborsP());
 
   // create interior flags
+  std::cout << "FDModel: Creating interior flags for nodes.\n";
   d_interiorFlags_p = new geometry::InteriorFlags(
       d_input_p->getInteriorFlagsDeck(), d_mesh_p->getNodesP(),
       d_mesh_p->getBoundingBox());
 
   // initialize initial condition class
+  std::cout << "FDModel: Initializing initial condition object.\n";
   d_initialCondition_p =
       new loading::InitialCondition(d_input_p->getInitialConditionDeck());
 
   // initialize loading class
+  std::cout << "FDModel: Initializing displacement loading object.\n";
   d_uLoading_p = new loading::ULoading(d_input_p->getLoadingDeck(), d_mesh_p);
+  std::cout << "FDModel: Initializing force loading object.\n";
   d_fLoading_p = new loading::FLoading(d_input_p->getLoadingDeck(), d_mesh_p);
 
   // initialize material class
+  std::cout << "FDModel: Initializing material object.\n";
   d_material_p = new material::pd::Material(d_input_p->getMaterialDeck(),
                                             d_modelDeck_p->d_dim,
                                             d_modelDeck_p->d_horizon);
@@ -123,6 +132,8 @@ void model::FDModel::initHObjects() {
 }
 
 void model::FDModel::init() {
+
+  std::cout << "FDModel: Initializing basic datas.\n";
 
   d_n = 0;
   d_time = 0.;

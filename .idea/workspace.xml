@@ -5,16 +5,16 @@
   </component>
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
     <generated>
-      <config projectName="NLMech" targetName="TestGeom_exe" />
+      <config projectName="NLMech" targetName="Material" />
       <config projectName="NLMech" targetName="Geometry" />
+      <config projectName="NLMech" targetName="TestGeom_exe" />
+      <config projectName="NLMech" targetName="Util" />
+      <config projectName="NLMech" targetName="NLMech_exe" />
+      <config projectName="NLMech" targetName="Model" />
+      <config projectName="NLMech" targetName="RW" />
       <config projectName="NLMech" targetName="Inp" />
       <config projectName="NLMech" targetName="FE" />
-      <config projectName="NLMech" targetName="RW" />
-      <config projectName="NLMech" targetName="NLMech_exe" />
       <config projectName="NLMech" targetName="TestFE_exe" />
-      <config projectName="NLMech" targetName="Material" />
-      <config projectName="NLMech" targetName="Util" />
-      <config projectName="NLMech" targetName="Model" />
       <config projectName="NLMech" targetName="Loading" />
     </generated>
   </component>
@@ -26,12 +26,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52b6175d-7e8c-4d1c-853b-d71d66d49617" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/inp/policy.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/inp/policy.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/pd/influenceFn.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/pd/influenceFn.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/pd/rnpBond.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/pd/rnpBond.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/material/pd/rnpBond.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/material/pd/rnpBond.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/model/fd/fDModel.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fe/mesh.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/mesh.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -69,12 +67,12 @@
   <component name="FileEditorManager">
     <leaf>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.h">
+        <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="112" column="3" selection-start-line="112" selection-start-column="3" selection-end-line="112" selection-end-column="3" />
+            <state relative-caret-position="273">
+              <caret line="135" column="49" selection-start-line="135" selection-start-column="49" selection-end-line="135" selection-end-column="49" />
               <folding>
-                <element signature="e#199#224#0" expanded="true" />
+                <element signature="e#181#203#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -137,11 +135,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/geometry/fracture.cpp" />
-        <option value="$PROJECT_DIR$/src/geometry/fracture.h" />
-        <option value="$PROJECT_DIR$/src/geometry/interiorFlags.cpp" />
-        <option value="$PROJECT_DIR$/src/geometry/neighbor.h" />
-        <option value="$PROJECT_DIR$/src/geometry/neighbor.cpp" />
         <option value="$PROJECT_DIR$/src/inp/input.cpp" />
         <option value="$PROJECT_DIR$/src/inp/input.h" />
         <option value="$PROJECT_DIR$/src/inp/CMakeLists.txt" />
@@ -169,7 +162,6 @@
         <option value="$PROJECT_DIR$/build/imp/input_2d.yaml" />
         <option value="$PROJECT_DIR$/build/test_fd_1/memory_and_time_record.md" />
         <option value="$PROJECT_DIR$/build/test_fd_1/vertical_crack/new_code_central_difference/input_2d.yaml" />
-        <option value="$PROJECT_DIR$/src/model/fd/fDModel.cpp" />
         <option value="$PROJECT_DIR$/src/rw/vtkWriter.cpp" />
         <option value="$PROJECT_DIR$/src/rw/writer.h" />
         <option value="$PROJECT_DIR$/src/rw/writer.cpp" />
@@ -188,6 +180,12 @@
         <option value="$PROJECT_DIR$/src/inp/policy.h" />
         <option value="$PROJECT_DIR$/src/material/pd/influenceFn.h" />
         <option value="$PROJECT_DIR$/src/model/fd/fDModel.h" />
+        <option value="$PROJECT_DIR$/src/fe/mesh.cpp" />
+        <option value="$PROJECT_DIR$/src/loading/uLoading.cpp" />
+        <option value="$PROJECT_DIR$/src/geometry/interiorFlags.cpp" />
+        <option value="$PROJECT_DIR$/src/geometry/fracture.cpp" />
+        <option value="$PROJECT_DIR$/src/geometry/neighbor.cpp" />
+        <option value="$PROJECT_DIR$/src/model/fd/fDModel.cpp" />
       </list>
     </option>
   </component>
@@ -198,7 +196,7 @@
   <component name="OCResolveContextSettings">
     <option name="configuration" value="0-RW" />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="31" />
     <option name="y" value="427" />
     <option name="width" value="1869" />
@@ -229,14 +227,31 @@
               <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="~/work/nlmech_works/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="material" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="fe" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nlmech_works/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="geometry" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nlmech_works/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="inp" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+            </path>
+            <path>
+              <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
+              <item name="~/work/nlmech_works/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
+              <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
+              <item name="loading" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
               <item name="~/work/nlmech_works/NLMech-v0.1" type="442cc68d:ScopeViewTreeModel$RootNode" />
               <item name="src" type="9f88c78c:ScopeViewTreeModel$FileNode" />
               <item name="material" type="9f88c78c:ScopeViewTreeModel$FileNode" />
-              <item name="pd" type="9f88c78c:ScopeViewTreeModel$FileNode" />
             </path>
             <path>
               <item name="NLMech" type="3d21c010:ScopeViewTreeModel$ProjectNode" />
@@ -275,7 +290,7 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C/C++" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -445,12 +460,14 @@
       <workItem from="1556242091556" duration="59000" />
       <workItem from="1556242164168" duration="790000" />
       <workItem from="1556329041699" duration="5739000" />
-      <workItem from="1556346264044" duration="1368000" />
+      <workItem from="1556346264044" duration="2235000" />
+      <workItem from="1556499488418" duration="602000" />
+      <workItem from="1556504833728" duration="854000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="418984000" />
+    <option name="totallyTimeSpent" value="421307000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -465,7 +482,7 @@
     <frame x="0" y="425" width="1920" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.25825346" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.26357827" />
       <window_info id="Structure" order="1" sideWeight="0.50152904" side_tool="true" weight="0.20757826" />
       <window_info id="Favorites" order="2" sideWeight="0.50083196" side_tool="true" weight="0.2539913" />
       <window_info anchor="bottom" id="Messages" order="0" sideWeight="0.49854863" weight="0.1681592" />
@@ -520,26 +537,6 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.log" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/util/fastMethods.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="52" selection-start-line="8" selection-start-column="52" selection-end-line="8" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/fastMethods.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="20" selection-start-line="6" selection-start-column="20" selection-end-line="6" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/feElementDefs.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/util/matrix.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/util/matrixBlaze.h">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -655,16 +652,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="636" column="69" lean-forward="true" selection-start-line="636" selection-start-column="69" selection-end-line="636" selection-end-column="69" />
-          <folding>
-            <element signature="e#181#203#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/inp/decks/outputDeck.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="278">
@@ -768,29 +755,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/mesh.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="21">
-          <caret line="59" column="56" selection-start-line="59" selection-start-column="56" selection-end-line="59" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fe/baseElem.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="378">
           <caret line="18" column="1" lean-forward="true" selection-start-line="18" selection-start-column="1" selection-end-line="18" selection-end-column="1" />
           <folding>
             <element signature="e#150#171#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="25" column="30" lean-forward="true" selection-start-line="25" selection-start-column="30" selection-end-line="25" selection-end-column="30" />
-          <folding>
-            <element signature="e#150#222#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -893,10 +863,71 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="112" column="3" selection-start-line="112" selection-start-column="3" selection-end-line="112" selection-end-column="3" />
+        <state relative-caret-position="261">
+          <caret line="113" column="5" lean-forward="true" selection-start-line="113" selection-start-column="3" selection-end-line="113" selection-end-column="5" />
           <folding>
             <element signature="e#199#224#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="25" column="30" selection-start-line="25" selection-start-column="30" selection-end-line="25" selection-end-column="30" />
+          <folding>
+            <element signature="e#150#222#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/mesh.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="120" column="51" selection-start-line="120" selection-start-column="51" selection-end-line="120" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/loading/uLoading.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/geometry/fracture.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
+          <folding>
+            <element signature="e#150#171#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/geometry/interiorFlags.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="436">
+          <caret line="108" column="70" lean-forward="true" selection-start-line="108" selection-start-column="70" selection-end-line="108" selection-end-column="70" />
+          <folding>
+            <element signature="e#150#176#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/geometry/neighbor.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="13" selection-start-line="13" selection-end-line="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="273">
+          <caret line="135" column="49" selection-start-line="135" selection-start-column="49" selection-end-line="135" selection-end-column="49" />
+          <folding>
+            <element signature="e#181#203#0" expanded="true" />
           </folding>
         </state>
       </provider>
