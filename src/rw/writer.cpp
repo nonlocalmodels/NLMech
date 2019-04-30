@@ -29,7 +29,7 @@ void rw::writer::VtkWriterInterface::appendNodes(
 
 void rw::writer::VtkWriterInterface::appendMesh(
     const std::vector<util::Point3> *nodes, const size_t &element_type,
-    const std::vector<std::vector<size_t>> *en_con,
+    const std::vector<size_t> *en_con,
     const std::vector<util::Point3> *u) {
 
   d_vtkWriter_p->appendMesh(nodes, element_type, en_con, u);

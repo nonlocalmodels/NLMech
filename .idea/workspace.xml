@@ -11,10 +11,10 @@
       <config projectName="NLMech" targetName="Util" />
       <config projectName="NLMech" targetName="NLMech_exe" />
       <config projectName="NLMech" targetName="Model" />
-      <config projectName="NLMech" targetName="RW" />
+      <config projectName="NLMech" targetName="TestFE_exe" />
       <config projectName="NLMech" targetName="Inp" />
       <config projectName="NLMech" targetName="FE" />
-      <config projectName="NLMech" targetName="TestFE_exe" />
+      <config projectName="NLMech" targetName="RW" />
       <config projectName="NLMech" targetName="Loading" />
     </generated>
   </component>
@@ -26,7 +26,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="52b6175d-7e8c-4d1c-853b-d71d66d49617" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fe/mesh.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/mesh.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fe/mesh.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/fe/mesh.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/fd/fDModel.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rw/mshReader.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/mshReader.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rw/vtkWriter.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/vtkWriter.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rw/vtkWriter.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/vtkWriter.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rw/writer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/writer.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rw/writer.h" beforeDir="false" afterPath="$PROJECT_DIR$/src/rw/writer.h" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -62,12 +70,12 @@
     <favorites_list name="NLMech" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2399">
-              <caret line="135" column="49" selection-start-line="135" selection-start-column="49" selection-end-line="135" selection-end-column="49" />
+            <state relative-caret-position="308">
+              <caret line="665" column="53" selection-start-line="665" selection-start-column="53" selection-end-line="665" selection-end-column="53" />
               <folding>
                 <element signature="e#181#203#0" expanded="true" />
                 <element signature="e#374#400#0" expanded="true" />
@@ -77,19 +85,25 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fe/mesh.cpp">
+        <entry file="file://$PROJECT_DIR$/src/rw/vtkWriter.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="231">
-              <caret line="94" column="59" lean-forward="true" selection-start-line="94" selection-start-column="59" selection-end-line="94" selection-end-column="59" />
+            <state relative-caret-position="441">
+              <caret line="61" column="42" selection-start-line="61" selection-start-column="42" selection-end-line="61" selection-end-column="42" />
+              <folding>
+                <element signature="e#197#225#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/rw/mshReader.cpp">
+        <entry file="file://$PROJECT_DIR$/src/rw/vtkWriter.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="420">
-              <caret line="286" column="12" selection-start-line="286" selection-start-column="12" selection-end-line="286" selection-end-column="12" />
+              <caret line="93" selection-start-line="93" selection-end-line="93" />
+              <folding>
+                <element signature="e#150#172#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -151,7 +165,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/inp/input.h" />
         <option value="$PROJECT_DIR$/src/inp/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/src/geometry/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/src/loading/CMakeLists.txt" />
@@ -177,10 +190,6 @@
         <option value="$PROJECT_DIR$/build/imp/input_2d.yaml" />
         <option value="$PROJECT_DIR$/build/test_fd_1/memory_and_time_record.md" />
         <option value="$PROJECT_DIR$/build/test_fd_1/vertical_crack/new_code_central_difference/input_2d.yaml" />
-        <option value="$PROJECT_DIR$/src/rw/vtkWriter.cpp" />
-        <option value="$PROJECT_DIR$/src/rw/writer.h" />
-        <option value="$PROJECT_DIR$/src/rw/writer.cpp" />
-        <option value="$PROJECT_DIR$/src/rw/vtkWriter.h" />
         <option value="$PROJECT_DIR$/src/geometry/interiorFlags.h" />
         <option value="$PROJECT_DIR$/src/inp/decks/outputDeck.h" />
         <option value="$PROJECT_DIR$/src/loading/loading.h" />
@@ -195,13 +204,18 @@
         <option value="$PROJECT_DIR$/src/inp/policy.h" />
         <option value="$PROJECT_DIR$/src/material/pd/influenceFn.h" />
         <option value="$PROJECT_DIR$/src/model/fd/fDModel.h" />
-        <option value="$PROJECT_DIR$/src/fe/mesh.cpp" />
         <option value="$PROJECT_DIR$/src/loading/uLoading.cpp" />
         <option value="$PROJECT_DIR$/src/geometry/interiorFlags.cpp" />
         <option value="$PROJECT_DIR$/src/geometry/fracture.cpp" />
         <option value="$PROJECT_DIR$/src/geometry/neighbor.cpp" />
-        <option value="$PROJECT_DIR$/src/model/fd/fDModel.cpp" />
         <option value="$PROJECT_DIR$/src/rw/mshReader.cpp" />
+        <option value="$PROJECT_DIR$/src/fe/mesh.h" />
+        <option value="$PROJECT_DIR$/src/fe/mesh.cpp" />
+        <option value="$PROJECT_DIR$/src/model/fd/fDModel.cpp" />
+        <option value="$PROJECT_DIR$/src/rw/writer.h" />
+        <option value="$PROJECT_DIR$/src/rw/writer.cpp" />
+        <option value="$PROJECT_DIR$/src/rw/vtkWriter.h" />
+        <option value="$PROJECT_DIR$/src/rw/vtkWriter.cpp" />
       </list>
     </option>
   </component>
@@ -226,7 +240,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
       <pane id="Scope">
         <subPane subId="Scope 'Project Files'; set:Project Files; class com.intellij.psi.search.scope.ProjectFilesScope">
           <expand>
@@ -292,6 +305,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -484,12 +498,13 @@
       <workItem from="1556329041699" duration="5739000" />
       <workItem from="1556346264044" duration="2235000" />
       <workItem from="1556499488418" duration="602000" />
-      <workItem from="1556504833728" duration="3994000" />
+      <workItem from="1556504833728" duration="4418000" />
+      <workItem from="1556579000087" duration="3255000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="424447000" />
+    <option name="totallyTimeSpent" value="428126000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -504,7 +519,7 @@
     <frame x="0" y="425" width="1920" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.26357827" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49847096" visible="true" weight="0.2662407" />
       <window_info id="Structure" order="1" sideWeight="0.50152904" side_tool="true" weight="0.20757826" />
       <window_info id="Favorites" order="2" sideWeight="0.50083196" side_tool="true" weight="0.2539913" />
       <window_info anchor="bottom" id="Messages" order="0" sideWeight="0.49854863" weight="0.1681592" />
@@ -559,13 +574,6 @@
     <option featureType="com.intellij.fileTypeFactory" implementationName="*.log" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/util/point.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1005">
-          <caret line="8" column="16" lean-forward="true" selection-start-line="8" selection-start-column="16" selection-end-line="8" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/fe/quadData.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
@@ -636,38 +644,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/rw/vtkWriter.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3315">
-          <caret line="221" column="22" selection-start-line="221" selection-start-column="22" selection-end-line="221" selection-end-column="22" />
-          <folding>
-            <element signature="e#150#172#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rw/writer.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
-          <folding>
-            <element signature="e#150#169#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/build/test_fd_1/memory_and_time_record.md">
-      <provider editor-type-id="text-editor">
-        <state relative-caret-position="540">
-          <caret line="36" column="29" lean-forward="true" selection-start-line="36" selection-start-column="29" selection-end-line="36" selection-end-column="29" />
-        </state>
-      </provider>
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="150">
             <caret line="10" column="21" lean-forward="true" selection-start-line="10" selection-start-column="21" selection-end-line="10" selection-end-column="21" />
           </first_editor>
           <second_editor />
+        </state>
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="36" column="29" lean-forward="true" selection-start-line="36" selection-start-column="29" selection-end-line="36" selection-end-column="29" />
         </state>
       </provider>
     </entry>
@@ -678,30 +666,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/rw/writer.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" selection-start-line="29" selection-end-line="33" selection-end-column="3" />
-          <folding>
-            <element signature="e#191#248#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/geometry/interiorFlags.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
           <caret line="92" column="27" selection-start-line="92" selection-start-column="27" selection-end-line="92" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rw/vtkWriter.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
-          <folding>
-            <element signature="e#197#225#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -766,13 +734,6 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/LICENSE">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/mesh.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1134">
-          <caret line="123" column="48" selection-start-line="123" selection-start-column="48" selection-end-line="123" selection-end-column="48" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/fe/baseElem.cpp">
       <provider selected="true" editor-type-id="text-editor">
@@ -934,10 +895,61 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/mshReader.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="441">
+          <caret line="261" column="9" selection-start-line="261" selection-start-column="9" selection-end-line="261" selection-end-column="9" />
+          <folding>
+            <element signature="e#150#172#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util/feElementDefs.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1113">
+          <caret line="53" column="11" selection-start-line="53" selection-start-column="11" selection-end-line="53" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/mesh.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="903">
+          <caret line="233" lean-forward="true" selection-start-line="233" selection-end-line="233" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fe/mesh.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2226">
+          <caret line="172" column="57" lean-forward="true" selection-start-line="172" selection-start-column="57" selection-end-line="172" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/writer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="34" column="57" lean-forward="true" selection-start-line="34" selection-start-column="57" selection-end-line="34" selection-end-column="57" />
+          <folding>
+            <element signature="e#150#169#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rw/writer.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="79" column="52" lean-forward="true" selection-start-line="79" selection-start-column="52" selection-end-line="79" selection-end-column="52" />
+          <folding>
+            <element signature="e#191#248#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/model/fd/fDModel.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2399">
-          <caret line="135" column="49" selection-start-line="135" selection-start-column="49" selection-end-line="135" selection-end-column="49" />
+        <state relative-caret-position="308">
+          <caret line="665" column="53" selection-start-line="665" selection-start-column="53" selection-end-line="665" selection-end-column="53" />
           <folding>
             <element signature="e#181#203#0" expanded="true" />
             <element signature="e#374#400#0" expanded="true" />
@@ -945,17 +957,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fe/mesh.cpp">
+    <entry file="file://$PROJECT_DIR$/src/rw/vtkWriter.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="231">
-          <caret line="94" column="59" lean-forward="true" selection-start-line="94" selection-start-column="59" selection-end-line="94" selection-end-column="59" />
+        <state relative-caret-position="441">
+          <caret line="61" column="42" selection-start-line="61" selection-start-column="42" selection-end-line="61" selection-end-column="42" />
+          <folding>
+            <element signature="e#197#225#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/rw/mshReader.cpp">
+    <entry file="file://$PROJECT_DIR$/src/rw/vtkWriter.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="420">
-          <caret line="286" column="12" selection-start-line="286" selection-start-column="12" selection-end-line="286" selection-end-column="12" />
+          <caret line="93" selection-start-line="93" selection-end-line="93" />
+          <folding>
+            <element signature="e#150#172#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

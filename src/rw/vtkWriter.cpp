@@ -4,6 +4,7 @@
 // (See accompanying file LICENSE.txt)
 
 #include "vtkWriter.h"
+#include <util/feElementDefs.h>
 #include <vtkCellArray.h>
 #include <vtkCellData.h>
 #include <vtkDoubleArray.h>
@@ -50,7 +51,7 @@ void rw::writer::VtkWriter::appendNodes(const std::vector<util::Point3> *nodes,
 
 void rw::writer::VtkWriter::appendMesh(
     const std::vector<util::Point3> *nodes, const size_t &element_type,
-    const std::vector<std::vector<size_t>> *en_con,
+    const std::vector<size_t> *en_con,
     const std::vector<util::Point3> *u) {
 
   // we write following things to the file
@@ -66,37 +67,28 @@ void rw::writer::VtkWriter::appendMesh(
   this->appendNodes(nodes, u);
 
   // get the total number of elements
-  size_t num_elems = en_con->size();
+  size_t num_vertex = util::vtk_map_element_to_num_nodes[element_type];
+  size_t num_elems = en_con->size() / num_vertex;
 
   //
   // process elements data
   //
   // element node connectivity
   auto cells = vtkSmartPointer<vtkCellArray>::New();
-
-  size_t max_pts = (*en_con)[0].size();
-  cells->Allocate(max_pts, num_elems);
+  cells->Allocate(num_vertex, num_elems);
 
   // element type
   int cell_types[num_elems];
 
-  size_t elem_counter = 0;
+  vtkIdType ids[num_vertex];
   for (size_t i = 0; i < num_elems; i++) {
 
-    // if element number is -1 skip the element
-    std::vector<size_t> e_nodes = (*en_con)[i];
+    // get ids of vertex of this element
+    for (size_t k = 0; k < num_vertex; k++)
+      ids[k] = (*en_con)[num_vertex*i + k];
 
-    size_t n = e_nodes.size();
-    vtkIdType ids[n];
-    for (size_t k = 0; k < n; k++)
-      ids[k] = e_nodes[k];
-
-    cells->InsertNextCell(n, ids);
-
-    cell_types[elem_counter] =
-        element_type; // see util::element struct definition
-
-    elem_counter++;
+    cells->InsertNextCell(num_vertex, ids);
+    cell_types[i] = element_type;
   }
 
   // element node connectivity

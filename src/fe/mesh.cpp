@@ -16,7 +16,7 @@
 #include <stdint.h>
 
 fe::Mesh::Mesh(inp::MeshDeck *deck)
-    : d_numNodes(0), d_numElems(0), d_eType(0), d_eNumVertex(0), d_numDofs(0),
+    : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
       d_h(deck->d_h), d_dim(deck->d_dim),
       d_spatialDiscretization(deck->d_spatialDiscretization),
       d_filename(deck->d_filename) {
@@ -201,6 +201,8 @@ size_t fe::Mesh::getDimension() { return d_dim; }
 
 size_t fe::Mesh::getNumNodes() { return d_numNodes; }
 
+size_t fe::Mesh::getNumElements() { return d_enc.size()/d_eNumVertex; }
+
 size_t fe::Mesh::getNumDofs() { return d_numDofs; }
 
 size_t fe::Mesh::getElementType() { return d_eType; }
@@ -229,6 +231,11 @@ fe::Mesh::getElementConnectivityNodes(const size_t &i) {
     nds.emplace_back(d_nodes[d_enc[d_eNumVertex * i + k]]);
   return nds;
 }
+
+const std::vector<size_t> *fe::Mesh::getElementConnectivitiesP() {
+  return &d_enc;
+}
+
 
 std::pair<std::vector<double>, std::vector<double>> fe::Mesh::getBoundingBox() {
   return d_bbox;

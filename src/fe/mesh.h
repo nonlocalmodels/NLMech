@@ -6,8 +6,8 @@
 #ifndef FE_MESH_H
 #define FE_MESH_H
 
+#include "util/point.h" // definition of struct Point3
 #include <hpx/config.hpp>
-#include "util/point.h"       // definition of struct Point3
 #include <string>
 #include <vector>
 
@@ -75,6 +75,12 @@ public:
    * @return N number of nodes
    */
   size_t getNumNodes();
+
+  /*!
+   * @brief Get the number of elements
+   * @return N number of elements
+   */
+  size_t getNumElements();
 
   /*!
    * @brief Get the number of dofs
@@ -159,6 +165,12 @@ public:
    * @return Vec vector of vertices
    */
   const std::vector<util::Point3> getElementConnectivityNodes(const size_t &i);
+
+  /*!
+   * @brief Get the pointer to nodes data
+   * @return Pointer to nodes data
+   */
+  const std::vector<size_t> *getElementConnectivitiesP();
 
   /*!
    * @brief Get the bounding box of the mesh
