@@ -83,5 +83,8 @@ add_subdirectory(src/model)
 # add test directory
 add_subdirectory(src/test)
 
+# add tool directory
+add_subdirectory(tools/mesh)
+
 # Build executable
 add_hpx_executable(NLMech SOURCES src/main.cpp DEPENDENCIES Inp Model)

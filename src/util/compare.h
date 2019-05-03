@@ -20,7 +20,6 @@ namespace compare {
  * @param b Value b
  * @return Result true if approximately equal else false
  */
-
 bool approximatelyEqual(const double &a, const double &b);
 
 /*!
@@ -29,7 +28,6 @@ bool approximatelyEqual(const double &a, const double &b);
  * @param b Value b
  * @return Result true if essentially equal else false
  */
-
 bool essentiallyEqual(const double &a, const double &b);
 
 /*!
@@ -38,7 +36,6 @@ bool essentiallyEqual(const double &a, const double &b);
  * @param b Value b
  * @return Result true if a is definitely greater than b
  */
-
 bool definitelyGreaterThan(const double &a, const double &b);
 
 /*!
@@ -47,7 +44,6 @@ bool definitelyGreaterThan(const double &a, const double &b);
  * @param b Value b
  * @return Result true if a is definitely less than b
  */
-
 bool definitelyLessThan(const double &a, const double &b);
 
 } // namespace compare

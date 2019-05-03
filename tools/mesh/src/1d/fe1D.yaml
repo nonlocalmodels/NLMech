@@ -1,0 +1,32 @@
+OutputFile:
+    # remove below block if don't want output of information
+    # corresponding to dirichlet bc
+    Dirichlet_Filename:
+        Path: ./dirichlet_fe
+        Fe_Mesh_File: mesh_dir_1D.vtu
+        BC_Displ_ID_Left_File: bc_l_dir_1D.csv
+        BC_Displ_ID_Right_File: bc_r_dir_1D.csv
+    # remove below block if don't want output of information
+    # corresponding to neuman bc
+    Neuman_Filename:
+        Path: ./neuman_fe
+        Fe_Mesh_File: mesh_neu_1D.vtu
+        BC_Displ_ID_Left_File: bc_l_neu_1D.csv
+        BC_Displ_ID_Right_File: bc_r_neu_1D.csv 
+MeshData:
+    Domain:
+        - 0.0
+        - 1.0
+    Horizon: 0.01
+    Horizon_Mesh_Ratio: 5
+ICData:
+    Displacement:
+        Flag: 1
+        Parameters:
+            - 0.5
+            - 0.003
+            - 0.001
+    Velocity:
+        Flag: 0
+        Parameters:
+            - 0
