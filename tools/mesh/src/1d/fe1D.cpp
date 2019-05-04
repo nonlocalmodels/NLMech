@@ -6,6 +6,7 @@
 #include "fe1D.h"
 #include "rw/writer.h"  // definition of VtkWriterInterface
 #include "util/point.h" // definition of Point3
+#include "util/feElementDefs.h"   // definition of fe element type
 #include <cmath>
 #include <iostream>
 #include <yaml-cpp/yaml.h> // YAML reader
@@ -82,7 +83,7 @@ void tools::mesh::fe1D(const std::string &filename) {
   // read input file
   YAML::Node config = YAML::LoadFile(filename);
   InpData data;
-  readDataFile(&data, config);
+  readInputFile(&data, config);
 
   //
   size_t num_elems =
@@ -91,11 +92,11 @@ void tools::mesh::fe1D(const std::string &filename) {
 
   // node and element-node connectivity data
   std::vector<util::Point3> nodes(num_nodes, util::Point3());
-  std::vector<size_t> en_con(2 * num_elems, 0);
-  size_t element_type = util::vtk_type_line;
   std::vector<double> nodal_vols(num_nodes, data.d_h);
   nodal_vols[0] *= 0.5;
   nodal_vols[num_nodes - 1] *= 0.5;
+  size_t element_type = util::vtk_type_line;
+  std::vector<size_t> en_con(2 * num_elems, 0);
 
   // create nodes
   for (size_t i = 0; i < num_nodes; i++)
@@ -111,8 +112,9 @@ void tools::mesh::fe1D(const std::string &filename) {
   std::vector<util::Point3> u(num_nodes, util::Point3());
 
   // write to vtu file
-  auto writer = rw::writer::VtkWriterInterface(filename);
+  auto writer = rw::writer::VtkWriterInterface(data.d_meshFile);
   writer.appendMesh(&nodes, element_type, &en_con, &u);
+  writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);
   writer.close();
 }

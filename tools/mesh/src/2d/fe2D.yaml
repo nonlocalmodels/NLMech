@@ -1,0 +1,12 @@
+Output:
+  Path: ./mesh_fe
+  Mesh_Filename: mesh.vtu
+Domain: [0.0, 0.0, 1.0, 1.0]
+Horizon: 0.01
+Horizon_h_Ratio: 5
+# Mesh_Size: 0.001
+# mesh types: uniform_tri, uniform_tri_sym, uniform_square
+Mesh_Type: uniform_tri
+# true if this is for finite difference, in which case we do not
+# compute element-node connectivity, and supply nodal volume data
+Is_FD: true

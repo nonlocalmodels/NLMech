@@ -721,7 +721,7 @@ void model::FDModel::output() {
 
   tag = "Node_Volume";
   if (d_outputDeck_p->isTagInOutput(tag))
-    writer.appendPointData(tag, d_mesh_p->getFixityP());
+    writer.appendPointData(tag, d_mesh_p->getNodalVolumeP());
 
   tag = "Damage";
   if (d_outputDeck_p->isTagInOutput(tag) &&
