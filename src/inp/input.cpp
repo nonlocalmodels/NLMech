@@ -469,6 +469,8 @@ void inp::Input::setMaterialDeck() {
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   auto e = config["Material"];
+  if (e["Is_Plane_Strain"])
+    d_materialDeck_p->d_isPlaneStrain = e["Is_Plane_Strain"].as<bool>();
   if (e["Type"])
     d_materialDeck_p->d_materialType = e["Type"].as<std::string>();
   else {

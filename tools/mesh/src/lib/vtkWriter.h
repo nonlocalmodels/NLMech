@@ -3,37 +3,21 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef RW_WRITER_H
-#define RW_WRITER_H
+#ifndef TOOLS_MESH_VTKWRITER_H
+#define TOOLS_MESH_VTKWRITER_H
+
+#include <vtkSmartPointer.h>
+#include <vtkUnstructuredGrid.h>
+#include <vtkXMLUnstructuredGridWriter.h>
 
 #include "util/point.h"           // definition of Point3
-#include "util/matrix.h"          // definition of SymMatrix3
-#include <string>
-#include <vector>
 
-// forward declaration
-namespace rw {
-namespace writer {
-class VtkWriter;
-}
-} // namespace rw
+namespace tools {
 
-namespace rw {
+namespace mesh {
 
-/*!
- * @brief Collection of methods and database related to writing
- *
- * This namespace provides methods and data members specific to wiriting of
- * the mesh data and simulation data. Currently, .vtu is supported.
- */
-namespace writer {
-
-/*!
- * @brief A interface class writing data using vtk writer
- *
- * This interface separates the caller from vtk library.
- */
-class VtkWriterInterface {
+/*! @brief A vtk writer for simple point data and complex fem mesh data */
+class VtkWriter {
 
 public:
   /*!
@@ -44,10 +28,7 @@ public:
    *
    * @param filename Name of file which will be created
    */
-  explicit VtkWriterInterface(const std::string &filename);
-
-  /*! @brief Destructor */
-  ~VtkWriterInterface();
+  explicit VtkWriter(const std::string &filename);
 
   /**
    * @name Mesh data
@@ -134,37 +115,6 @@ public:
   void appendPointData(const std::string &name,
                        const std::vector<util::Point3> *data);
 
-  /*!
- * @brief Writes the symmetric matrix data associated to nodes to the
- * file
- * @param name Name of the data
- * @param data The vector containing the data
- */
-  void appendPointData(const std::string &name,
-                       const std::vector<util::SymMatrix3> *data);
-
-  /** @}*/
-
-  /**
-   * @name Cell data
-   */
-  /**@{*/
-
-  /*!
-   * @brief Writes the float data associated to cells to the file
-   * @param name Name of the data
-   * @param data The vector containing the data
-   */
-  void appendCellData(const std::string &name, const std::vector<float> *data);
-
-  /*!
-   * @brief Writes the symmetric matrix data associated to cells to the file
-   * @param name Name of the data
-   * @param data The vector containing the data
-   */
-  void appendCellData(const std::string &name,
-                      const std::vector<util::SymMatrix3> *data);
-
   /** @}*/
 
   /**
@@ -200,12 +150,15 @@ public:
   void close();
 
 private:
-  /*! @brief Pointer to the vtk writer class */
-  rw::writer::VtkWriter *d_vtkWriter_p;
+  /*! @brief XML unstructured grid writer */
+  vtkSmartPointer<vtkXMLUnstructuredGridWriter> d_writer_p;
+
+  /*! @brief Unstructured grid */
+  vtkSmartPointer<vtkUnstructuredGrid> d_grid_p;
 };
 
-} // namespace writer
+} // namespace mesh
 
-} // namespace rw
+} // namespace tools
 
-#endif // RW_WRITER_H
+#endif // TOOLS_MESH_VTKWRITER_H

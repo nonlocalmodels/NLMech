@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE.txt)
 
 #include "fe1D.h"
-#include "rw/writer.h"  // definition of VtkWriterInterface
+#include "../lib/vtkWriter.h"  // definition of VtkWriter
 #include "util/point.h" // definition of Point3
 #include "util/feElementDefs.h"   // definition of fe element type
 #include <cmath>
@@ -112,7 +112,7 @@ void tools::mesh::fe1D(const std::string &filename) {
   std::vector<util::Point3> u(num_nodes, util::Point3());
 
   // write to vtu file
-  auto writer = rw::writer::VtkWriterInterface(data.d_meshFile);
+  auto writer = tools::mesh::VtkWriter(data.d_meshFile);
   writer.appendMesh(&nodes, element_type, &en_con, &u);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);

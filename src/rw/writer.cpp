@@ -65,6 +65,20 @@ void rw::writer::VtkWriterInterface::appendPointData(
   d_vtkWriter_p->appendPointData(name, data);
 }
 
+void rw::writer::VtkWriterInterface::appendPointData(
+    const std::string &name, const std::vector<util::SymMatrix3> *data) {
+  d_vtkWriter_p->appendPointData(name, data);
+}
+
+void rw::writer::VtkWriterInterface::appendCellData(const std::string& name, const std::vector<float>* data){
+  d_vtkWriter_p->appendCellData(name, data);
+}
+
+void rw::writer::VtkWriterInterface::appendCellData(
+    const std::string &name, const std::vector<util::SymMatrix3> *data) {
+  d_vtkWriter_p->appendCellData(name, data);
+}
+
 void rw::writer::VtkWriterInterface::addTimeStep(const double &timestep) {
   d_vtkWriter_p->addTimeStep(timestep);
 }

@@ -97,3 +97,7 @@ double material::pd::Material::getBondContribToHydroStrain(const double &S,
                                                            const double &r) {
   return d_baseMaterial_p->getBondContribToHydroStrain(S, r);
 }
+
+inp::MaterialDeck *material::pd::Material::getMaterialDeck() {
+  return d_deck_p;
+}

@@ -11,6 +11,7 @@
 #include <vtkXMLUnstructuredGridWriter.h>
 
 #include "util/point.h"           // definition of Point3
+#include "util/matrix.h"           // definition of SymMatrix3
 
 namespace rw {
 
@@ -114,6 +115,37 @@ public:
    */
   void appendPointData(const std::string &name,
                        const std::vector<util::Point3> *data);
+
+  /*!
+   * @brief Writes the symmetric matrix data associated to nodes to the
+   * file
+   * @param name Name of the data
+   * @param data The vector containing the data
+   */
+  void appendPointData(const std::string &name,
+                       const std::vector<util::SymMatrix3> *data);
+
+  /** @}*/
+
+  /**
+   * @name Cell data
+   */
+  /**@{*/
+
+  /*!
+   * @brief Writes the float data associated to cells to the file
+   * @param name Name of the data
+   * @param data The vector containing the data
+   */
+  void appendCellData(const std::string &name, const std::vector<float> *data);
+
+  /*!
+   * @brief Writes the symmetric matrix data associated to cells to the file
+   * @param name Name of the data
+   * @param data The vector containing the data
+   */
+  void appendCellData(const std::string &name,
+                       const std::vector<util::SymMatrix3> *data);
 
   /** @}*/
 

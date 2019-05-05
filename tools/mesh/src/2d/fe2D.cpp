@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE.txt)
 
 #include "fe2D.h"
-#include "rw/writer.h"  // definition of VtkWriterInterface
+#include "../lib/vtkWriter.h"  // definition of VtkWriter
 #include "util/point.h" // definition of Point3
 #include "util/feElementDefs.h"   // definition of fe element type
 #include "util/compare.h"         // compare real numbers
@@ -151,7 +151,7 @@ void tools::mesh::uniformSquare(const std::string &filename) {
   if (data.d_isFd) {
 
     // write data to vtu file
-    auto writer = rw::writer::VtkWriterInterface(data.d_meshFile);
+    auto writer = tools::mesh::VtkWriter(data.d_meshFile);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
     writer.addTimeStep(0.);
@@ -181,7 +181,7 @@ void tools::mesh::uniformSquare(const std::string &filename) {
   std::vector<util::Point3> u(num_nodes, util::Point3());
 
   // write to vtu file
-  auto writer = rw::writer::VtkWriterInterface(data.d_meshFile);
+  auto writer = tools::mesh::VtkWriter(data.d_meshFile);
   writer.appendMesh(&nodes, element_type, &en_con, &u);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);
@@ -268,7 +268,7 @@ void tools::mesh::uniformTri(const std::string &filename) {
   if (data.d_isFd) {
 
     // write data to vtu file
-    auto writer = rw::writer::VtkWriterInterface(data.d_meshFile);
+    auto writer = tools::mesh::VtkWriter(data.d_meshFile);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
     writer.addTimeStep(0.);
@@ -324,7 +324,7 @@ void tools::mesh::uniformTri(const std::string &filename) {
   std::vector<util::Point3> u(num_nodes, util::Point3());
 
   // write to vtu file
-  auto writer = rw::writer::VtkWriterInterface(data.d_meshFile);
+  auto writer = tools::mesh::VtkWriter(data.d_meshFile);
   writer.appendMesh(&nodes, element_type, &en_con, &u);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);
@@ -477,7 +477,7 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
   if (data.d_isFd) {
 
     // write data to vtu file
-    auto writer = rw::writer::VtkWriterInterface(data.d_meshFile);
+    auto writer = tools::mesh::VtkWriter(data.d_meshFile);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
     writer.addTimeStep(0.);
@@ -555,7 +555,7 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
   std::vector<util::Point3> u(num_nodes, util::Point3());
 
   // write to vtu file
-  auto writer = rw::writer::VtkWriterInterface(data.d_meshFile);
+  auto writer = tools::mesh::VtkWriter(data.d_meshFile);
   writer.appendMesh(&nodes, element_type, &en_con, &u);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);

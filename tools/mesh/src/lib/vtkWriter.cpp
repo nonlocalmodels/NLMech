@@ -14,7 +14,7 @@
 #include <vtkPoints.h>
 #include <vtkUnsignedIntArray.h>
 
-rw::writer::VtkWriter::VtkWriter(const std::string &filename) {
+tools::mesh::VtkWriter::VtkWriter(const std::string &filename) {
 
   std::string f = filename + ".vtu";
 
@@ -22,7 +22,7 @@ rw::writer::VtkWriter::VtkWriter(const std::string &filename) {
   d_writer_p->SetFileName(const_cast<char *>(f.c_str()));
 }
 
-void rw::writer::VtkWriter::appendNodes(
+void tools::mesh::VtkWriter::appendNodes(
     const std::vector<util::Point3> *nodes) {
 
   auto points = vtkSmartPointer<vtkPoints>::New();
@@ -34,7 +34,7 @@ void rw::writer::VtkWriter::appendNodes(
   d_grid_p->SetPoints(points);
 }
 
-void rw::writer::VtkWriter::appendNodes(const std::vector<util::Point3> *nodes,
+void tools::mesh::VtkWriter::appendNodes(const std::vector<util::Point3> *nodes,
                                         const std::vector<util::Point3> *u) {
 
   auto points = vtkSmartPointer<vtkPoints>::New();
@@ -49,7 +49,7 @@ void rw::writer::VtkWriter::appendNodes(const std::vector<util::Point3> *nodes,
   d_grid_p->SetPoints(points);
 }
 
-void rw::writer::VtkWriter::appendMesh(
+void tools::mesh::VtkWriter::appendMesh(
     const std::vector<util::Point3> *nodes, const size_t &element_type,
     const std::vector<size_t> *en_con,
     const std::vector<util::Point3> *u) {
@@ -95,7 +95,7 @@ void rw::writer::VtkWriter::appendMesh(
   d_grid_p->SetCells(cell_types, cells);
 }
 
-void rw::writer::VtkWriter::appendPointData(const std::string &name,
+void tools::mesh::VtkWriter::appendPointData(const std::string &name,
                                             const std::vector<uint8_t> *data) {
 
   auto array = vtkSmartPointer<vtkDoubleArray>::New();
@@ -111,7 +111,7 @@ void rw::writer::VtkWriter::appendPointData(const std::string &name,
   d_grid_p->GetPointData()->AddArray(array);
 }
 
-void rw::writer::VtkWriter::appendPointData(const std::string &name,
+void tools::mesh::VtkWriter::appendPointData(const std::string &name,
                                             const std::vector<size_t> *data) {
 
   auto array = vtkSmartPointer<vtkDoubleArray>::New();
@@ -127,7 +127,7 @@ void rw::writer::VtkWriter::appendPointData(const std::string &name,
   d_grid_p->GetPointData()->AddArray(array);
 }
 
-void rw::writer::VtkWriter::appendPointData(const std::string &name,
+void tools::mesh::VtkWriter::appendPointData(const std::string &name,
                                             const std::vector<int> *data) {
 
   auto array = vtkSmartPointer<vtkDoubleArray>::New();
@@ -143,7 +143,7 @@ void rw::writer::VtkWriter::appendPointData(const std::string &name,
   d_grid_p->GetPointData()->AddArray(array);
 }
 
-void rw::writer::VtkWriter::appendPointData(const std::string &name,
+void tools::mesh::VtkWriter::appendPointData(const std::string &name,
                                             const std::vector<float> *data) {
 
   auto array = vtkSmartPointer<vtkDoubleArray>::New();
@@ -159,7 +159,7 @@ void rw::writer::VtkWriter::appendPointData(const std::string &name,
   d_grid_p->GetPointData()->AddArray(array);
 }
 
-void rw::writer::VtkWriter::appendPointData(const std::string &name,
+void tools::mesh::VtkWriter::appendPointData(const std::string &name,
                                             const std::vector<double> *data) {
 
   auto array = vtkSmartPointer<vtkDoubleArray>::New();
@@ -175,7 +175,7 @@ void rw::writer::VtkWriter::appendPointData(const std::string &name,
   d_grid_p->GetPointData()->AddArray(array);
 }
 
-void rw::writer::VtkWriter::appendPointData(
+void tools::mesh::VtkWriter::appendPointData(
     const std::string &name, const std::vector<util::Point3> *data) {
 
   auto array = vtkSmartPointer<vtkDoubleArray>::New();
@@ -197,78 +197,7 @@ void rw::writer::VtkWriter::appendPointData(
   d_grid_p->GetPointData()->AddArray(array);
 }
 
-void rw::writer::VtkWriter::appendPointData(
-    const std::string &name, const std::vector<util::SymMatrix3> *data) {
-
-  auto array = vtkSmartPointer<vtkDoubleArray>::New();
-  array->SetNumberOfComponents(6);
-  array->SetName(name.c_str());
-
-  array->SetComponentName(0, "xx");
-  array->SetComponentName(1, "yy");
-  array->SetComponentName(2, "zz");
-  array->SetComponentName(3, "xy");
-  array->SetComponentName(4, "xz");
-  array->SetComponentName(5, "yz");
-
-  double value[6];
-  for (const auto &i : *data) {
-    value[0] = i.d_xx;
-    value[1] = i.d_yy;
-    value[2] = i.d_zz;
-    value[3] = i.d_xy;
-    value[4] = i.d_xz;
-    value[5] = i.d_yz;
-    array->InsertNextTuple(value);
-  }
-
-  d_grid_p->GetPointData()->AddArray(array);
-}
-
-void rw::writer::VtkWriter::appendCellData(const std::string &name,
-                                           const std::vector<float> *data) {
-  auto array = vtkSmartPointer<vtkDoubleArray>::New();
-  array->SetNumberOfComponents(1);
-  array->SetName(name.c_str());
-
-  double value[1];
-  for (float i : *data) {
-    value[0] = i;
-    array->InsertNextTuple(value);
-  }
-
-  d_grid_p->GetCellData()->AddArray(array);
-}
-
-void rw::writer::VtkWriter::appendCellData(
-    const std::string &name, const std::vector<util::SymMatrix3> *data) {
-
-  auto array = vtkSmartPointer < vtkDoubleArray > ::New();
-  array->SetNumberOfComponents(6);
-  array->SetName(name.c_str());
-
-  array->SetComponentName(0, "xx");
-  array->SetComponentName(1, "yy");
-  array->SetComponentName(2, "zz");
-  array->SetComponentName(3, "xy");
-  array->SetComponentName(4, "xz");
-  array->SetComponentName(5, "yz");
-
-  double value[6];
-  for (const auto &i : *data) {
-    value[0] = i.d_xx;
-    value[1] = i.d_yy;
-    value[2] = i.d_zz;
-    value[3] = i.d_xy;
-    value[4] = i.d_xz;
-    value[5] = i.d_yz;
-    array->InsertNextTuple(value);
-  }
-
-  d_grid_p->GetCellData()->AddArray(array);
-}
-
-void rw::writer::VtkWriter::addTimeStep(const double &timestep) {
+void tools::mesh::VtkWriter::addTimeStep(const double &timestep) {
 
   auto t = vtkDoubleArray::New();
   t->SetName("TIME");
@@ -277,7 +206,7 @@ void rw::writer::VtkWriter::addTimeStep(const double &timestep) {
   d_grid_p->GetFieldData()->AddArray(t);
 }
 
-void rw::writer::VtkWriter::close() {
+void tools::mesh::VtkWriter::close() {
   d_writer_p->SetInputData(d_grid_p);
   d_writer_p->SetDataModeToAppended();
   d_writer_p->EncodeAppendedDataOn();
@@ -285,7 +214,7 @@ void rw::writer::VtkWriter::close() {
   d_writer_p->Write();
 }
 
-void rw::writer::VtkWriter::appendFieldData(const std::string &name,
+void tools::mesh::VtkWriter::appendFieldData(const std::string &name,
                                             const double &data) {
 
   auto t = vtkDoubleArray::New();
@@ -295,7 +224,7 @@ void rw::writer::VtkWriter::appendFieldData(const std::string &name,
   d_grid_p->GetFieldData()->AddArray(t);
 }
 
-void rw::writer::VtkWriter::appendFieldData(const std::string &name,
+void tools::mesh::VtkWriter::appendFieldData(const std::string &name,
                                             const float &data) {
 
   auto t = vtkDoubleArray::New();

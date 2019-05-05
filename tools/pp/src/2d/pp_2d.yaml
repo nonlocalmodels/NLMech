@@ -1,0 +1,81 @@
+# type: fe_2d or fe_truss_2d
+Type: fe_2d
+# provide input files used in running simulation
+Source_Path: ./
+Simulation_Input_File: input.yaml
+# provide necessary material properties if not provided in the simulation
+# input file above
+Material:
+  Poisson_Ratio: 0.25
+  E: 1.0
+# over ride some data of above input file
+Override_Simulation_Input:
+  Final_Time: 1.0
+  Time_Steps: 1000
+  # specify if only one file needs to be processed
+  Process_Single_File: true
+  # name of the vtu file which contains data like 
+  # displacement, velocity
+  # default name is used in below is not provided
+  # if Process_Single_File is set to true, provide full name of file
+  # e.g. output_1
+  Filename_To_Read: output_20.vtu
+  # if it is fe weak then provide the name of mesh
+  # file related to quadrature data
+  # default name is used if below is not provided
+  # if Process_Single_File is set to true, provide full name of file
+  # e.g. output_quads_1
+  Filename_Quad_To_Read: output_quads_20.vtu
+Output:
+  # specify output directory
+  Path: pp/modify_v/new/
+# specify what to compute
+Compute:
+  Sets: 1
+  Set_1:
+    # output filename
+    Output_Filename: pp_mark_v_20
+    # mark velocity as zero in given region
+    Mark_V_0: 
+      #####
+      # provide rectangle within which nodes will be marked
+      # with zero velocity
+      Rectangle: [0.049, 0.0, 0.052, 0.032]
+      # Rectangle: [0.049, 0.0, 0.052, 0.044]
+      #####
+      # # provide list of points on which nodes will be marked zero
+      # Points:
+      #   # can provide 3 components or just 2 components (for 2-d providing
+      #   # only 2 component is efficient)
+      #   - [0.0, 0.1, 0.0]
+      #   - [0.1, 0.0]
+      # # specify if the points are in current or in reference configuration 
+      # # (default is current)
+      # Points_Current_Config: true
+      #####
+      # Provide ids of node to mark
+      Nodes:
+        # for output_20
+        - 1972
+        - 1260
+        # # for output_15
+        # - 1366
+        # - 1260
+        # - 654
+    # compute magnitude of strain tensor
+    Magnitude_Strain_Tensor:
+      # specify component if any
+      Component: xx
+    # symmetrize velocity along given line of symmetry
+    Symmetrize_V:
+      # specify if this operation needs to be combined with
+      # Mark_V_0 operation (default is false)
+      Combine_Mark_V_0: true
+      # specify if line is vertical or horizontal
+      Axis: y
+      # specify the location of line
+      Axis_Line: 0.05
+    # compute strain and stress
+    Strain_Stress: true
+HPX:
+  Partitions: 1

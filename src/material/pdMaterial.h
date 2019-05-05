@@ -153,6 +153,12 @@ public:
    */
   double getSc(const double &r);
 
+  /*!
+   * @brief Returns the material deck
+   * @return deck Material deck
+   */
+  inp::MaterialDeck * getMaterialDeck();
+
 private:
   /**
    * @name Internal data

@@ -122,27 +122,32 @@ struct MatData {
   /*!
    * @brief Compute critical energy release rate Gc from critical
    * stress-intensity factor KIc, Poisson's ratio nu, and Young's modulus E
+   *
+   * Below conversion from KIc to Gc assumes **plane-stress** condition. For
+   * **plane-stress** condition, we need to modify the Young's modulus \f$
+   * E\f$ to \f$ \frac{E}{1 - \nu^2} \f$ where \f$ \nu\f$ is the Poisson's
+   * ratio.
    * @param KIc Critical stress-intensity factor
    * @param nu Poisson's ratio
    * @param E Young's modulus
    * @return Gc Critical energy release rate
    */
-  double toGc(double KIc, double nu, double E) {
-    return KIc * KIc * (1. - nu * nu) / E;
-  }
+  double toGc(double KIc, double nu, double E) { return KIc * KIc / E; }
 
   /*!
    * @brief Compute critical stress-intensity factor KIc from critical energy
-   * release rate Gc, Poisson's ratio
-   * nu, and Young's modulus E
+   * release rate Gc, Poisson's ratio \f$ nu\f$, and Young's modulus E
+   *
+   * Below conversion from Gc to KIc assumes **plane-stress** condition. For
+   * **plane-stress** condition, we need to modify the Young's modulus \f$
+   * E\f$ to \f$ \frac{E}{1 - \nu^2} \f$ where \f$ \nu\f$ is the Poisson's
+   * ratio.
    * @param Gc Critical energy release rate
    * @param nu Poisson's ratio
    * @param E Young's modulus
    * @return KIc Critical stress-intensity factor
    */
-  double toKIc(double Gc, double nu, double E) {
-    return std::sqrt(Gc * E / (1.0 - nu * nu));
-  }
+  double toKIc(double Gc, double nu, double E) { return std::sqrt(Gc * E); }
 
   /** @}*/
 };
@@ -161,12 +166,10 @@ struct MaterialDeck {
   /**@{*/
 
   /*!
-   * @brief 2D type
-   *
-   * - \a plane-stress -- thin material
-   * - \a plane-strain -- thick material
+   * @brief Indicates if the 2-d simulation is of plane-strain type (thick
+   * material) or plane-stress type (thin material)
    */
-  std::string d_2DType;
+  bool d_isPlaneStrain;
 
   /*! @brief Material type */
   std::string d_materialType;
@@ -217,10 +220,10 @@ struct MaterialDeck {
    * @brief Constructor
    */
   MaterialDeck()
-      : d_bondPotentialType(0), d_statePotentialType(0), d_influenceFnType(0),
-        d_irreversibleBondBreak(true), d_stateContributionFromBrokenBond(true),
-        d_checkScFactor(1.), d_computeParamsFromElastic(true), d_matData(),
-        d_density(1.){};
+      : d_isPlaneStrain(false), d_bondPotentialType(0), d_statePotentialType(0),
+        d_influenceFnType(0), d_irreversibleBondBreak(true),
+        d_stateContributionFromBrokenBond(true), d_checkScFactor(1.),
+        d_computeParamsFromElastic(true), d_matData(), d_density(1.){};
 };
 
 /** @}*/

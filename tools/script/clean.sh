@@ -6,3 +6,4 @@ rm cmake_install.cmake
 rm CTestTestfile.cmake
 rm Makefile 
 rm NLMech
+rm NLMech.cbp
