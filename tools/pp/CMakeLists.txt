@@ -10,4 +10,4 @@ add_library(PP ${SOURCES})
 target_link_libraries(PP Util Inp Material RW FE)
 
 # Build mesh executible
-add_hpx_executable(pp SOURCES pp.cpp DEPENDENCIES RW PP)
+add_hpx_executable(pp SOURCES pp.cpp DEPENDENCIES PP)

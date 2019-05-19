@@ -80,6 +80,74 @@ void inp::Policy::addToTags(const size_t &level, const std::string &tag) {
     addTag(d_l2Tags, tag);
 }
 
+void inp::Policy::removeTag(const std::string &tag) {
+
+  // depending on level find if variable_name is in any of the
+  // tag list
+  switch (d_policyDeck_p->d_memControlFlag) {
+
+  case 0: {
+    std::vector<std::string> temp;
+    for (const auto &s : d_l0Tags) {
+      if (s == tag)
+        continue;
+      temp.emplace_back(s);
+    }
+    d_l0Tags = temp;
+  } break;
+
+  case 1: {
+
+    std::vector<std::string> temp;
+    for (const auto &s : d_l0Tags) {
+      if (s == tag)
+        continue;
+      temp.emplace_back(s);
+    }
+    d_l0Tags = temp;
+
+    temp.clear();
+    for (const auto &s : d_l1Tags) {
+      if (s == tag)
+        continue;
+    temp.emplace_back(s);
+    }
+    d_l1Tags = temp;
+  } break;
+
+  case 2: {
+    std::vector<std::string> temp;
+    for (const auto &s : d_l0Tags) {
+      if (s == tag)
+        continue;
+      temp.emplace_back(s);
+    }
+    d_l0Tags = temp;
+
+    temp.clear();
+    for (const auto &s : d_l1Tags) {
+      if (s == tag)
+        continue;
+      temp.emplace_back(s);
+    }
+    d_l1Tags = temp;
+
+    temp.clear();
+    for (const auto &s : d_l2Tags) {
+      if (s == tag)
+        continue;
+      temp.emplace_back(s);
+    }
+    d_l2Tags = temp;
+  } break;
+
+  default: {
+    std::cerr << "Error: Check memory consumption flag.\n";
+    exit(1);
+  } break;
+  }
+}
+
 bool inp::Policy::populateData(const std::string &tag) {
 
   // depending on level find if variable_name is in any of the

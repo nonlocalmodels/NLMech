@@ -35,7 +35,7 @@ void readInputFile(InpData *data, YAML::Node config) {
   // read output path, filenames
   if (config["Output"]) {
     if (config["Output"]["Path"])
-      data->d_pathFile = config["Output"]["Path"].as<std::string>();
+      data->d_pathFile = config["Output"]["Path"].as<std::string>() + "/";
     else
       data->d_pathFile = "./";
 

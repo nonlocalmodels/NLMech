@@ -103,6 +103,9 @@ void model::FDModel::initHObjects() {
   d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck(),
                                         d_mesh_p->getNodesP(),
                                         d_neighbor_p->getNeighborsP());
+  if (d_fracture_p->getDtCrackOut() != 0 &&
+      !d_policy_p->populateData("Model_d_Z"))
+    d_policy_p->removeTag("Model_d_Z");
 
   // create interior flags
   std::cout << "FDModel: Creating interior flags for nodes.\n";
@@ -199,6 +202,12 @@ void model::FDModel::integrate() {
     else if (d_modelDeck_p->d_timeDiscretization == "velocity_verlet")
       integrateVerlet();
 
+    // handle fracture output
+    d_fracture_p->updateCrackAndOutput(
+        d_n, d_time, d_outputDeck_p->d_path, d_modelDeck_p->d_horizon,
+        d_mesh_p->getNodesP(), d_neighbor_p->getNeighborsP(), &d_u, &d_Z);
+
+    // handle general output
     if ((d_n % d_outputDeck_p->d_dtOut == 0) &&
         (d_n >= d_outputDeck_p->d_dtOut)) {
 

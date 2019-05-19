@@ -6,16 +6,17 @@
 #ifndef GEOM_FRACTURE_H
 #define GEOM_FRACTURE_H
 
-#include "util/point.h"                   // definition of Point3
-#include <stdint.h>                       // uint8_t type
-#include <string.h>                       // size_t type
+#include "util/point.h" // definition of Point3
+#include <inp/decks/fractureDeck.h>
+#include <stdint.h> // uint8_t type
+#include <string.h> // size_t type
 #include <vector>
 
 // forward declaration of fracture deck
 namespace inp {
 struct EdgeCrack;
 struct FractureDeck;
-}
+} // namespace inp
 
 /*!
  * @brief Collection of methods and database related to geometry
@@ -55,6 +56,13 @@ public:
   void setBondState(const size_t &i, const size_t &j, const bool &state);
 
   /*!
+   * @brief Sets the output time step to given value
+   *
+   * @param dt Output time step interval
+   */
+  void setUpdateCrack(const size_t &dt);
+
+  /*!
    * @brief Sets the bond state
    *
    * @param i Nodal id
@@ -71,6 +79,32 @@ public:
    */
   const std::vector<uint8_t> getBonds(const size_t &i);
 
+  /*!
+   * @brief Updates crack tip and velocity and performs output
+   *
+   * @param n Time step
+   * @param time Current time
+   * @param output_path Path where crack data file will be created
+   * @param horizon Horizon
+   * @param nodes Reference coordinates of all nodes
+   * @param neighbor_list Neighbor list of nodes
+   * @param u Vector of displacement
+   * @param Z Vector of damage at nodes
+   */
+  void
+  updateCrackAndOutput(const size_t &n, const double &time,
+                       const std::string &output_path,
+                       const double &horizon,
+                       const std::vector<util::Point3> *nodes,
+                       const std::vector<std::vector<size_t>> *neighbor_list,
+                       std::vector<util::Point3> *u, std::vector<float> *Z);
+
+  /*!
+   * @brief Updates crack tip and velocity and performs output
+   * @return dt Time step interval for crack output
+   */
+  size_t getDtCrackOut();
+
 private:
   /*!
    * @brief Sets flag of bonds of i as fractured which intersect the
@@ -84,6 +118,36 @@ private:
   void computeFracturedBondFd(const size_t &i, inp::EdgeCrack *crack,
                               const std::vector<util::Point3> *nodes,
                               const std::vector<size_t> *neighbors);
+
+  /*!
+   * @brief Updates crack tip location and crack velocity
+   * @param n Time step
+   * @param time Current time
+   * @param horizon Horizon
+   * @param nodes Reference coordinates of all nodes
+   * @param neighbor_list Neighbor list of nodes
+   * @param u Vector of displacement
+   * @param Z Vector of damage at nodes
+   */
+  void updateCrack(const size_t &n, const double &time, const double &horizon,
+                   const std::vector<util::Point3> *nodes,
+                   const std::vector<std::vector<size_t>> *neighbor_list,
+                   std::vector<util::Point3> *u, std::vector<float> *Z);
+
+  /*!
+   * @brief Performs output
+   * @param n Time step
+   * @param time Current time
+   * @param output_path Path where crack data file will be created
+   * @param nodes Reference coordinates of all nodes
+   * @param neighbor_list Neighbor list of nodes
+   * @param u Vector of displacement
+   */
+  void output(const size_t &n, const double &time,
+              const std::string &output_path,
+              const std::vector<util::Point3> *nodes,
+              const std::vector<std::vector<size_t>> *neighbor_list,
+              std::vector<util::Point3> *u);
 
   /*! @brief Interior flags deck */
   inp::FractureDeck *d_fractureDeck_p;

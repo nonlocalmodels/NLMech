@@ -260,10 +260,15 @@ void inp::Input::setFractureDeck() {
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   if (config["Fracture"]["Dt_Out"])
-    d_fractureDeck_p->d_crackOutput = config["Fracture"]["Dt_Out"].as<size_t>();
-  else if (config["Output"]["Output_Interval"])
-    d_fractureDeck_p->d_crackOutput =
-        config["Output"]["Output_Interval"].as<size_t>();
+    d_fractureDeck_p->d_dtCrackOut = config["Fracture"]["Dt_Out"].as<size_t>();
+
+  if (config["Fracture"]["Dt_Crack_Velocity"])
+    d_fractureDeck_p->d_dtCrackVelocity = config["Fracture"]["Dt_Crack_Velocity"].as<size_t>();
+  else
+    d_fractureDeck_p->d_dtCrackVelocity = d_fractureDeck_p->d_dtCrackOut;
+
+  if (d_fractureDeck_p->d_dtCrackVelocity > d_fractureDeck_p->d_dtCrackOut)
+    d_fractureDeck_p->d_dtCrackVelocity = d_fractureDeck_p->d_dtCrackOut;
 
   size_t ncracks = 0;
   if (config["Fracture"]["Cracks"]["Sets"])
@@ -294,6 +299,7 @@ void inp::Input::setFractureDeck() {
       }
       crack.d_pb = util::Point3(locs[0], locs[1], 0.);
       crack.d_pt = util::Point3(locs[2], locs[3], 0.);
+      crack.d_l = crack.d_pb.dist(crack.d_pt);
     } else {
       std::cerr << "Error: Need Line data for complete specification of "
                    "pre-crack.\n";

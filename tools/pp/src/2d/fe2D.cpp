@@ -7,6 +7,7 @@
 #include "inp/input.h"          // definition of Input
 #include "inp/decks/materialDeck.h"       // definition of MaterialDeck
 #include "inp/decks/modelDeck.h"          // definition of ModelDeck
+#include "inp/policy.h"         // definition of Policy
 #include "rw/reader.h"          // definition of readVtuFileRestart
 #include "rw/writer.h"          // definition of VtkWriterInterface
 #include "util/compare.h"       // compare real numbers
@@ -253,6 +254,9 @@ void tools::pp::fe2D(const std::string &filename) {
   // read input data
   std::cout << "PP_fe2D: Reading simulation input file.\n";
   auto *deck = new inp::Input(filename);
+
+  // get policy deck
+  auto policy_deck = inp::Policy::getInstance(deck->getPolicyDeck());
 
   // create mesh
   std::cout << "PP_fe2D: Creating mesh.\n";

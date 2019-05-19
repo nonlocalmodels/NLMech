@@ -50,10 +50,10 @@ struct EdgeCrack {
   double d_lb;
 
   /*! @brief Velocity of top (right) crack tip */
-  std::vector<double> d_vt;
+  util::Point3 d_vt;
 
   /*! @brief Velocity of bottom (left) crack tip */
-  std::vector<double> d_vb;
+  util::Point3 d_vb;
 
   /*! @brief Closest id of node to top (right) crack tip */
   int d_it;
@@ -61,23 +61,14 @@ struct EdgeCrack {
   /*! @brief Closest id of node to bottom (left) crack tip */
   int d_ib;
 
-  /*! @brief Closest id of node to old top (right) crack tip */
-  int d_iot;
-
-  /*! @brief Closest id of node to old bottom (left) crack tip */
-  int d_iob;
-
   /*! @brief Top (right) crack tip location */
   util::Point3 d_pt;
 
   /*! @brief Bottom (left) crack tip location */
   util::Point3 d_pb;
 
-  /*! @brief Old top (right) crack tip location */
-  util::Point3 d_pot;
-
-  /*! @brief Old bottom (left) crack tip location */
-  util::Point3 d_pob;
+  /*! @brief Time at which crack length was updated */
+  double d_time;
 
   /** @}*/
 
@@ -86,9 +77,8 @@ struct EdgeCrack {
    */
   EdgeCrack()
       : d_o(1), d_theta(0.), d_l(0.), d_lt(0.), d_lb(0.), d_it(-1), d_ib(-1),
-        d_iot(-1), d_iob(-1), d_vt(std::vector<double>(3, 0.)),
-        d_vb(std::vector<double>(3, 0.)), d_pt(util::Point3()),
-        d_pb(util::Point3()), d_pot(util::Point3()), d_pob(util::Point3()){};
+        d_vt(util::Point3()), d_vb(util::Point3()),
+        d_pt(util::Point3()), d_pb(util::Point3()), d_time(0.) {};
 
   /*!
    * @brief Checks if point lies outside the crack
@@ -189,23 +179,25 @@ struct FractureDeck {
   /*! @brief Vector of pre-crack data*/
   std::vector<inp::EdgeCrack> d_cracks;
 
-  /*! @brief Flag which indicates if pre-crack is present */
-  bool d_crackActive;
-
   /*!
-   * @brief Output interval
+   * @brief Output interval for crack tip and crack velocity
+   *
+   * If the value is zero then no output is performed.
    *
    * I.e. code perform crack data output every N number of steps, when N is
    * given by this data
    */
-  size_t d_crackOutput;
+  size_t d_dtCrackOut;
+
+  /*! @brief Number of time steps used to compute the crack velocity */
+  size_t d_dtCrackVelocity;
 
   /** @}*/
 
   /*!
    * @brief Constructor
    */
-  FractureDeck() : d_crackActive(false), d_crackOutput(0){};
+  FractureDeck() : d_dtCrackOut(0), d_dtCrackVelocity(0){};
 };
 
 /** @}*/

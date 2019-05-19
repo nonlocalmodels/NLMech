@@ -73,6 +73,12 @@ public:
    */
   void addToTags(const size_t &level, const std::string &tag);
 
+  /*!
+   * @brief Looks for tag and if present removes it
+   * @param tag Tag to be appended to list
+   */
+  void removeTag(const std::string &tag);
+
   /** @}*/
 
   /**
