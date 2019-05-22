@@ -498,17 +498,21 @@ void model::FDModel::computeHydrostaticStrains() {
 void model::FDModel::computePostProcFields() {
 
   // if work done is to be computed, get the external forces
-  std::vector<util::Point3> fext(d_mesh_p->getNumNodes(), util::Point3());
-  if (d_policy_p->populateData("Model_d_w"))
-    d_fLoading_p->apply(d_time, &fext, d_mesh_p);
+  std::vector<util::Point3> f_ext;
+  if (d_policy_p->populateData("Model_d_w")) {
+    f_ext = std::vector<util::Point3>(d_mesh_p->getNumNodes(), util::Point3());
+    d_fLoading_p->apply(d_time, &f_ext, d_mesh_p);
+  }
 
   // local data for kinetic energy
-  std::vector<float> vec_ke(d_mesh_p->getNumNodes(), 0.);
+  std::vector<float> vec_ke;
+  if (this->d_policy_p->populateData("Model_d_e"))
+    vec_ke = std::vector<float>(d_mesh_p->getNumNodes(), 0.);
 
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       d_mesh_p->getNumNodes(),
-      [this, fext, &vec_ke](boost::uint64_t i) {
+      [this, &f_ext, &vec_ke](boost::uint64_t i) {
         // local variable
         double energy_i = 0.0;
         double hydro_energy_i = 0.0;
@@ -593,7 +597,7 @@ void model::FDModel::computePostProcFields() {
           this->d_e[i] = (energy_i + hydro_energy_i) * voli;
 
         if (this->d_policy_p->populateData("Model_d_w"))
-          this->d_w[i] = ui.dot(fext[i]);
+          this->d_w[i] = ui.dot(f_ext[i]);
 
         if (this->d_policy_p->populateData("Model_d_eFB") &&
             util::compare::definitelyGreaterThan(z, 1.0 - 1.0E-10))
@@ -610,7 +614,8 @@ void model::FDModel::computePostProcFields() {
           this->d_Z[i] = z;
 
         // compute kinetic energy
-        vec_ke[i] = 0.5 * this->d_material_p->getDensity() *
+        if (this->d_policy_p->populateData("Model_d_e"))
+          vec_ke[i] = 0.5 * this->d_material_p->getDensity() *
                     this->d_v[i].dot(this->d_v[i]) * voli;
       } // loop over nodes
 
@@ -628,7 +633,8 @@ void model::FDModel::computePostProcFields() {
   if (this->d_policy_p->populateData("Model_d_eFB"))
     d_teFB = util::methods::add(d_eFB);
 
-  d_tk = util::methods::add(vec_ke);
+  if (this->d_policy_p->populateData("Model_d_e"))
+    d_tk = util::methods::add(vec_ke);
 }
 
 void model::FDModel::output() {

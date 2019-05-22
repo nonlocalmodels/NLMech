@@ -7,6 +7,7 @@
 #include "inp/input.h"          // definition of Input
 #include "inp/decks/materialDeck.h"       // definition of MaterialDeck
 #include "inp/decks/modelDeck.h"          // definition of ModelDeck
+#include "inp/decks/outputDeck.h"         // definition of OutputDeck
 #include "inp/policy.h"         // definition of Policy
 #include "rw/reader.h"          // definition of readVtuFileRestart
 #include "rw/writer.h"          // definition of VtkWriterInterface
@@ -26,7 +27,7 @@
 namespace {
 
 struct InstructionData {
-  std::string d_filename;
+  std::string d_tagFilename;
 
   bool d_scaleUOut;
   double d_scaleU;
@@ -56,27 +57,37 @@ struct InstructionData {
   std::string d_symmAxis;
   double d_symmLine;
 
+  bool d_crackTip;
+
   InstructionData()
       : d_scaleUOut(false), d_scaleU(1.), d_damageAtNodes(false),
-        d_outOnlyNodes(false), d_removeElements(false), d_markVAsZero(false),
+        d_outOnlyNodes(true), d_removeElements(false), d_markVAsZero(false),
         d_markVInRectGiven(false),
         d_markVRect(std::make_pair(util::Point3(), util::Point3())),
         d_markVPtsAreInCurrentConfig(false), d_computeStrain(false),
         d_outStrainAtElements(false), d_magStrainTensor(false),
-        d_symmetrizeV(false), d_combineMarkV(false), d_symmLine(0.){};
+        d_symmetrizeV(false), d_combineMarkV(false), d_symmLine(0.),
+        d_crackTip(false){};
 };
 
 void readInputFile(YAML::Node config, const std::string &set,
                    InstructionData *data) {
 
-  if (config["Compute"][set]["Output_Filename"]) {
-    data->d_filename =
-        config["Compute"][set]["Output_Filename"].as<std::string>();
+  if (config["Compute"][set]["Tag_Filename"]) {
+    data->d_tagFilename = "_" +
+        config["Compute"][set]["Tag_Filename"].as<std::string>();
   } else {
     // we work with default filename of form
     // pp_set_1_time_step_0.vtu
-    data->d_filename = "pp_" + set;
+    data->d_tagFilename = "_" + set;
   }
+
+  //
+  // Output only nodes
+  //
+  if (config["Compute"][set]["Output_Only_Nodes"])
+    data->d_outOnlyNodes = config["Compute"][set]["Output_Only_Nodes"]
+        .as<bool>();
 
   //
   // Scale displacement
@@ -89,14 +100,8 @@ void readInputFile(YAML::Node config, const std::string &set,
   //
   // Compute damage at nodes
   //
-  if (config["Compute"][set]["Compute_Damage_At_Nodes"])
-    data->d_damageAtNodes = true;
-
-  //
-  // Output only nodes
-  //
-  if (config["Compute"][set]["Output_Only_Nodes"])
-    data->d_outOnlyNodes = true;
+  if (config["Compute"][set]["Damage_Z"])
+    data->d_damageAtNodes = config["Compute"][set]["Damage_Z"].as<bool>();
 
   //
   // Mark velocity as zero
@@ -211,6 +216,15 @@ void readInputFile(YAML::Node config, const std::string &set,
       exit(1);
     }
   }
+
+  //
+  // Crack tip calculation
+  //
+  if (config["Compute"][set]["Crack_Tip"]) {
+    data->d_crackTip = config["Compute"][set]["Crack_Tip"].as<bool>();
+    if (data->d_crackTip)
+      data->d_damageAtNodes = true;
+  }
 }
 
 size_t findNode(const util::Point3 &x, const std::vector<util::Point3>
@@ -254,29 +268,20 @@ void tools::pp::fe2D(const std::string &filename) {
   // read input data
   std::cout << "PP_fe2D: Reading simulation input file.\n";
   auto *deck = new inp::Input(filename);
+  auto model_deck = deck->getModelDeck();
+  auto output_deck = deck->getOutputDeck();
 
   // get policy deck
-  auto policy_deck = inp::Policy::getInstance(deck->getPolicyDeck());
+  auto policy = inp::Policy::getInstance(deck->getPolicyDeck());
 
-  // create mesh
-  std::cout << "PP_fe2D: Creating mesh.\n";
-  auto *mesh = new fe::Mesh(deck->getMeshDeck());
-
-  // TODO
-  // //
-  // // override some of the data in deck from the input file
-  // //
-  // if (config["Override_Simulation_Input"]["Final_Time"])
-
-  auto process_single_file = false; // default
+  size_t process_single_file = 0; // default
   if (config["Override_Simulation_Input"]["Process_Single_File"])
     process_single_file =
-        config["Override_Simulation_Input"]["Process_Single_File"].as<bool>();
+        config["Override_Simulation_Input"]["Process_Single_File"].as<size_t>();
 
   std::string filename_to_read;
-  if (config["Override_Simulation_Input"]["Filename_To_Read"])
-    filename_to_read = config["Override_Simulation_Input"]["Filename_To_Read"]
-                           .as<std::string>();
+  if (config["Filename_To_Read"])
+    filename_to_read = config["Filename_To_Read"].as<std::string>();
   else {
     std::cerr << "Error: Simulation results filename is not provided.\n";
     exit(1);
@@ -286,37 +291,57 @@ void tools::pp::fe2D(const std::string &filename) {
   std::string out_path = "./"; // default
   if (config["Output"]["Path"])
     out_path = config["Output"]["Path"].as<std::string>();
+  std::string out_filename = "pp"; // default
+  if (config["Output"]["Filename"])
+    out_filename = config["Output"]["Filename"].as<std::string>();
 
-  // get number of compute set
-  auto num_compute = config["Compute"]["Sets"].as<size_t>();
+  // over ride final time step
+  if (config["Override_Simulation_Input"]["Time_Steps"])
+    model_deck->d_Nt = config["Override_Simulation_Input"]["Time_Steps"]
+        .as<size_t>();
+  size_t start_file = 1;
+  if (process_single_file > 0)
+    start_file = process_single_file;
+  size_t end_file = model_deck->d_Nt / output_deck->d_dtOut;
+  if (process_single_file > 0)
+    end_file = process_single_file;
 
-  // loop over compute sets and do as instructed in input file
-  for (size_t c = 1; c <= num_compute; c++) {
+  // create mesh
+  std::cout << "PP_fe2D: Creating mesh.\n";
+  auto *mesh = new fe::Mesh(deck->getMeshDeck());
 
-    // get string to read instruction
-    auto set = "Set_" + std::to_string(c);
+  // loop over output files
+  for (size_t out=start_file; out<=end_file; out++) {
+    // get number of compute set
+    auto num_compute = config["Compute"]["Sets"].as<size_t>();
 
-    // read file for instructions
-    auto data = InstructionData();
-    readInputFile(config, set, &data);
+    // append path to filename
+    auto sim_results_file =
+        source_path + "/" + filename_to_read + "_" + std::to_string(out);
 
-    if (process_single_file) {
+    // just read one file and do operations and move to the next compute set
+    std::vector<util::Point3> u;
+    std::vector<util::Point3> v;
+
+    // get displacement and velocity from the simulation
+    rw::reader::readVtuFileRestart(sim_results_file, &u, &v);
+
+    // loop over compute sets and do as instructed in input file
+    for (size_t c = 1; c <= num_compute; c++) {
+
+      // get string to read instruction
+      auto set = "Set_" + std::to_string(c);
+
+      // read file for instructions
+      auto data = InstructionData();
+      readInputFile(config, set, &data);
 
       // keep track of whether mesh has been written to output file
       auto mesh_appended = false;
 
-      // just read one file and do operations and move to the next compute set
-      std::vector<util::Point3> u;
-      std::vector<util::Point3> v;
-
-      // append path to filename
-      auto sim_results_file = source_path + "/" + filename_to_read;
-
-      // get displacement and velocity from the simulation
-      rw::reader::readVtuFileRestart(sim_results_file, &u, &v);
-
       // open a output vtu file
-      auto writer = rw::writer::VtkWriterInterface(data.d_filename);
+      auto writer = rw::writer::VtkWriterInterface(out_path + out_filename +
+          data.d_tagFilename);
 
       //
       // operation : Scale displacement and write to output mesh
@@ -348,32 +373,6 @@ void tools::pp::fe2D(const std::string &filename) {
       }
 
       //
-      // operation : Compute damage at node
-      //
-      // Steps: Create material class and compute damage at nodes
-      //
-      auto model_deck = deck->getModelDeck();
-      auto *material = new material::pd::Material(deck->getMaterialDeck(),
-                                                  model_deck->d_dim,
-                                                  model_deck->d_horizon);;
-
-      if (data.d_damageAtNodes) {
-        std::vector<double> damage_Z;
-
-        if (!mesh_appended) {
-          if (data.d_outOnlyNodes)
-            writer.appendNodes(mesh->getNodesP(), &u);
-          else
-            writer.appendMesh(mesh->getNodesP(), mesh->getElementType(),
-                              mesh->getElementConnectivitiesP(), &u);
-
-          mesh_appended = true;
-        }
-        // append data to file
-        writer.appendPointData("Damage_Z", &damage_Z);
-      }
-
-      //
       // operation : Mark velocity in region as zero
       //
       // Steps: Read initial, current, and velocity, and modify
@@ -388,7 +387,7 @@ void tools::pp::fe2D(const std::string &filename) {
           for (size_t i = 0; i < mesh->getNumNodes(); i++)
             if (util::geometry::isPointInsideRectangle(
                     mesh->getNode(i), data.d_markVRect.first[0],
-                    data.d_markVRect.second[0],data.d_markVRect.first[1],
+                    data.d_markVRect.second[0], data.d_markVRect.first[1],
                     data.d_markVRect.second[1]))
               v_mark[i] = util::Point3();
 
@@ -442,11 +441,11 @@ void tools::pp::fe2D(const std::string &filename) {
           auto x = mesh->getNode(i);
 
           if (data.d_symmAxis == "y" &&
-            util::compare::definitelyLessThan(x.d_x, data.d_symmLine + 1.0E-8))
+              util::compare::definitelyLessThan(x.d_x, data.d_symmLine + 1.0E-8))
             continue;
 
           if (data.d_symmAxis == "x" &&
-            util::compare::definitelyLessThan(x.d_y, data.d_symmLine + 1.0E-8))
+              util::compare::definitelyLessThan(x.d_y, data.d_symmLine + 1.0E-8))
             continue;
 
           // find the coordinate of point from where we want to copy
@@ -492,6 +491,10 @@ void tools::pp::fe2D(const std::string &filename) {
       std::vector<util::SymMatrix3> stress;
       if (data.d_computeStrain) {
 
+        auto *material = new material::pd::Material(
+            deck->getMaterialDeck(), model_deck->d_dim, model_deck->d_horizon);
+        auto mat_deck = material->getMaterialDeck();
+
         //
         // compute strain and stress
         //
@@ -511,7 +514,7 @@ void tools::pp::fe2D(const std::string &filename) {
           exit(1);
         }
 
-        for (size_t e=0; e<mesh->getNumElements(); e++) {
+        for (size_t e = 0; e < mesh->getNumElements(); e++) {
           auto ssn = util::SymMatrix3();
           auto sss = util::SymMatrix3();
 
@@ -523,7 +526,7 @@ void tools::pp::fe2D(const std::string &filename) {
           auto qd0 = qds[0];
 
           // compute strain in xy plane
-          for (size_t i=0; i<id_nds.size(); i++) {
+          for (size_t i = 0; i < id_nds.size(); i++) {
             auto id = id_nds[i];
             auto ui = u[id];
 
@@ -533,15 +536,12 @@ void tools::pp::fe2D(const std::string &filename) {
             ssn.d_xy += 0.5 * ui.d_y * qd0.d_derShapes[i][0];
           }
 
-          // compute out of plane component if it is plane strain
-          auto mat_deck = material->getMaterialDeck();
-
           // if material deck does not have valid material properties, search
           // the properties in the pp input file
           if (mat_deck->d_matData.d_nu < 0. || mat_deck->d_matData.d_E < 0.) {
             if (config["Material"]["Poisson_Ratio"])
-              mat_deck->d_matData.d_nu = config["Material"]["Poisson_Ratio"]
-                  .as<double>();
+              mat_deck->d_matData.d_nu =
+                  config["Material"]["Poisson_Ratio"].as<double>();
             else {
               std::cerr << "Error: Need Poisson ratio for strain and stress "
                            "computation.\n";
@@ -556,26 +556,26 @@ void tools::pp::fe2D(const std::string &filename) {
             }
 
             // compute lambda and mu
-            mat_deck->d_matData.d_lambda = mat_deck->d_matData.toLambdaE
-                (mat_deck->d_matData.d_E, mat_deck->d_matData.d_nu);
+            mat_deck->d_matData.d_lambda = mat_deck->d_matData.toLambdaE(
+                mat_deck->d_matData.d_E, mat_deck->d_matData.d_nu);
             mat_deck->d_matData.d_mu = mat_deck->d_matData.d_lambda;
           }
 
           if (mat_deck->d_isPlaneStrain)
-            ssn.d_zz = - mat_deck->d_matData.d_nu * (ssn.d_xx + ssn.d_yy) /
-                (1. - mat_deck->d_matData.d_nu);
+            ssn.d_zz = -mat_deck->d_matData.d_nu * (ssn.d_xx + ssn.d_yy) /
+                       (1. - mat_deck->d_matData.d_nu);
 
           // compute stress
           auto trace = ssn.d_xx + ssn.d_yy + ssn.d_zz;
-          sss.d_xx = mat_deck->d_matData.d_lambda * trace * 1.
-                      + 2. * mat_deck->d_matData.d_mu * ssn.d_xx;
+          sss.d_xx = mat_deck->d_matData.d_lambda * trace * 1. +
+                     2. * mat_deck->d_matData.d_mu * ssn.d_xx;
           sss.d_xy = 2. * mat_deck->d_matData.d_mu * ssn.d_xy;
           sss.d_xz = 2. * mat_deck->d_matData.d_mu * ssn.d_xz;
 
-          sss.d_yy = mat_deck->d_matData.d_lambda * trace * 1.
-              + 2. * mat_deck->d_matData.d_mu * ssn.d_yy;
+          sss.d_yy = mat_deck->d_matData.d_lambda * trace * 1. +
+                     2. * mat_deck->d_matData.d_mu * ssn.d_yy;
           sss.d_yz = 2. * mat_deck->d_matData.d_mu * ssn.d_yz;
-          if(!mat_deck->d_isPlaneStrain)
+          if (!mat_deck->d_isPlaneStrain)
             sss.d_zz = mat_deck->d_matData.d_nu * (sss.d_xx + sss.d_yy);
         } // loop over elements
 
@@ -598,13 +598,13 @@ void tools::pp::fe2D(const std::string &filename) {
 
           // compute 1st order quad points and store them (quad points in
           // current configuration)
-          std::vector<util::Point3> elem_quads = std::vector<util::Point3>(
-              mesh->getNumElements(), util::Point3());
+          std::vector<util::Point3> elem_quads =
+              std::vector<util::Point3>(mesh->getNumElements(), util::Point3());
 
           for (size_t e = 0; e < mesh->getNumElements(); e++) {
             auto nds = mesh->getElementConnectivity(e);
             std::vector<util::Point3> nds_current(nds.size(), util::Point3());
-            for (size_t j=0; j<nds.size(); j++)
+            for (size_t j = 0; j < nds.size(); j++)
               nds_current[j] = mesh->getNode(nds[j]) + u[nds[j]];
 
             std::vector<fe::QuadData> qds = quad->getQuadPoints(nds_current);
@@ -666,10 +666,56 @@ void tools::pp::fe2D(const std::string &filename) {
       }
 
       //
+      // operation : Compute damage at node
+      //
+      if (data.d_damageAtNodes) {
+        auto *material = new material::pd::Material(
+            deck->getMaterialDeck(), model_deck->d_dim, model_deck->d_horizon);
+
+        std::vector<float> damage_Z(mesh->getNumNodes(), 0.);
+        for (size_t i=0; i<mesh->getNumNodes(); i++) {
+          auto xi = mesh->getNode(i);
+          for (size_t j = 0; j < mesh->getNumNodes(); j++) {
+            if (util::compare::definitelyGreaterThan(xi.dist(mesh->getNode(j)
+            ), model_deck->d_horizon) || j == i)
+              continue;
+
+            auto xj = mesh->getNode(j);
+            if (util::compare::definitelyGreaterThan(xj.dist(xi), 1.0E-10)) {
+              auto Sr = std::abs(material->getS(xj - xi, u[j] - u[i])) /
+                  material->getSc(xj.dist(xi));
+
+              if(util::compare::definitelyLessThan(damage_Z[i], Sr))
+                damage_Z[i] = Sr;
+            }
+          } // loop over neighbors
+        } // loop over nodes
+
+        if (!mesh_appended) {
+          if (data.d_outOnlyNodes)
+            writer.appendNodes(mesh->getNodesP(), &u);
+          else
+            writer.appendMesh(mesh->getNodesP(), mesh->getElementType(),
+                              mesh->getElementConnectivitiesP(), &u);
+
+          mesh_appended = true;
+        }
+        // append data to file
+        writer.appendPointData("Damage_Z", &damage_Z);
+      }
+
+      //
+      // operation : Compute crack tip location and velocity
+      //
+      if (data.d_crackTip) {
+
+      }
+
+      //
       // close file
       //
       if (mesh_appended)
         writer.close();
-    } // if processing single file
-  } // loop over compute sets
+    } // loop over compute sets
+  }// processing output files
 }

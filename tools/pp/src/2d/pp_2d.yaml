@@ -3,6 +3,10 @@ Type: fe_2d
 # provide input files used in running simulation
 Source_Path: ./
 Simulation_Input_File: input.yaml
+# name of the vtu file which contains data like
+# displacement, velocity
+# default name is used in below if it is not provided
+Filename_To_Read: output
 # provide necessary material properties if not provided in the simulation
 # input file above
 Material:
@@ -10,31 +14,24 @@ Material:
   E: 1.0
 # over ride some data of above input file
 Override_Simulation_Input:
-  Final_Time: 1.0
-  Time_Steps: 1000
-  # specify if only one file needs to be processed
-  Process_Single_File: true
-  # name of the vtu file which contains data like 
-  # displacement, velocity
-  # default name is used in below is not provided
-  # if Process_Single_File is set to true, provide full name of file
-  # e.g. output_1
-  Filename_To_Read: output_20.vtu
-  # if it is fe weak then provide the name of mesh
-  # file related to quadrature data
-  # default name is used if below is not provided
-  # if Process_Single_File is set to true, provide full name of file
-  # e.g. output_quads_1
-  Filename_Quad_To_Read: output_quads_20.vtu
+  Time_Steps: 25000
+  # specify the output file number if only one file needs to be processed
+#  Process_Single_File: 20
 Output:
   # specify output directory
   Path: pp/modify_v/new/
+  # output filename
+  Filename: pp
 # specify what to compute
 Compute:
   Sets: 1
   Set_1:
-    # output filename
-    Output_Filename: pp_mark_v_20
+    # Provide unique tag for filename for this set
+    # if not provided then it will assign tag "set_1" by default
+    Tag_Filename: mark_v
+    # set true if output nodal data and not whole mesh
+    # default is true
+    Output_Only_Nodes: true
     # mark velocity as zero in given region
     Mark_V_0: 
       #####
@@ -62,10 +59,6 @@ Compute:
         # - 1366
         # - 1260
         # - 654
-    # compute magnitude of strain tensor
-    Magnitude_Strain_Tensor:
-      # specify component if any
-      Component: xx
     # symmetrize velocity along given line of symmetry
     Symmetrize_V:
       # specify if this operation needs to be combined with
@@ -75,7 +68,21 @@ Compute:
       Axis: y
       # specify the location of line
       Axis_Line: 0.05
+  Set_2:
+    Tag_Filename: strain
+    Output_Only_Nodes: true
+    # compute magnitude of strain tensor
+    Magnitude_Strain_Tensor:
+      # specify component if any
+      Component: xx
     # compute strain and stress
     Strain_Stress: true
+  Set_3:
+    Tag_Filename: crack_tip
+    Output_Only_Nodes: true
+    # compute damage function Z
+    Damage_Z: true
+    # compute crack tip location and velocity
+    Crack_Tip: true
 HPX:
   Partitions: 1
