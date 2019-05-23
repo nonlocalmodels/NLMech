@@ -40,11 +40,14 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
   // 2. Gc or KIc
   // For bond-based, Poisson's ratio is fixed to 1/4
   //
-  if (deck->d_matData.d_E < 0. && deck->d_matData.d_K < 0.) {
+  if (util::compare::definitelyLessThan(deck->d_matData.d_E, 0.) &&
+      util::compare::definitelyLessThan(deck->d_matData.d_K, 0.)) {
     std::cerr << "Error: Require either Young's modulus E or Bulk modulus K"
                  " to compute the RNP bond-based peridynamic parameters.\n";
     exit(1);
-  } else if (deck->d_matData.d_E > 0. && deck->d_matData.d_K > 0.) {
+  }
+  if (util::compare::definitelyGreaterThan(deck->d_matData.d_E, 0.) &&
+      util::compare::definitelyGreaterThan(deck->d_matData.d_K, 0.)) {
     std::cout << "Warning: Both Young's modulus E and Bulk modulus K are "
                  "provided.\n";
     std::cout << "Warning: To compute the RNP bond-based peridynamic "
@@ -52,12 +55,14 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
     std::cout << "Warning: Selecting Young's modulus to compute parameters.\n";
   }
 
-  if (deck->d_matData.d_Gc < 0. && deck->d_matData.d_KIc < 0.) {
+  if (util::compare::definitelyLessThan(deck->d_matData.d_Gc, 0.) &&
+      util::compare::definitelyLessThan(deck->d_matData.d_KIc, 0.)) {
     std::cerr << "Error: Require either critical energy release rate Gc or "
                  "critical stress intensity factor KIc to compute the RNP "
                  "bond-based peridynamic parameters.\n";
     exit(1);
-  } else if (deck->d_matData.d_Gc > 0. && deck->d_matData.d_KIc > 0.) {
+  } else if (util::compare::definitelyGreaterThan(deck->d_matData.d_Gc, 0.) &&
+             util::compare::definitelyGreaterThan(deck->d_matData.d_KIc, 0.)) {
     std::cout << "Warning: Both critical energy release rate Gc and critical "
                  "stress intensity factor KIc are provided.\n";
     std::cout << "Warning: To compute the RNP bond-based peridynamic "

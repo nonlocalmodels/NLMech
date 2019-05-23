@@ -4,25 +4,28 @@
 // (See accompanying file LICENSE.txt)
 
 #include "fe2D.h"
-#include "inp/input.h"          // definition of Input
-#include "inp/decks/materialDeck.h"       // definition of MaterialDeck
-#include "inp/decks/modelDeck.h"          // definition of ModelDeck
-#include "inp/decks/outputDeck.h"         // definition of OutputDeck
-#include "inp/policy.h"         // definition of Policy
-#include "rw/reader.h"          // definition of readVtuFileRestart
-#include "rw/writer.h"          // definition of VtkWriterInterface
-#include "util/compare.h"       // compare real numbers
-#include "util/feElementDefs.h" // definition of fe element type
-#include "util/point.h"         // definition of Point3
-#include "util/matrix.h"        // definition of SymMatrix3
-#include "fe/triElem.h"         // definition of TriElem
-#include "fe/quadElem.h"        // definition of QuadElem
-#include "fe/mesh.h"            // definition of Mesh
-#include "material/pdMaterial.h"          // definition of Material
-#include "util/utilGeom.h"      // definition of isPointInsideRectangle
+#include "fe/mesh.h"                // definition of Mesh
+#include "fe/quadElem.h"            // definition of QuadElem
+#include "fe/triElem.h"             // definition of TriElem
+#include "geometry/fracture.h"      // definition of Fracture
+#include "inp/decks/materialDeck.h" // definition of MaterialDeck
+#include "inp/decks/modelDeck.h"    // definition of ModelDeck
+#include "inp/decks/outputDeck.h"   // definition of OutputDeck
+#include "inp/input.h"              // definition of Input
+#include "inp/policy.h"             // definition of Policy
+#include "material/pdMaterial.h"    // definition of Material
+#include "rw/reader.h"              // definition of readVtuFileRestart
+#include "rw/writer.h"              // definition of VtkWriterInterface
+#include "util/compare.h"           // compare real numbers
+#include "util/feElementDefs.h"     // definition of fe element type
+#include "util/matrix.h"            // definition of SymMatrix3
+#include "util/point.h"             // definition of Point3
+#include "util/utilGeom.h"          // definition of isPointInsideRectangle
 #include <cmath>
+#include <geometry/fracture.h>
+#include <hpx/include/parallel_algorithm.hpp>
 #include <iostream>
-#include <yaml-cpp/yaml.h>      // YAML reader
+#include <yaml-cpp/yaml.h> // YAML reader
 
 namespace {
 
@@ -46,7 +49,6 @@ struct InstructionData {
   std::vector<size_t> d_markVNodes;
 
   bool d_computeStrain;
-  bool d_outStrainAtElements;
 
   bool d_magStrainTensor;
   std::string d_magStrainComp;
@@ -65,9 +67,8 @@ struct InstructionData {
         d_markVInRectGiven(false),
         d_markVRect(std::make_pair(util::Point3(), util::Point3())),
         d_markVPtsAreInCurrentConfig(false), d_computeStrain(false),
-        d_outStrainAtElements(false), d_magStrainTensor(false),
-        d_symmetrizeV(false), d_combineMarkV(false), d_symmLine(0.),
-        d_crackTip(false){};
+        d_magStrainTensor(false), d_symmetrizeV(false), d_combineMarkV(false),
+        d_symmLine(0.), d_crackTip(false){};
 };
 
 void readInputFile(YAML::Node config, const std::string &set,
@@ -158,13 +159,8 @@ void readInputFile(YAML::Node config, const std::string &set,
   //
   // Compute strain and stress
   //
-  if (config["Compute"][set]["Strain_Stress"]) {
-    data->d_computeStrain = true;
-    if (config["Compute"][set]["Strain_Stress"]["Output_At_Elements"])
-      data->d_outStrainAtElements =
-          config["Compute"][set]["Strain_Stress"]["Output_At_Elements"]
-              .as<bool>();
-  }
+  if (config["Compute"][set]["Strain_Stress"])
+    data->d_computeStrain = config["Compute"][set]["Strain_Stress"].as<bool>();
 
   //
   // Compute magnitude of strain and stress
@@ -254,6 +250,36 @@ size_t findNode(const util::Point3 &x, const std::vector<util::Point3>
   return size_t(i_found);
 }
 
+void compute_damage(inp::Input *deck, inp::ModelDeck *model_deck,
+    material::pd::Material *material, fe::Mesh
+*mesh, const std::vector<util::Point3> *u, std::vector<float>
+    *Z) {
+  Z = new std::vector<float>(mesh->getNumNodes(), 0.);
+  auto f = hpx::parallel::for_loop(
+      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      mesh->getNumNodes(), [Z, mesh, material, model_deck, u]
+          (boost::uint64_t i) {
+        auto xi = mesh->getNode(i);
+        for (size_t j = 0; j < mesh->getNumNodes(); j++) {
+          if (util::compare::definitelyGreaterThan(
+              xi.dist(mesh->getNode(j)), model_deck->d_horizon) ||
+              j == i)
+            continue;
+
+          auto xj = mesh->getNode(j);
+          if (util::compare::definitelyGreaterThan(xj.dist(xi),
+                                                   1.0E-10)) {
+            auto Sr = std::abs(material->getS(xj - xi, (*u)[j] - (*u)[i])) /
+                material->getSc(xj.dist(xi));
+
+            if (util::compare::definitelyLessThan((*Z)[i], Sr))
+              (*Z)[i] = Sr;
+          }
+        } // loop over neighbors
+      }); // parallel loop over nodes
+  f.get();
+}
+
 } // namespace
 
 void tools::pp::fe2D(const std::string &filename) {
@@ -267,7 +293,7 @@ void tools::pp::fe2D(const std::string &filename) {
 
   // read input data
   std::cout << "PP_fe2D: Reading simulation input file.\n";
-  auto *deck = new inp::Input(filename);
+  auto *deck = new inp::Input(sim_filename);
   auto model_deck = deck->getModelDeck();
   auto output_deck = deck->getOutputDeck();
 
@@ -291,9 +317,11 @@ void tools::pp::fe2D(const std::string &filename) {
   std::string out_path = "./"; // default
   if (config["Output"]["Path"])
     out_path = config["Output"]["Path"].as<std::string>();
-  std::string out_filename = "pp"; // default
+  std::string out_filename;
   if (config["Output"]["Filename"])
-    out_filename = config["Output"]["Filename"].as<std::string>();
+    out_filename = out_path + "/" + config["Output"]["Filename"].as<std::string>();
+  else
+    out_filename = out_path + "/pp";
 
   // over ride final time step
   if (config["Override_Simulation_Input"]["Time_Steps"])
@@ -310,14 +338,48 @@ void tools::pp::fe2D(const std::string &filename) {
   std::cout << "PP_fe2D: Creating mesh.\n";
   auto *mesh = new fe::Mesh(deck->getMeshDeck());
 
+  // material deck and material
+  auto *material = new material::pd::Material(
+      deck->getMaterialDeck(), model_deck->d_dim, model_deck->d_horizon);
+  auto mat_deck = material->getMaterialDeck();
+  // if material deck does not have valid material properties,
+  // search the properties in the pp input file
+  if (mat_deck->d_matData.d_nu < 0. ||
+      mat_deck->d_matData.d_E < 0.) {
+    if (config["Material"]["Poisson_Ratio"])
+      mat_deck->d_matData.d_nu =
+          config["Material"]["Poisson_Ratio"].as<double>();
+    else {
+      std::cerr
+          << "Error: Need Poisson ratio for strain and stress "
+             "computation.\n";
+      exit(1);
+    }
+    if (config["Material"]["E"])
+      mat_deck->d_matData.d_E =
+          config["Material"]["E"].as<double>();
+    else {
+      std::cerr
+          << "Error: Need Young's modulus for strain and stress "
+             "computation.\n";
+      exit(1);
+    }
+
+    // compute lambda and mu
+    mat_deck->d_matData.d_lambda = mat_deck->d_matData.toLambdaE(
+        mat_deck->d_matData.d_E, mat_deck->d_matData.d_nu);
+    mat_deck->d_matData.d_mu = mat_deck->d_matData.d_lambda;
+  }
+
   // loop over output files
   for (size_t out=start_file; out<=end_file; out++) {
+    std::cout << "PP_fe2D: Processing output file = " << out << "\n";
     // get number of compute set
     auto num_compute = config["Compute"]["Sets"].as<size_t>();
 
     // append path to filename
-    auto sim_results_file =
-        source_path + "/" + filename_to_read + "_" + std::to_string(out);
+    auto sim_results_file = source_path + "/" + filename_to_read + "_" +
+                            std::to_string(out) + ".vtu";
 
     // just read one file and do operations and move to the next compute set
     std::vector<util::Point3> u;
@@ -328,6 +390,7 @@ void tools::pp::fe2D(const std::string &filename) {
 
     // loop over compute sets and do as instructed in input file
     for (size_t c = 1; c <= num_compute; c++) {
+      std::cout << "  PP_fe2D: Processing compute set = " << c << "\n";
 
       // get string to read instruction
       auto set = "Set_" + std::to_string(c);
@@ -340,7 +403,7 @@ void tools::pp::fe2D(const std::string &filename) {
       auto mesh_appended = false;
 
       // open a output vtu file
-      auto writer = rw::writer::VtkWriterInterface(out_path + out_filename +
+      auto writer = rw::writer::VtkWriterInterface(out_filename +
           data.d_tagFilename);
 
       //
@@ -351,10 +414,14 @@ void tools::pp::fe2D(const std::string &filename) {
       if (data.d_scaleUOut) {
 
         std::vector<util::Point3> u_temp(mesh->getNumNodes(), util::Point3());
-        for (size_t i = 0; i < mesh->getNumNodes(); i++)
-          u_temp[i] =
-              util::Point3(data.d_scaleU * u[i].d_x, data.d_scaleU * u[i].d_y,
-                           data.d_scaleU * u[i].d_z);
+        auto f = hpx::parallel::for_loop(
+            hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+            mesh->getNumNodes(), [&u_temp, data, u](boost::uint64_t i) {
+              u_temp[i] =
+                  util::Point3(data.d_scaleU * u[i].d_x, data.d_scaleU * u[i].d_y,
+                               data.d_scaleU * u[i].d_z);
+            });
+        f.get();
 
         // append mesh (check if only nodes need to be written)
         if (data.d_outOnlyNodes)
@@ -383,13 +450,20 @@ void tools::pp::fe2D(const std::string &filename) {
 
       if (data.d_markVAsZero) {
         v_mark = v;
-        if (data.d_markVInRectGiven)
-          for (size_t i = 0; i < mesh->getNumNodes(); i++)
-            if (util::geometry::isPointInsideRectangle(
-                    mesh->getNode(i), data.d_markVRect.first[0],
-                    data.d_markVRect.second[0], data.d_markVRect.first[1],
-                    data.d_markVRect.second[1]))
-              v_mark[i] = util::Point3();
+
+        if (data.d_markVInRectGiven) {
+          auto f = hpx::parallel::for_loop(
+              hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+              mesh->getNumNodes(), [&v_mark, data, mesh](boost::uint64_t i) {
+
+                if (util::geometry::isPointInsideRectangle(
+                    mesh->getNode(i), data.d_markVRect.first.d_x,
+                    data.d_markVRect.second.d_x, data.d_markVRect.first.d_y,
+                    data.d_markVRect.second.d_y))
+                  v_mark[i] = util::Point3();
+              });
+          f.get();
+        }
 
         if (!data.d_markVPts.empty())
           for (auto x : data.d_markVPts) {
@@ -436,37 +510,44 @@ void tools::pp::fe2D(const std::string &filename) {
         if (!data.d_combineMarkV)
           v_mark = v;
 
-        for (size_t i = 0; i < mesh->getNumNodes(); i++) {
+        auto f = hpx::parallel::for_loop(
+            hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+            mesh->getNumNodes(), [&v_mark, data, mesh](boost::uint64_t i) {
+              auto x = mesh->getNode(i);
 
-          auto x = mesh->getNode(i);
+              bool proceed = true;
+              if (data.d_symmAxis == "y" &&
+                  util::compare::definitelyLessThan(x.d_x,
+                                                    data.d_symmLine + 1.0E-8))
+                proceed = false;
 
-          if (data.d_symmAxis == "y" &&
-              util::compare::definitelyLessThan(x.d_x, data.d_symmLine + 1.0E-8))
-            continue;
+              if (data.d_symmAxis == "x" &&
+                  util::compare::definitelyLessThan(x.d_y,
+                                                    data.d_symmLine + 1.0E-8))
+                proceed = false;
 
-          if (data.d_symmAxis == "x" &&
-              util::compare::definitelyLessThan(x.d_y, data.d_symmLine + 1.0E-8))
-            continue;
+              if (proceed) {
+                // find the coordinate of point from where we want to copy
+                // the velocity at this node.
+                // Mirror image of point
+                auto search_x = x;
+                if (data.d_symmAxis == "y")
+                  search_x.d_x = data.d_symmLine - (x.d_x - data.d_symmLine);
+                if (data.d_symmAxis == "x")
+                  search_x.d_y = data.d_symmLine - (x.d_y - data.d_symmLine);
 
-          // find the coordinate of point from where we want to copy
-          // the velocity at this node.
-          // Mirror image of point
-          auto search_x = x;
-          if (data.d_symmAxis == "y")
-            search_x.d_x = data.d_symmLine - (x.d_x - data.d_symmLine);
-          if (data.d_symmAxis == "x")
-            search_x.d_y = data.d_symmLine - (x.d_y - data.d_symmLine);
+                // search for node at search_x and obtain velocity
+                size_t i_found = findNode(search_x, mesh->getNodesP());
 
-          // search for node at search_x and obtain velocity
-          size_t i_found = findNode(search_x, mesh->getNodesP());
-
-          // write velocity
-          v_mark[i] = v_mark[i_found];
-          if (data.d_symmAxis == "y")
-            v_mark[i].d_x *= -1.;
-          if (data.d_symmAxis == "x")
-            v_mark[i].d_y *= -1.;
-        }
+                // write velocity
+                v_mark[i] = v_mark[i_found];
+                if (data.d_symmAxis == "y")
+                  v_mark[i].d_x *= -1.;
+                if (data.d_symmAxis == "x")
+                  v_mark[i].d_y *= -1.;
+              }
+            }); // parallel for loop
+        f.get();
 
         if (!mesh_appended) {
           if (data.d_outOnlyNodes)
@@ -481,25 +562,21 @@ void tools::pp::fe2D(const std::string &filename) {
         // append velocity
         writer.appendPointData("Symm_Velocity", &v_mark);
       }
+      // clear the v_mark data
+      if (!v_mark.empty())
+        v_mark.shrink_to_fit();
 
       //
-      // operation : Compute strain
+      // operation : Compute strain and magnitude of strain
       //
       // Steps: Call CCMFE class and compute strain and stress
       //
-      std::vector<util::SymMatrix3> strain;
-      std::vector<util::SymMatrix3> stress;
       if (data.d_computeStrain) {
-
-        auto *material = new material::pd::Material(
-            deck->getMaterialDeck(), model_deck->d_dim, model_deck->d_horizon);
-        auto mat_deck = material->getMaterialDeck();
-
-        //
-        // compute strain and stress
-        //
-        strain.resize(mesh->getNumElements());
-        stress.resize(mesh->getNumElements());
+        std::vector<util::SymMatrix3> strain(mesh->getNumElements(),
+          util::SymMatrix3());
+        std::vector<util::SymMatrix3> stress(mesh->getNumElements(),
+                                             util::SymMatrix3());
+        std::vector<float> magS;
 
         // get Quadrature
         fe::BaseElem *quad;
@@ -514,75 +591,81 @@ void tools::pp::fe2D(const std::string &filename) {
           exit(1);
         }
 
-        for (size_t e = 0; e < mesh->getNumElements(); e++) {
-          auto ssn = util::SymMatrix3();
-          auto sss = util::SymMatrix3();
+        // compute strain and stress
+        auto f = hpx::parallel::for_loop(
+            hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+            mesh->getNumElements(),
+            [&strain, &stress, data, mesh, quad, mat_deck, u](boost::uint64_t
+            e) {
+              auto ssn = util::SymMatrix3();
+              auto sss = util::SymMatrix3();
 
-          // get ids of nodes of element, coordinate of nodes, 1st order quad
-          // data, and first quad data
-          auto id_nds = mesh->getElementConnectivity(e);
-          auto nds = mesh->getElementConnectivityNodes(e);
-          auto qds = quad->getQuadPoints(nds);
-          auto qd0 = qds[0];
+              // get ids of nodes of element, coordinate of nodes, 1st order
+              // quad data, and first quad data
+              auto id_nds = mesh->getElementConnectivity(e);
+              auto nds = mesh->getElementConnectivityNodes(e);
+              auto qds = quad->getQuadPoints(nds);
+              auto qd0 = qds[0];
 
-          // compute strain in xy plane
-          for (size_t i = 0; i < id_nds.size(); i++) {
-            auto id = id_nds[i];
-            auto ui = u[id];
+              // compute strain in xy plane
+              for (size_t i = 0; i < id_nds.size(); i++) {
+                auto id = id_nds[i];
+                auto ui = u[id];
 
-            ssn.d_xx += ui.d_x * qd0.d_derShapes[i][0];
-            ssn.d_yy += ui.d_y * qd0.d_derShapes[i][1];
-            ssn.d_xy += 0.5 * ui.d_x * qd0.d_derShapes[i][1];
-            ssn.d_xy += 0.5 * ui.d_y * qd0.d_derShapes[i][0];
-          }
+                ssn.d_xx += ui.d_x * qd0.d_derShapes[i][0];
+                ssn.d_yy += ui.d_y * qd0.d_derShapes[i][1];
+                ssn.d_xy += 0.5 * ui.d_x * qd0.d_derShapes[i][1];
+                ssn.d_xy += 0.5 * ui.d_y * qd0.d_derShapes[i][0];
+              }
 
-          // if material deck does not have valid material properties, search
-          // the properties in the pp input file
-          if (mat_deck->d_matData.d_nu < 0. || mat_deck->d_matData.d_E < 0.) {
-            if (config["Material"]["Poisson_Ratio"])
-              mat_deck->d_matData.d_nu =
-                  config["Material"]["Poisson_Ratio"].as<double>();
-            else {
-              std::cerr << "Error: Need Poisson ratio for strain and stress "
-                           "computation.\n";
-              exit(1);
-            }
-            if (config["Material"]["E"])
-              mat_deck->d_matData.d_E = config["Material"]["E"].as<double>();
-            else {
-              std::cerr << "Error: Need Young's modulus for strain and stress "
-                           "computation.\n";
-              exit(1);
-            }
+              if (mat_deck->d_isPlaneStrain)
+                ssn.d_zz = -mat_deck->d_matData.d_nu * (ssn.d_xx + ssn.d_yy) /
+                           (1. - mat_deck->d_matData.d_nu);
 
-            // compute lambda and mu
-            mat_deck->d_matData.d_lambda = mat_deck->d_matData.toLambdaE(
-                mat_deck->d_matData.d_E, mat_deck->d_matData.d_nu);
-            mat_deck->d_matData.d_mu = mat_deck->d_matData.d_lambda;
-          }
+              // compute stress
+              auto trace = ssn.d_xx + ssn.d_yy + ssn.d_zz;
+              sss.d_xx = mat_deck->d_matData.d_lambda * trace * 1. +
+                         2. * mat_deck->d_matData.d_mu * ssn.d_xx;
+              sss.d_xy = 2. * mat_deck->d_matData.d_mu * ssn.d_xy;
+              sss.d_xz = 2. * mat_deck->d_matData.d_mu * ssn.d_xz;
 
-          if (mat_deck->d_isPlaneStrain)
-            ssn.d_zz = -mat_deck->d_matData.d_nu * (ssn.d_xx + ssn.d_yy) /
-                       (1. - mat_deck->d_matData.d_nu);
+              sss.d_yy = mat_deck->d_matData.d_lambda * trace * 1. +
+                         2. * mat_deck->d_matData.d_mu * ssn.d_yy;
+              sss.d_yz = 2. * mat_deck->d_matData.d_mu * ssn.d_yz;
+              if (!mat_deck->d_isPlaneStrain)
+                sss.d_zz = mat_deck->d_matData.d_nu * (sss.d_xx + sss.d_yy);
 
-          // compute stress
-          auto trace = ssn.d_xx + ssn.d_yy + ssn.d_zz;
-          sss.d_xx = mat_deck->d_matData.d_lambda * trace * 1. +
-                     2. * mat_deck->d_matData.d_mu * ssn.d_xx;
-          sss.d_xy = 2. * mat_deck->d_matData.d_mu * ssn.d_xy;
-          sss.d_xz = 2. * mat_deck->d_matData.d_mu * ssn.d_xz;
+              strain[e] = ssn;
+              stress[e] = sss;
+            }); // parallel loop over elements
+        f.get();
 
-          sss.d_yy = mat_deck->d_matData.d_lambda * trace * 1. +
-                     2. * mat_deck->d_matData.d_mu * ssn.d_yy;
-          sss.d_yz = 2. * mat_deck->d_matData.d_mu * ssn.d_yz;
-          if (!mat_deck->d_isPlaneStrain)
-            sss.d_zz = mat_deck->d_matData.d_nu * (sss.d_xx + sss.d_yy);
-        } // loop over elements
+        // compute magnitude of strain
+        if (data.d_magStrainTensor) {
+          magS = std::vector<float>(strain.size(), 0.);
+          auto f2 = hpx::parallel::for_loop(
+              hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+              mesh->getNumElements(), [&magS, strain, data](boost::uint64_t e) {
+                if (data.d_magStrainComp.empty()) {
+                  magS[e] = std::abs(strain[e].d_xx);
+                  magS[e] += std::abs(strain[e].d_yy);
+                  magS[e] += std::abs(strain[e].d_zz);
+                  magS[e] += std::abs(strain[e].d_xy);
+                  magS[e] += std::abs(strain[e].d_xz);
+                  magS[e] += std::abs(strain[e].d_yz);
+                } else if (data.d_magStrainComp == "xx") {
+                  magS[e] = std::abs(strain[e].d_xx);
+                } else if (data.d_magStrainComp == "yy") {
+                  magS[e] = std::abs(strain[e].d_yy);
+                }
+              });
+          f2.get();
+        }
 
         //
         // output strain/stress data
         //
-        if (data.d_outStrainAtElements) {
+        if (!data.d_outOnlyNodes) {
 
           // append mesh
           if (!mesh_appended) {
@@ -594,6 +677,18 @@ void tools::pp::fe2D(const std::string &filename) {
 
           writer.appendCellData("Strain_Tensor", &strain);
           writer.appendCellData("Stress_Tensor", &stress);
+          if (data.d_magStrainTensor)
+            writer.appendCellData("Mag_Strain", &magS);
+
+//          // mark magnitude of strain if asked
+//          if (!data.d_markMagStrainCells.empty()) {
+//            for (auto cell : data.d_markMagStrainCells)
+//              magS[cell.first] = cell.second;
+//
+//            if (data.d_magStrainTensor)
+//              writer.appendCellData("Mark_Mag_Strain", &magS);
+//          }
+
         } else {
 
           // compute 1st order quad points and store them (quad points in
@@ -601,95 +696,103 @@ void tools::pp::fe2D(const std::string &filename) {
           std::vector<util::Point3> elem_quads =
               std::vector<util::Point3>(mesh->getNumElements(), util::Point3());
 
-          for (size_t e = 0; e < mesh->getNumElements(); e++) {
-            auto nds = mesh->getElementConnectivity(e);
-            std::vector<util::Point3> nds_current(nds.size(), util::Point3());
-            for (size_t j = 0; j < nds.size(); j++)
-              nds_current[j] = mesh->getNode(nds[j]) + u[nds[j]];
+          auto f2 = hpx::parallel::for_loop(
+              hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+              mesh->getNumElements(),
+              [&elem_quads, mesh, quad, u](boost::uint64_t e) {
+                auto nds = mesh->getElementConnectivity(e);
+                std::vector<util::Point3> nds_current(nds.size(),
+                                                      util::Point3());
+                for (size_t j = 0; j < nds.size(); j++)
+                  nds_current[j] = mesh->getNode(nds[j]) + u[nds[j]];
 
-            std::vector<fe::QuadData> qds = quad->getQuadPoints(nds_current);
-            // store first quad point
-            elem_quads[e] = qds[0].d_p;
-          }
+                std::vector<fe::QuadData> qds =
+                    quad->getQuadPoints(nds_current);
+                // store first quad point
+                elem_quads[e] = qds[0].d_p;
+              });
+          f2.get();
 
           // create unstructured vtk output
-          std::string fname = data.d_filename + "_quads.vtu";
+          std::string fname = out_filename + data.d_tagFilename +
+                              "_quads_" + std::to_string(out);
           auto writer1 = rw::writer::VtkWriterInterface(fname);
           writer1.appendNodes(&elem_quads);
           writer1.appendPointData("Strain_Tensor", &strain);
           writer1.appendPointData("Stress_Tensor", &stress);
+          if (data.d_magStrainTensor)
+            writer1.appendPointData("Mag_Strain", &magS);
+
+          // mark magnitude of strain if asked
+          if (!data.d_markMagStrainCells.empty()) {
+            for (auto cell : data.d_markMagStrainCells)
+              magS[cell.first] = cell.second;
+
+            if (data.d_magStrainTensor)
+              writer1.appendPointData("Mark_Mag_Strain", &magS);
+          }
           writer1.close();
         }
       }
 
       //
-      // operation : Compute magnitude of strain
+      // operation : Compute crack tip location and velocity
       //
-      // Steps: Create new data and store magnitude of strain. Either
-      // compute sum of absolute value of all components or the component
-      // specified by the input file.
-      //
-      if (data.d_magStrainTensor) {
-        std::vector<float> magS = std::vector<float>(strain.size(), 0.);
-        for (size_t i = 0; i < strain.size(); i++) {
-          if (data.d_magStrainComp.empty()) {
-            magS[i] = std::abs(strain[i].d_xx);
-            magS[i] += std::abs(strain[i].d_yy);
-            magS[i] += std::abs(strain[i].d_zz);
-            magS[i] += std::abs(strain[i].d_xy);
-            magS[i] += std::abs(strain[i].d_xz);
-            magS[i] += std::abs(strain[i].d_yz);
-          } else if (data.d_magStrainComp == "xx") {
-            magS[i] = std::abs(strain[i].d_xx);
-          } else if (data.d_magStrainComp == "yy") {
-            magS[i] = std::abs(strain[i].d_yy);
-          }
-        }
+      std::vector<float> damage_Z;
+      if (data.d_crackTip) {
 
-        // append mesh
-        if (!mesh_appended) {
-          writer.appendMesh(mesh->getNodesP(), mesh->getElementType(),
-                            mesh->getElementConnectivitiesP(), &u);
+        // get displacement at n-1
+        auto n = out * output_deck->d_dtOut - 1;
+        std::cout << "Here 1, n = " << n << "\n";
+        auto time = n * model_deck->d_dt;
+        auto f = hpx::parallel::for_loop(
+            hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+            mesh->getNumNodes(), [&u, v, model_deck](boost::uint64_t i) {
+              u[i] -= util::Point3(model_deck->d_dt * v[i].d_x,
+                                   model_deck->d_dt * v[i].d_y,
+                                   model_deck->d_dt * v[i].d_z);
+            });
+        f.get();
 
-          mesh_appended = true;
-        }
+        // compute damage at n-1
+        compute_damage(deck, model_deck, material, mesh, &u, &damage_Z);
+        std::cout << "Here 1 size Z = " << damage_Z.size() << "\n";
 
-        // append new cell data
-        writer.appendCellData("Mag_Strain", &magS);
+        // compute crack tip location and crack tip velocity
+        auto fracture_deck = deck->getFractureDeck();
+        fracture_deck->d_dtCrackOut = output_deck->d_dtOut;
+        fracture_deck->d_dtCrackVelocity = 1;
+        auto fracture = new geometry::Fracture(fracture_deck);
+        fracture->updateCrackAndOutput(n, time, out_path, model_deck->d_horizon,
+                                       mesh->getNodesP(), &u, &damage_Z);
 
-        // mark strains of certain cells prescribed value if asked
-        for (auto cell : data.d_markMagStrainCells)
-          magS[cell.first] = cell.second;
+        // get current displacement
+        n += 1;
+        std::cout << "Here 1, n = " << n << "\n";
+        time += model_deck->d_dt;
+        auto f2 = hpx::parallel::for_loop(
+            hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+            mesh->getNumNodes(), [&u, v, model_deck](boost::uint64_t i) {
+              u[i] += util::Point3(model_deck->d_dt * v[i].d_x,
+                                   model_deck->d_dt * v[i].d_y,
+                                   model_deck->d_dt * v[i].d_z);
+            });
+        f2.get();
 
-        // append new cell data
-        writer.appendCellData("Mark_Mag_Strain", &magS);
+        // compute damage at current displacement
+        compute_damage(deck, model_deck, material, mesh, &u, &damage_Z);
+        fracture->updateCrackAndOutput(n, time, out_path, model_deck->d_horizon,
+                                       mesh->getNodesP(), &u, &damage_Z);
       }
 
       //
       // operation : Compute damage at node
       //
       if (data.d_damageAtNodes) {
-        auto *material = new material::pd::Material(
-            deck->getMaterialDeck(), model_deck->d_dim, model_deck->d_horizon);
 
-        std::vector<float> damage_Z(mesh->getNumNodes(), 0.);
-        for (size_t i=0; i<mesh->getNumNodes(); i++) {
-          auto xi = mesh->getNode(i);
-          for (size_t j = 0; j < mesh->getNumNodes(); j++) {
-            if (util::compare::definitelyGreaterThan(xi.dist(mesh->getNode(j)
-            ), model_deck->d_horizon) || j == i)
-              continue;
-
-            auto xj = mesh->getNode(j);
-            if (util::compare::definitelyGreaterThan(xj.dist(xi), 1.0E-10)) {
-              auto Sr = std::abs(material->getS(xj - xi, u[j] - u[i])) /
-                  material->getSc(xj.dist(xi));
-
-              if(util::compare::definitelyLessThan(damage_Z[i], Sr))
-                damage_Z[i] = Sr;
-            }
-          } // loop over neighbors
-        } // loop over nodes
+        // compute if it is not computed already
+        if (damage_Z.empty())
+          compute_damage(deck, model_deck, material, mesh, &u, &damage_Z);
 
         if (!mesh_appended) {
           if (data.d_outOnlyNodes)
@@ -704,12 +807,9 @@ void tools::pp::fe2D(const std::string &filename) {
         writer.appendPointData("Damage_Z", &damage_Z);
       }
 
-      //
-      // operation : Compute crack tip location and velocity
-      //
-      if (data.d_crackTip) {
-
-      }
+      // clear data
+      if (!damage_Z.empty())
+        damage_Z.shrink_to_fit();
 
       //
       // close file

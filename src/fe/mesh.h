@@ -194,6 +194,11 @@ public:
    */
   void setFixity(const size_t &i, const unsigned int &dof, const bool &flag);
 
+  /*!
+   * @brief Clear element data to save memory
+   */
+  void clearElementData();
+
   /** @}*/
 
 private:

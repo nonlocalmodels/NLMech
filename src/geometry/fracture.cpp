@@ -24,6 +24,9 @@ struct CrackOutData {
 static auto crackOutData = CrackOutData();
 } // namespace
 
+geometry::Fracture::Fracture(inp::FractureDeck *deck)
+    : d_fractureDeck_p(deck){}
+
 geometry::Fracture::Fracture(
     inp::FractureDeck *deck, const std::vector<util::Point3> *nodes,
     const std::vector<std::vector<size_t>> *neighbor_list) {
@@ -178,7 +181,6 @@ size_t geometry::Fracture::getDtCrackOut() {
 void geometry::Fracture::updateCrackAndOutput(
     const size_t &n, const double &time, const std::string &output_path,
     const double &horizon, const std::vector<util::Point3> *nodes,
-    const std::vector<std::vector<size_t>> *neighbor_list,
     std::vector<util::Point3> *u, std::vector<float> *Z) {
   // Idea: Suppose we output crack tip and crack velocity data every dt
   // interval of time step and suppose we use dt_v time step interval to
@@ -196,36 +198,39 @@ void geometry::Fracture::updateCrackAndOutput(
   if (d_fractureDeck_p->d_dtCrackOut == 0)
     return;
 
-  if ((n >= d_fractureDeck_p->d_dtCrackOut) &&
-      (d_fractureDeck_p->d_dtCrackVelocity < d_fractureDeck_p->d_dtCrackOut) &&
+  std::cout << "Dtout = " << d_fractureDeck_p->d_dtCrackOut << ", DtVel = "
+  << d_fractureDeck_p->d_dtCrackVelocity << "\n";
+
+  if ((d_fractureDeck_p->d_dtCrackVelocity < d_fractureDeck_p->d_dtCrackOut) &&
       ((n + d_fractureDeck_p->d_dtCrackVelocity) %
            d_fractureDeck_p->d_dtCrackOut ==
-       0))
-    updateCrack(n, time, horizon, nodes, neighbor_list, u, Z);
+       0)) {
+    std::cout << "Enterred for n = " << n << "\n";
+    updateCrack(n, time, horizon, nodes, u, Z);
+  } else
+    std::cout << "Not enterred for n = " << n << "\n";
 
   if (n % d_fractureDeck_p->d_dtCrackOut == 0) {
-    updateCrack(n, time, horizon, nodes, neighbor_list, u, Z);
-    output(n, time, output_path, nodes, neighbor_list, u);
+    updateCrack(n, time, horizon, nodes, u, Z);
+    output(n, time, output_path, nodes, u);
   }
 }
 
 void geometry::Fracture::updateCrack(
     const size_t &n, const double &time, const double &horizon,
     const std::vector<util::Point3> *nodes,
-    const std::vector<std::vector<size_t>> *neighbor_list,
     std::vector<util::Point3> *u, std::vector<float> *Z) {
 
+  std::cout << "Here 2 n = " << n << "\n";
   // loop over crack lines
+  size_t count = 0;
   for (auto &crack : d_fractureDeck_p->d_cracks) {
+
     if (crack.d_o == 0)
       continue;
 
     auto pb = crack.d_pb;
     auto pt = crack.d_pt;
-
-    // points to store new up and down crack points
-    auto new_pb = pb;
-    auto new_pt = pt;
 
     // search length
     double search_length = 1000.;
@@ -261,7 +266,12 @@ void geometry::Fracture::updateCrack(
     float Zb = 1000.;
     float Zt = 1000.;
 
+    std::cout << "Here 2 count = " << count++ << "\n";
+    std::cout << "Num nodes = " << nodes->size() << ", size u = " << u->size
+    () << ", size Z = " << Z->size() << "\n";
     for (size_t i = 0; i < nodes->size(); i++) {
+      if ( i < 20 )
+        std::cout << "Here 2 i = " << i << "\n";
       auto xi = (*nodes)[i];
       auto yi = xi + (*u)[i];
       auto damage = (*Z)[i];
@@ -282,22 +292,25 @@ void geometry::Fracture::updateCrack(
         Zb = damage;
       }
     } // loop over nodes
+    std::cout << "Here 2 count = " << count++ << "\n";
+    std::cout << "it = " << it << " Zt = " << Zt << "\n";
+    std::cout << "ib = " << ib << " Zb = " << Zb << "\n";
 
     crack.d_pt = (*nodes)[it] + (*u)[it];
     crack.d_pb = (*nodes)[ib] + (*u)[ib];
 
     auto diff = crack.d_pt - pt;
     auto delta_t = time - crack.d_time;
-    crack.d_lt += diff.length() / delta_t;
+    crack.d_lt += diff.length();
+    crack.d_l += diff.length();
     crack.d_vt = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
                               diff.d_z / delta_t);
 
     diff = crack.d_pb - pb;
-    crack.d_lb += diff.length() / (time - crack.d_time);
+    crack.d_lb += diff.length();
+    crack.d_l += diff.length();
     crack.d_vb = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
                               diff.d_z / delta_t);
-
-    crack.d_l += crack.d_lt + crack.d_lb;
 
     // update time
     crackOutData.d_oldTime = crack.d_time;
@@ -308,7 +321,6 @@ void geometry::Fracture::updateCrack(
 void geometry::Fracture::output(
     const size_t &n, const double &time, const std::string &output_path,
     const std::vector<util::Point3> *nodes,
-    const std::vector<std::vector<size_t>> *neighbor_list,
     std::vector<util::Point3> *u) {
 
   // create new file for every 10000 calls to this function

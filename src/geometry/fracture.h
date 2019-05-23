@@ -47,6 +47,12 @@ public:
            const std::vector<std::vector<size_t>> *neighbor_list);
 
   /*!
+   * @brief Constructor
+   * @param deck Input deck which contains user-specified information
+   */
+  explicit Fracture(inp::FractureDeck *deck);
+
+  /*!
    * @brief Sets the bond state
    *
    * @param i Nodal id
@@ -87,7 +93,6 @@ public:
    * @param output_path Path where crack data file will be created
    * @param horizon Horizon
    * @param nodes Reference coordinates of all nodes
-   * @param neighbor_list Neighbor list of nodes
    * @param u Vector of displacement
    * @param Z Vector of damage at nodes
    */
@@ -96,7 +101,6 @@ public:
                        const std::string &output_path,
                        const double &horizon,
                        const std::vector<util::Point3> *nodes,
-                       const std::vector<std::vector<size_t>> *neighbor_list,
                        std::vector<util::Point3> *u, std::vector<float> *Z);
 
   /*!
@@ -125,13 +129,11 @@ private:
    * @param time Current time
    * @param horizon Horizon
    * @param nodes Reference coordinates of all nodes
-   * @param neighbor_list Neighbor list of nodes
    * @param u Vector of displacement
    * @param Z Vector of damage at nodes
    */
   void updateCrack(const size_t &n, const double &time, const double &horizon,
                    const std::vector<util::Point3> *nodes,
-                   const std::vector<std::vector<size_t>> *neighbor_list,
                    std::vector<util::Point3> *u, std::vector<float> *Z);
 
   /*!
@@ -140,13 +142,11 @@ private:
    * @param time Current time
    * @param output_path Path where crack data file will be created
    * @param nodes Reference coordinates of all nodes
-   * @param neighbor_list Neighbor list of nodes
    * @param u Vector of displacement
    */
   void output(const size_t &n, const double &time,
               const std::string &output_path,
               const std::vector<util::Point3> *nodes,
-              const std::vector<std::vector<size_t>> *neighbor_list,
               std::vector<util::Point3> *u);
 
   /*! @brief Interior flags deck */

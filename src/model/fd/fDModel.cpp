@@ -41,6 +41,7 @@ model::FDModel::FDModel(inp::Input *deck)
 
   d_modelDeck_p = deck->getModelDeck();
   d_outputDeck_p = deck->getOutputDeck();
+  d_policy_p = inp::Policy::getInstance(d_input_p->getPolicyDeck());
 
   if (d_modelDeck_p->d_isRestartActive)
     restart(deck);
@@ -90,6 +91,7 @@ void model::FDModel::initHObjects() {
   // read mesh data
   std::cout << "FDModel: Creating mesh.\n";
   d_mesh_p = new fe::Mesh(d_input_p->getMeshDeck());
+  d_mesh_p->clearElementData();
 
   // create neighbor list
   std::cout << "FDModel: Creating neighbor list.\n";
@@ -129,9 +131,6 @@ void model::FDModel::initHObjects() {
   d_material_p = new material::pd::Material(d_input_p->getMaterialDeck(),
                                             d_modelDeck_p->d_dim,
                                             d_modelDeck_p->d_horizon);
-
-  // static class
-  d_policy_p = inp::Policy::getInstance(d_input_p->getPolicyDeck());
 }
 
 void model::FDModel::init() {
@@ -205,7 +204,7 @@ void model::FDModel::integrate() {
     // handle fracture output
     d_fracture_p->updateCrackAndOutput(
         d_n, d_time, d_outputDeck_p->d_path, d_modelDeck_p->d_horizon,
-        d_mesh_p->getNodesP(), d_neighbor_p->getNeighborsP(), &d_u, &d_Z);
+        d_mesh_p->getNodesP(), &d_u, &d_Z);
 
     // handle general output
     if ((d_n % d_outputDeck_p->d_dtOut == 0) &&

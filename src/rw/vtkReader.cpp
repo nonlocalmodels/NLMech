@@ -163,6 +163,7 @@ void rw::reader::VtkReader::readPointData(std::string name,
                                           std::vector<util::Point3> *data) {
 
   // read point field data
+  d_grid_p = d_reader_p->GetOutput();
   vtkPointData *p_field = d_grid_p->GetPointData();
 
   // handle for displacement, fixity and node element connectivity

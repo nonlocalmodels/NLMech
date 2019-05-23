@@ -43,7 +43,7 @@ void readInputFile(InpData *data, YAML::Node config) {
     if (config["Output"]["Mesh"])
       data->d_meshFile += config["Output"]["Mesh"].as<std::string>();
     else
-      data->d_meshFile += "mesh.vtu";
+      data->d_meshFile += "mesh";
   }
 
   if (config["Domain"]) {
@@ -88,7 +88,7 @@ void readInputFile(InpData *data, YAML::Node config) {
   if (config["Mesh_Type"])
     data->d_meshType = config["Mesh_Type"].as<std::string>();
   else
-    data->d_meshType = "Uniform_Triangle";
+    data->d_meshType = "uniform_tri";
 
   if (config["Is_FD"])
     data->d_isFd = config["Is_FD"].as<bool>();

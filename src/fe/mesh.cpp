@@ -89,10 +89,10 @@ void fe::Mesh::createData(const std::string &filename) {
     rw::reader::readCsvFile(filename, d_dim, &d_nodes, &d_vol);
   else if (file_type == 1)
     rw::reader::readVtuFile(filename, d_dim, &d_nodes, d_eType, d_numElems,
-                            &d_enc, &d_nec, &d_vol, is_fd);
+                            &d_enc, &d_nec, &d_vol, false);
   else if (file_type == 2)
     rw::reader::readMshFile(filename, d_dim, &d_nodes, d_eType, d_numElems,
-                            &d_enc, &d_nec, &d_vol, is_fd);
+                            &d_enc, &d_nec, &d_vol, false);
 
   // compute data from mesh data
   d_numNodes = d_nodes.size();
@@ -262,4 +262,11 @@ void fe::Mesh::setFixity(const size_t &i, const unsigned int &dof,
   // a &= ~(1UL << (i % 8))
 
   flag ? (d_fix[i] |= 1UL << dof) : (d_fix[i] &= ~(1UL << dof));
+}
+void fe::Mesh::clearElementData() {
+  if (!d_enc.empty())
+    d_enc.shrink_to_fit();
+  d_numElems = 0;
+  if (!d_nec.empty())
+    d_nec.shrink_to_fit();
 }

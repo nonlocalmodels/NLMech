@@ -70,7 +70,7 @@ Compute:
       Axis_Line: 0.05
   Set_2:
     Tag_Filename: strain
-    Output_Only_Nodes: true
+    Output_Only_Nodes: false
     # compute magnitude of strain tensor
     Magnitude_Strain_Tensor:
       # specify component if any

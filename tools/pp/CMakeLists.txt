@@ -7,7 +7,7 @@ AUX_SOURCE_DIRECTORY(./src/2d SOURCES)
 
 # build Mesh library
 add_library(PP ${SOURCES})
-target_link_libraries(PP Util Inp Material RW FE)
+target_link_libraries(PP Util Inp Material RW Geometry FE)
 
 # Build mesh executible
 add_hpx_executable(pp SOURCES pp.cpp DEPENDENCIES PP)
