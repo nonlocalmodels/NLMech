@@ -254,7 +254,6 @@ void compute_damage(inp::Input *deck, inp::ModelDeck *model_deck,
     material::pd::Material *material, fe::Mesh
 *mesh, const std::vector<util::Point3> *u, std::vector<float>
     *Z) {
-  Z = new std::vector<float>(mesh->getNumNodes(), 0.);
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       mesh->getNumNodes(), [Z, mesh, material, model_deck, u]
@@ -371,7 +370,9 @@ void tools::pp::fe2D(const std::string &filename) {
     mat_deck->d_matData.d_mu = mat_deck->d_matData.d_lambda;
   }
 
+  //
   // loop over output files
+  //
   for (size_t out=start_file; out<=end_file; out++) {
     std::cout << "PP_fe2D: Processing output file = " << out << "\n";
     // get number of compute set
@@ -404,7 +405,7 @@ void tools::pp::fe2D(const std::string &filename) {
 
       // open a output vtu file
       auto writer = rw::writer::VtkWriterInterface(out_filename +
-          data.d_tagFilename);
+          data.d_tagFilename + "_" + std::to_string(out));
 
       //
       // operation : Scale displacement and write to output mesh
@@ -423,14 +424,16 @@ void tools::pp::fe2D(const std::string &filename) {
             });
         f.get();
 
-        // append mesh (check if only nodes need to be written)
-        if (data.d_outOnlyNodes)
-          writer.appendNodes(mesh->getNodesP(), &u_temp);
-        else
-          writer.appendMesh(mesh->getNodesP(), mesh->getElementType(),
-                            mesh->getElementConnectivitiesP(), &u_temp);
+        if (!mesh_appended) {
+          // append mesh (check if only nodes need to be written)
+          if (data.d_outOnlyNodes)
+            writer.appendNodes(mesh->getNodesP(), &u_temp);
+          else
+            writer.appendMesh(mesh->getNodesP(), mesh->getElementType(),
+                              mesh->getElementConnectivitiesP(), &u_temp);
 
-        mesh_appended = true;
+          mesh_appended = true;
+        }
 
         // append original displacement
         writer.appendPointData("Displacement", &u);
@@ -743,7 +746,6 @@ void tools::pp::fe2D(const std::string &filename) {
 
         // get displacement at n-1
         auto n = out * output_deck->d_dtOut - 1;
-        std::cout << "Here 1, n = " << n << "\n";
         auto time = n * model_deck->d_dt;
         auto f = hpx::parallel::for_loop(
             hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
@@ -755,8 +757,8 @@ void tools::pp::fe2D(const std::string &filename) {
         f.get();
 
         // compute damage at n-1
+        damage_Z = std::vector<float>(mesh->getNumNodes(), 0.);
         compute_damage(deck, model_deck, material, mesh, &u, &damage_Z);
-        std::cout << "Here 1 size Z = " << damage_Z.size() << "\n";
 
         // compute crack tip location and crack tip velocity
         auto fracture_deck = deck->getFractureDeck();
@@ -768,7 +770,6 @@ void tools::pp::fe2D(const std::string &filename) {
 
         // get current displacement
         n += 1;
-        std::cout << "Here 1, n = " << n << "\n";
         time += model_deck->d_dt;
         auto f2 = hpx::parallel::for_loop(
             hpx::parallel::execution::par(hpx::parallel::execution::task), 0,

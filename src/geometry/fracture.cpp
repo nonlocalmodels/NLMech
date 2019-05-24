@@ -198,17 +198,11 @@ void geometry::Fracture::updateCrackAndOutput(
   if (d_fractureDeck_p->d_dtCrackOut == 0)
     return;
 
-  std::cout << "Dtout = " << d_fractureDeck_p->d_dtCrackOut << ", DtVel = "
-  << d_fractureDeck_p->d_dtCrackVelocity << "\n";
-
   if ((d_fractureDeck_p->d_dtCrackVelocity < d_fractureDeck_p->d_dtCrackOut) &&
       ((n + d_fractureDeck_p->d_dtCrackVelocity) %
            d_fractureDeck_p->d_dtCrackOut ==
-       0)) {
-    std::cout << "Enterred for n = " << n << "\n";
+       0))
     updateCrack(n, time, horizon, nodes, u, Z);
-  } else
-    std::cout << "Not enterred for n = " << n << "\n";
 
   if (n % d_fractureDeck_p->d_dtCrackOut == 0) {
     updateCrack(n, time, horizon, nodes, u, Z);
@@ -221,7 +215,6 @@ void geometry::Fracture::updateCrack(
     const std::vector<util::Point3> *nodes,
     std::vector<util::Point3> *u, std::vector<float> *Z) {
 
-  std::cout << "Here 2 n = " << n << "\n";
   // loop over crack lines
   size_t count = 0;
   for (auto &crack : d_fractureDeck_p->d_cracks) {
@@ -266,12 +259,7 @@ void geometry::Fracture::updateCrack(
     float Zb = 1000.;
     float Zt = 1000.;
 
-    std::cout << "Here 2 count = " << count++ << "\n";
-    std::cout << "Num nodes = " << nodes->size() << ", size u = " << u->size
-    () << ", size Z = " << Z->size() << "\n";
     for (size_t i = 0; i < nodes->size(); i++) {
-      if ( i < 20 )
-        std::cout << "Here 2 i = " << i << "\n";
       auto xi = (*nodes)[i];
       auto yi = xi + (*u)[i];
       auto damage = (*Z)[i];
@@ -292,9 +280,6 @@ void geometry::Fracture::updateCrack(
         Zb = damage;
       }
     } // loop over nodes
-    std::cout << "Here 2 count = " << count++ << "\n";
-    std::cout << "it = " << it << " Zt = " << Zt << "\n";
-    std::cout << "ib = " << ib << " Zb = " << Zb << "\n";
 
     crack.d_pt = (*nodes)[it] + (*u)[it];
     crack.d_pb = (*nodes)[ib] + (*u)[ib];
