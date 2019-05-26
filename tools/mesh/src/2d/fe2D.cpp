@@ -135,7 +135,7 @@ void tools::mesh::uniformSquare(const std::string &filename) {
   for (size_t j = 0; j <= ny; j++)
     for (size_t i = 0; i <= nx; i++) {
       // node number
-      size_t n = j * nx + i;
+      size_t n = j * (nx + 1) + i;
       nodes[n] =
           util::Point3(data.d_domain.first[0] + double(i) * data.d_h,
                        data.d_domain.first[1] + double(j) * data.d_h, 0.);
@@ -252,7 +252,7 @@ void tools::mesh::uniformTri(const std::string &filename) {
   for (size_t j = 0; j <= ny; j++)
     for (size_t i = 0; i <= nx; i++) {
       // node number
-      size_t n = j * nx + i;
+      size_t n = j * (nx + 1) + i;
       nodes[n] =
           util::Point3(data.d_domain.first[0] + double(i) * data.d_h,
                        data.d_domain.first[1] + double(j) * data.d_h, 0.);
@@ -300,13 +300,13 @@ void tools::mesh::uniformTri(const std::string &filename) {
       if (i % 2 == 0) {
         // T1 (anticlockwise order)
         en_con[3 * T1 + 0] = n1;
-        en_con[3 * T1 + 1] = n2;
-        en_con[3 * T1 + 2] = n4;
+        en_con[3 * T1 + 1] = n4;
+        en_con[3 * T1 + 2] = n3;
 
         // T2 (anticlockwise order)
         en_con[3 * T2 + 0] = n1;
-        en_con[3 * T2 + 1] = n4;
-        en_con[3 * T2 + 2] = n3;
+        en_con[3 * T2 + 1] = n2;
+        en_con[3 * T2 + 2] = n4;
       } else {
         // T1 (anticlockwise order)
         en_con[3 * T1 + 0] = n1;

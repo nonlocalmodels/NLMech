@@ -60,6 +60,7 @@ struct InstructionData {
   double d_symmLine;
 
   bool d_crackTip;
+  bool d_crackSameDtOut;
 
   InstructionData()
       : d_scaleUOut(false), d_scaleU(1.), d_damageAtNodes(false),
@@ -68,7 +69,7 @@ struct InstructionData {
         d_markVRect(std::make_pair(util::Point3(), util::Point3())),
         d_markVPtsAreInCurrentConfig(false), d_computeStrain(false),
         d_magStrainTensor(false), d_symmetrizeV(false), d_combineMarkV(false),
-        d_symmLine(0.), d_crackTip(false){};
+        d_symmLine(0.), d_crackTip(false), d_crackSameDtOut(true) {};
 };
 
 void readInputFile(YAML::Node config, const std::string &set,
@@ -217,9 +218,11 @@ void readInputFile(YAML::Node config, const std::string &set,
   // Crack tip calculation
   //
   if (config["Compute"][set]["Crack_Tip"]) {
-    data->d_crackTip = config["Compute"][set]["Crack_Tip"].as<bool>();
-    if (data->d_crackTip)
-      data->d_damageAtNodes = true;
+    data->d_crackTip = true;
+    data->d_damageAtNodes = true;
+    if (config["Compute"][set]["Crack_Tip"]["Same_Dt_Out"])
+      data->d_crackSameDtOut =
+          config["Compute"][set]["Crack_Tip"]["Same_Dt_Out"].as<bool>();
   }
 }
 
@@ -389,6 +392,15 @@ void tools::pp::fe2D(const std::string &filename) {
     // get displacement and velocity from the simulation
     rw::reader::readVtuFileRestart(sim_results_file, &u, &v);
 
+//    // output file for debug
+//    // open a output vtu file
+//    auto writer_debug = rw::writer::VtkWriterInterface(out_filename +
+//        "_debug" + "_" + std::to_string(out));
+//    writer_debug.appendNodes(mesh->getNodesP(), &u);
+//    writer_debug.appendPointData("Displacement", &u);
+//    writer_debug.appendPointData("Velocity", &v);
+//    writer_debug.close();
+
     // loop over compute sets and do as instructed in input file
     for (size_t c = 1; c <= num_compute; c++) {
       std::cout << "  PP_fe2D: Processing compute set = " << c << "\n";
@@ -415,14 +427,15 @@ void tools::pp::fe2D(const std::string &filename) {
       if (data.d_scaleUOut) {
 
         std::vector<util::Point3> u_temp(mesh->getNumNodes(), util::Point3());
-        auto f = hpx::parallel::for_loop(
-            hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-            mesh->getNumNodes(), [&u_temp, data, u](boost::uint64_t i) {
+//        auto f = hpx::parallel::for_loop(
+//            hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+//            mesh->getNumNodes(), [&u_temp, data, u](boost::uint64_t i) {
+        for (size_t i=0; i < mesh->getNumNodes(); i++)
               u_temp[i] =
                   util::Point3(data.d_scaleU * u[i].d_x, data.d_scaleU * u[i].d_y,
                                data.d_scaleU * u[i].d_z);
-            });
-        f.get();
+//            });
+//        f.get();
 
         if (!mesh_appended) {
           // append mesh (check if only nodes need to be written)

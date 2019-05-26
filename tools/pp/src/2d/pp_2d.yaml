@@ -83,6 +83,9 @@ Compute:
     # compute damage function Z
     Damage_Z: true
     # compute crack tip location and velocity
-    Crack_Tip: true
+    Crack_Tip:
+      # specify if we compute crack tip velocity using same
+      # time step interval as the output interval
+      Same_Dt_Out: true
 HPX:
   Partitions: 1

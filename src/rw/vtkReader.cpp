@@ -180,15 +180,11 @@ void rw::reader::VtkReader::readPointData(std::string name,
   data_a->SetNumberOfComponents(3);
   data_a->Allocate(3, 1); // allocate memory
 
+  (*data).resize(array->GetNumberOfTuples());
   for (size_t i = 0; i < array->GetNumberOfTuples(); i++) {
-
     array->GetTuples(i, i, data_a);
-
-    util::Point3 d = util::Point3();
-    for (size_t j = 0; j < 3; j++)
-      d[j] = data_a->GetValue(j);
-
-    (*data).push_back(d);
+    (*data)[i] = util::Point3(data_a->GetValue(0), data_a->GetValue(1),
+      data_a->GetValue(2));
   }
 }
 

@@ -10,14 +10,15 @@
 
 namespace {
 struct CrackOutData {
-  double d_oldTime;
+  double d_timet;
+  double d_timeb;
   size_t d_updateCount;
   size_t d_fileOutCount;
   bool d_needNewFile;
   FILE *d_file;
 
   CrackOutData()
-      : d_oldTime(0.), d_updateCount(0), d_fileOutCount(0),
+      : d_timet(0.), d_timeb(0.), d_updateCount(0), d_fileOutCount(0),
         d_needNewFile(false), d_file(nullptr){};
 };
 
@@ -232,30 +233,30 @@ void geometry::Fracture::updateCrack(
     double rect_t[4];
     double rect_b[4];
     if (crack.d_o == -1) {
-      rect_t[0] = pt.d_x - horizon;
+      rect_t[0] = pt.d_x - 2. * horizon;
       rect_t[1] = pt.d_y;
-      rect_t[2] = pt.d_x + horizon;
+      rect_t[2] = pt.d_x + 2. * horizon;
       rect_t[3] = pt.d_y + search_length;
 
-      rect_b[0] = pb.d_x - horizon;
+      rect_b[0] = pb.d_x - 2. * horizon;
       rect_b[1] = pb.d_y - search_length;
-      rect_b[2] = pb.d_x + horizon;
+      rect_b[2] = pb.d_x + 2. * horizon;
       rect_b[3] = pb.d_y;
     } else if (crack.d_o == 1) {
       rect_t[0] = pt.d_x;
-      rect_t[1] = pt.d_y - horizon;
+      rect_t[1] = pt.d_y - 2. * horizon;
       rect_t[2] = pt.d_x + search_length;
-      rect_t[3] = pt.d_y + horizon;
+      rect_t[3] = pt.d_y + 2. * horizon;
 
       rect_b[0] = pb.d_x - search_length;
-      rect_b[1] = pb.d_y - horizon;
+      rect_b[1] = pb.d_y - 2. * horizon;
       rect_b[2] = pb.d_x;
-      rect_b[3] = pb.d_y + horizon;
+      rect_b[3] = pb.d_y + 2. * horizon;
     }
 
     // find and store id of node at crack tip
-    size_t ib = 0;
-    size_t it = 0;
+    long ib = -1;
+    long it = -1;
     float Zb = 1000.;
     float Zt = 1000.;
 
@@ -281,32 +282,38 @@ void geometry::Fracture::updateCrack(
       }
     } // loop over nodes
 
-    crack.d_pt = (*nodes)[it] + (*u)[it];
-    crack.d_pb = (*nodes)[ib] + (*u)[ib];
+    if (it != -1) {
+      crack.d_pt = (*nodes)[it] + (*u)[it];
+      auto diff = crack.d_pt - pt;
+      auto delta_t = time - crackOutData.d_timet;
+      crack.d_lt += diff.length();
+      crack.d_l += diff.length();
+      crack.d_vt = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
+                                diff.d_z / delta_t);
+      crackOutData.d_timet = time;
+    }
 
-    auto diff = crack.d_pt - pt;
-    auto delta_t = time - crack.d_time;
-    crack.d_lt += diff.length();
-    crack.d_l += diff.length();
-    crack.d_vt = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
-                              diff.d_z / delta_t);
-
-    diff = crack.d_pb - pb;
-    crack.d_lb += diff.length();
-    crack.d_l += diff.length();
-    crack.d_vb = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
-                              diff.d_z / delta_t);
+    if (ib != -1) {
+      crack.d_pb = (*nodes)[ib] + (*u)[ib];
+      auto diff = crack.d_pb - pb;
+      auto delta_t = time - crackOutData.d_timeb;
+      crack.d_lb += diff.length();
+      crack.d_l += diff.length();
+      crack.d_vb = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
+                                diff.d_z / delta_t);
+      crackOutData.d_timeb = time;
+    }
 
     // update time
-    crackOutData.d_oldTime = crack.d_time;
-    crack.d_time = time;
+    if (it != -1 || ib != -1)
+      crack.d_time = time;
   } // loop over cracks
 }
 
 void geometry::Fracture::output(
     const size_t &n, const double &time, const std::string &output_path,
     const std::vector<util::Point3> *nodes,
-    std::vector<util::Point3> *u) {
+    std::vector<util::Point3> *u, std::vector<float> *Z) {
 
   // create new file for every 10000 calls to this function
   int up_bound = 10000;
@@ -337,18 +344,19 @@ void geometry::Fracture::output(
       fclose(crackOutData.d_file);
     crackOutData.d_file = fopen(filename.c_str(), "w");
     // write header
-    fprintf(crackOutData.d_file, "crack_id, time, pb.x, pb.y, pt.x, pt.y, l, "
-                             "lb,  lt, vb.x, vb.y, vb_mag, vt.x, vt.y,"
-                             "  vt_mag\n");
+    fprintf(crackOutData.d_file, "crack_id, time, ib, pb.x, pb.y, Zb, it, pt.x,"
+                                 " pt.y, Zt, l, lb,  lt, vb.x, vb.y, vb_mag,"
+                                 " vt.x, vt.y, vt_mag\n");
   }
 
   for (size_t i = 0; i < d_fractureDeck_p->d_cracks.size(); i++) {
     auto crack = d_fractureDeck_p->d_cracks[i];
     fprintf(crackOutData.d_file,
-            "%lu, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, "
-            "%6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e\n",
-            i, time, crack.d_pb.d_x, crack.d_pb.d_y, crack.d_pt.d_x,
-            crack.d_pt.d_y, crack.d_l, crack.d_lb, crack.d_lt, crack.d_vb.d_x,
+            "%lu, %6.8e, %u, %6.8e, %6.8e, %6.8e, %u, %6.8e, %6.8e, %6.8e, "
+            "%6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e\n",
+            i, time, crack.d_ib, crack.d_pb.d_x, crack.d_pb.d_y, (*Z)[crack
+            .d_ib], crack.d_it, crack.d_pt.d_x, crack.d_pt.d_y, (*Z)[crack
+            .d_it], crack.d_l, crack.d_lb, crack.d_lt, crack.d_vb.d_x,
             crack.d_vb.d_y, crack.d_vb.length(), crack.d_vt.d_x, crack.d_vt.d_y,
             crack.d_vt.length());
   }

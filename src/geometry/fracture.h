@@ -147,7 +147,7 @@ private:
   void output(const size_t &n, const double &time,
               const std::string &output_path,
               const std::vector<util::Point3> *nodes,
-              std::vector<util::Point3> *u);
+              std::vector<util::Point3> *u, std::vector<float> *Z);
 
   /*! @brief Interior flags deck */
   inp::FractureDeck *d_fractureDeck_p;
