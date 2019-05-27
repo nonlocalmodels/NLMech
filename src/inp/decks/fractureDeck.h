@@ -67,9 +67,6 @@ struct EdgeCrack {
   /*! @brief Bottom (left) crack tip location */
   util::Point3 d_pb;
 
-  /*! @brief Time at which crack length was updated */
-  double d_time;
-
   /** @}*/
 
   /*!
@@ -78,7 +75,7 @@ struct EdgeCrack {
   EdgeCrack()
       : d_o(1), d_theta(0.), d_l(0.), d_lt(0.), d_lb(0.), d_it(-1), d_ib(-1),
         d_vt(util::Point3()), d_vb(util::Point3()),
-        d_pt(util::Point3()), d_pb(util::Point3()), d_time(0.) {};
+        d_pt(util::Point3()), d_pb(util::Point3()) {};
 
   /*!
    * @brief Checks if point lies outside the crack

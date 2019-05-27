@@ -8,31 +8,14 @@
 #include "util/utilGeom.h"
 #include <hpx/include/parallel_algorithm.hpp>
 
-namespace {
-struct CrackOutData {
-  double d_timet;
-  double d_timeb;
-  size_t d_updateCount;
-  size_t d_fileOutCount;
-  bool d_needNewFile;
-  FILE *d_file;
-
-  CrackOutData()
-      : d_timet(0.), d_timeb(0.), d_updateCount(0), d_fileOutCount(0),
-        d_needNewFile(false), d_file(nullptr){};
-};
-
-static auto crackOutData = CrackOutData();
-} // namespace
-
 geometry::Fracture::Fracture(inp::FractureDeck *deck)
-    : d_fractureDeck_p(deck){}
+    : d_fractureDeck_p(deck), d_crackOutData(geometry::CrackOutData()) {}
 
 geometry::Fracture::Fracture(
     inp::FractureDeck *deck, const std::vector<util::Point3> *nodes,
-    const std::vector<std::vector<size_t>> *neighbor_list) {
+    const std::vector<std::vector<size_t>> *neighbor_list)
+    : d_fractureDeck_p(deck), d_crackOutData(geometry::CrackOutData()) {
 
-  d_fractureDeck_p = deck;
   d_fracture.resize(neighbor_list->size());
 
   auto f = hpx::parallel::for_loop(
@@ -207,14 +190,15 @@ void geometry::Fracture::updateCrackAndOutput(
 
   if (n % d_fractureDeck_p->d_dtCrackOut == 0) {
     updateCrack(n, time, horizon, nodes, u, Z);
-    output(n, time, output_path, nodes, u);
+    output(n, time, output_path, nodes, u, Z);
   }
 }
 
-void geometry::Fracture::updateCrack(
-    const size_t &n, const double &time, const double &horizon,
-    const std::vector<util::Point3> *nodes,
-    std::vector<util::Point3> *u, std::vector<float> *Z) {
+void geometry::Fracture::updateCrack(const size_t &n, const double &time,
+                                     const double &horizon,
+                                     const std::vector<util::Point3> *nodes,
+                                     std::vector<util::Point3> *u,
+                                     std::vector<float> *Z) {
 
   // loop over crack lines
   size_t count = 0;
@@ -285,49 +269,46 @@ void geometry::Fracture::updateCrack(
     if (it != -1) {
       crack.d_pt = (*nodes)[it] + (*u)[it];
       auto diff = crack.d_pt - pt;
-      auto delta_t = time - crackOutData.d_timet;
+      auto delta_t = time - d_crackOutData.d_timet;
       crack.d_lt += diff.length();
       crack.d_l += diff.length();
       crack.d_vt = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
                                 diff.d_z / delta_t);
-      crackOutData.d_timet = time;
+      d_crackOutData.d_timet = time;
     }
 
     if (ib != -1) {
       crack.d_pb = (*nodes)[ib] + (*u)[ib];
       auto diff = crack.d_pb - pb;
-      auto delta_t = time - crackOutData.d_timeb;
+      auto delta_t = time - d_crackOutData.d_timeb;
       crack.d_lb += diff.length();
       crack.d_l += diff.length();
       crack.d_vb = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
                                 diff.d_z / delta_t);
-      crackOutData.d_timeb = time;
+      d_crackOutData.d_timeb = time;
     }
-
-    // update time
-    if (it != -1 || ib != -1)
-      crack.d_time = time;
   } // loop over cracks
 }
 
-void geometry::Fracture::output(
-    const size_t &n, const double &time, const std::string &output_path,
-    const std::vector<util::Point3> *nodes,
-    std::vector<util::Point3> *u, std::vector<float> *Z) {
+void geometry::Fracture::output(const size_t &n, const double &time,
+                                const std::string &output_path,
+                                const std::vector<util::Point3> *nodes,
+                                std::vector<util::Point3> *u,
+                                std::vector<float> *Z) {
 
   // create new file for every 10000 calls to this function
   int up_bound = 10000;
-  size_t mod = crackOutData.d_updateCount % up_bound;
-  if (crackOutData.d_updateCount > 1 && mod == 0) {
-    crackOutData.d_fileOutCount++;
-    crackOutData.d_needNewFile = true;
+  size_t mod = d_crackOutData.d_updateCount % up_bound;
+  if (d_crackOutData.d_updateCount > 1 && mod == 0) {
+    d_crackOutData.d_fileOutCount++;
+    d_crackOutData.d_needNewFile = true;
   } else
-    crackOutData.d_needNewFile = false;
+    d_crackOutData.d_needNewFile = false;
 
   // if the total call reaches 5*10000, close the open file and return
-  if (crackOutData.d_updateCount >= 5 * up_bound) {
-    if (crackOutData.d_file) {
-      fclose(crackOutData.d_file);
+  if (d_crackOutData.d_updateCount >= 5 * up_bound) {
+    if (d_crackOutData.d_file) {
+      fclose(d_crackOutData.d_file);
       std::cout << "Warning: Number of times crack data output requested "
                    "exceeds the upper limit 10000.\n";
     }
@@ -335,31 +316,33 @@ void geometry::Fracture::output(
   }
 
   // write
-  if (crackOutData.d_updateCount == 0 || crackOutData.d_needNewFile) {
+  if (d_crackOutData.d_updateCount == 0 || d_crackOutData.d_needNewFile) {
     std::string filename = output_path + "/crack_data_" +
-                           std::to_string(crackOutData.d_fileOutCount) + ".csv";
+                           std::to_string(d_crackOutData.d_fileOutCount) +
+                           ".csv";
 
     // before opening a new file, close the previous file
-    if (crackOutData.d_needNewFile && crackOutData.d_file)
-      fclose(crackOutData.d_file);
-    crackOutData.d_file = fopen(filename.c_str(), "w");
+    if (d_crackOutData.d_needNewFile && d_crackOutData.d_file)
+      fclose(d_crackOutData.d_file);
+    d_crackOutData.d_file = fopen(filename.c_str(), "w");
     // write header
-    fprintf(crackOutData.d_file, "crack_id, time, ib, pb.x, pb.y, Zb, it, pt.x,"
-                                 " pt.y, Zt, l, lb,  lt, vb.x, vb.y, vb_mag,"
-                                 " vt.x, vt.y, vt_mag\n");
+    fprintf(d_crackOutData.d_file,
+            "crack_id, time, ib, pb.x, pb.y, Zb, it, pt.x,"
+            " pt.y, Zt, l, lb,  lt, vb.x, vb.y, vb_mag,"
+            " vt.x, vt.y, vt_mag\n");
   }
 
   for (size_t i = 0; i < d_fractureDeck_p->d_cracks.size(); i++) {
     auto crack = d_fractureDeck_p->d_cracks[i];
-    fprintf(crackOutData.d_file,
+    fprintf(d_crackOutData.d_file,
             "%lu, %6.8e, %u, %6.8e, %6.8e, %6.8e, %u, %6.8e, %6.8e, %6.8e, "
             "%6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e\n",
-            i, time, crack.d_ib, crack.d_pb.d_x, crack.d_pb.d_y, (*Z)[crack
-            .d_ib], crack.d_it, crack.d_pt.d_x, crack.d_pt.d_y, (*Z)[crack
-            .d_it], crack.d_l, crack.d_lb, crack.d_lt, crack.d_vb.d_x,
+            i, time, crack.d_ib, crack.d_pb.d_x, crack.d_pb.d_y,
+            (*Z)[crack.d_ib], crack.d_it, crack.d_pt.d_x, crack.d_pt.d_y,
+            (*Z)[crack.d_it], crack.d_l, crack.d_lb, crack.d_lt, crack.d_vb.d_x,
             crack.d_vb.d_y, crack.d_vb.length(), crack.d_vt.d_x, crack.d_vt.d_y,
             crack.d_vt.length());
   }
 
-  crackOutData.d_updateCount++;
+  d_crackOutData.d_updateCount++;
 }

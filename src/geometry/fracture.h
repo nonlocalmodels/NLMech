@@ -28,6 +28,33 @@ struct FractureDeck;
  */
 namespace geometry {
 
+/*! @brief A struct to compute crack tip and crack tip velocity */
+struct CrackOutData {
+
+  /*! @brief Old update time for top (right) side of crack */
+  double d_timet;
+
+  /*! @brief Old update time for bottom (left) side of crack */
+  double d_timeb;
+
+  /*! @brief Total number of updates at current time */
+  size_t d_updateCount;
+
+  /*! @brief Total number of files created so far */
+  size_t d_fileOutCount;
+
+  /*! @brief Flag which specifies if we need to create new file */
+  bool d_needNewFile;
+
+  /*! @brief File to which crack data will be written */
+  FILE *d_file;
+
+  /*! @brief Default constructor */
+  CrackOutData()
+      : d_timet(0.), d_timeb(0.), d_updateCount(0), d_fileOutCount(0),
+        d_needNewFile(false), d_file(nullptr){};
+};
+
 /*! @brief A class for fracture state of bonds
  *
  * In this class fracture state of each bonds (i.e. whether the bond is
@@ -151,6 +178,9 @@ private:
 
   /*! @brief Interior flags deck */
   inp::FractureDeck *d_fractureDeck_p;
+
+  /*! @brief Data for crack tip calculation */
+  geometry::CrackOutData d_crackOutData;
 
   /*! @brief Vector which stores the state of bonds
    *

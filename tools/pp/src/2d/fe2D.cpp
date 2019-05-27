@@ -32,6 +32,9 @@ namespace {
 struct InstructionData {
   std::string d_tagFilename;
 
+  int d_start;
+  int d_end;
+
   bool d_scaleUOut;
   double d_scaleU;
 
@@ -63,7 +66,8 @@ struct InstructionData {
   bool d_crackSameDtOut;
 
   InstructionData()
-      : d_scaleUOut(false), d_scaleU(1.), d_damageAtNodes(false),
+      : d_start(-1), d_end(-1),
+        d_scaleUOut(false), d_scaleU(1.), d_damageAtNodes(false),
         d_outOnlyNodes(true), d_removeElements(false), d_markVAsZero(false),
         d_markVInRectGiven(false),
         d_markVRect(std::make_pair(util::Point3(), util::Point3())),
@@ -90,6 +94,15 @@ void readInputFile(YAML::Node config, const std::string &set,
   if (config["Compute"][set]["Output_Only_Nodes"])
     data->d_outOnlyNodes = config["Compute"][set]["Output_Only_Nodes"]
         .as<bool>();
+
+  //
+  // check if start and end time step are specified
+  //
+  if (config["Compute"][set]["Dt_Start"])
+    data->d_start = config["Compute"][set]["Dt_Start"].as<int>();
+
+  if (config["Compute"][set]["Dt_End"])
+    data->d_end = config["Compute"][set]["Dt_End"].as<int>();
 
   //
   // Scale displacement
@@ -298,14 +311,10 @@ void tools::pp::fe2D(const std::string &filename) {
   auto *deck = new inp::Input(sim_filename);
   auto model_deck = deck->getModelDeck();
   auto output_deck = deck->getOutputDeck();
+  auto fracture_deck = deck->getFractureDeck();
 
   // get policy deck
   auto policy = inp::Policy::getInstance(deck->getPolicyDeck());
-
-  size_t process_single_file = 0; // default
-  if (config["Override_Simulation_Input"]["Process_Single_File"])
-    process_single_file =
-        config["Override_Simulation_Input"]["Process_Single_File"].as<size_t>();
 
   std::string filename_to_read;
   if (config["Filename_To_Read"])
@@ -325,16 +334,8 @@ void tools::pp::fe2D(const std::string &filename) {
   else
     out_filename = out_path + "/pp";
 
-  // over ride final time step
-  if (config["Override_Simulation_Input"]["Time_Steps"])
-    model_deck->d_Nt = config["Override_Simulation_Input"]["Time_Steps"]
-        .as<size_t>();
-  size_t start_file = 1;
-  if (process_single_file > 0)
-    start_file = process_single_file;
-  size_t end_file = model_deck->d_Nt / output_deck->d_dtOut;
-  if (process_single_file > 0)
-    end_file = process_single_file;
+  int start_file = 1;
+  int end_file = model_deck->d_Nt / output_deck->d_dtOut;
 
   // create mesh
   std::cout << "PP_fe2D: Creating mesh.\n";
@@ -373,13 +374,30 @@ void tools::pp::fe2D(const std::string &filename) {
     mat_deck->d_matData.d_mu = mat_deck->d_matData.d_lambda;
   }
 
+  // to hold compute input data
+  auto num_compute = config["Compute"]["Sets"].as<size_t>();
+  std::vector<InstructionData> compute_data;
+  for (size_t c = 0; c < num_compute; c++) {
+    std::string set = "Set_" + std::to_string(c+1);
+    auto data = InstructionData();
+    readInputFile(config, set, &data);
+    if (data.d_start == -1)
+      data.d_start = int(start_file);
+    if (data.d_end == -1)
+      data.d_end = int(end_file);
+
+    compute_data.emplace_back(data);
+  }
+
+  // vector of null pointer Fracture class
+  std::vector<geometry::Fracture *> fractures(num_compute, nullptr);
+  std::vector<inp::FractureDeck> fracture_decks(num_compute, *fracture_deck);
+
   //
   // loop over output files
   //
-  for (size_t out=start_file; out<=end_file; out++) {
+  for (int out=start_file; out<=end_file; out++) {
     std::cout << "PP_fe2D: Processing output file = " << out << "\n";
-    // get number of compute set
-    auto num_compute = config["Compute"]["Sets"].as<size_t>();
 
     // append path to filename
     auto sim_results_file = source_path + "/" + filename_to_read + "_" +
@@ -402,15 +420,14 @@ void tools::pp::fe2D(const std::string &filename) {
 //    writer_debug.close();
 
     // loop over compute sets and do as instructed in input file
-    for (size_t c = 1; c <= num_compute; c++) {
-      std::cout << "  PP_fe2D: Processing compute set = " << c << "\n";
+    for (size_t c = 0; c < num_compute; c++) {
+      auto data = compute_data[c];
 
-      // get string to read instruction
-      auto set = "Set_" + std::to_string(c);
+      // continue if in the specified bound
+      if (out < data.d_start || out > data.d_end)
+        continue;
 
-      // read file for instructions
-      auto data = InstructionData();
-      readInputFile(config, set, &data);
+      std::cout << "  PP_fe2D: Processing compute set = " << c + 1 << "\n";
 
       // keep track of whether mesh has been written to output file
       auto mesh_appended = false;
@@ -757,29 +774,46 @@ void tools::pp::fe2D(const std::string &filename) {
       std::vector<float> damage_Z;
       if (data.d_crackTip) {
 
-        // get displacement at n-1
-        auto n = out * output_deck->d_dtOut - 1;
+        if (fractures[c] == nullptr) {
+          // modify fracture deck for crack tip calculation
+          if (!data.d_crackSameDtOut) {
+            fracture_decks[c].d_dtCrackOut = output_deck->d_dtOut;
+            fracture_decks[c].d_dtCrackVelocity = 1;
+          } else {
+            fracture_decks[c].d_dtCrackOut = output_deck->d_dtOut;
+            fracture_decks[c].d_dtCrackVelocity = output_deck->d_dtOut;
+          }
+
+          // get fracture class
+          fractures[c] = new geometry::Fracture(&(fracture_decks[c]));
+        }
+
+        auto n = out * output_deck->d_dtOut;
         auto time = n * model_deck->d_dt;
-        auto f = hpx::parallel::for_loop(
-            hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-            mesh->getNumNodes(), [&u, v, model_deck](boost::uint64_t i) {
-              u[i] -= util::Point3(model_deck->d_dt * v[i].d_x,
-                                   model_deck->d_dt * v[i].d_y,
-                                   model_deck->d_dt * v[i].d_z);
-            });
-        f.get();
 
-        // compute damage at n-1
-        damage_Z = std::vector<float>(mesh->getNumNodes(), 0.);
-        compute_damage(deck, model_deck, material, mesh, &u, &damage_Z);
+        // compute displacement, damage, and crack tip at k-1 step if
+        // crack update is not same as simulation output interval
+        if (!data.d_crackSameDtOut) {
+          n -= 1;
+          time -= model_deck->d_dt;
+          auto f = hpx::parallel::for_loop(
+              hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+              mesh->getNumNodes(), [&u, v, model_deck](boost::uint64_t i) {
+                u[i] -= util::Point3(model_deck->d_dt * v[i].d_x,
+                                     model_deck->d_dt * v[i].d_y,
+                                     model_deck->d_dt * v[i].d_z);
+              });
+          f.get();
 
-        // compute crack tip location and crack tip velocity
-        auto fracture_deck = deck->getFractureDeck();
-        fracture_deck->d_dtCrackOut = output_deck->d_dtOut;
-        fracture_deck->d_dtCrackVelocity = 1;
-        auto fracture = new geometry::Fracture(fracture_deck);
-        fracture->updateCrackAndOutput(n, time, out_path, model_deck->d_horizon,
-                                       mesh->getNodesP(), &u, &damage_Z);
+          // compute damage at n-1
+          damage_Z = std::vector<float>(mesh->getNumNodes(), 0.);
+          compute_damage(deck, model_deck, material, mesh, &u, &damage_Z);
+
+          // compute crack tip location and crack tip velocity
+          fractures[c]->updateCrackAndOutput(n, time, out_path,
+                                         model_deck->d_horizon,
+                                         mesh->getNodesP(), &u, &damage_Z);
+        }
 
         // get current displacement
         n += 1;
@@ -795,7 +829,7 @@ void tools::pp::fe2D(const std::string &filename) {
 
         // compute damage at current displacement
         compute_damage(deck, model_deck, material, mesh, &u, &damage_Z);
-        fracture->updateCrackAndOutput(n, time, out_path, model_deck->d_horizon,
+        fractures[c]->updateCrackAndOutput(n, time, out_path, model_deck->d_horizon,
                                        mesh->getNodesP(), &u, &damage_Z);
       }
 

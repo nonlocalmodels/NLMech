@@ -12,11 +12,6 @@ Filename_To_Read: output
 Material:
   Poisson_Ratio: 0.25
   E: 1.0
-# over ride some data of above input file
-Override_Simulation_Input:
-  Time_Steps: 25000
-  # specify the output file number if only one file needs to be processed
-#  Process_Single_File: 20
 Output:
   # specify output directory
   Path: pp/modify_v/new/
@@ -79,6 +74,8 @@ Compute:
     Strain_Stress: true
   Set_3:
     Tag_Filename: crack_tip
+    Dt_Start: 70
+    Dt_End: 100
     Output_Only_Nodes: true
     # compute damage function Z
     Damage_Z: true
