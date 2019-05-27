@@ -403,12 +403,19 @@ void tools::pp::fe2D(const std::string &filename) {
     auto sim_results_file = source_path + "/" + filename_to_read + "_" +
                             std::to_string(out) + ".vtu";
 
+    //see if we need to read the data
+    bool read_file = false;
+    for (const auto& data : compute_data)
+      read_file = out >= data.d_start && out <= data.d_end;
+
+
     // just read one file and do operations and move to the next compute set
     std::vector<util::Point3> u;
     std::vector<util::Point3> v;
 
     // get displacement and velocity from the simulation
-    rw::reader::readVtuFileRestart(sim_results_file, &u, &v);
+    if (read_file)
+      rw::reader::readVtuFileRestart(sim_results_file, &u, &v);
 
 //    // output file for debug
 //    // open a output vtu file
@@ -806,7 +813,8 @@ void tools::pp::fe2D(const std::string &filename) {
           f.get();
 
           // compute damage at n-1
-          damage_Z = std::vector<float>(mesh->getNumNodes(), 0.);
+          if (damage_Z.empty())
+            damage_Z = std::vector<float>(mesh->getNumNodes(), 0.);
           compute_damage(deck, model_deck, material, mesh, &u, &damage_Z);
 
           // compute crack tip location and crack tip velocity
@@ -828,6 +836,8 @@ void tools::pp::fe2D(const std::string &filename) {
         f2.get();
 
         // compute damage at current displacement
+        if (damage_Z.empty())
+          damage_Z = std::vector<float>(mesh->getNumNodes(), 0.);
         compute_damage(deck, model_deck, material, mesh, &u, &damage_Z);
         fractures[c]->updateCrackAndOutput(n, time, out_path, model_deck->d_horizon,
                                        mesh->getNodesP(), &u, &damage_Z);
