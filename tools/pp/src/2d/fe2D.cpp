@@ -232,7 +232,6 @@ void readInputFile(YAML::Node config, const std::string &set,
   //
   if (config["Compute"][set]["Crack_Tip"]) {
     data->d_crackTip = true;
-    data->d_damageAtNodes = true;
     if (config["Compute"][set]["Crack_Tip"]["Same_Dt_Out"])
       data->d_crackSameDtOut =
           config["Compute"][set]["Crack_Tip"]["Same_Dt_Out"].as<bool>();
@@ -436,12 +435,10 @@ void tools::pp::fe2D(const std::string &filename) {
 
       std::cout << "  PP_fe2D: Processing compute set = " << c + 1 << "\n";
 
-      // keep track of whether mesh has been written to output file
-      auto mesh_appended = false;
-
       // open a output vtu file
-      auto writer = rw::writer::VtkWriterInterface(out_filename + "_" +
-          data.d_tagFilename + "_" + std::to_string(out));
+      std::string compute_filename = out_filename + "_" +
+          data.d_tagFilename + "_" + std::to_string(out);
+      rw::writer::VtkWriterInterface * writer = nullptr;
 
       //
       // operation : Scale displacement and write to output mesh
@@ -461,22 +458,21 @@ void tools::pp::fe2D(const std::string &filename) {
 //            });
 //        f.get();
 
-        if (!mesh_appended) {
+        if (!writer) {
+          writer = new rw::writer::VtkWriterInterface(compute_filename);
           // append mesh (check if only nodes need to be written)
           if (data.d_outOnlyNodes)
-            writer.appendNodes(mesh->getNodesP(), &u_temp);
+            writer->appendNodes(mesh->getNodesP(), &u_temp);
           else
-            writer.appendMesh(mesh->getNodesP(), mesh->getElementType(),
+            writer->appendMesh(mesh->getNodesP(), mesh->getElementType(),
                               mesh->getElementConnectivitiesP(), &u_temp);
-
-          mesh_appended = true;
         }
 
         // append original displacement
-        writer.appendPointData("Displacement", &u);
+        writer->appendPointData("Displacement", &u);
 
         // append velocity
-        writer.appendPointData("Velocity", &v);
+        writer->appendPointData("Velocity", &v);
       }
 
       //
@@ -521,18 +517,17 @@ void tools::pp::fe2D(const std::string &filename) {
           for (auto i : data.d_markVNodes)
             v_mark[i] = util::Point3();
 
-        if (!mesh_appended) {
+        if (!writer) {
+          writer = new rw::writer::VtkWriterInterface(compute_filename);
           if (data.d_outOnlyNodes)
-            writer.appendNodes(mesh->getNodesP(), &u);
+            writer->appendNodes(mesh->getNodesP(), &u);
           else
-            writer.appendMesh(mesh->getNodesP(), mesh->getElementType(),
+            writer->appendMesh(mesh->getNodesP(), mesh->getElementType(),
                               mesh->getElementConnectivitiesP(), &u);
-
-          mesh_appended = true;
         }
 
         // append velocity
-        writer.appendPointData("Mark_Velocity", &v_mark);
+        writer->appendPointData("Mark_Velocity", &v_mark);
       }
 
       //
@@ -589,18 +584,17 @@ void tools::pp::fe2D(const std::string &filename) {
             }); // parallel for loop
         f.get();
 
-        if (!mesh_appended) {
+        if (!writer) {
+          writer = new rw::writer::VtkWriterInterface(compute_filename);
           if (data.d_outOnlyNodes)
-            writer.appendNodes(mesh->getNodesP(), &u);
+            writer->appendNodes(mesh->getNodesP(), &u);
           else
-            writer.appendMesh(mesh->getNodesP(), mesh->getElementType(),
+            writer->appendMesh(mesh->getNodesP(), mesh->getElementType(),
                               mesh->getElementConnectivitiesP(), &u);
-
-          mesh_appended = true;
         }
 
         // append velocity
-        writer.appendPointData("Symm_Velocity", &v_mark);
+        writer->appendPointData("Symm_Velocity", &v_mark);
       }
       // clear the v_mark data
       if (!v_mark.empty())
@@ -708,17 +702,16 @@ void tools::pp::fe2D(const std::string &filename) {
         if (!data.d_outOnlyNodes) {
 
           // append mesh
-          if (!mesh_appended) {
-            writer.appendMesh(mesh->getNodesP(), mesh->getElementType(),
+          if (!writer) {
+            writer = new rw::writer::VtkWriterInterface(compute_filename);
+            writer->appendMesh(mesh->getNodesP(), mesh->getElementType(),
                               mesh->getElementConnectivitiesP(), &u);
-
-            mesh_appended = true;
           }
 
-          writer.appendCellData("Strain_Tensor", &strain);
-          writer.appendCellData("Stress_Tensor", &stress);
+          writer->appendCellData("Strain_Tensor", &strain);
+          writer->appendCellData("Stress_Tensor", &stress);
           if (data.d_magStrainTensor)
-            writer.appendCellData("Mag_Strain", &magS);
+            writer->appendCellData("Mag_Strain", &magS);
 
 //          // mark magnitude of strain if asked
 //          if (!data.d_markMagStrainCells.empty()) {
@@ -853,17 +846,16 @@ void tools::pp::fe2D(const std::string &filename) {
         if (damage_Z.empty())
           compute_damage(deck, model_deck, material, mesh, &u, &damage_Z);
 
-        if (!mesh_appended) {
+        if (!writer) {
+          writer = new rw::writer::VtkWriterInterface(compute_filename);
           if (data.d_outOnlyNodes)
-            writer.appendNodes(mesh->getNodesP(), &u);
+            writer->appendNodes(mesh->getNodesP(), &u);
           else
-            writer.appendMesh(mesh->getNodesP(), mesh->getElementType(),
+            writer->appendMesh(mesh->getNodesP(), mesh->getElementType(),
                               mesh->getElementConnectivitiesP(), &u);
-
-          mesh_appended = true;
         }
         // append data to file
-        writer.appendPointData("Damage_Z", &damage_Z);
+        writer->appendPointData("Damage_Z", &damage_Z);
       }
 
       // clear data
@@ -873,8 +865,8 @@ void tools::pp::fe2D(const std::string &filename) {
       //
       // close file
       //
-      if (mesh_appended)
-        writer.close();
+      if (writer)
+        writer->close();
     } // loop over compute sets
   }// processing output files
 }
