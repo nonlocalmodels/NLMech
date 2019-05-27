@@ -267,6 +267,7 @@ void geometry::Fracture::updateCrack(const size_t &n, const double &time,
     } // loop over nodes
 
     if (it != -1) {
+      crack.d_it = it;
       crack.d_pt = (*nodes)[it] + (*u)[it];
       auto diff = crack.d_pt - pt;
       auto delta_t = time - d_crackOutData.d_timet;
@@ -278,6 +279,7 @@ void geometry::Fracture::updateCrack(const size_t &n, const double &time,
     }
 
     if (ib != -1) {
+      crack.d_ib = ib;
       crack.d_pb = (*nodes)[ib] + (*u)[ib];
       auto diff = crack.d_pb - pb;
       auto delta_t = time - d_crackOutData.d_timeb;
@@ -317,9 +319,9 @@ void geometry::Fracture::output(const size_t &n, const double &time,
 
   // write
   if (d_crackOutData.d_updateCount == 0 || d_crackOutData.d_needNewFile) {
-    std::string filename = output_path + "/crack_data_" +
-                           std::to_string(d_crackOutData.d_fileOutCount) +
-                           ".csv";
+    std::string filename =
+        output_path + "/" + d_fractureDeck_p->d_crackOutFilename + "_" +
+        std::to_string(d_crackOutData.d_fileOutCount) + ".csv";
 
     // before opening a new file, close the previous file
     if (d_crackOutData.d_needNewFile && d_crackOutData.d_file)
@@ -335,8 +337,9 @@ void geometry::Fracture::output(const size_t &n, const double &time,
   for (size_t i = 0; i < d_fractureDeck_p->d_cracks.size(); i++) {
     auto crack = d_fractureDeck_p->d_cracks[i];
     fprintf(d_crackOutData.d_file,
-            "%lu, %6.8e, %u, %6.8e, %6.8e, %6.8e, %u, %6.8e, %6.8e, %6.8e, "
-            "%6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e\n",
+            "%lu, %6.8e, %u, %6.8e, %6.8e, %6.8e, %u, %6.8e, "
+            "%6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, %6.8e, "
+            "%6.8e, %6.8e\n",
             i, time, crack.d_ib, crack.d_pb.d_x, crack.d_pb.d_y,
             (*Z)[crack.d_ib], crack.d_it, crack.d_pt.d_x, crack.d_pt.d_y,
             (*Z)[crack.d_it], crack.d_l, crack.d_lb, crack.d_lt, crack.d_vb.d_x,

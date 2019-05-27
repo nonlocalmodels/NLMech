@@ -80,12 +80,12 @@ void readInputFile(YAML::Node config, const std::string &set,
                    InstructionData *data) {
 
   if (config["Compute"][set]["Tag_Filename"]) {
-    data->d_tagFilename = "_" +
+    data->d_tagFilename =
         config["Compute"][set]["Tag_Filename"].as<std::string>();
   } else {
     // we work with default filename of form
     // pp_set_1_time_step_0.vtu
-    data->d_tagFilename = "_" + set;
+    data->d_tagFilename = set;
   }
 
   //
@@ -440,7 +440,7 @@ void tools::pp::fe2D(const std::string &filename) {
       auto mesh_appended = false;
 
       // open a output vtu file
-      auto writer = rw::writer::VtkWriterInterface(out_filename +
+      auto writer = rw::writer::VtkWriterInterface(out_filename + "_" +
           data.d_tagFilename + "_" + std::to_string(out));
 
       //
@@ -754,7 +754,7 @@ void tools::pp::fe2D(const std::string &filename) {
           f2.get();
 
           // create unstructured vtk output
-          std::string fname = out_filename + data.d_tagFilename +
+          std::string fname = out_filename + "_" + data.d_tagFilename +
                               "_quads_" + std::to_string(out);
           auto writer1 = rw::writer::VtkWriterInterface(fname);
           writer1.appendNodes(&elem_quads);
@@ -790,6 +790,7 @@ void tools::pp::fe2D(const std::string &filename) {
             fracture_decks[c].d_dtCrackOut = output_deck->d_dtOut;
             fracture_decks[c].d_dtCrackVelocity = output_deck->d_dtOut;
           }
+          fracture_decks[c].d_crackOutFilename = data.d_tagFilename;
 
           // get fracture class
           fractures[c] = new geometry::Fracture(&(fracture_decks[c]));
@@ -824,8 +825,8 @@ void tools::pp::fe2D(const std::string &filename) {
         }
 
         // get current displacement
-        n += 1;
-        time += model_deck->d_dt;
+        n = out * output_deck->d_dtOut;
+        time = n * model_deck->d_dt;
         auto f2 = hpx::parallel::for_loop(
             hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
             mesh->getNumNodes(), [&u, v, model_deck](boost::uint64_t i) {

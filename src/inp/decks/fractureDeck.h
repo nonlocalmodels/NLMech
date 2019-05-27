@@ -189,6 +189,9 @@ struct FractureDeck {
   /*! @brief Number of time steps used to compute the crack velocity */
   size_t d_dtCrackVelocity;
 
+  /*! @brief filename of crack data */
+  std::string d_crackOutFilename;
+
   /** @}*/
 
   /*!

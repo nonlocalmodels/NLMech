@@ -270,6 +270,12 @@ void inp::Input::setFractureDeck() {
   if (d_fractureDeck_p->d_dtCrackVelocity > d_fractureDeck_p->d_dtCrackOut)
     d_fractureDeck_p->d_dtCrackVelocity = d_fractureDeck_p->d_dtCrackOut;
 
+  if (config["Fracture"]["Crack_Out_Filename"])
+    d_fractureDeck_p->d_crackOutFilename =
+      config["Fracture"]["Crack_Out_Filename"].as<std::string>();
+  else
+    d_fractureDeck_p->d_crackOutFilename = "crack_data";
+
   size_t ncracks = 0;
   if (config["Fracture"]["Cracks"]["Sets"])
     ncracks = config["Fracture"]["Cracks"]["Sets"].as<size_t>();
