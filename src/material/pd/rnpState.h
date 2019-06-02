@@ -3,8 +3,8 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#ifndef MATERIAL_PD_BONDMATERIAL_H
-#define MATERIAL_PD_BONDMATERIAL_H
+#ifndef MATERIAL_PD_STATEMATERIAL_H
+#define MATERIAL_PD_STATEMATERIAL_H
 
 #include "baseMaterial.h"
 #include <vector>
@@ -20,20 +20,25 @@ namespace pd {
 
 /*! @brief A Class implementing regularized nonlinear peridynamic model
  *
- * Provides method to compute energy and force using nonlinear bond-based
- * model introduced and studied in <a href="https://doi.org/10
- * .1007/s10659-015-9564-z>Lipton2016</a>, <a href="https://epubs.siam
- * .org/doi/10.1137/17M1112236">JhaLipton2018</a>, and <a href="https://doi
- * .org/10.1007/s42102-019-00010-0">LiptonJha2019</a>.
+ * Provides method to compute energy and force using nonlinear state-based
+ * model introduced and studied in <a
+ * href="https://doi.org/10.1007/978-3-319-22977-5_33-1">Lipton2018</a>, <a
+ * href="https://www.sciencedirect.com/science/article/pii/S0045782519301537">JhaLipton2019</a>.
  *
- * 1. The pairwise energy is
- * \f[ E_{bond} = \int_D \frac{1}{|H_\epsilon(x)|} \int_{H_\epsilon(x)} |y-x|
+ * 1. The pairwise energy and hydrostatic energy are
+ * \f[ E_{bond} = \int_D \frac{1}{|B_\epsilon(x)|} \int_{B_\epsilon(x)} |y-x|
  * W_{bond}(S(y,x; u)) dy dx \f]
- * where \f$ H_\epsilon(x) \f$ is a ball (circle in 2-d) centered at \f$ x\f$
- * of  radius \f$ \epsilon\f$, \f$ |H_\epsilon(x)| \f$ is the volume (area in
+ * \f[ E_{state} = \int_D W_{state}(\theta(x;u)) dx \f]
+ * where \f$ B_\epsilon(x) \f$ is a ball (circle in 2-d) centered at \f$ x\f$
+ * of  radius \f$ \epsilon\f$, \f$ |B_\epsilon(x)| \f$ is the volume (area in
  * 2-d) of ball, \f$ S(y,x;u) = \frac{u(y) - u(x)}{|y-x|} \cdot
  * \frac{y-x}{|y-x|} \f$
- * is the linearized bond strain (assuming small deformation).
+ * is the linearized bond strain (assuming small deformation) and \f$ \theta
+ * (x;u) \f$ is the volumetric (hydrostatic) strain at material point \f$ x\f$
+ * defined as
+ * \f[ \theta(x;u) = \frac{1}{|H_\epsilon(x)|} \int_{H_\epsilon(x)}
+ * J^\epsilon(|y-x|) S(y,x;u) |y-x| dy. \f]
+ * \f$ J^\epsilon(|y-x|)\f$ is the influence function.
  *
  * 2. Bond energy density \f$ W_{bond} \f$ is given by
  * \f[ W_{bond} (S(y,x;u)) = J^\epsilon(|y-x|) \frac{1}{\epsilon |y-x|} \psi
@@ -43,19 +48,30 @@ namespace pd {
  * function with following properties
  * \f[ \lim_{r\to 0^+} \frac{\psi(r)}{r} = \psi'(0), \quad \lim_{r\to \infty}
  * \psi(r) = \psi_\infty < \infty. \f]
- * \f$ J^\epsilon(|y-x|)\f$ is the influence function.
  *
- * 3. Force at material point \f$ x \f$ is given by
- * \f[ f_{bond}(x) = \frac{4}{|H_\epsilon(x)|} \int_{H_\epsilon(x)}
+ * 3. State energy density \f$ W_{state}\f$ is given by
+ * \f[ W_{state}(\theta(x;u)) = \frac{g(\theta(x;u))}{\epsilon^2} \f]
+ * where \f$ g : \mathsf{R} \to \mathsf{R} \f$ is the hydrostatic potential
+ * function. It can be either quadratic function or can be convex for small
+ * strain and concave for large strain.
+ *
+ * 4. Force at material point \f$ x \f$ due to bond-based potential is given by
+ * \f[ f_{bond}(x) = \frac{4}{|B_\epsilon(x)|} \int_{B_\epsilon(x)}
  * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi'(|y-x| S(y,x;u)^2) S(y,x;u)
  * \frac{y-x}{|y-x|} dy.\f]
  *
- * 4. In this class, we will assume
- *  \f[ \psi(r) = C ( 1-\exp[-\beta r] \f]
- * where \f$ C, \beta \f$ are the peridynamic material parameter
+ * 5. Force at material point \f$ x\f$ due to state-based potential is given by
+ * \f[ f_{state}(x) = \frac{1}{|B_\epsilon(x)|} \int_{B_\epsilon(x)}
+ * \frac{J^\epsilon(|y-x|)}{\epsilon^2} [g'(\theta(x;u)) + g'(\theta(y;u))]
+ * \frac{y-x}{|y-x|} dy.\f]
+ *
+ * 6. In this class, we will assume
+ *  - \f[ \psi(r) = C ( 1-\exp[-\beta r] \f]
+ *  - \f[ g(r) = \frac{\bar{C}}{2} r^2 \f]
+ * where \f$ C, \beta, \bar{C} \f$ are the peridynamic material parameter
  * determined from the elastic and fracture properties of the material.
  */
-class RNPBond : public BaseMaterial {
+class RNPState : public BaseMaterial {
 
 public:
   /*!
@@ -65,8 +81,8 @@ public:
    * @param horizon Horizon
    * @param M Moment of influence function
    */
-  RNPBond(inp::MaterialDeck *deck, const size_t &dim, const double &horizon,
-          const double &M);
+  RNPState(inp::MaterialDeck *deck, const size_t &dim, const double &horizon,
+           const double &M);
 
   /*!
    * @brief Returns energy and force between bond due to pairwise interaction
@@ -80,7 +96,7 @@ public:
    * dy. \f]
    * where \f$\psi(r) = C(1-\exp(-\beta r))\f$.
    *
-   * For given initial bond length $\f r \f$ and bond strain \f$ s\f$, this
+   * For given initial bond length \f$ r \f$ and bond strain \f$ s\f$, this
    * function returns pair of
    * \f[ \hat{e} =  \frac{J^\epsilon(r)}{\epsilon |B_\epsilon(0)|} \psi(r s^2)
    * \f]
@@ -112,7 +128,7 @@ public:
    * For material point \f$ x \f$ in \a no-fail region, we modify the function
    * \f$ \psi \f$ to \f[ \psi(r) = \psi'(0) r, \qquad \psi'(0) = C\beta . \f]
    *
-   * For given initial bond length $\f r \f$ and bond strain \f$ s\f$, this
+   * For given initial bond length \f$ r \f$ and bond strain \f$ s\f$, this
    * function returns pair of
    * \f[ \hat{e} =  \frac{J^\epsilon(r)}{\epsilon |B_\epsilon(0)|} \psi(r s^2)
    * \f]
@@ -129,6 +145,66 @@ public:
                                             const double &J) override;
 
   /*!
+   * @brief Returns hydrostatic energy density
+   *
+   * Total hydrostatic energy is given by
+   * \f[ \int_D \frac{g(\theta(x;u))}{\epsilon^2}  dx \f]
+   * where \f$ g(r) = \bar{C}r^2/2 \f$.
+   *
+   * Given hydrostatic strain \f$ \theta \f$, this function returns \f$
+   * \frac{g(\theta)}{\epsilon^2}\f$.
+   *
+   * @param theta Hydrostatic strain
+   * @return Value Energy density
+   */
+  double getStateEnergy(const double &theta) override;
+
+  /*!
+   * @brief Returns hydrostatic force density
+   *
+   * Force at material point \f$ x\f$ due to state-based potential is given by
+   * \f[ f_{state}(x) = \frac{1}{|B_\epsilon(x)|} \int_{B_\epsilon(x)}
+   * \frac{J^\epsilon(|y-x|)}{\epsilon^2} [g'(\theta(x;u)) + g'(\theta(y;u))]
+   * \frac{y-x}{|y-x|} dy.\f]
+   * Here \f$ g(r) = \frac{\bar{C}}{2} r^2 \f$.
+   *
+   * Given hydrostatic strain \f$ \theta \f$, influence function \f$ J \f$ at
+   * \f$ r\f$, this function returns
+   * \f[ \frac{g'(\theta) J}{\epsilon^2|B_\epsilon(x)|} \f]
+   *
+   * @param theta Hydrostatic strain
+   * @param J Influence function at r
+   * @return Value Force density
+   */
+  double getStateForce(const double &theta, const double &J) override;
+
+  /*!
+   * @brief Returns true if bond contributes to hydrostatic force
+   * @param S Bond strain
+   * @param r Reference bond length
+   * @return True/false
+   */
+  bool doesBondContribToState(const double &S, const double &r) override;
+
+  /*!
+   * @brief Returns contribution of bond to hydrostatic strain
+   *
+   * Hydrostatic strain is given by
+   * \f[ \theta(x;u) = \frac{1}{|H_\epsilon(x)|} \int_{H_\epsilon(x)}
+   * J^\epsilon(|y-x|) S(y,x;u) |y-x| dy. \f]
+   *
+   * Given \f$ r\f$, strain \f$ s \f$, this function returns
+   * \f[ \frac{J^\epsilon(r) s r}{|H_\epsilon(x)|}. \f]
+   *
+   * @param S Bond strain
+   * @param r Reference (initial) bond length
+   * @param J Influence function at r
+   * @return Value Contribution to hydrostatic strain
+   */
+  double getBondContribToHydroStrain(const double &S, const double &r,
+                                     const double &J) override;
+
+  /*!
    * @brief Returns critical bond strain
    *
    * @param r Reference length of bond
@@ -140,32 +216,37 @@ private:
   /*!
    * @brief Computes rnp material parameters from elastic constants
    *
-   * Either Young's modulus E or bulk modulus K, and either critical energy
-   * release rate Gc or critical stress intensity factor KIc are needed.
-   * Assuming Poisson's ratio \f$ \nu = \frac{1}{4} \f$ we compute lame
-   * parameters \f$ \lambda, \mu \f$ where \f$ \mu = \lambda \f$ for bond-based.
+   * Either Young's modulus E or bulk modulus K, and Poisson ratio \f$ \nu \f$,
+   * and either critical energy release rate Gc or critical stress intensity
+   * factor KIc are needed. We first compute lame
+   * parameters \f$ \lambda, \mu \f$.
    *
-   * With lame parameters, we use following formula, see Equation (5.7) & (5
-   * .8) of <a href="https://doi.org/10.1007/s10659-015-9564-z>Lipton2016</a>
+   * With lame parameters, we use following formula, see Equations (94), (95)
+   * & (97) of <a
+   * href="https://doi.org/10.1007/978-3-319-22977-5_33-1">Lipton2018</a>
    * - if \f$ d=2 \f$
-   * \f[ \lambda = \mu = \frac{\psi'(0)}{4} M_2, \qquad Gc = \frac{4
-   * \psi_{\infty}}{\pi} M_2. \f]
+   * \f[ \mu = \frac{\psi'(0)}{4} M_2, \qquad \lambda = \mu + \frac{g''(0)}{2}
+   * M_2^2, \qquad Gc = \frac{4\psi_{\infty}}{\pi} M_2. \f]
    * - if \f$ d=3\f$
-   * \f[ \lambda = \mu = \frac{\psi'(0)}{5} M_3, \qquad Gc = \frac{3
-   * \psi_{\infty}}{2} M_3. \f]
+   * \f[ \mu = \frac{\psi'(0)}{5} M_3, \qquad \lambda = \mu + \frac{g''(0)
+   * }{2}M_3^2, \qquad Gc = \frac{3\psi_{\infty}}{2} M_3. \f]
    *
    * Where \f$M_2, M_3\f$ are defined by
    * \f[ M_2 =\int_0^1 r^2 J(r) dr, \qquad M_3 = \int_0^1 r^3 J(r) dr. \f]
    *
-   * For potential function \f$ \psi(r) = c ( 1-\exp[-\beta r])\f$, we have \f$
-   * \psi'(0) = c\beta, \psi_{\infty} = c \f$. Thus, the values of \f$ c, \beta \f$
-   * are given by
+   * For potential function \f$ \psi(r) = c ( 1-\exp[-\beta r]), g(r) =
+   * \bar{C} r^2/2\f$, we have \f$
+   * \psi'(0) = c\beta, \psi_{\infty} = c, g''(0) = \bar{C} \f$. Thus, the
+   * values of \f$ c, \beta, \bar{C} \f$ are given by
    * - if \f$ d=2 \f$
    * \f[ c = \frac{\pi G_c}{4} \frac{1}{M_2}, \qquad
-   *     \beta = \frac{4 \lambda}{c} \frac{1}{M_2} .\f]
+   *     \beta = \frac{4 \mu}{c} \frac{1}{M_2}, \qquad \bar{C} = \frac{2
+   *     (\lambda - \mu)}{M_2^2} .\f]
    * - if \f$ d=3 \f$
    * \f[ c = \frac{2 G_c}{3} \frac{1}{M_3}, \qquad
-   *     \beta = \frac{5 \lambda}{c} \frac{1}{M_3} .\f]
+   *     \beta = \frac{5 \lambda}{c} \frac{1}{M_3}, \qquad \bar{C} = \frac{2
+   *     (\lambda - \mu)}{M_3^2} .\f]
+   *
    * @param deck Input material deck
    * @param M Moment of influence function
    */
@@ -197,6 +278,9 @@ private:
   /*! @brief Parameter \f$ \beta \f$ */
   double d_beta;
 
+  /*! @brief Parameter \f$ \bar{C} \f$ */
+  double d_barC;
+
   /** @}*/
 
   /*! @brief Inflection point of nonlinear function = \f$ 1/\sqrt{2\beta}\f$ */
@@ -215,6 +299,12 @@ private:
 
   /*! @brief Flag which indicates if the breaking of bond is irreversible */
   bool d_irrevBondBreak;
+
+  /*!
+   * @brief Flag which indicates if the broken bond contributes to
+   * state-based interaction
+   */
+  bool d_stateContributionFromBrokenBond;
 };
 
 } // namespace pd

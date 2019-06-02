@@ -365,11 +365,6 @@ void model::FDModel::computeForces() {
         auto xi = this->d_mesh_p->getNode(i);
         auto ui = this->d_u[i];
 
-        // get hydrostatic energy and force
-        std::pair<double, double> gi;
-        if (this->d_material_p->isStateActive())
-          gi = d_material_p->getStateEF(this->d_hS[i]);
-
         // get interior flag
         auto node_i_interior = this->d_interiorFlags_p->getInteriorFlag(i, xi);
 
@@ -419,18 +414,18 @@ void model::FDModel::computeForces() {
           force_i.d_z += scalar_f * (xj.d_z - xi.d_z);
 
           // compute state-based contribution
-          if (d_material_p->isStateActive() &&
-              d_material_p->addBondContribToState(Sji, rji)) {
+          if (this->d_material_p->isStateActive() &&
+              this->d_material_p->doesBondContribToState(Sji, rji)) {
 
-            // Compute gj while noting that gi is already computed
-            auto gj = d_material_p->getStateEF(this->d_hS[j_id]);
+            // Compute state force density
+            auto dgi = this->d_material_p->getStateForce(this->d_hS[i], rji);
+            auto dgj = this->d_material_p->getStateForce(this->d_hS[j_id], rji);
 
-            auto scalar_g =
-                d_material_p->getStateForce(gi.second + gj.second, rji) / rji;
+            auto scalar_g = (dgi + dgj) / rji;
 
             force_i.d_x += scalar_g * (xj.d_x - xi.d_x);
-            force_i.d_y += scalar_g * (xj.d_x - xi.d_x);
-            force_i.d_z += scalar_g * (xj.d_x - xi.d_x);
+            force_i.d_y += scalar_g * (xj.d_y - xi.d_y);
+            force_i.d_z += scalar_g * (xj.d_z - xi.d_z);
           }
         } // loop over neighboring nodes
 
@@ -478,11 +473,9 @@ void model::FDModel::computeHydrostaticStrains() {
             volj *= (check_up - rji) / h;
 
           // compute the contribution of bond to hydrostatic strain at i
-          if (d_material_p->addBondContribToState(Sji, rji)) {
-
+          if (this->d_material_p->doesBondContribToState(Sji, rji))
             hydro_strain_i +=
-                volj * d_material_p->getBondContribToHydroStrain(Sji, rji);
-          }
+                volj * this->d_material_p->getBondContribToHydroStrain(Sji, rji);
         } // loop over neighboring nodes
 
         // update
@@ -525,11 +518,6 @@ void model::FDModel::computePostProcFields() {
 
         // get volume of node i
         auto voli = this->d_mesh_p->getNodalVolume(i);
-
-        // get hydrostatic energy and force
-        std::pair<double, double> gi;
-        if (this->d_material_p->isStateActive())
-          gi = d_material_p->getStateEF(this->d_hS[i]);
 
         // get interior flag
         auto node_i_interior = this->d_interiorFlags_p->getInteriorFlag(i, xi);
@@ -589,8 +577,7 @@ void model::FDModel::computePostProcFields() {
 
         // compute hydrostatic energy
         if (this->d_material_p->isStateActive())
-          hydro_energy_i =
-              gi.first / (d_modelDeck_p->d_horizon * d_modelDeck_p->d_horizon);
+          hydro_energy_i = this->d_material_p->getStateEnergy(this->d_hS[i]);
 
         if (this->d_policy_p->populateData("Model_d_e"))
           this->d_e[i] = (energy_i + hydro_energy_i) * voli;

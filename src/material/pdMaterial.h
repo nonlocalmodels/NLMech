@@ -6,7 +6,7 @@
 #ifndef MATERIAL_PD_MATERIAL_H
 #define MATERIAL_PD_MATERIAL_H
 
-#include "util/point.h"         // definition of Point3
+#include "util/point.h" // definition of Point3
 #include <string>
 #include <vector>
 
@@ -79,21 +79,29 @@ public:
                                       bool &fs, const bool &break_bonds);
 
   /*!
-   * @brief Returns hydrostatic energy and force
+   * @brief Returns hydrostatic energy density
    *
    * @param theta Hydrostatic strain
-   * @return Value Pair of energy and force
+   * @return Value Energy density
    */
-  std::pair<double, double> getStateEF(const double &theta);
+  double getStateEnergy(const double &theta);
 
   /*!
    * @brief Returns hydrostatic force density
    *
-   * @param g_prime Derivative of hydrostatic potential function
+   * @param theta Hydrostatic strain
    * @param r Reference (initial) bond length
    * @return Value Force density
    */
-  double getStateForce(const double &g_prime, const double &r);
+  double getStateForce(const double &theta, const double &r);
+
+  /*!
+   * @brief Returns true if bond contributes to hydrostatic force
+   * @param S Bond strain
+   * @param r Reference bond length
+   * @return True/false
+   */
+  bool doesBondContribToState(const double &S, const double &r);
 
   /*!
    * @brief Returns contribution of bond to hydrostatic strain
@@ -103,6 +111,28 @@ public:
    * @return Value Contribution to hydrostatic strain
    */
   double getBondContribToHydroStrain(const double &S, const double &r);
+
+  /*!
+   * @brief Returns the bond strain
+   * @param dx Reference bond vector
+   * @param du Difference of displacement
+   * @return Value Bond strain \f$ S = \frac{du \cdot dx}{|dx|^2} \f$
+   */
+  double getS(const util::Point3 &dx, const util::Point3 &du);
+
+  /*!
+   * @brief Returns critical bond strain
+   *
+   * @param r Reference length of bond
+   * @return Value Critical strain
+   */
+  double getSc(const double &r);
+
+  /*!
+   * @brief Returns the density of the material
+   * @return density Density of the material
+   */
+  double getDensity();
 
   /*!
    * @brief Returns the value of influence function
@@ -124,40 +154,10 @@ public:
   double getMoment(const size_t &i);
 
   /*!
-   * @brief Returns the bond strain
-   * @param dx Reference bond vector
-   * @param du Difference of displacement
-   * @return Value Bond strain \f$ S = \frac{du \cdot dx}{|dx|^2} \f$
-   */
-  double getS(const util::Point3 &dx, const util::Point3 &du);
-
-  /*!
-   * @brief Returns the density of the material
-   * @return density Density of the material
-   */
-  double getDensity();
-
-  /*!
-   * @brief Returns true if bond contributes to hydrostatic force
-   * @param S Bond strain
-   * @param r Reference bond length
-   * @return True/false
-   */
-  bool addBondContribToState(const double &S, const double &r);
-
-  /*!
-   * @brief Returns critical bond strain
-   *
-   * @param r Reference length of bond
-   * @return Value Critical strain
-   */
-  double getSc(const double &r);
-
-  /*!
    * @brief Returns the material deck
    * @return deck Material deck
    */
-  inp::MaterialDeck * getMaterialDeck();
+  inp::MaterialDeck *getMaterialDeck();
 
 private:
   /**

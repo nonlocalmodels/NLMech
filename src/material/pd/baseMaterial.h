@@ -35,12 +35,12 @@ public:
    *
    * @param r Reference (initial) bond length
    * @param s Bond strain
-   * @param influence Value of influence function at r
+   * @param J Influence function at r
    * @param fs Bond fracture state
    * @return Value Pair of energy and force
    */
   virtual std::pair<double, double> getBondEF(const double &r, const double &s,
-                                              const double &influence,
+                                              const double &J,
                                               bool &fs) {
     return std::make_pair(0., 0.);
   };
@@ -50,33 +50,43 @@ public:
    *
    * @param r Reference (initial) bond length
    * @param s Bond strain
-   * @param influence Value of influence function at r
+   * @param J Influence function at r
    * @return Value Pair of energy and force
    */
   virtual std::pair<double, double>
-  getBondEFNoFail(const double &r, const double &s, const double &influence) {
+  getBondEFNoFail(const double &r, const double &s, const double &J) {
     return std::make_pair(0., 0.);
   };
 
   /*!
-   * @brief Returns hydrostatic energy and force
+   * @brief Returns hydrostatic energy density
    *
    * @param theta Hydrostatic strain
-   * @return Value Pair of energy and force
+   * @return Value Energy density
    */
-  virtual std::pair<double, double> getStateEF(const double &theta) {
-    return std::make_pair(0., 0.);
+  virtual double getStateEnergy(const double &theta) {
+    return 0.;
   };
 
   /*!
    * @brief Returns hydrostatic force density
    *
-   * @param g_prime Derivative of hydrostatic potential function
-   * @param r Reference (initial) bond length
+   * @param theta Hydrostatic strain
+   * @param J Influence function at r
    * @return Value Force density
    */
-  virtual double getStateForce(const double &g_prime, const double &r) {
+  virtual double getStateForce(const double &theta, const double &J) {
     return 0.;
+  };
+
+  /*!
+   * @brief Returns true if bond contributes to hydrostatic force
+   * @param S Bond strain
+   * @param r Reference bond length
+   * @return True/false
+   */
+  virtual bool doesBondContribToState(const double &S, const double &r) {
+    return false;
   };
 
   /*!
@@ -84,9 +94,11 @@ public:
    *
    * @param S Bond strain
    * @param r Reference (initial) bond length
+   * @param J Influence function at r
    * @return Value Contribution to hydrostatic strain
    */
-  virtual double getBondContribToHydroStrain(const double &S, const double &r) {
+  virtual double getBondContribToHydroStrain(const double &S, const double &r, const
+  double &J) {
     return 0.;
   };
 

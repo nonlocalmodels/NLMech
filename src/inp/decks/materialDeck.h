@@ -66,6 +66,14 @@ struct MatData {
   /**@{*/
 
   /*!
+   * @brief Compute Poisson's ratio from Lame parameters
+   * @param lambda Lame first parameter
+   * @param mu Lame second parameter
+   * @return nu Poisson's ratio
+   */
+  double toNu(double lambda, double mu) { return lambda * 0.5 / (lambda + mu); }
+
+  /*!
    * @brief Compute Young's modulus E from Bulk modulus K and Poisson's ratio nu
    * @param K Bulk modulus
    * @param nu Poisson's ratio
@@ -117,6 +125,17 @@ struct MatData {
    */
   double toGK(double K, double nu) {
     return 3. * K * (1. - 2. * nu) / (2. * (1. + nu));
+  }
+
+  /*!
+ * @brief Compute Young's modulus E from Lame first parameter lambda and
+ * Poisson's ratio nu
+ * @param lambda Lame first parameter
+ * @param nu Poisson's ratio
+ * @return E Young's modulus
+ */
+  double toELambda(double lambda, double nu) {
+    return lambda * (1. + nu) * (1. - 2. * nu) / nu;
   }
 
   /*!

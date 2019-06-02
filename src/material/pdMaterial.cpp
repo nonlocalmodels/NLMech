@@ -7,6 +7,7 @@
 #include "inp/decks/materialDeck.h"
 #include "pd/influenceFn.h"
 #include "pd/rnpBond.h"
+#include "pd/rnpState.h"
 #include "util/compare.h"
 #include <iostream>
 
@@ -37,12 +38,19 @@ material::pd::Material::Material(inp::MaterialDeck *deck, const size_t &dim,
     d_baseMaterial_p =
         new material::pd::RNPBond(d_deck_p, d_dimension, d_horizon,
                                   d_baseInfluenceFn_p->getMoment(d_dimension));
+  } else if (d_deck_p->d_materialType == "PDState") {
+    d_stateActive = true;
+    d_baseMaterial_p =
+        new material::pd::RNPState(d_deck_p, d_dimension, d_horizon,
+                                   d_baseInfluenceFn_p->getMoment(d_dimension));
   } else {
     std::cerr << "Error: Material type = " << d_deck_p->d_materialType
-              << ". Currently only PDBond is implemented.\n";
+              << ". Currently only PDBond and PDState is implemented.\n";
     exit(1);
   }
 }
+
+bool material::pd::Material::isStateActive() { return d_stateActive; }
 
 std::pair<double, double>
 material::pd::Material::getBondEF(const double &r, const double &s, bool &fs,
@@ -55,17 +63,25 @@ material::pd::Material::getBondEF(const double &r, const double &s, bool &fs,
         r, s, d_baseInfluenceFn_p->getInfFn(r / d_horizon));
 }
 
-std::pair<double, double>
-material::pd::Material::getStateEF(const double &theta) {
-  return d_baseMaterial_p->getStateEF(theta);
+double material::pd::Material::getStateEnergy(const double &theta) {
+  return d_baseMaterial_p->getStateEnergy(theta);
 }
 
-double material::pd::Material::getInfFn(const double &r) {
-  return d_baseInfluenceFn_p->getInfFn(r / d_horizon);
+double material::pd::Material::getStateForce(const double &theta,
+                                             const double &r) {
+  return d_baseMaterial_p->getStateForce(
+      theta, d_baseInfluenceFn_p->getInfFn(r / d_horizon));
 }
 
-double material::pd::Material::getMoment(const size_t &i) {
-  return d_baseInfluenceFn_p->getMoment(i);
+bool material::pd::Material::doesBondContribToState(const double &S,
+                                                   const double &r) {
+  return d_baseMaterial_p->doesBondContribToState(S, r);
+}
+
+double material::pd::Material::getBondContribToHydroStrain(const double &S,
+                                                           const double &r) {
+  return d_baseMaterial_p->getBondContribToHydroStrain(
+      S, r, d_baseInfluenceFn_p->getInfFn(r / d_horizon));
 }
 
 double material::pd::Material::getS(const util::Point3 &dx,
@@ -73,29 +89,18 @@ double material::pd::Material::getS(const util::Point3 &dx,
   return dx.dot(du) / dx.dot(dx);
 }
 
-double material::pd::Material::getDensity() { return d_density; }
-
-bool material::pd::Material::isStateActive() { return d_stateActive; }
-
-bool material::pd::Material::addBondContribToState(const double &S,
-                                                   const double &r) {
-  return d_deck_p->d_stateContributionFromBrokenBond ||
-         util::compare::definitelyLessThan(S, d_deck_p->d_checkScFactor *
-                                                  d_baseMaterial_p->getSc(r));
-}
-
 double material::pd::Material::getSc(const double &r) {
   return d_baseMaterial_p->getSc(r);
 }
 
-double material::pd::Material::getStateForce(const double &g_prime,
-                                             const double &r) {
-  return d_baseMaterial_p->getStateForce(g_prime, r);
+double material::pd::Material::getDensity() { return d_density; }
+
+double material::pd::Material::getInfFn(const double &r) {
+  return d_baseInfluenceFn_p->getInfFn(r / d_horizon);
 }
 
-double material::pd::Material::getBondContribToHydroStrain(const double &S,
-                                                           const double &r) {
-  return d_baseMaterial_p->getBondContribToHydroStrain(S, r);
+double material::pd::Material::getMoment(const size_t &i) {
+  return d_baseInfluenceFn_p->getMoment(i);
 }
 
 inp::MaterialDeck *material::pd::Material::getMaterialDeck() {
