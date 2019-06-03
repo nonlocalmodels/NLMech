@@ -337,7 +337,8 @@ void inp::Input::setInteriorFlagsDeck() {
         d_modelDeck_p->d_horizon *
         config["No_Fail_Region"]["Factor"].as<double>();
 
-    d_interiorFlagsDeck_p->d_computeAndNotStoreFlag =
+    if (config["No_Fail_Region"]["Compute_And_Not_Store"])
+      d_interiorFlagsDeck_p->d_computeAndNotStoreFlag =
         config["No_Fail_Region"]["Compute_And_Not_Store"].as<bool>();
   }
 } // setInteriorFlagsDeck

@@ -6,6 +6,7 @@
 #include "interiorFlags.h"
 #include "inp/decks/interiorFlagsDeck.h"
 #include "util/compare.h"
+#include <iostream>
 
 //
 // BaseInterior
@@ -26,7 +27,7 @@ bool geometry::BaseInterior::getInteriorFlag(const size_t &i,
 geometry::ComputeInterior::ComputeInterior(
     inp::InteriorFlagsDeck *deck,
     std::pair<std::vector<double>, std::vector<double>> bbox)
-    : BaseInterior(deck, std::move(bbox)) {}
+    : geometry::BaseInterior(deck, std::move(bbox)) {}
 
 bool geometry::ComputeInterior::getInteriorFlag(const size_t &i,
                                                 const util::Point3 &x) {
@@ -56,17 +57,15 @@ bool geometry::ComputeInterior::getInteriorFlag(const size_t &i,
 geometry::DataInterior::DataInterior(
     inp::InteriorFlagsDeck *deck, const std::vector<util::Point3> *nodes,
     std::pair<std::vector<double>, std::vector<double>> bbox)
-    : BaseInterior(deck, std::move(bbox)) {
+    : geometry::BaseInterior(deck, std::move(bbox)) {
 
-  size_t size = nodes->size() / 8;
-  if (size * 8 < nodes->size())
-    size++;
-  d_intFlags = std::vector<uint8_t>(size, uint8_t(0));
+  size_t s = nodes->size() / 8;
+  if (s * 8 < nodes->size())
+    s++;
+  d_intFlags = std::vector<uint8_t>(s, uint8_t(0));
   for (size_t i = 0; i < nodes->size(); i++) {
-
     bool flag = true;
-
-    util::Point3 x = (*nodes)[i];
+    auto x = (*nodes)[i];
 
     // check if x coordinate is on left side of the left interior boundary
     if (util::compare::definitelyLessThan(x.d_x, d_bbox.first[0] + d_noFailTol))

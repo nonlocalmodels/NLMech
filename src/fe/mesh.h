@@ -235,6 +235,9 @@ private:
    */
   void computeVol();
 
+  /*! @brief Compute the bounding box  */
+  void computeBBox();
+
   /*!
    * @brief Compute the mesh size
    *

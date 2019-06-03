@@ -6,14 +6,15 @@
 #include "mesh.h"
 #include "inp/decks/meshDeck.h"
 #include "inp/policy.h"
+#include "quadrature.h"
 #include "rw/reader.h"
 #include "util/feElementDefs.h"
-#include "quadrature.h"
-#include <hpx/include/parallel_algorithm.hpp>
 #include <cstdint>
 #include <fstream>
+#include <hpx/include/parallel_algorithm.hpp>
 #include <iostream>
 #include <stdint.h>
+#include <util/compare.h>
 
 fe::Mesh::Mesh(inp::MeshDeck *deck)
     : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
@@ -121,6 +122,11 @@ void fe::Mesh::createData(const std::string &filename) {
     std::cout << "Mesh: Computing nodal volume.\n";
     computeVol();
   }
+
+  //
+  // compute bounding box
+  //
+  computeBBox();
 }
 
 void fe::Mesh::computeVol() {
@@ -173,6 +179,27 @@ void fe::Mesh::computeVol() {
       }); // end of parallel for loop
 
   f.get();
+}
+
+void fe::Mesh::computeBBox() {
+  std::vector<double> p1(3,0.);
+  std::vector<double> p2(3,0.);
+  for (auto x : d_nodes) {
+    if (util::compare::definitelyLessThan(x.d_x, p1[0]))
+      p1[0] = x.d_x;
+    if (util::compare::definitelyLessThan(x.d_y, p1[1]))
+      p1[1] = x.d_y;
+    if (util::compare::definitelyLessThan(x.d_z, p1[2]))
+      p1[2] = x.d_z;
+    if (util::compare::definitelyLessThan(p2[0], x.d_x))
+      p2[0] = x.d_x;
+    if (util::compare::definitelyLessThan(p2[1], x.d_y))
+      p2[1] = x.d_y;
+    if (util::compare::definitelyLessThan(p2[2], x.d_z))
+      p2[2] = x.d_z;
+  }
+
+  d_bbox = std::make_pair(p1, p2);
 }
 
 void fe::Mesh::computeMeshSize() {

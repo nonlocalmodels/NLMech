@@ -71,8 +71,7 @@ public:
    * @param bbox Bounding box to determine the location of nodes relative to
    * the boundary
    */
-  explicit ComputeInterior(
-      inp::InteriorFlagsDeck *deck,
+  ComputeInterior(inp::InteriorFlagsDeck *deck,
       std::pair<std::vector<double>, std::vector<double>> bbox);
 
   /*!
