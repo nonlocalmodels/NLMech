@@ -52,7 +52,7 @@ double material::pd::LinearInfluenceFn::getInfFn(const double &r) {
 }
 
 double material::pd::LinearInfluenceFn::getMoment(const size_t &i) {
-  return (d_a0 / double(i + 1)) - (d_a1 / double(i + 2));
+  return (d_a0 / double(i + 1)) + (d_a1 / double(i + 2));
 }
 
 material::pd::GaussianInfluenceFn::GaussianInfluenceFn(
