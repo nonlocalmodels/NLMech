@@ -660,11 +660,11 @@ void model::FDModel::output() {
   auto writer = rw::writer::VtkWriterInterface(filename);
 
   // write mesh
-  if (d_mesh_p->getNumElements() == 0)
-    writer.appendNodes(d_mesh_p->getNodesP(), &d_u);
-  else
+  if (d_mesh_p->getNumElements() != 0 && d_outputDeck_p->d_performFEOut)
     writer.appendMesh(d_mesh_p->getNodesP(), d_mesh_p->getElementType(),
         d_mesh_p->getElementConnectivitiesP(), &d_u);
+  else
+    writer.appendNodes(d_mesh_p->getNodesP(), &d_u);
 
   //
   // major simulation data
