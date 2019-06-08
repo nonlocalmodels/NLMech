@@ -47,7 +47,7 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
       exit(1);
     }
 
-    size_t time_num_params = 2;
+    size_t time_num_params = 1;
     if (bc.d_timeFnType == "linear_step")
       time_num_params = 3;
     else if (bc.d_timeFnType == "linear_slow_fast")
@@ -131,15 +131,15 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
 
       // apply time function
       if (bc.d_timeFnType == "linear")
-        fmax *= bc.d_timeFnParams[1] * time;
+        fmax *= time;
       else if (bc.d_timeFnType == "linear_step")
         fmax *= util::function::linearStepFunc(time, bc.d_timeFnParams[1],
                                                bc.d_timeFnParams[2]);
       else if (bc.d_timeFnType == "linear_slow_fast") {
         if (util::compare::definitelyGreaterThan(time, bc.d_timeFnParams[1]))
-          fmax *= bc.d_timeFnParams[2] * time;
-        else
           fmax *= bc.d_timeFnParams[3] * time;
+        else
+          fmax *= bc.d_timeFnParams[2] * time;
       }
 
       // multiply by the slope
