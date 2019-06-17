@@ -120,6 +120,10 @@ double getExactIntegrationRefQuad(size_t alpha, size_t beta) {
     return 0.;
 }
 
+void testLineElem(size_t n) {
+  return;
+}
+
 void testTriElem(size_t n) {
 
   //

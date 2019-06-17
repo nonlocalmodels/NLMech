@@ -18,7 +18,7 @@ struct QuadData {
   /*! @brief Quadrature weight */
   double d_w;
 
-  /*! @brief Quadrature point in 2-d or 3-d */
+  /*! @brief Quadrature point in 1-d, 2-d or 3-d */
   util::Point3 d_p;
 
   /*!

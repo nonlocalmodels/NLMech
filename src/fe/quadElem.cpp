@@ -16,17 +16,16 @@ fe::QuadElem::QuadElem(size_t order)
 std::vector<fe::QuadData>
 fe::QuadElem::getQuadPoints(const std::vector<util::Point3> &nodes) {
   //
-  // Map vertices of given triangle to reference triangle. Map first vertex
-  // in nodes to the first vertex (0,0) of triangle, similarly, map second
-  // and third to the second and third vertices (1,0) and (0,1) of reference
-  // triangle.
+  // Map vertices of given quadrangle element to reference quadrangle. Map
+  // first vertex in nodes list to the first vertex (-1,-1) of reference
+  // quadrangle, and similarly for other vertices.
   //
   // Caller needs to ensure that order does not go higher than 5.
   std::vector<fe::QuadData> qds = d_quads;
 
   // Since mapping will leave values of shape function unchanged, we only
   // need to modify the positions of quad points in qds and map it to the
-  // given triangle, and we also need to modify the weights.
+  // given quadrangle, and we also need to modify the weights.
   for (auto &i : qds) {
 
     fe::QuadData *qd = &i;
@@ -127,7 +126,7 @@ void fe::QuadElem::init() {
     d_quads.resize(0);
 
   //
-  // first order quad points for quadrangle
+  // first order quad points
   //
   if (d_quadOrder == 1) {
     d_quads.clear();
@@ -148,7 +147,7 @@ void fe::QuadElem::init() {
   }
 
   //
-  // second order quad points for triangle
+  // second order quad points
   //
   if (d_quadOrder == 2) {
     d_quads.clear();
@@ -170,7 +169,7 @@ void fe::QuadElem::init() {
   }
 
   //
-  // third order quad points for triangle
+  // third order quad points
   //
   if (d_quadOrder == 3) {
     d_quads.clear();
@@ -193,7 +192,7 @@ void fe::QuadElem::init() {
   }
 
   //
-  // fourth order quad points for triangle
+  // fourth order quad points
   //
   if (d_quadOrder == 4) {
     d_quads.clear();
@@ -217,7 +216,7 @@ void fe::QuadElem::init() {
   }
 
   //
-  // fifth order quad points for triangle
+  // fifth order quad points
   //
   if (d_quadOrder == 5) {
     d_quads.clear();

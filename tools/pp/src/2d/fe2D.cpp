@@ -4,10 +4,14 @@
 // (See accompanying file LICENSE.txt)
 
 #include "fe2D.h"
+#include "external/csv.h"           // csv reader
 #include "fe/mesh.h"                // definition of Mesh
+#include "fe/quadrature.h"          //
 #include "fe/quadElem.h"            // definition of QuadElem
 #include "fe/triElem.h"             // definition of TriElem
+#include "fe/lineElem.h"            // definition of LineElem
 #include "geometry/fracture.h"      // definition of Fracture
+#include "geometry/neighbor.h"      // definition of Neighbor
 #include "inp/decks/materialDeck.h" // definition of MaterialDeck
 #include "inp/decks/modelDeck.h"    // definition of ModelDeck
 #include "inp/decks/outputDeck.h"   // definition of OutputDeck
@@ -28,6 +32,16 @@
 #include <yaml-cpp/yaml.h> // YAML reader
 
 namespace {
+
+struct CrackTipData {
+  size_t d_n;
+  util::Point3 d_p;
+  util::Point3 d_v;
+
+  CrackTipData() : d_n(0), d_p(util::Point3()), d_v(util::Point3()){};
+  CrackTipData(size_t n, util::Point3 p, util::Point3 v)
+      : d_n(n), d_p(p), d_v(v){};
+};
 
 struct InstructionData {
   std::string d_tagFilename;
@@ -65,15 +79,24 @@ struct InstructionData {
   bool d_crackTip;
   bool d_crackSameDtOut;
 
+  bool d_compJIntegral;
+  int d_crackOrient;
+  std::string d_crackTipFile;
+  std::vector<double> d_contourFactor;
+  std::vector<CrackTipData> d_crackTipData;
+  size_t d_startJIntegral;
+  size_t d_endJIntegral;
+
   InstructionData()
-      : d_start(-1), d_end(-1),
-        d_scaleUOut(false), d_scaleU(1.), d_damageAtNodes(false),
-        d_outOnlyNodes(true), d_removeElements(false), d_markVAsZero(false),
-        d_markVInRectGiven(false),
+      : d_start(-1), d_end(-1), d_scaleUOut(false), d_scaleU(1.),
+        d_damageAtNodes(false), d_outOnlyNodes(true), d_removeElements(false),
+        d_markVAsZero(false), d_markVInRectGiven(false),
         d_markVRect(std::make_pair(util::Point3(), util::Point3())),
         d_markVPtsAreInCurrentConfig(false), d_computeStrain(false),
         d_magStrainTensor(false), d_symmetrizeV(false), d_combineMarkV(false),
-        d_symmLine(0.), d_crackTip(false), d_crackSameDtOut(true) {};
+        d_symmLine(0.), d_crackTip(false), d_crackSameDtOut(true),
+        d_compJIntegral(false), d_crackOrient(0), d_startJIntegral(0),
+        d_endJIntegral(0){};
 };
 
 void readInputFile(YAML::Node config, const std::string &set,
@@ -92,8 +115,8 @@ void readInputFile(YAML::Node config, const std::string &set,
   // Output only nodes
   //
   if (config["Compute"][set]["Output_Only_Nodes"])
-    data->d_outOnlyNodes = config["Compute"][set]["Output_Only_Nodes"]
-        .as<bool>();
+    data->d_outOnlyNodes =
+        config["Compute"][set]["Output_Only_Nodes"].as<bool>();
 
   //
   // check if start and end time step are specified
@@ -236,10 +259,41 @@ void readInputFile(YAML::Node config, const std::string &set,
       data->d_crackSameDtOut =
           config["Compute"][set]["Crack_Tip"]["Same_Dt_Out"].as<bool>();
   }
+
+  //
+  // J integral
+  //
+  if (config["Compute"][set]["J_Integral"]) {
+    auto e = config["Compute"][set]["J_Integral"];
+    data->d_compJIntegral = true;
+    if (e["Crack_Orient"])
+      data->d_crackOrient = e["Crack_Orient"].as<int>();
+    else {
+      std::cerr << "Error: Crack orientation is not provided.\n";
+      exit(1);
+    }
+    if (e["Crack_Tip_File"])
+      data->d_crackTipFile = e["Crack_Tip_File"].as<std::string>();
+    else {
+      std::cerr << "Error: Crack tip information filename is not provided.\n";
+      exit(1);
+    }
+    if (e["Contour_Size"]) {
+      for (auto f : e["Contour_Size"])
+        data->d_contourFactor.push_back(f.as<double>());
+
+      if (data->d_contourFactor.size() == 1)
+        data->d_contourFactor.push_back(data->d_contourFactor[0]);
+    } else {
+      std::cerr << "Error: Factors to create contour for J integral not "
+                   "provided.\n";
+      exit(1);
+    }
+  }
 }
 
-size_t findNode(const util::Point3 &x, const std::vector<util::Point3>
-  *nodes, const std::vector<util::Point3> *u = nullptr) {
+size_t findNode(const util::Point3 &x, const std::vector<util::Point3> *nodes,
+                const std::vector<util::Point3> *u = nullptr) {
 
   long int i_found = -1;
   double dist = 1000.0;
@@ -251,7 +305,7 @@ size_t findNode(const util::Point3 &x, const std::vector<util::Point3>
       }
     } else {
       if (util::compare::definitelyLessThan(x.dist((*nodes)[i] + (*u)[i]),
-        dist)) {
+                                            dist)) {
         dist = x.dist((*nodes)[i] + (*u)[i]);
         i_found = i;
       }
@@ -265,26 +319,24 @@ size_t findNode(const util::Point3 &x, const std::vector<util::Point3>
   return size_t(i_found);
 }
 
-void compute_damage(inp::Input *deck, inp::ModelDeck *model_deck,
-    material::pd::Material *material, fe::Mesh
-*mesh, const std::vector<util::Point3> *u, std::vector<float>
-    *Z) {
+void computeDamage(inp::Input *deck, inp::ModelDeck *model_deck,
+                   material::pd::Material *material, fe::Mesh *mesh,
+                   const std::vector<util::Point3> *u, std::vector<float> *Z) {
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      mesh->getNumNodes(), [Z, mesh, material, model_deck, u]
-          (boost::uint64_t i) {
+      mesh->getNumNodes(),
+      [Z, mesh, material, model_deck, u](boost::uint64_t i) {
         auto xi = mesh->getNode(i);
         for (size_t j = 0; j < mesh->getNumNodes(); j++) {
-          if (util::compare::definitelyGreaterThan(
-              xi.dist(mesh->getNode(j)), model_deck->d_horizon) ||
+          if (util::compare::definitelyGreaterThan(xi.dist(mesh->getNode(j)),
+                                                   model_deck->d_horizon) ||
               j == i)
             continue;
 
           auto xj = mesh->getNode(j);
-          if (util::compare::definitelyGreaterThan(xj.dist(xi),
-                                                   1.0E-10)) {
+          if (util::compare::definitelyGreaterThan(xj.dist(xi), 1.0E-10)) {
             auto Sr = std::abs(material->getS(xj - xi, (*u)[j] - (*u)[i])) /
-                material->getSc(xj.dist(xi));
+                      material->getSc(xj.dist(xi));
 
             if (util::compare::definitelyLessThan((*Z)[i], Sr))
               (*Z)[i] = Sr;
@@ -292,6 +344,151 @@ void compute_damage(inp::Input *deck, inp::ModelDeck *model_deck,
         } // loop over neighbors
       }); // parallel loop over nodes
   f.get();
+}
+
+void readCrackTipData(const std::string &filename,
+                      std::vector<CrackTipData> *data) {
+  // expected format of file:
+  // <output step>, <tip x>, <tip y>, <tip vx>, <tip vy>
+  io::CSVReader<5> in(filename);
+  in.read_header(io::ignore_extra_column, "id", "x", "y", "z", "volume");
+
+  double px, py, vx, vy;
+  int n;
+  while (in.read_row(n, px, py, vx, vy)) {
+    data->emplace_back(CrackTipData(size_t(n), util::Point3(px, py, 0.),
+                                    util::Point3(vx, vy, 0.)));
+  }
+}
+
+void interpolateUV(util::Point3 p, util::Point3 &uq, util::Point3 &vq,
+                   std::vector<util::Point3> *u, std::vector<util::Point3> *v,
+                   fe::Mesh *mesh) {
+  // check if element data is available
+  if (mesh->getNumElements() == 0) {
+    // use piecewise constant interpolation
+    long int loc_i = -1;
+    double dist = 1000.0;
+    for (size_t i=0; i<mesh->getNumNodes(); i++) {
+      if (util::compare::definitelyLessThan(p.dist(mesh->getNode(i)), dist)) {
+        dist = p.dist(mesh->getNode(i));
+        loc_i = i;
+      }
+    }
+
+    if (loc_i == -1) {
+      std::cerr << "Error: Can not locate node near to point p = (" << p.d_x <<
+      ","<<p.d_y<<").\n";
+      exit(1);
+    }
+
+    uq = (*u)[loc_i];
+    vq = (*v)[loc_i];
+  }
+  else {
+    // find element containing
+  }
+}
+
+void computeJIntegral(const size_t &out, const InstructionData &data,
+                      inp::ModelDeck *model_deck, inp::MaterialDeck *mat_deck,
+                      material::pd::Material *material, fe::Mesh *mesh,
+                      geometry::Neighbor * neighbor_list,
+                      std::vector<util::Point3> *u,
+                      std::vector<util::Point3> *v, double &energy) {
+
+  if (out < data.d_startJIntegral || out > data.d_endJIntegral)
+    return;
+
+  auto ctip = data.d_crackTipData[out - data.d_startJIntegral];
+  //
+  // create rectangle domain of specified size at the tip of crack
+  //
+  // Schematic for horizontal crack (similar for vertical crack)
+  //
+  //                         D                    C
+  //                         + + + + + + + + + + +
+  //                         +                   +
+  //                         +                   +
+  //       ------------------+                   +
+  //                         +                   +
+  //                         +                   +
+  //                         + + + + + + + + + + +
+  //                        A                    B
+  //
+  // 1. Contour is formed by lines A-B, B-C, C-D, D-A
+  //
+  // 2. Discretization scheme for integral over contour
+  // a. Discretize edges with uniform number of points and use linear line
+  // element for the interpolation
+  // b. Quadrature approximation of second order for integration over line
+  // elements
+  // c. Mesh size of uniform discretization is fixed to half of the mesh size
+  // of the simulation
+  //
+  std::pair<util::Point3, util::Point3> cd(
+      std::make_pair(util::Point3(), util::Point3()));
+  if (data.d_crackOrient == -1) {
+    // vertical crack
+    cd.first = util::Point3(ctip.d_p.d_x - 0.5 * data.d_contourFactor[0] *
+                                               model_deck->d_horizon,
+                            ctip.d_p.d_y, 0.);
+    cd.second = util::Point3(
+        ctip.d_p.d_x + 0.5 * data.d_contourFactor[0] * model_deck->d_horizon,
+        ctip.d_p.d_y + data.d_contourFactor[1] * model_deck->d_horizon, 0.);
+  } else if (data.d_crackOrient == 1) {
+    // horizontal crack
+    cd.first = util::Point3(ctip.d_p.d_x,
+                            ctip.d_p.d_y - 0.5 * data.d_contourFactor[1] *
+                                               model_deck->d_horizon,
+                            0.);
+    cd.second = util::Point3(
+        ctip.d_p.d_x + data.d_contourFactor[0] * model_deck->d_horizon,
+        ctip.d_p.d_y + 0.5 * data.d_contourFactor[1] * model_deck->d_horizon,
+        0.);
+  }
+
+  // create second order quadrature class for 1-d line element
+  auto quad = fe::LineElem(2);
+
+  // Discretize edge A - B and C - D
+  auto h = mesh->getMeshSize();
+  size_t N = (cd.second.d_x - cd.first.d_x) / h;
+  if (util::compare::definitelyLessThan(cd.fist.d_x + double(N) * h, cd
+  .second.d_x))
+    N++;
+  for (size_t I=0; I<N; I++) {
+
+    // line element
+    auto x1 = cd.first.d_x + double(I) * h;
+    auto x2 = cd.first.d_x + double(I+1) * h;
+    if (I == N - 1)
+      x2 = cd.second.d_x;
+
+    // get quadrature points
+    auto qds = quad.getQuadPoints(std::vector<util::Point3>{
+        util::Point3(x1, 0., 0.), util::Point3(x2, 0., 0.)});
+
+    // Edge A - B
+    auto y = cd.first.d_y;
+
+    // get normal
+    auto n = util::Point3(0.,-1., 0.);
+
+    // loop over quad points
+    for (auto qd : qds) {
+      // modify the y coordinate of quad point
+      qd.d_p.d_y = y;
+
+      // either interpolate or use piecewise constant approximation to get the
+      // displacement and velocity at the quadrature point
+      auto uq = util::Point3();
+      auto vq = util::Point3();
+      interpolateUV(qd.d_p, uq, vq, u, v, mesh);
+    }
+  }
+
+
 }
 
 } // namespace
@@ -329,7 +526,8 @@ void tools::pp::fe2D(const std::string &filename) {
     out_path = config["Output"]["Path"].as<std::string>();
   std::string out_filename;
   if (config["Output"]["Filename"])
-    out_filename = out_path + "/" + config["Output"]["Filename"].as<std::string>();
+    out_filename =
+        out_path + "/" + config["Output"]["Filename"].as<std::string>();
   else
     out_filename = out_path + "/pp";
 
@@ -346,24 +544,20 @@ void tools::pp::fe2D(const std::string &filename) {
   auto mat_deck = material->getMaterialDeck();
   // if material deck does not have valid material properties,
   // search the properties in the pp input file
-  if (mat_deck->d_matData.d_nu < 0. ||
-      mat_deck->d_matData.d_E < 0.) {
+  if (mat_deck->d_matData.d_nu < 0. || mat_deck->d_matData.d_E < 0.) {
     if (config["Material"]["Poisson_Ratio"])
       mat_deck->d_matData.d_nu =
           config["Material"]["Poisson_Ratio"].as<double>();
     else {
-      std::cerr
-          << "Error: Need Poisson ratio for strain and stress "
-             "computation.\n";
+      std::cerr << "Error: Need Poisson ratio for strain and stress "
+                   "computation.\n";
       exit(1);
     }
     if (config["Material"]["E"])
-      mat_deck->d_matData.d_E =
-          config["Material"]["E"].as<double>();
+      mat_deck->d_matData.d_E = config["Material"]["E"].as<double>();
     else {
-      std::cerr
-          << "Error: Need Young's modulus for strain and stress "
-             "computation.\n";
+      std::cerr << "Error: Need Young's modulus for strain and stress "
+                   "computation.\n";
       exit(1);
     }
 
@@ -377,7 +571,7 @@ void tools::pp::fe2D(const std::string &filename) {
   auto num_compute = config["Compute"]["Sets"].as<size_t>();
   std::vector<InstructionData> compute_data;
   for (size_t c = 0; c < num_compute; c++) {
-    std::string set = "Set_" + std::to_string(c+1);
+    std::string set = "Set_" + std::to_string(c + 1);
     auto data = InstructionData();
     readInputFile(config, set, &data);
     if (data.d_start == -1)
@@ -392,21 +586,44 @@ void tools::pp::fe2D(const std::string &filename) {
   std::vector<geometry::Fracture *> fractures(num_compute, nullptr);
   std::vector<inp::FractureDeck> fracture_decks(num_compute, *fracture_deck);
 
+  // read crack tip data for J integral calculation
+  for (auto &data : compute_data) {
+    if (data.d_compJIntegral) {
+      readCrackTipData(data.d_crackTipFile, &(data.d_crackTipData));
+      data.d_startJIntegral = data.d_crackTipData[0].d_n;
+      data.d_endJIntegral =
+          data.d_crackTipData[data.d_crackTipData.size() - 1].d_n;
+    }
+  }
+
   //
+  // compute neighbor list (if required)
+  //
+  bool compute_neighbor_list = false;
+  for (const auto& d : compute_data)
+    compute_neighbor_list = d.d_compJIntegral;
+
+  geometry::Neighbor * neighbor_list = nullptr;
+  if (compute_neighbor_list)
+    neighbor_list = new geometry::Neighbor(model_deck->d_horizon,
+                                           deck->getNeighborDeck(),
+                                           mesh->getNodesP());
+
+
+    //
   // loop over output files
   //
-  for (int out=start_file; out<=end_file; out++) {
+  for (int out = start_file; out <= end_file; out++) {
     std::cout << "PP_fe2D: Processing output file = " << out << "\n";
 
     // append path to filename
     auto sim_results_file = source_path + "/" + filename_to_read + "_" +
                             std::to_string(out) + ".vtu";
 
-    //see if we need to read the data
+    // see if we need to read the data
     bool read_file = false;
-    for (const auto& data : compute_data)
+    for (const auto &data : compute_data)
       read_file = out >= data.d_start && out <= data.d_end;
-
 
     // just read one file and do operations and move to the next compute set
     std::vector<util::Point3> u;
@@ -416,14 +633,14 @@ void tools::pp::fe2D(const std::string &filename) {
     if (read_file)
       rw::reader::readVtuFileRestart(sim_results_file, &u, &v);
 
-//    // output file for debug
-//    // open a output vtu file
-//    auto writer_debug = rw::writer::VtkWriterInterface(out_filename +
-//        "_debug" + "_" + std::to_string(out));
-//    writer_debug.appendNodes(mesh->getNodesP(), &u);
-//    writer_debug.appendPointData("Displacement", &u);
-//    writer_debug.appendPointData("Velocity", &v);
-//    writer_debug.close();
+    //    // output file for debug
+    //    // open a output vtu file
+    //    auto writer_debug = rw::writer::VtkWriterInterface(out_filename +
+    //        "_debug" + "_" + std::to_string(out));
+    //    writer_debug.appendNodes(mesh->getNodesP(), &u);
+    //    writer_debug.appendPointData("Displacement", &u);
+    //    writer_debug.appendPointData("Velocity", &v);
+    //    writer_debug.close();
 
     // loop over compute sets and do as instructed in input file
     for (size_t c = 0; c < num_compute; c++) {
@@ -436,9 +653,9 @@ void tools::pp::fe2D(const std::string &filename) {
       std::cout << "  PP_fe2D: Processing compute set = " << c + 1 << "\n";
 
       // open a output vtu file
-      std::string compute_filename = out_filename + "_" +
-          data.d_tagFilename + "_" + std::to_string(out);
-      rw::writer::VtkWriterInterface * writer = nullptr;
+      std::string compute_filename =
+          out_filename + "_" + data.d_tagFilename + "_" + std::to_string(out);
+      rw::writer::VtkWriterInterface *writer = nullptr;
 
       //
       // operation : Scale displacement and write to output mesh
@@ -448,15 +665,16 @@ void tools::pp::fe2D(const std::string &filename) {
       if (data.d_scaleUOut) {
 
         std::vector<util::Point3> u_temp(mesh->getNumNodes(), util::Point3());
-//        auto f = hpx::parallel::for_loop(
-//            hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-//            mesh->getNumNodes(), [&u_temp, data, u](boost::uint64_t i) {
-        for (size_t i=0; i < mesh->getNumNodes(); i++)
-              u_temp[i] =
-                  util::Point3(data.d_scaleU * u[i].d_x, data.d_scaleU * u[i].d_y,
-                               data.d_scaleU * u[i].d_z);
-//            });
-//        f.get();
+        //        auto f = hpx::parallel::for_loop(
+        //            hpx::parallel::execution::par(hpx::parallel::execution::task),
+        //            0, mesh->getNumNodes(), [&u_temp, data, u](boost::uint64_t
+        //            i) {
+        for (size_t i = 0; i < mesh->getNumNodes(); i++)
+          u_temp[i] =
+              util::Point3(data.d_scaleU * u[i].d_x, data.d_scaleU * u[i].d_y,
+                           data.d_scaleU * u[i].d_z);
+        //            });
+        //        f.get();
 
         if (!writer) {
           writer = new rw::writer::VtkWriterInterface(compute_filename);
@@ -465,7 +683,7 @@ void tools::pp::fe2D(const std::string &filename) {
             writer->appendNodes(mesh->getNodesP(), &u_temp);
           else
             writer->appendMesh(mesh->getNodesP(), mesh->getElementType(),
-                              mesh->getElementConnectivitiesP(), &u_temp);
+                               mesh->getElementConnectivitiesP(), &u_temp);
         }
 
         // append original displacement
@@ -491,11 +709,10 @@ void tools::pp::fe2D(const std::string &filename) {
           auto f = hpx::parallel::for_loop(
               hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
               mesh->getNumNodes(), [&v_mark, data, mesh](boost::uint64_t i) {
-
                 if (util::geometry::isPointInsideRectangle(
-                    mesh->getNode(i), data.d_markVRect.first.d_x,
-                    data.d_markVRect.second.d_x, data.d_markVRect.first.d_y,
-                    data.d_markVRect.second.d_y))
+                        mesh->getNode(i), data.d_markVRect.first.d_x,
+                        data.d_markVRect.second.d_x, data.d_markVRect.first.d_y,
+                        data.d_markVRect.second.d_y))
                   v_mark[i] = util::Point3();
               });
           f.get();
@@ -523,7 +740,7 @@ void tools::pp::fe2D(const std::string &filename) {
             writer->appendNodes(mesh->getNodesP(), &u);
           else
             writer->appendMesh(mesh->getNodesP(), mesh->getElementType(),
-                              mesh->getElementConnectivitiesP(), &u);
+                               mesh->getElementConnectivitiesP(), &u);
         }
 
         // append velocity
@@ -590,7 +807,7 @@ void tools::pp::fe2D(const std::string &filename) {
             writer->appendNodes(mesh->getNodesP(), &u);
           else
             writer->appendMesh(mesh->getNodesP(), mesh->getElementType(),
-                              mesh->getElementConnectivitiesP(), &u);
+                               mesh->getElementConnectivitiesP(), &u);
         }
 
         // append velocity
@@ -607,7 +824,7 @@ void tools::pp::fe2D(const std::string &filename) {
       //
       if (data.d_computeStrain) {
         std::vector<util::SymMatrix3> strain(mesh->getNumElements(),
-          util::SymMatrix3());
+                                             util::SymMatrix3());
         std::vector<util::SymMatrix3> stress(mesh->getNumElements(),
                                              util::SymMatrix3());
         std::vector<float> magS;
@@ -629,8 +846,8 @@ void tools::pp::fe2D(const std::string &filename) {
         auto f = hpx::parallel::for_loop(
             hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
             mesh->getNumElements(),
-            [&strain, &stress, data, mesh, quad, mat_deck, u](boost::uint64_t
-            e) {
+            [&strain, &stress, data, mesh, quad, mat_deck,
+             u](boost::uint64_t e) {
               auto ssn = util::SymMatrix3();
               auto sss = util::SymMatrix3();
 
@@ -705,7 +922,7 @@ void tools::pp::fe2D(const std::string &filename) {
           if (!writer) {
             writer = new rw::writer::VtkWriterInterface(compute_filename);
             writer->appendMesh(mesh->getNodesP(), mesh->getElementType(),
-                              mesh->getElementConnectivitiesP(), &u);
+                               mesh->getElementConnectivitiesP(), &u);
           }
 
           writer->appendCellData("Strain_Tensor", &strain);
@@ -713,14 +930,14 @@ void tools::pp::fe2D(const std::string &filename) {
           if (data.d_magStrainTensor)
             writer->appendCellData("Mag_Strain", &magS);
 
-//          // mark magnitude of strain if asked
-//          if (!data.d_markMagStrainCells.empty()) {
-//            for (auto cell : data.d_markMagStrainCells)
-//              magS[cell.first] = cell.second;
-//
-//            if (data.d_magStrainTensor)
-//              writer.appendCellData("Mark_Mag_Strain", &magS);
-//          }
+          //          // mark magnitude of strain if asked
+          //          if (!data.d_markMagStrainCells.empty()) {
+          //            for (auto cell : data.d_markMagStrainCells)
+          //              magS[cell.first] = cell.second;
+          //
+          //            if (data.d_magStrainTensor)
+          //              writer.appendCellData("Mark_Mag_Strain", &magS);
+          //          }
 
         } else {
 
@@ -809,12 +1026,12 @@ void tools::pp::fe2D(const std::string &filename) {
           // compute damage at n-1
           if (damage_Z.empty())
             damage_Z = std::vector<float>(mesh->getNumNodes(), 0.);
-          compute_damage(deck, model_deck, material, mesh, &u, &damage_Z);
+          computeDamage(deck, model_deck, material, mesh, &u, &damage_Z);
 
           // compute crack tip location and crack tip velocity
           fractures[c]->updateCrackAndOutput(n, time, out_path,
-                                         model_deck->d_horizon,
-                                         mesh->getNodesP(), &u, &damage_Z);
+                                             model_deck->d_horizon,
+                                             mesh->getNodesP(), &u, &damage_Z);
         }
 
         // get current displacement
@@ -832,9 +1049,10 @@ void tools::pp::fe2D(const std::string &filename) {
         // compute damage at current displacement
         if (damage_Z.empty())
           damage_Z = std::vector<float>(mesh->getNumNodes(), 0.);
-        compute_damage(deck, model_deck, material, mesh, &u, &damage_Z);
-        fractures[c]->updateCrackAndOutput(n, time, out_path, model_deck->d_horizon,
-                                       mesh->getNodesP(), &u, &damage_Z);
+        computeDamage(deck, model_deck, material, mesh, &u, &damage_Z);
+        fractures[c]->updateCrackAndOutput(n, time, out_path,
+                                           model_deck->d_horizon,
+                                           mesh->getNodesP(), &u, &damage_Z);
       }
 
       //
@@ -844,7 +1062,7 @@ void tools::pp::fe2D(const std::string &filename) {
 
         // compute if it is not computed already
         if (damage_Z.empty())
-          compute_damage(deck, model_deck, material, mesh, &u, &damage_Z);
+          computeDamage(deck, model_deck, material, mesh, &u, &damage_Z);
 
         if (!writer) {
           writer = new rw::writer::VtkWriterInterface(compute_filename);
@@ -852,7 +1070,7 @@ void tools::pp::fe2D(const std::string &filename) {
             writer->appendNodes(mesh->getNodesP(), &u);
           else
             writer->appendMesh(mesh->getNodesP(), mesh->getElementType(),
-                              mesh->getElementConnectivitiesP(), &u);
+                               mesh->getElementConnectivitiesP(), &u);
         }
         // append data to file
         writer->appendPointData("Damage_Z", &damage_Z);
@@ -863,10 +1081,20 @@ void tools::pp::fe2D(const std::string &filename) {
         damage_Z.shrink_to_fit();
 
       //
+      // operation : Compute J integral
+      //
+      if (data.d_compJIntegral) {
+
+        double energy_into_crack = 0.;
+        computeJIntegral(out, data, model_deck, mat_deck, material, mesh,
+            neighbor_list, &u, &v, energy_into_crack);
+      }
+
+      //
       // close file
       //
       if (writer)
         writer->close();
     } // loop over compute sets
-  }// processing output files
+  }   // processing output files
 }

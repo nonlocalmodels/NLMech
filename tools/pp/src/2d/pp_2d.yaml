@@ -19,7 +19,7 @@ Output:
   Filename: pp
 # specify what to compute
 Compute:
-  Sets: 1
+  Sets: 4
   Set_1:
     # Provide unique tag for filename for this set
     # if not provided then it will assign tag "set_1" by default
@@ -84,5 +84,19 @@ Compute:
       # specify if we compute crack tip velocity using same
       # time step interval as the output interval
       Same_Dt_Out: true
+  Set_4:
+    Tag_Filename: crack_energy
+    Dt_Start: 70
+    Dt_End: 100
+    Output_Only_Nodes: true
+    J_Integral:
+      # specify the orientation of crack
+      # -1 for vertical and 1 for horizontal
+      Crack_Orient: 1
+      # file which contains crack tip location and velocity
+      # format of file: <output step>, <tip x>, <tip y>, <tip vx>, <tip vy>
+      Crack_Tip_File: crack_tip_data.csv
+      # factor (for x and y direction) to compute the contour around crack tip
+      Contour_Size: [4.0, 4.0]
 HPX:
   Partitions: 1
