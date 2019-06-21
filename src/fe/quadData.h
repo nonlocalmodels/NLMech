@@ -6,6 +6,7 @@
 #ifndef FE_QUADDATA_H
 #define FE_QUADDATA_H
 
+#include <util/point.h>           // definition of Point3
 #include <vector>
 
 namespace fe {
@@ -43,9 +44,23 @@ struct QuadData {
   std::vector<std::vector<double>> d_derShapes;
 
   /*!
+   * @brief Jacobian of the map from reference element to the element
+   *
+   * In 1-d, size is 1, 2-d size is \f$ 2\times 2\f$, and in 3-d size is \f$
+   * 3\times 3\f$.
+   */
+  std::vector<std::vector<double>> d_J;
+
+  /*!
+   * @brief Determinant of the Jacobian of the map from reference element to
+   * the element
+   */
+  double d_detJ;
+
+  /*!
    * @brief Constructor
    */
-  QuadData() : d_w(0.), d_p(util::Point3()){};
+  QuadData() : d_w(0.), d_p(util::Point3()), d_detJ(0.){};
 };
 
 } // namespace fe

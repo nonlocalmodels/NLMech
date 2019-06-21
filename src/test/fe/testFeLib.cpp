@@ -9,7 +9,6 @@
 #include "fe/massMatrix.h"
 #include "fe/mesh.h"
 #include "fe/quadElem.h"
-#include "fe/quadrature.h"
 #include "fe/triElem.h"
 #include "util/point.h"
 #include <util/feElementDefs.h>
@@ -135,7 +134,7 @@ void testTriElem(size_t n) {
   //
 
   // get Quadrature
-  fe::Quadrature<fe::TriElem> quad(n);
+  auto quad = fe::TriElem(n);
 
   //
   // Test 1
@@ -287,7 +286,7 @@ void testQuadElem(size_t n) {
   //
 
   // get Quadrature
-  fe::Quadrature<fe::QuadElem> quad(n);
+  auto quad = fe::QuadElem(n);
 
   //
   // Test 1
@@ -429,7 +428,7 @@ void testQuadElem(size_t n) {
 void testTriElemTime(size_t n, size_t N) {
 
   // get Quadrature
-  fe::Quadrature<fe::TriElem> quad(n);
+  auto quad = fe::TriElem(n);
 
   //
   // Test 1

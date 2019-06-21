@@ -800,6 +800,8 @@ INPUT                  = ../src/main.cpp \
                          ../src/rw \
                          ../src/util \
                          ../src/test \
+                         ../tools/pp \
+                         ../tools/mesh \
                          ../README.md
 
 # This tag can be used to specify the character encoding of the source files

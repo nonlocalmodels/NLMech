@@ -170,6 +170,7 @@ private:
    * @param output_path Path where crack data file will be created
    * @param nodes Reference coordinates of all nodes
    * @param u Vector of displacement
+   * @param Z Vector of damage at nodes
    */
   void output(const size_t &n, const double &time,
               const std::string &output_path,

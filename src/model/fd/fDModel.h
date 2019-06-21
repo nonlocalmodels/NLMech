@@ -225,13 +225,6 @@ private:
   fe::Mesh *d_mesh_p;
 
   /*!
-   * @brief Pointer to Quadrature object
-   *
-   * @sa Quadrature
-   */
-  //  fe::Quadrature *d_quadrature_p;
-
-  /*!
    * @brief Pointer to Fracture object
    *
    * @sa Fracture
@@ -245,43 +238,50 @@ private:
    */
   geometry::Neighbor *d_neighbor_p;
 
-  /*! @brief Pointer to InteriorFlags object
+  /*!
+   * @brief Pointer to InteriorFlags object
    *
    * @sa InteriorFlags
    */
   geometry::InteriorFlags *d_interiorFlags_p;
 
-  /*! @brief Pointer to Input object
+  /*!
+   * @brief Pointer to Input object
    *
    * @sa Input
    */
   inp::Input *d_input_p;
 
-  /*! @brief Pointer to Policy object
+  /*!
+   * @brief Pointer to Policy object
    *
    * @sa Policy
    */
   inp::Policy *d_policy_p;
 
-  /*! @brief Pointer to InitialCondition object
+  /*!
+   * @brief Pointer to InitialCondition object
    *
    * @sa InitialCondition
    */
   loading::InitialCondition *d_initialCondition_p;
 
-  /*! @brief Pointer to displacement Loading object
+  /*!
+   * @brief Pointer to displacement Loading object
    *
    * @sa ULoading
    */
   loading::ULoading *d_uLoading_p;
 
-  /*! @brief Pointer to force Loading object
+  /*!
+   * @brief Pointer to force Loading object
    *
    * @sa FLoading
    */
   loading::FLoading *d_fLoading_p;
 
-  /*! @brief Pointer to Material object
+  /*!
+   * @brief Pointer to Material object
    *
    * @sa Material
    */

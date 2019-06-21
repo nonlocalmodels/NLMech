@@ -4,7 +4,9 @@
 // (See accompanying file LICENSE.txt)
 
 #include "lineElem.h"
-#include "util/feElementDefs.h"     // global definition of elements
+#include "util/feElementDefs.h" // global definition of elements
+#include <iostream>
+#include <util/compare.h>
 
 fe::LineElem::LineElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_line) {
@@ -13,22 +15,74 @@ fe::LineElem::LineElem(size_t order)
   this->init();
 }
 
+double fe::LineElem::elemSize(const std::vector<util::Point3> &nodes) {
+  return (nodes[1].d_x - nodes[0].d_x);
+}
+
+std::vector<double>
+fe::LineElem::getShapes(const util::Point3 &p,
+                       const std::vector<util::Point3> &nodes) {
+  return getShapes(mapPointToRefElem(p, nodes));
+}
+
+std::vector<std::vector<double>>
+fe::LineElem::getDerShapes(const util::Point3 &p,
+                          const std::vector<util::Point3> &nodes) {
+  // get derivatives of shape function in reference triangle
+  auto ders_ref = getDerShapes(mapPointToRefElem(p, nodes));
+
+  // get Jacobian
+  auto detJ = getJacobian(p, nodes, nullptr);
+
+  // modify derivatives of shape function
+  ders_ref[0][0] = ders_ref[0][0] / detJ;
+  ders_ref[1][0] = ders_ref[1][0] / detJ;
+
+  return ders_ref;
+}
+
+std::vector<fe::QuadData>
+fe::LineElem::getQuadDatas(const std::vector<util::Point3> &nodes) {
+
+  // copy quad data associated to reference element
+  auto qds = d_quads;
+
+  // modify data
+  for (auto &qd : qds) {
+
+    // get Jacobian and determinant
+    qd.d_detJ = getJacobian(qd.d_p, nodes, &(qd.d_J));
+
+    // transform quad weight
+    qd.d_w *= qd.d_detJ;
+
+    // map point to line
+    qd.d_p.d_x = qd.d_shapes[0] * nodes[0].d_x + qd.d_shapes[1] * nodes[1]
+        .d_x;
+
+    // modify derivative of shape function
+    for (size_t i=0; i<2; i++)
+      qd.d_derShapes[i][0] = qd.d_derShapes[i][0] / qd.d_detJ;
+  }
+
+  return qds;
+}
+
 std::vector<fe::QuadData>
 fe::LineElem::getQuadPoints(const std::vector<util::Point3> &nodes) {
-  //
-  // Map vertices of given line to reference line.
-  //
-  // Caller needs to ensure that order does not go higher than 5.
-  std::vector<fe::QuadData> qds = d_quads;
 
-  // Since mapping will leave values of shape function unchanged, we only
-  // need to modify the positions of quad points in qds and map it to the
-  // given line element, and we also need to modify the weights.
-  for (auto &i : qds) {
+  // copy quad data associated to reference element
+  auto qds = d_quads;
 
-    fe::QuadData *qd = &i;
-    qd->d_w = qd->d_w *
-              mapRefElemToElem(qd->d_p, qd->d_shapes, qd->d_derShapes, nodes);
+  // modify data
+  for (auto &qd : qds) {
+
+    // transform quad weight
+    qd.d_w *= getJacobian(qd.d_p, nodes, nullptr);
+
+    // map point to line
+    qd.d_p.d_x = qd.d_shapes[0] * nodes[0].d_x + qd.d_shapes[1] * nodes[1]
+        .d_x;
   }
 
   return qds;
@@ -55,17 +109,36 @@ fe::LineElem::getDerShapes(const util::Point3 &p) {
   return r;
 }
 
-double fe::LineElem::mapRefElemToElem(
-    util::Point3 &p, const std::vector<double> &shapes,
-    const std::vector<std::vector<double>> &der_shapes,
-    const std::vector<util::Point3> &nodes) {
+util::Point3
+fe::LineElem::mapPointToRefElem(const util::Point3 &p,
+                               const std::vector<util::Point3> &nodes) {
+  auto xi = (2. * p.d_x - nodes[0].d_x - nodes[1].d_x) /
+            (nodes[0].d_x - nodes[1].d_x);
 
-  //
-  // see function descriptor for details
-  //
-  p.d_x = shapes[0] * nodes[0].d_x + shapes[1] * nodes[1].d_x;
+  if (util::compare::definitelyLessThan(xi, -1.) ||
+      util::compare::definitelyLessThan(xi, 1.) ) {
+    std::cerr << "Error: Trying to map point p = " << p.d_x
+              << " in given line to reference line.\n"
+              << "But the point p does not belong to line = {"
+              << nodes[0].d_x << ", " << nodes[1].d_x << "}.\n";
+    exit(1);
+  }
 
-  return der_shapes[0][0] * nodes[0].d_x + der_shapes[1][0] * nodes[1].d_x;
+  return {xi, 0., 0.};
+}
+
+double fe::LineElem::getJacobian(const util::Point3 &p,
+                                const std::vector<util::Point3> &nodes,
+                                std::vector<std::vector<double>> *J) {
+
+  if (J != nullptr) {
+    J->resize(1);
+    (*J)[0] = std::vector<double>{nodes[1].d_x - nodes[0].d_x};
+
+    return (*J)[0][0];
+  }
+
+  return (nodes[1].d_x - nodes[0].d_x);
 }
 
 void fe::LineElem::init() {
@@ -85,6 +158,10 @@ void fe::LineElem::init() {
   if (d_quadOrder == 0)
     d_quads.resize(0);
 
+  // 1x1 identity matrix
+  std::vector<std::vector<double>> ident_mat;
+  ident_mat.push_back(std::vector<double>{1.});
+
   //
   // first order quad points
   //
@@ -96,6 +173,8 @@ void fe::LineElem::init() {
     qd.d_p = util::Point3();
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
   }
 
@@ -110,12 +189,16 @@ void fe::LineElem::init() {
     qd.d_p = util::Point3(-1. / std::sqrt(3.), 0., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
 
     qd.d_w = 1.;
     qd.d_p = util::Point3(1. / std::sqrt(3.), 0., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
   }
 
@@ -131,18 +214,24 @@ void fe::LineElem::init() {
     qd.d_p = util::Point3(-std::sqrt(3.) / std::sqrt(5.), 0., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
 
     qd.d_w = 8. / 9.;
     qd.d_p = util::Point3();
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
 
     qd.d_w = 5. / 9.;
     qd.d_p = util::Point3(std::sqrt(3.) / std::sqrt(5.), 0., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
   }
 
@@ -156,24 +245,32 @@ void fe::LineElem::init() {
     qd.d_p = util::Point3(-0.3399810435848563, 0., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
 
     qd.d_w = 0.6521451548625461;
     qd.d_p = util::Point3(0.3399810435848563, 0., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
 
     qd.d_w = 0.3478548451374538;
     qd.d_p = util::Point3(-0.8611363115940526, 0., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
 
     qd.d_w = 0.3478548451374538;
     qd.d_p = util::Point3(0.8611363115940526, 0., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
   }
 
@@ -187,30 +284,40 @@ void fe::LineElem::init() {
     qd.d_p = util::Point3();
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
 
     qd.d_w = 0.4786286704993665;
     qd.d_p = util::Point3(-0.5384693101056831, 0., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
 
     qd.d_w = 0.4786286704993665;
     qd.d_p = util::Point3(0.5384693101056831, 0., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
 
     qd.d_w = 0.2369268850561891;
     qd.d_p = util::Point3(-0.9061798459386640, 0., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
 
     qd.d_w = 0.2369268850561891;
     qd.d_p = util::Point3(0.9061798459386640, 0., 0.);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
     d_quads.push_back(qd);
   }
 }

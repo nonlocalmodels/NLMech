@@ -43,7 +43,7 @@ namespace pd {
  * 2. Bond energy density \f$ W_{bond} \f$ is given by
  * \f[ W_{bond} (S(y,x;u)) = J^\epsilon(|y-x|) \frac{1}{\epsilon |y-x|} \psi
  * (|y-x| S(y,x;u)^2) \f]
- * where \f$ \psi(r) : \mathbb{R}^+ \to \mathbb{R} \f$ is positive, smooth,
+ * where \f$ \psi(r) : \textsf{R}^+ \to \textsf{R} \f$ is positive, smooth,
  * concave
  * function with following properties
  * \f[ \lim_{r\to 0^+} \frac{\psi(r)}{r} = \psi'(0), \quad \lim_{r\to \infty}
@@ -92,7 +92,7 @@ public:
    * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi(|y-x|S^2) dy \f]
    * and force at point x is
    * \f[ f(x) = \frac{4}{|B_\epsilon(0)|} \int_{B_\epsilon(x)}
-   * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi'(|y-x|S^2)} S \frac{y-x}{|y-x|}
+   * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi'(|y-x|S^2) S \frac{y-x}{|y-x|}
    * dy. \f]
    * where \f$\psi(r) = C(1-\exp(-\beta r))\f$.
    *
@@ -121,7 +121,7 @@ public:
    * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi(|y-x|S^2) dy \f]
    * and force at point x is
    * \f[ f(x) = \frac{4}{|B_\epsilon(0)|} \int_{B_\epsilon(x)}
-   * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi'(|y-x|S^2)} S \frac{y-x}{|y-x|}
+   * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi'(|y-x|S^2) S \frac{y-x}{|y-x|}
    * dy. \f]
    * where \f$\psi(r) = C(1-\exp(-\beta r))\f$.
    *

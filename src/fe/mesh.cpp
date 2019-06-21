@@ -6,7 +6,9 @@
 #include "mesh.h"
 #include "inp/decks/meshDeck.h"
 #include "inp/policy.h"
-#include "quadrature.h"
+#include "lineElem.h"
+#include "quadElem.h"
+#include "triElem.h"
 #include "rw/reader.h"
 #include "util/feElementDefs.h"
 #include <cstdint>
@@ -167,7 +169,7 @@ void fe::Mesh::computeVol() {
           for (auto k : e_ns)
             e_nodes.emplace_back(this->d_nodes[k]);
 
-          std::vector<fe::QuadData> qds = quads->getQuadPoints(e_nodes);
+          std::vector<fe::QuadData> qds = quads->getQuadDatas(e_nodes);
 
           // compute V_e and add it to volume
           for (auto qd : qds)

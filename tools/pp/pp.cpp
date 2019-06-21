@@ -3,10 +3,10 @@
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
-#include <hpx/hpx_main.hpp>
-#include "src/2d/fe2D.h"
+#include "src/compute.h"
 #include <algorithm>
 #include <boost/program_options.hpp>
+#include <hpx/hpx_main.hpp>
 #include <iostream>
 
 int main(int argc, char *argv[]) {
@@ -44,14 +44,13 @@ int main(int argc, char *argv[]) {
     found++;
   }
 
-  if (found != 2) {
-    std::cerr << argv[0] << " -i input.yaml -k fe_2d --hpx:threads=n" <<
-    std::endl;
+  if (found != 1) {
+    std::cerr << argv[0] << " -i input.yaml --hpx:threads=n" << std::endl;
     exit(1);
   }
 
-  if (kind == "fe_2d")
-    tools::pp::fe2D(filename);
+  // call compute
+  auto compute = tools::pp::Compute(filename);
 
   return EXIT_SUCCESS;
 }

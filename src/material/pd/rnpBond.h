@@ -27,10 +27,10 @@ namespace pd {
  * .org/10.1007/s42102-019-00010-0">LiptonJha2019</a>.
  *
  * 1. The pairwise energy is
- * \f[ E_{bond} = \int_D \frac{1}{|H_\epsilon(x)|} \int_{H_\epsilon(x)} |y-x|
+ * \f[ E_{bond} = \int_D \frac{1}{|B_\epsilon(x)|} \int_{B_\epsilon(x)} |y-x|
  * W_{bond}(S(y,x; u)) dy dx \f]
- * where \f$ H_\epsilon(x) \f$ is a ball (circle in 2-d) centered at \f$ x\f$
- * of  radius \f$ \epsilon\f$, \f$ |H_\epsilon(x)| \f$ is the volume (area in
+ * where \f$ B_\epsilon(x) \f$ is a ball (circle in 2-d) centered at \f$ x\f$
+ * of  radius \f$ \epsilon\f$, \f$ |B_\epsilon(x)| \f$ is the volume (area in
  * 2-d) of ball, \f$ S(y,x;u) = \frac{u(y) - u(x)}{|y-x|} \cdot
  * \frac{y-x}{|y-x|} \f$
  * is the linearized bond strain (assuming small deformation).
@@ -38,7 +38,7 @@ namespace pd {
  * 2. Bond energy density \f$ W_{bond} \f$ is given by
  * \f[ W_{bond} (S(y,x;u)) = J^\epsilon(|y-x|) \frac{1}{\epsilon |y-x|} \psi
  * (|y-x| S(y,x;u)^2) \f]
- * where \f$ \psi(r) : \mathbb{R}^+ \to \mathbb{R} \f$ is positive, smooth,
+ * where \f$ \psi(r) : \textsf{R}^+ \to \textsf{R} \f$ is positive, smooth,
  * concave
  * function with following properties
  * \f[ \lim_{r\to 0^+} \frac{\psi(r)}{r} = \psi'(0), \quad \lim_{r\to \infty}
@@ -46,7 +46,7 @@ namespace pd {
  * \f$ J^\epsilon(|y-x|)\f$ is the influence function.
  *
  * 3. Force at material point \f$ x \f$ is given by
- * \f[ f_{bond}(x) = \frac{4}{|H_\epsilon(x)|} \int_{H_\epsilon(x)}
+ * \f[ f_{bond}(x) = \frac{4}{|B_\epsilon(x)|} \int_{B_\epsilon(x)}
  * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi'(|y-x| S(y,x;u)^2) S(y,x;u)
  * \frac{y-x}{|y-x|} dy.\f]
  *
@@ -76,11 +76,11 @@ public:
    * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi(|y-x|S^2) dy \f]
    * and force at point x is
    * \f[ f(x) = \frac{4}{|B_\epsilon(0)|} \int_{B_\epsilon(x)}
-   * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi'(|y-x|S^2)} S \frac{y-x}{|y-x|}
-   * dy. \f]
-   * where \f$\psi(r) = C(1-\exp(-\beta r))\f$.
+   * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi'(|y-x|S^2) S \frac{y-x}{|y-x|}
+   * dy, \f]
+   * where \f$ \psi(r) = C(1-\exp(-\beta r))\f$.
    *
-   * For given initial bond length $\f r \f$ and bond strain \f$ s\f$, this
+   * For given initial bond length \f$ r \f$ and bond strain \f$ s\f$, this
    * function returns pair of
    * \f[ \hat{e} =  \frac{J^\epsilon(r)}{\epsilon |B_\epsilon(0)|} \psi(r s^2)
    * \f]
@@ -105,14 +105,14 @@ public:
    * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi(|y-x|S^2) dy \f]
    * and force at point x is
    * \f[ f(x) = \frac{4}{|B_\epsilon(0)|} \int_{B_\epsilon(x)}
-   * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi'(|y-x|S^2)} S \frac{y-x}{|y-x|}
+   * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi'(|y-x|S^2) S \frac{y-x}{|y-x|}
    * dy. \f]
    * where \f$\psi(r) = C(1-\exp(-\beta r))\f$.
    *
    * For material point \f$ x \f$ in \a no-fail region, we modify the function
    * \f$ \psi \f$ to \f[ \psi(r) = \psi'(0) r, \qquad \psi'(0) = C\beta . \f]
    *
-   * For given initial bond length $\f r \f$ and bond strain \f$ s\f$, this
+   * For given initial bond length \f$ r \f$ and bond strain \f$ s\f$, this
    * function returns pair of
    * \f[ \hat{e} =  \frac{J^\epsilon(r)}{\epsilon |B_\epsilon(0)|} \psi(r s^2)
    * \f]

@@ -16,7 +16,6 @@
 // include high level class declarations
 #include "fe/massMatrix.h"
 #include "fe/mesh.h"
-#include "fe/quadrature.h"
 #include "geometry/fracture.h"
 #include "geometry/interiorFlags.h"
 #include "geometry/neighbor.h"

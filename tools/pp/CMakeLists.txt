@@ -3,7 +3,7 @@
 # Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 # (See accompanying file LICENSE.txt)
 
-AUX_SOURCE_DIRECTORY(./src/2d SOURCES)
+AUX_SOURCE_DIRECTORY(./src SOURCES)
 
 # build Mesh library
 add_library(PP ${SOURCES})

@@ -13,24 +13,73 @@ fe::QuadElem::QuadElem(size_t order)
   this->init();
 }
 
+double fe::QuadElem::elemSize(const std::vector<util::Point3> &nodes) {
+  return 0.25 *
+         ((-nodes[0].d_x + nodes[1].d_x + nodes[2].d_x - nodes[3].d_x) *
+              (-nodes[0].d_y - nodes[1].d_y + nodes[2].d_y + nodes[3].d_y) -
+          (-nodes[0].d_x - nodes[1].d_x + nodes[2].d_x + nodes[3].d_x) *
+              (-nodes[0].d_y + nodes[1].d_y + nodes[2].d_y - nodes[3].d_y));
+}
+
+
+
+std::vector<fe::QuadData>
+fe::QuadElem::getQuadDatas(const std::vector<util::Point3> &nodes) {
+
+  // copy quad data associated to reference element
+  auto qds = d_quads;
+
+  // modify data
+  for (auto &qd : qds) {
+
+    // get Jacobian and determinant
+    qd.d_detJ = getJacobian(qd.d_p, nodes, &(qd.d_J));
+
+    // transform quad weight
+    qd.d_w *= qd.d_detJ;
+
+    // map point to triangle
+    qd.d_p.d_x = qd.d_shapes[0] * nodes[0].d_x + qd.d_shapes[1] * nodes[1].d_x +
+        qd.d_shapes[2] * nodes[2].d_x + qd.d_shapes[3] * nodes[3].d_x;
+    qd.d_p.d_y = qd.d_shapes[0] * nodes[0].d_y + qd.d_shapes[1] * nodes[1].d_y +
+        qd.d_shapes[2] * nodes[2].d_y + qd.d_shapes[3] * nodes[3].d_y;
+
+    // derivatives of shape function
+    std::vector<std::vector<double>> ders;
+
+    for (size_t i=3; i<4; i++) {
+      // partial N_i/ partial x
+      auto d1 = (qd.d_derShapes[i][0] * qd.d_J[1][1] - qd.d_derShapes[i][1] *
+          qd.d_J[0][1]) / qd.d_detJ;
+      // partial N_i/ partial y
+      auto d2 = (-qd.d_derShapes[i][0] * qd.d_J[1][0] + qd.d_derShapes[i][1] *
+          qd.d_J[0][0]) / qd.d_detJ;
+
+      ders.push_back(std::vector<double>{d1, d2});
+    }
+    qd.d_derShapes = ders;
+  }
+
+  return qds;
+}
+
 std::vector<fe::QuadData>
 fe::QuadElem::getQuadPoints(const std::vector<util::Point3> &nodes) {
-  //
-  // Map vertices of given quadrangle element to reference quadrangle. Map
-  // first vertex in nodes list to the first vertex (-1,-1) of reference
-  // quadrangle, and similarly for other vertices.
-  //
-  // Caller needs to ensure that order does not go higher than 5.
-  std::vector<fe::QuadData> qds = d_quads;
 
-  // Since mapping will leave values of shape function unchanged, we only
-  // need to modify the positions of quad points in qds and map it to the
-  // given quadrangle, and we also need to modify the weights.
-  for (auto &i : qds) {
+  // copy quad data associated to reference element
+  auto qds = d_quads;
 
-    fe::QuadData *qd = &i;
-    qd->d_w = qd->d_w *
-              mapRefElemToElem(qd->d_p, qd->d_shapes, qd->d_derShapes, nodes);
+  // modify data
+  for (auto &qd : qds) {
+
+    // transform quad weight
+    qd.d_w *= getJacobian(qd.d_p, nodes, nullptr);
+
+    // map point to triangle
+    qd.d_p.d_x = qd.d_shapes[0] * nodes[0].d_x + qd.d_shapes[1] * nodes[1].d_x +
+        qd.d_shapes[2] * nodes[2].d_x + qd.d_shapes[3] * nodes[3].d_x;
+    qd.d_p.d_y = qd.d_shapes[0] * nodes[0].d_y + qd.d_shapes[1] * nodes[1].d_y +
+        qd.d_shapes[2] * nodes[2].d_y + qd.d_shapes[3] * nodes[3].d_y;
   }
 
   return qds;
@@ -70,18 +119,26 @@ fe::QuadElem::getDerShapes(const util::Point3 &p) {
   return r;
 }
 
-double fe::QuadElem::mapRefElemToElem(
-    util::Point3 &p, const std::vector<double> &shapes,
-    const std::vector<std::vector<double>> &der_shapes,
-    const std::vector<util::Point3> &nodes) {
+double fe::QuadElem::getJacobian(const util::Point3 &p,
+                                const std::vector<util::Point3> &nodes,
+                                std::vector<std::vector<double>> *J) {
 
-  //
-  // see function descriptor for details
-  //
-  p.d_x = shapes[0] * nodes[0].d_x + shapes[1] * nodes[1].d_x +
-          shapes[2] * nodes[2].d_x + shapes[3] * nodes[3].d_x;
-  p.d_y = shapes[0] * nodes[0].d_y + shapes[1] * nodes[1].d_y +
-          shapes[2] * nodes[2].d_y + shapes[3] * nodes[3].d_y;
+  auto der_shapes = getDerShapes(p);
+  if (J != nullptr) {
+    J->resize(2);
+    (*J)[0] = std::vector<double>{
+        der_shapes[0][0] * nodes[0].d_x + der_shapes[1][0] * nodes[1].d_x +
+            der_shapes[2][0] * nodes[2].d_x + der_shapes[3][0] * nodes[3].d_x,
+        der_shapes[0][0] * nodes[0].d_y + der_shapes[1][0] * nodes[1].d_y +
+            der_shapes[2][0] * nodes[2].d_y + der_shapes[3][0] * nodes[3].d_y};
+    (*J)[1] = std::vector<double>{
+        der_shapes[0][1] * nodes[0].d_x + der_shapes[1][1] * nodes[1].d_x +
+            der_shapes[2][1] * nodes[2].d_x + der_shapes[3][1] * nodes[3].d_x,
+        der_shapes[0][1] * nodes[0].d_y + der_shapes[1][1] * nodes[1].d_y +
+            der_shapes[2][1] * nodes[2].d_y + der_shapes[3][1] * nodes[3].d_y};
+
+    return (*J)[0][0] * (*J)[1][1] - (*J)[0][1] * (*J)[1][0];
+  }
 
   return (der_shapes[0][0] * nodes[0].d_x + der_shapes[1][0] * nodes[1].d_x +
           der_shapes[2][0] * nodes[2].d_x + der_shapes[3][0] * nodes[3].d_x) *
@@ -125,6 +182,11 @@ void fe::QuadElem::init() {
   if (d_quadOrder == 0)
     d_quads.resize(0);
 
+  // 2x2 identity matrix
+  std::vector<std::vector<double>> ident_mat;
+  ident_mat.push_back(std::vector<double>{1., 0.});
+  ident_mat.push_back(std::vector<double>{0., 1.});
+
   //
   // first order quad points
   //
@@ -142,6 +204,8 @@ void fe::QuadElem::init() {
         qd.d_p = util::Point3(x[i], x[j], 0.);
         qd.d_shapes = getShapes(qd.d_p);
         qd.d_derShapes = getDerShapes(qd.d_p);
+        qd.d_J = ident_mat;
+        qd.d_detJ = 1.;
         d_quads.push_back(qd);
       }
   }
@@ -164,6 +228,8 @@ void fe::QuadElem::init() {
         qd.d_p = util::Point3(x[i], x[j], 0.);
         qd.d_shapes = getShapes(qd.d_p);
         qd.d_derShapes = getDerShapes(qd.d_p);
+        qd.d_J = ident_mat;
+        qd.d_detJ = 1.;
         d_quads.push_back(qd);
       }
   }
@@ -187,6 +253,8 @@ void fe::QuadElem::init() {
         qd.d_p = util::Point3(x[i], x[j], 0.);
         qd.d_shapes = getShapes(qd.d_p);
         qd.d_derShapes = getDerShapes(qd.d_p);
+        qd.d_J = ident_mat;
+        qd.d_detJ = 1.;
         d_quads.push_back(qd);
       }
   }
@@ -211,6 +279,8 @@ void fe::QuadElem::init() {
         qd.d_p = util::Point3(x[i], x[j], 0.);
         qd.d_shapes = getShapes(qd.d_p);
         qd.d_derShapes = getDerShapes(qd.d_p);
+        qd.d_J = ident_mat;
+        qd.d_detJ = 1.;
         d_quads.push_back(qd);
       }
   }
@@ -235,6 +305,8 @@ void fe::QuadElem::init() {
         qd.d_p = util::Point3(x[i], x[j], 0.);
         qd.d_shapes = getShapes(qd.d_p);
         qd.d_derShapes = getDerShapes(qd.d_p);
+        qd.d_J = ident_mat;
+        qd.d_detJ = 1.;
         d_quads.push_back(qd);
       }
   }
