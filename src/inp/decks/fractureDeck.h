@@ -176,28 +176,12 @@ struct FractureDeck {
   /*! @brief Vector of pre-crack data*/
   std::vector<inp::EdgeCrack> d_cracks;
 
-  /*!
-   * @brief Output interval for crack tip and crack velocity
-   *
-   * If the value is zero then no output is performed.
-   *
-   * I.e. code perform crack data output every N number of steps, when N is
-   * given by this data
-   */
-  size_t d_dtCrackOut;
-
-  /*! @brief Number of time steps used to compute the crack velocity */
-  size_t d_dtCrackVelocity;
-
-  /*! @brief filename of crack data */
-  std::string d_crackOutFilename;
-
   /** @}*/
 
   /*!
    * @brief Constructor
    */
-  FractureDeck() : d_dtCrackOut(0), d_dtCrackVelocity(0){};
+  FractureDeck() {};
 };
 
 /** @}*/

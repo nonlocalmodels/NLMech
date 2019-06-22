@@ -33,6 +33,17 @@ namespace pp {
 /*!
  * @brief Processes simulation results and computes postprocessing
  * quantities
+ *
+ * Currently we have implemented
+ * - Transformation of displacement data such as scaling of displacement by
+ * specified factor
+ * - Transformation of velocity data such as
+ *  1. marking velocity of specified nodes as zero
+ *  2. symmetrizing velocity with specified line of symmetry
+ * - Strain and stress calculation and magnitude of strain calculation
+ * - Finding crack tip location and crack tip velocity
+ * - Computation of nodal damage
+ * - Computation of J integral
  */
 class Compute {
 
@@ -50,6 +61,11 @@ public:
   void init();
 
   /*!
+   * @brief Finalize
+   */
+  void finalize();
+
+  /*!
    * @brief Read compute instruction
    *
    * @param set Tag for given compute set
@@ -60,14 +76,19 @@ public:
 
   /*!
    * @brief Read crack tip data
+   *
+   * @param filename Filename to read crack tip data
+   * @param crack_id Id of crack to read
+   * @param data Pointer to data where crack tip data will be stored
    */
-  void readCrackTipData(const std::string &filename,
+  void readCrackTipData(const std::string &filename, int crack_id,
                         std::vector<tools::pp::CrackTipData> *data);
 
   /*!
    * @brief Create new writer object if it is not already done so
    *
    * @param writer Pointer to vtk writer
+   * @param u Pointer to nodal displacement vector
    */
   void initWriter(rw::writer::VtkWriterInterface *writer,
                   std::vector<util::Point3> *u);
@@ -300,6 +321,20 @@ private:
                             std::vector<size_t> *elements);
 
   /*!
+   * @brief Decompose node list into two lists
+   *
+   * We remove those nodes from the list which are outside the
+   * specified rectangle and add them to the new list.
+   *
+   * @param cd Rectangle defined by two corner points
+   * @param nodes Pointer to ids of nodes
+   * @param nodes_new Pointer to new list of ids of nodes
+   */
+  void decomposeSearchNodes(const std::pair<util::Point3, util::Point3> &cd,
+                            std::vector<size_t> *nodes,
+                            std::vector<size_t> *nodes_new);
+
+  /*!
    * @brief Interpolates displacement and velocity at given point in triangle
    *
    * Triangle is specified by global ids of nodes. We first check if point is
@@ -315,7 +350,7 @@ private:
    * @param up Displacement at the point p
    * @param vp Velocity at the point p
    * @param ids Global ids of vertices of triangle
-   * @param status True if point is found in the triangle. Otherwise false.
+   * @return status True if point is found in the triangle. Otherwise false.
    */
   bool triCheckAndInterpolateUV(const util::Point3 &p, util::Point3 &up,
                                 util::Point3 &vp,
@@ -358,7 +393,7 @@ private:
    * point on contour
    *
    * Computes \f[ \frac{1}{2} \rho |\dot{u}(t)|^2 dt + \bar{W}(x; u(t)) \f]
-   * at given point, see computeJIntegral for more details.
+   * at given point, see computeJIntegral() for more details.
    *
    * @param p Point
    * @param nodes Pointer to ids of nodes to perform search
@@ -368,6 +403,17 @@ private:
   double getContourContribJInt(const util::Point3 &p,
                      const std::vector<size_t> *nodes,
                      const std::vector<size_t> *elements);
+
+  /*!
+   * @brief Updates crack tip location and crack velocity
+   *
+   * @param time Current time
+   * @param Z Vector of damage at nodes
+   */
+  void updateCrack(const double &time, const std::vector<float> *Z);
+
+  /*! @brief Performs output of crack tip data */
+  void crackOutput();
 
   /** @}*/
 
@@ -441,7 +487,7 @@ private:
   material::pd::Material *d_material_p;
 
   /*! @brief List of fracture objects (required for crack tip calculation) */
-  std::vector<geometry::Fracture *> d_fractureSet;
+  std::vector<inp::FractureDeck *> d_fractureDeckSet;
 };
 
 } // namespace pp

@@ -93,8 +93,11 @@ Compute:
       # specify the orientation of crack
       # -1 for vertical and 1 for horizontal
       Crack_Orient: 1
+      # specify the id of crack (crack data file may have data for multiple
+      # cracks, so we need the id of crack for which J integral is computed)
+      Crack_Id: 1
       # file which contains crack tip location and velocity
-      # format of file: <output step>, <tip x>, <tip y>, <tip vx>, <tip vy>
+      # format: <crack id>, <output step>, <tip x>, <tip y>, <tip vx>, <tip vy>
       Crack_Tip_File: crack_tip_data.csv
       # factor (for x and y direction) to compute the contour around crack tip
       Contour_Size: [4.0, 4.0]

@@ -28,33 +28,6 @@ struct FractureDeck;
  */
 namespace geometry {
 
-/*! @brief A struct to compute crack tip and crack tip velocity */
-struct CrackOutData {
-
-  /*! @brief Old update time for top (right) side of crack */
-  double d_timet;
-
-  /*! @brief Old update time for bottom (left) side of crack */
-  double d_timeb;
-
-  /*! @brief Total number of updates at current time */
-  size_t d_updateCount;
-
-  /*! @brief Total number of files created so far */
-  size_t d_fileOutCount;
-
-  /*! @brief Flag which specifies if we need to create new file */
-  bool d_needNewFile;
-
-  /*! @brief File to which crack data will be written */
-  FILE *d_file;
-
-  /*! @brief Default constructor */
-  CrackOutData()
-      : d_timet(0.), d_timeb(0.), d_updateCount(0), d_fileOutCount(0),
-        d_needNewFile(false), d_file(nullptr){};
-};
-
 /*! @brief A class for fracture state of bonds
  *
  * In this class fracture state of each bonds (i.e. whether the bond is
@@ -89,13 +62,6 @@ public:
   void setBondState(const size_t &i, const size_t &j, const bool &state);
 
   /*!
-   * @brief Sets the output time step to given value
-   *
-   * @param dt Output time step interval
-   */
-  void setUpdateCrack(const size_t &dt);
-
-  /*!
    * @brief Sets the bond state
    *
    * @param i Nodal id
@@ -112,30 +78,6 @@ public:
    */
   const std::vector<uint8_t> getBonds(const size_t &i);
 
-  /*!
-   * @brief Updates crack tip and velocity and performs output
-   *
-   * @param n Time step
-   * @param time Current time
-   * @param output_path Path where crack data file will be created
-   * @param horizon Horizon
-   * @param nodes Reference coordinates of all nodes
-   * @param u Vector of displacement
-   * @param Z Vector of damage at nodes
-   */
-  void
-  updateCrackAndOutput(const size_t &n, const double &time,
-                       const std::string &output_path,
-                       const double &horizon,
-                       const std::vector<util::Point3> *nodes,
-                       std::vector<util::Point3> *u, std::vector<float> *Z);
-
-  /*!
-   * @brief Updates crack tip and velocity and performs output
-   * @return dt Time step interval for crack output
-   */
-  size_t getDtCrackOut();
-
 private:
   /*!
    * @brief Sets flag of bonds of i as fractured which intersect the
@@ -150,38 +92,8 @@ private:
                               const std::vector<util::Point3> *nodes,
                               const std::vector<size_t> *neighbors);
 
-  /*!
-   * @brief Updates crack tip location and crack velocity
-   * @param n Time step
-   * @param time Current time
-   * @param horizon Horizon
-   * @param nodes Reference coordinates of all nodes
-   * @param u Vector of displacement
-   * @param Z Vector of damage at nodes
-   */
-  void updateCrack(const size_t &n, const double &time, const double &horizon,
-                   const std::vector<util::Point3> *nodes,
-                   std::vector<util::Point3> *u, std::vector<float> *Z);
-
-  /*!
-   * @brief Performs output
-   * @param n Time step
-   * @param time Current time
-   * @param output_path Path where crack data file will be created
-   * @param nodes Reference coordinates of all nodes
-   * @param u Vector of displacement
-   * @param Z Vector of damage at nodes
-   */
-  void output(const size_t &n, const double &time,
-              const std::string &output_path,
-              const std::vector<util::Point3> *nodes,
-              std::vector<util::Point3> *u, std::vector<float> *Z);
-
   /*! @brief Interior flags deck */
   inp::FractureDeck *d_fractureDeck_p;
-
-  /*! @brief Data for crack tip calculation */
-  geometry::CrackOutData d_crackOutData;
 
   /*! @brief Vector which stores the state of bonds
    *

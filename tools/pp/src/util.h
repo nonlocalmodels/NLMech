@@ -20,7 +20,7 @@ namespace pp {
 struct CrackTipData {
 
   /*! @brief Output time step */
-  size_t d_n;
+  int d_n;
 
   /*! @brief Crack tip location */
   util::Point3 d_p;
@@ -138,10 +138,27 @@ struct FindCrackTip {
    */
   bool d_crackSameDtOut;
 
+  /*! @brief Old update time for top (right) side of crack */
+  double d_timet;
+
+  /*! @brief Old update time for bottom (left) side of crack */
+  double d_timeb;
+
+  /*! @brief Total number of updates at current time */
+  size_t d_updateCount;
+
+  /*! @brief File (for top tip) to which crack data will be written */
+  FILE *d_filet;
+
+  /*! @brief File (for bottom tip) to which crack data will be written */
+  FILE *d_fileb;
+
   /*!
    * @brief Constructor
    */
-  FindCrackTip() : d_crackSameDtOut(true) {};
+  FindCrackTip()
+      : d_crackSameDtOut(true), d_timet(0.), d_timeb(0.), d_updateCount(0),
+        d_filet(nullptr), d_fileb(nullptr){};
 };
 
 /*!
@@ -150,6 +167,9 @@ struct FindCrackTip {
 struct ComputeJIntegral {
   /*! @brief Specify orientation of crack. 1 for horizontal, -1 for vertical */
   int d_crackOrient;
+
+  /*! @brief Specify crack id for which data to be read from file */
+  int d_crackId;
 
   /*! @brief Specify file from which crack tip information is to be read */
   std::string d_crackTipFile;
@@ -166,10 +186,15 @@ struct ComputeJIntegral {
   /*! @brief End step for J-integral calculation */
   int d_end;
 
+  /*! @brief File to write J integral data */
+  FILE *d_file;
+
   /*!
    * @brief Constructor
    */
-  ComputeJIntegral() : d_crackOrient(0), d_start(-1), d_end(-1) {};
+  ComputeJIntegral()
+      : d_crackOrient(0), d_crackId(1), d_start(-1), d_end(-1),
+        d_file(nullptr){};
 };
 
 /*!

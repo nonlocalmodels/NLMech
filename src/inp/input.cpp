@@ -259,23 +259,6 @@ void inp::Input::setFractureDeck() {
   d_fractureDeck_p = new inp::FractureDeck();
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
-  if (config["Fracture"]["Dt_Out"])
-    d_fractureDeck_p->d_dtCrackOut = config["Fracture"]["Dt_Out"].as<size_t>();
-
-  if (config["Fracture"]["Dt_Crack_Velocity"])
-    d_fractureDeck_p->d_dtCrackVelocity = config["Fracture"]["Dt_Crack_Velocity"].as<size_t>();
-  else
-    d_fractureDeck_p->d_dtCrackVelocity = d_fractureDeck_p->d_dtCrackOut;
-
-  if (d_fractureDeck_p->d_dtCrackVelocity > d_fractureDeck_p->d_dtCrackOut)
-    d_fractureDeck_p->d_dtCrackVelocity = d_fractureDeck_p->d_dtCrackOut;
-
-  if (config["Fracture"]["Crack_Out_Filename"])
-    d_fractureDeck_p->d_crackOutFilename =
-      config["Fracture"]["Crack_Out_Filename"].as<std::string>();
-  else
-    d_fractureDeck_p->d_crackOutFilename = "crack_data";
-
   size_t ncracks = 0;
   if (config["Fracture"]["Cracks"]["Sets"])
     ncracks = config["Fracture"]["Cracks"]["Sets"].as<size_t>();
