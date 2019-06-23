@@ -19,8 +19,8 @@
 #include <yaml-cpp/yaml.h> // YAML reader
 
 tools::pp::Compute::Compute(const std::string &filename)
-    : d_inpFilename(filename), d_nC(0), d_currentData(nullptr),
-      d_modelDeck_p(nullptr), d_outputDeck_p(nullptr),
+    : d_inpFilename(filename), d_nOut(0), d_nC(0), d_currentData(nullptr),
+      d_writerReady(false), d_modelDeck_p(nullptr), d_outputDeck_p(nullptr),
       d_fractureDeck_p(nullptr), d_matDeck_p(nullptr), d_mesh_p(nullptr),
       d_fracture_p(nullptr), d_neighbor_p(nullptr), d_input_p(nullptr),
       d_material_p(nullptr) {
@@ -58,27 +58,29 @@ tools::pp::Compute::Compute(const std::string &filename)
       // filename for writing postprocessed data
       d_outFilename = d_outPreTag + "_" + d_currentData->d_tagFilename + "_" +
                       std::to_string(d_nOut);
+
       // writer
-      rw::writer::VtkWriterInterface *writer = nullptr;
+      rw::writer::VtkWriterInterface writer;
+      d_writerReady = false;
 
       // apply postprocessing
-      transformU(writer);
-      transformV(writer);
-      computeStrain(writer);
+      transformU(&writer);
+      transformV(&writer);
+      computeStrain(&writer);
 
       // nodal damage
-      std::vector<float> Z;
-      findCrackTip(&Z, writer);
+      std::vector<double> Z;
+      findCrackTip(&Z, &writer);
       if (d_currentData->d_damageAtNodes)
-        computeDamage(&Z, writer, true);
+        computeDamage(&writer, &Z, true);
       if (!Z.empty())
         Z.shrink_to_fit();
 
-      computeJIntegral(writer);
+      computeJIntegral(&writer);
 
       // close file
-      if (writer)
-        writer->close();
+      if (d_writerReady)
+        writer.close();
     } // loop compute set
   }   // loop simulation output
 
@@ -172,8 +174,13 @@ void tools::pp::Compute::init() {
     d_computeData.emplace_back(data);
   }
 
-  // vector of null pointer Fracture class
-  d_fractureDeckSet = std::vector<inp::FractureDeck *>(num_compute, nullptr);
+  // copy edge crack set for findCrackTip() function
+  for (auto &d : d_computeData) {
+    if (d.d_findCrackTip_p) {
+      d.d_findCrackTip_p->d_cracks = d_fractureDeck_p->d_cracks;
+      std::cout << "size 1 = " << d.d_findCrackTip_p->d_cracks.size() << "\n";
+    }
+  }
 
   // read crack tip data for J integral calculation
   for (auto &d : d_computeData) {
@@ -430,16 +437,18 @@ void tools::pp::Compute::readCrackTipData(
 
 void tools::pp::Compute::initWriter(rw::writer::VtkWriterInterface *writer,
                                     std::vector<util::Point3> *u) {
-  if (writer)
+  if (d_writerReady)
     return;
 
-  writer = new rw::writer::VtkWriterInterface(d_outFilename);
+  writer->open(d_outFilename);
   // append mesh (check if only nodes need to be written)
   if (d_currentData->d_outOnlyNodes)
     writer->appendNodes(d_mesh_p->getNodesP(), u);
   else
     writer->appendMesh(d_mesh_p->getNodesP(), d_mesh_p->getElementType(),
                        d_mesh_p->getElementConnectivitiesP(), u);
+
+  d_writerReady = true;
 }
 
 //
@@ -460,7 +469,7 @@ void tools::pp::Compute::transformU(rw::writer::VtkWriterInterface *writer) {
       });
   f.get();
 
-  if (!writer) {
+  if (!d_writerReady) {
     initWriter(writer, &u_temp);
 
     // append original displacement
@@ -516,7 +525,7 @@ void tools::pp::Compute::transformV(rw::writer::VtkWriterInterface *writer) {
       for (auto i : data->d_markVNodes)
         v_mark[i] = util::Point3();
 
-    if (!writer)
+    if (!d_writerReady)
       initWriter(writer, &d_u);
 
     // append velocity
@@ -570,7 +579,7 @@ void tools::pp::Compute::transformV(rw::writer::VtkWriterInterface *writer) {
         }); // parallel for loop
     f.get();
 
-    if (!writer)
+    if (!d_writerReady)
       initWriter(writer, &d_u);
 
     // append velocity
@@ -679,7 +688,7 @@ void tools::pp::Compute::computeStrain(rw::writer::VtkWriterInterface *writer) {
   if (!d_currentData->d_outOnlyNodes) {
 
     // append mesh
-    if (!writer)
+    if (!d_writerReady)
       initWriter(writer, &d_u);
 
     writer->appendCellData("Strain_Tensor", &strain);
@@ -737,21 +746,22 @@ void tools::pp::Compute::computeStrain(rw::writer::VtkWriterInterface *writer) {
   }
 }
 
-void tools::pp::Compute::computeDamage(std::vector<float> *Z,
-                                       rw::writer::VtkWriterInterface *writer,
-                                       bool perf_out) {
-  if (!d_currentData->d_damageAtNodes)
-    return;
+void tools::pp::Compute::computeDamage(rw::writer::VtkWriterInterface *writer,
+                                       std::vector<double> *Z, bool perf_out) {
+//  if (!d_currentData->d_damageAtNodes)
+//    return;
 
-  if (Z->empty())
+  if (Z->size() != d_mesh_p->getNumNodes())
     Z->resize(d_mesh_p->getNumNodes());
+
+  auto Z_tag = std::vector<size_t>(d_mesh_p->getNumNodes(), 0);
 
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_mesh_p->getNumNodes(), [Z, this](boost::uint64_t i) {
+      d_mesh_p->getNumNodes(), [&Z, &Z_tag, this](boost::uint64_t i) {
         auto xi = d_mesh_p->getNode(i);
 
-        float locz = 0.;
+        double locz = 0.;
         for (size_t j = 0; j < d_mesh_p->getNumNodes(); j++) {
           if (util::compare::definitelyGreaterThan(
                   xi.dist(d_mesh_p->getNode(j)), d_modelDeck_p->d_horizon) ||
@@ -769,29 +779,27 @@ void tools::pp::Compute::computeDamage(std::vector<float> *Z,
         } // loop over neighbors
 
         (*Z)[i] = locz;
+
+        if (locz > 0.9 && locz < 1.1)
+          Z_tag[i] = 10000;
       }); // parallel loop over nodes
   f.get();
 
   if (!perf_out)
     return;
 
-  if (!writer)
+  if (!d_writerReady)
     initWriter(writer, &d_u);
 
   writer->appendPointData("Damage_Z", Z);
 }
 
-void tools::pp::Compute::findCrackTip(std::vector<float> *Z,
+void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
                                       rw::writer::VtkWriterInterface *writer) {
 
   auto data = d_currentData->d_findCrackTip_p;
   if (!data)
     return;
-
-  if (!d_fractureDeckSet[d_nC]) {
-    auto fd = *d_fractureDeck_p;
-    d_fractureDeckSet[d_nC] = &fd;
-  }
 
   auto n = d_nOut * d_outputDeck_p->d_dtOut;
   auto time = n * d_modelDeck_p->d_dt;
@@ -804,16 +812,17 @@ void tools::pp::Compute::findCrackTip(std::vector<float> *Z,
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
         d_mesh_p->getNumNodes(), [this](boost::uint64_t i) {
-          d_u[i] -= util::Point3(d_modelDeck_p->d_dt * d_v[i].d_x,
-                                 d_modelDeck_p->d_dt * d_v[i].d_y,
-                                 d_modelDeck_p->d_dt * d_v[i].d_z);
+          d_u[i] -=
+              util::Point3(d_modelDeck_p->d_dt * d_v[i].d_x,
+                           d_modelDeck_p->d_dt * d_v[i].d_y,
+                           d_modelDeck_p->d_dt * d_v[i].d_z);
         });
     f.get();
 
     // compute damage at n-1
-    if (Z->empty())
+    if (Z->size() != d_mesh_p->getNumNodes())
       Z->resize(d_mesh_p->getNumNodes());
-    computeDamage(Z, writer, false);
+    computeDamage(writer, Z, false);
 
     // compute crack tip location and crack tip velocity
     updateCrack(time, Z);
@@ -832,9 +841,9 @@ void tools::pp::Compute::findCrackTip(std::vector<float> *Z,
   f2.get();
 
   // compute damage at current displacement
-  if (Z->empty())
+  if (Z->size() != d_mesh_p->getNumNodes())
     Z->resize(d_mesh_p->getNumNodes());
-  computeDamage(Z, writer, false);
+  computeDamage(writer, Z, false);
 
   // compute crack tip location and crack tip velocity
   updateCrack(time, Z);
@@ -871,29 +880,11 @@ void tools::pp::Compute::computeJIntegral(
   //                        A                    B
   //
   // Contour is formed by lines A-B, B-C, C-D, D-A
-  std::pair<util::Point3, util::Point3> cd(
-      std::make_pair(util::Point3(), util::Point3()));
-  if (data->d_crackOrient == -1) {
-    // vertical crack
-    cd.first = util::Point3(ctip.d_p.d_x - 0.5 * data->d_contourFactor[0] *
-                                               d_modelDeck_p->d_horizon,
-                            ctip.d_p.d_y, 0.);
-    cd.second = util::Point3(
-        ctip.d_p.d_x +
-            0.5 * data->d_contourFactor[0] * d_modelDeck_p->d_horizon,
-        ctip.d_p.d_y + data->d_contourFactor[1] * d_modelDeck_p->d_horizon, 0.);
-  } else if (data->d_crackOrient == 1) {
-    // horizontal crack
-    cd.first = util::Point3(ctip.d_p.d_x,
-                            ctip.d_p.d_y - 0.5 * data->d_contourFactor[1] *
-                                               d_modelDeck_p->d_horizon,
-                            0.);
-    cd.second = util::Point3(ctip.d_p.d_x + data->d_contourFactor[0] *
-                                                d_modelDeck_p->d_horizon,
-                             ctip.d_p.d_y + 0.5 * data->d_contourFactor[1] *
-                                                d_modelDeck_p->d_horizon,
-                             0.);
-  }
+  double tolx = 0.5 * data->d_contourFactor[0] * d_modelDeck_p->d_horizon;
+  double toly = 0.5 * data->d_contourFactor[1] * d_modelDeck_p->d_horizon;
+  auto cd = std::make_pair(
+      util::Point3(ctip.d_p.d_x - tolx, ctip.d_p.d_y - toly, 0.),
+      util::Point3(ctip.d_p.d_x + tolx, ctip.d_p.d_y + toly, 0.));
 
   // compute nodes and elements list for search
   std::vector<size_t> search_nodes;
@@ -915,48 +906,48 @@ void tools::pp::Compute::computeJIntegral(
   auto line_quad = fe::LineElem(2);
 
   auto energies = std::vector<double>(N, 0.);
-//  auto f = hpx::parallel::for_loop(
-//      hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
-//      [&energies, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
-//       this](boost::uint64_t I) {
-  for (size_t I=0; I<N; I++) {
-    double loc_energy = 0.;
+  auto f = hpx::parallel::for_loop(
+      hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
+      [&energies, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
+       this](boost::uint64_t I) {
+        //  for (size_t I = 0; I < N; I++) {
+        double loc_energy = 0.;
 
-    // line element
-    auto x1 = cd.first.d_x + double(I) * h;
-    auto x2 = cd.first.d_x + double(I + 1) * h;
-    if (I == N - 1)
-      x2 = cd.second.d_x;
+        // line element
+        auto x1 = cd.first.d_x + double(I) * h;
+        auto x2 = cd.first.d_x + double(I + 1) * h;
+        if (I == N - 1)
+          x2 = cd.second.d_x;
 
-    // get quadrature points
-    auto qds = line_quad.getQuadPoints(std::vector<util::Point3>{
-        util::Point3(x1, 0., 0.), util::Point3(x2, 0., 0.)});
+        // get quadrature points
+        auto qds = line_quad.getQuadPoints(std::vector<util::Point3>{
+            util::Point3(x1, 0., 0.), util::Point3(x2, 0., 0.)});
 
-    // loop over quad points
-    for (auto qd : qds) {
-      // process edge A-B
-      qd.d_p.d_y = cd.first.d_y;
+        // loop over quad points
+        for (auto qd : qds) {
+          // process edge A-B
+          qd.d_p.d_y = cd.first.d_y;
 
-      // get contribution
-      // n dot v for edge A-B = - (y component of v)
-      loc_energy +=
-          getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-          (-ctip.d_v.d_y) * qd.d_w;
+          // get contribution
+          // n dot v for edge A-B = - (y component of v)
+          loc_energy +=
+              getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
+              (-ctip.d_v.d_y) * qd.d_w;
 
-      // process edge C-D
-      qd.d_p.d_y = cd.second.d_y;
+          // process edge C-D
+          qd.d_p.d_y = cd.second.d_y;
 
-      // get contribution
-      // n dot v for edge A-B = - (y component of v)
-      loc_energy +=
-          getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-          ctip.d_v.d_y * qd.d_w;
-    }
+          // get contribution
+          // n dot v for edge C-D = y component of v
+          loc_energy +=
+              getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
+              ctip.d_v.d_y * qd.d_w;
+        }
 
-    energies[I] = loc_energy;
-  }
-//      });
-//  f.get();
+        energies[I] = loc_energy;
+        //  }
+      });
+  f.get();
 
   // add energies
   energy += util::methods::add(energies);
@@ -970,51 +961,51 @@ void tools::pp::Compute::computeJIntegral(
     N++;
 
   energies = std::vector<double>(N, 0.);
-//  f = hpx::parallel::for_loop(
-//      hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
-//      [&energies, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
-//       this](boost::uint64_t I) {
-  for (size_t I=0; I<N; I++) {
-    double loc_energy = 0.;
+  f = hpx::parallel::for_loop(
+      hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
+      [&energies, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
+       this](boost::uint64_t I) {
+        //  for (size_t I = 0; I < N; I++) {
+        double loc_energy = 0.;
 
-    // line element
-    auto y1 = cd.first.d_y + double(I) * h;
-    auto y2 = cd.first.d_y + double(I + 1) * h;
-    if (I == N - 1)
-      y2 = cd.second.d_y;
+        // line element
+        auto y1 = cd.first.d_y + double(I) * h;
+        auto y2 = cd.first.d_y + double(I + 1) * h;
+        if (I == N - 1)
+          y2 = cd.second.d_y;
 
-    // get quadrature points
-    auto qds = line_quad.getQuadPoints(std::vector<util::Point3>{
-        util::Point3(y1, 0., 0.), util::Point3(y2, 0., 0.)});
+        // get quadrature points
+        auto qds = line_quad.getQuadPoints(std::vector<util::Point3>{
+            util::Point3(y1, 0., 0.), util::Point3(y2, 0., 0.)});
 
-    // loop over quad points
-    for (auto qd : qds) {
-      // process edge B-C
-      // transform quad point along vertical line to correct coordinate
-      qd.d_p = util::Point3(cd.second.d_x, qd.d_p.d_x, 0.);
-      ;
+        // loop over quad points
+        for (auto qd : qds) {
+          // process edge B-C
+          // transform quad point along vertical line to correct coordinate
+          auto p_temp = qd.d_p;
+          qd.d_p = util::Point3(cd.second.d_x, p_temp.d_x, 0.);
 
-      // get contribution
-      // n dot v for edge B-C = (x component of v)
-      loc_energy +=
-          getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-          ctip.d_v.d_x * qd.d_w;
+          // get contribution
+          // n dot v for edge B-C = (x component of v)
+          loc_energy +=
+              getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
+              ctip.d_v.d_x * qd.d_w;
 
-      // process edge D-A
-      // transform quad point along vertical line to correct coordinate
-      qd.d_p = util::Point3(cd.first.d_x, qd.d_p.d_x, 0.);
+          // process edge D-A
+          // transform quad point along vertical line to correct coordinate
+          qd.d_p = util::Point3(cd.first.d_x, p_temp.d_x, 0.);
 
-      // get contribution
-      // n dot v for edge D-A = - (x component of v)
-      loc_energy +=
-          getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-          (-ctip.d_v.d_x) * qd.d_w;
-    }
+          // get contribution
+          // n dot v for edge D-A = - (x component of v)
+          loc_energy +=
+              getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
+              (-ctip.d_v.d_x) * qd.d_w;
+        }
 
-    energies[I] = loc_energy;
-  }
-//      });
-//  f.get();
+        energies[I] = loc_energy;
+        //  }
+      });
+  f.get();
 
   // add energies
   energy += util::methods::add(energies);
@@ -1031,7 +1022,7 @@ void tools::pp::Compute::computeJIntegral(
   energies = std::vector<double>(search_node_comp.size(), 0.);
 
   // loop over nodes in compliment of domain A
-  auto f = hpx::parallel::for_loop(
+  f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       search_node_comp.size(),
       [&energies, h, cd, &line_quad, search_nodes, search_node_comp,
@@ -1040,6 +1031,7 @@ void tools::pp::Compute::computeJIntegral(
         auto xi = d_mesh_p->getNode(id);
         auto ui = d_u[id];
         auto vi = d_v[id];
+        auto voli = d_mesh_p->getNodalVolume(id);
 
         double energy_loc = 0.;
 
@@ -1068,13 +1060,13 @@ void tools::pp::Compute::computeJIntegral(
           auto ef = d_material_p->getBondEF(rji, Sji, fracture_state, true);
 
           // compute the contribution
-          energy_loc += ef.second * volj *
+          energy_loc -= ef.second * volj *
                         (xji.d_x * v_sum.d_x + xji.d_y * v_sum.d_y +
                          xji.d_z * v_sum.d_z) /
                         rji;
         } // loop over neighboring nodes
 
-        energies[i] = energy_loc;
+        energies[i] = energy_loc * voli;
       });
   f.get();
 
@@ -1088,12 +1080,17 @@ void tools::pp::Compute::computeJIntegral(
     data->d_file = fopen(filename.c_str(), "w");
 
     // write header
-    fprintf(data->d_file, "dt_out, E, Gcompute, Gc\n");
+    fprintf(data->d_file, "dt_out, vmag, E, v*Gc, Gc_experiment, Gc_theory\n");
   }
 
   // write data
-  fprintf(data->d_file, "%u, %6.8e, %6.8e, %6.8e\n", d_nOut, energy,
-          energy / ctip.d_v.length(), d_matDeck_p->d_matData.d_Gc);
+  double Gcompute = 0.;
+  auto vmag = ctip.d_v.length();
+  if (util::compare::definitelyGreaterThan(vmag, 1.E-10))
+    Gcompute = energy / vmag;
+  fprintf(data->d_file, "%u, %4.6e, %4.6e, %4.6e, %4.6e, %4.6e\n", d_nOut, vmag,
+          energy, vmag * d_matDeck_p->d_matData.d_Gc, Gcompute,
+          d_matDeck_p->d_matData.d_Gc);
 }
 
 //
@@ -1247,7 +1244,6 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
                                        util::Point3 &vp,
                                        const std::vector<size_t> *nodes,
                                        const std::vector<size_t> *elements) {
-  std::cout << "here\n";
   // check if element data is available
   if (elements->empty()) {
     // use piecewise constant interpolation
@@ -1273,16 +1269,6 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
   } else {
     for (auto e : *elements) {
       auto ids = d_mesh_p->getElementConnectivity(e);
-
-      static int dbg = 0;
-      if (dbg < 10) {
-        std::cout << "ids size= " << ids.size();
-        for (auto i : ids)
-          std::cout << ", " << i;
-        std::cout << "\n";
-        dbg++;
-      }
-
 
       // cases
       if (d_mesh_p->getElementType() == util::vtk_type_triangle) {
@@ -1352,11 +1338,13 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
 }
 
 void tools::pp::Compute::updateCrack(const double &time,
-                                     const std::vector<float> *Z) {
+                                     const std::vector<double> *Z) {
   auto compute_data = d_currentData->d_findCrackTip_p;
 
+  std::cout << "size 2 = " << compute_data->d_cracks.size() << "\n";
+
   // loop over crack lines
-  for (auto &crack : d_fractureDeckSet[d_nC]->d_cracks) {
+  for (auto &crack : compute_data->d_cracks) {
 
     if (crack.d_o == 0)
       continue;
@@ -1370,53 +1358,78 @@ void tools::pp::Compute::updateCrack(const double &time,
     // create search rectangle containing crack
     double rect_t[4];
     double rect_b[4];
+
     if (crack.d_o == -1) {
-      rect_t[0] = pt.d_x - 2. * d_modelDeck_p->d_horizon;
+      rect_t[0] = pt.d_x - d_modelDeck_p->d_horizon;
       rect_t[1] = pt.d_y - d_modelDeck_p->d_horizon;
-      rect_t[2] = pt.d_x + 2. * d_modelDeck_p->d_horizon;
+      rect_t[2] = pt.d_x + d_modelDeck_p->d_horizon;
       rect_t[3] = pt.d_y + search_length;
 
-      rect_b[0] = pb.d_x - 2. * d_modelDeck_p->d_horizon;
+      rect_b[0] = pb.d_x - d_modelDeck_p->d_horizon;
       rect_b[1] = pb.d_y - search_length;
-      rect_b[2] = pb.d_x + 2. * d_modelDeck_p->d_horizon;
+      rect_b[2] = pb.d_x + d_modelDeck_p->d_horizon;
       rect_b[3] = pb.d_y + d_modelDeck_p->d_horizon;
     } else if (crack.d_o == 1) {
       rect_t[0] = pt.d_x - d_modelDeck_p->d_horizon;
-      rect_t[1] = pt.d_y - 2. * d_modelDeck_p->d_horizon;
+      rect_t[1] = pt.d_y - d_modelDeck_p->d_horizon;
       rect_t[2] = pt.d_x + search_length;
-      rect_t[3] = pt.d_y + 2. * d_modelDeck_p->d_horizon;
+      rect_t[3] = pt.d_y + d_modelDeck_p->d_horizon;
 
       rect_b[0] = pb.d_x - search_length;
-      rect_b[1] = pb.d_y - 2. * d_modelDeck_p->d_horizon;
+      rect_b[1] = pb.d_y - d_modelDeck_p->d_horizon;
       rect_b[2] = pb.d_x + d_modelDeck_p->d_horizon;
-      rect_b[3] = pb.d_y + 2. * d_modelDeck_p->d_horizon;
+      rect_b[3] = pb.d_y + d_modelDeck_p->d_horizon;
     }
 
     // find and store id of node at crack tip
     long ib = -1;
     long it = -1;
-    float Zb = 0.;
-    float Zt = 0.;
+    double Zb = 1000.;
+    double Zt = 1000.;
+    double dist_mid_t = d_modelDeck_p->d_horizon;
+    double dist_mid_b = d_modelDeck_p->d_horizon;
 
     for (size_t i = 0; i < d_mesh_p->getNumNodes(); i++) {
-      auto xi = d_mesh_p->getNode(i);
-      auto yi = xi + d_u[i];
+      auto yi = d_mesh_p->getNode(i) + d_u[i];
       auto damage = (*Z)[i];
 
+      if (std::abs(damage - 1.) > 5.0E-02)
+        continue;
+
       if (util::geometry::isPointInsideRectangle(yi, rect_t[0], rect_t[2],
-                                                 rect_t[1], rect_t[3]) &&
-          util::compare::definitelyLessThan(damage, 1.) &&
-          util::compare::definitelyGreaterThan(damage, Zt)) {
-        it = i;
-        Zt = damage;
+                                                 rect_t[1], rect_t[3])) {
+
+        // damage is within desired range and node is in the rectangle
+        // we now check if this node is more aligned to the crack line
+        if (crack.d_o == -1 && std::abs(yi.d_y - pt.d_y) < dist_mid_t) {
+          it = i;
+          Zt = damage;
+          dist_mid_t = std::abs(yi.d_y - pt.d_y);
+        }
+
+        if (crack.d_o == 1 && std::abs(yi.d_x - pt.d_x) < dist_mid_t) {
+          it = i;
+          Zt = damage;
+          dist_mid_t = std::abs(yi.d_x - pt.d_x);
+        }
       }
 
       if (util::geometry::isPointInsideRectangle(yi, rect_b[0], rect_b[2],
-                                                 rect_b[1], rect_b[3]) &&
-          util::compare::definitelyLessThan(damage, 1.) &&
-          util::compare::definitelyGreaterThan(damage, Zb)) {
-        ib = i;
-        Zb = damage;
+                                                 rect_b[1], rect_b[3])) {
+
+        // damage is within desired range and node is in the rectangle
+        // we now check if this node is more aligned to the crack line
+        if (crack.d_o == -1 && std::abs(yi.d_y - pb.d_y) < dist_mid_b) {
+          ib = i;
+          Zb = damage;
+          dist_mid_b = std::abs(yi.d_y - pb.d_y);
+        }
+
+        if (crack.d_o == 1 && std::abs(yi.d_x - pb.d_x) < dist_mid_b) {
+          ib = i;
+          Zb = damage;
+          dist_mid_b = std::abs(yi.d_x - pb.d_x);
+        }
       }
     } // loop over nodes
 
@@ -1430,11 +1443,33 @@ void tools::pp::Compute::updateCrack(const double &time,
       crack.d_vt = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
                                 diff.d_z / delta_t);
       compute_data->d_timet = time;
+
+      std::cout << "Damage: i = " << it << ", Z = " << Zt << "\n";
+    } else {
+      std::cout << "Warning: Can not find crack tip.\n";
+
+      // keep old point as crack tip
+      auto diff = crack.d_pt - pt;
+      auto delta_t = time - compute_data->d_timet;
+      crack.d_lt += diff.length();
+      crack.d_l += diff.length();
+      crack.d_vt = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
+                                diff.d_z / delta_t);
+      compute_data->d_timet = time;
     }
 
     if (ib != -1) {
       crack.d_ib = ib;
       crack.d_pb = d_mesh_p->getNode(ib) + d_u[ib];
+      auto diff = crack.d_pb - pb;
+      auto delta_t = time - compute_data->d_timeb;
+      crack.d_lb += diff.length();
+      crack.d_l += diff.length();
+      crack.d_vb = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
+                                diff.d_z / delta_t);
+      compute_data->d_timeb = time;
+    } else {
+      // keep old point as crack tip
       auto diff = crack.d_pb - pb;
       auto delta_t = time - compute_data->d_timeb;
       crack.d_lb += diff.length();
@@ -1479,8 +1514,8 @@ void tools::pp::Compute::crackOutput() {
   }
 
   // write to file
-  for (size_t i = 0; i < d_fractureDeckSet[d_nC]->d_cracks.size(); i++) {
-    auto crack = d_fractureDeckSet[d_nC]->d_cracks[i];
+  for (size_t i = 0; i < compute_data->d_cracks.size(); i++) {
+    auto crack = compute_data->d_cracks[i];
     fprintf(compute_data->d_filet, "%lu, %u, %6.8e, %6.8e, %6.8e, %6.8e\n",
             i + 1, d_nOut, crack.d_pt.d_x, crack.d_pt.d_y, crack.d_vt.d_x,
             crack.d_vt.d_y);

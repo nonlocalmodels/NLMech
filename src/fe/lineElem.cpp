@@ -115,14 +115,19 @@ fe::LineElem::mapPointToRefElem(const util::Point3 &p,
   auto xi = (2. * p.d_x - nodes[0].d_x - nodes[1].d_x) /
             (nodes[0].d_x - nodes[1].d_x);
 
-  if (util::compare::definitelyLessThan(xi, -1.) ||
-      util::compare::definitelyLessThan(xi, 1.) ) {
+  if (util::compare::definitelyLessThan(xi, -1. - 1.0E-8) ||
+      util::compare::definitelyGreaterThan(xi, 1. + 1.0E-8) ) {
     std::cerr << "Error: Trying to map point p = " << p.d_x
               << " in given line to reference line.\n"
               << "But the point p does not belong to line = {"
               << nodes[0].d_x << ", " << nodes[1].d_x << "}.\n";
     exit(1);
   }
+
+  if (util::compare::definitelyLessThan(xi, -1.))
+    xi = -1.;
+  if (util::compare::definitelyGreaterThan(xi, 1.))
+    xi = 1.;
 
   return {xi, 0., 0.};
 }

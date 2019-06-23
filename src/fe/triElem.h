@@ -291,7 +291,7 @@ private:
    *
    * If mapped point \f$ (\xi, \eta)\f$ does not satisfy following
    * condition
-   * - \f[ 0\leq \xi, \eta \leq 1 \f]
+   * - \f[ 0\leq \xi, \eta \f]
    * - \f[ \xi \leq 1 - \eta \quad (or\, equivalently) \quad \eta \leq 1 -
    * \xi \f]
    * then the point \f$ (\xi,\eta) \f$ does not belong to reference triangle

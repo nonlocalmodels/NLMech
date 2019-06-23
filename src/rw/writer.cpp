@@ -6,10 +6,17 @@
 #include "writer.h"
 #include "vtkWriter.h"
 
+rw::writer::VtkWriterInterface::VtkWriterInterface() : d_vtkWriter_p(nullptr) {}
+
 rw::writer::VtkWriterInterface::VtkWriterInterface(const std::string &filename)
     : d_vtkWriter_p(nullptr) {
 
   d_vtkWriter_p = new rw::writer::VtkWriter(filename);
+}
+
+void rw::writer::VtkWriterInterface::open(const std::string &filename) {
+  if (!d_vtkWriter_p)
+    d_vtkWriter_p = new rw::writer::VtkWriter(filename);
 }
 
 rw::writer::VtkWriterInterface::~VtkWriterInterface() {

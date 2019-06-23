@@ -141,19 +141,24 @@ fe::TriElem::mapPointToRefElem(const util::Point3 &p,
               (nodes[1].d_x - nodes[0].d_x) * (p.d_y - nodes[0].d_y)) /
       detB;
 
-  if (util::compare::definitelyLessThan(xi, 0.) ||
-      util::compare::definitelyLessThan(eta, 0.) ||
-      util::compare::definitelyGreaterThan(xi, 1.) ||
-      util::compare::definitelyGreaterThan(eta, 1.) ||
-      util::compare::definitelyGreaterThan(xi, 1. - eta)) {
+  if (util::compare::definitelyLessThan(xi, - 1.0E-6) ||
+      util::compare::definitelyLessThan(eta, - 1.0E-6) ||
+      util::compare::definitelyGreaterThan(xi, 1. + 1.0E-6 - eta)) {
     std::cerr << "Error: Trying to map point p = (" << p.d_x << ", " << p.d_y
               << ") in triangle to reference triangle.\n"
               << "But the point p does not belong to triangle = {("
               << nodes[0].d_x << ", " << nodes[0].d_y << "), (" << nodes[1].d_x
               << "," << nodes[1].d_y << "), (" << nodes[2].d_x << ","
-              << nodes[2].d_y << ")}.\n";
+              << nodes[2].d_y << ")}.\n"
+              << "Coordinates in reference triangle are: xi = " << xi
+              << ", eta = " << eta << "\n";
     exit(1);
   }
+
+  if (util::compare::definitelyLessThan(xi, 0.))
+    xi = 0.;
+  if (util::compare::definitelyLessThan(eta, 0.))
+    eta = 0.;
 
   return {xi, eta, 0.};
 }

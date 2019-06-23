@@ -38,6 +38,11 @@ class VtkWriterInterface {
 public:
   /*!
    * @brief Constructor
+   */
+  VtkWriterInterface();
+
+  /*!
+   * @brief Constructor
    *
    * Creates and opens .vtu file of name given by filename. The file remains
    * open till the close() function is invoked.
@@ -48,6 +53,13 @@ public:
 
   /*! @brief Destructor */
   ~VtkWriterInterface();
+
+  /*!
+   * @brief Open a .vtu file
+   *
+   * @param filename Name of file which will be created
+   */
+  void open(const std::string &filename);
 
   /**
    * @name Mesh data

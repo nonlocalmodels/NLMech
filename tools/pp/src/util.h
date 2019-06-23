@@ -6,6 +6,7 @@
 #ifndef TOOLS_PP_UTIL_H
 #define TOOLS_PP_UTIL_H
 
+#include "inp/decks/fractureDeck.h" // definition of EdgeCrack
 #include "util/point.h"             // definition of Point3
 #include <vector>
 #include <string>
@@ -152,6 +153,9 @@ struct FindCrackTip {
 
   /*! @brief File (for bottom tip) to which crack data will be written */
   FILE *d_fileb;
+
+  /*! @brief Set of edge cracks */
+  std::vector<inp::EdgeCrack> d_cracks;
 
   /*!
    * @brief Constructor

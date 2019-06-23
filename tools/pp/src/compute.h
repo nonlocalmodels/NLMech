@@ -175,12 +175,12 @@ public:
    * x;u) \f$ is the bond-strain between points \f$y,x\f$, and \f$S_c(y,x)
    * \f$ is the critical strain.
    *
-   * @param Z Pointer to nodal damage
    * @param writer Pointer to vtk writer
+   * @param Z Pointer to nodal damage
    * @param perf_out Flag to perform output of damage data
    */
-  void computeDamage(std::vector<float> *Z, rw::writer::VtkWriterInterface
-  *writer, bool perf_out = false);
+  void computeDamage(rw::writer::VtkWriterInterface *writer,
+      std::vector<double> *Z, bool perf_out = false);
 
   /*!
    * @brief Find crack tip location and velocity
@@ -199,7 +199,7 @@ public:
    * @param Z Pointer to nodal damage
    * @param writer Pointer to vtk writer
    */
-  void findCrackTip(std::vector<float> *Z, rw::writer::VtkWriterInterface
+  void findCrackTip(std::vector<double> *Z, rw::writer::VtkWriterInterface
   *writer);
 
   /*!
@@ -410,7 +410,7 @@ private:
    * @param time Current time
    * @param Z Vector of damage at nodes
    */
-  void updateCrack(const double &time, const std::vector<float> *Z);
+  void updateCrack(const double &time, const std::vector<double> *Z);
 
   /*! @brief Performs output of crack tip data */
   void crackOutput();
@@ -453,6 +453,9 @@ private:
    */
   std::string d_simOutFilename;
 
+  /*! @brief State of writer class */
+  bool d_writerReady;
+
   /*! @brief Displacement of nodes */
   std::vector<util::Point3> d_u;
 
@@ -485,9 +488,6 @@ private:
 
   /*! @brief Pointer to Material object */
   material::pd::Material *d_material_p;
-
-  /*! @brief List of fracture objects (required for crack tip calculation) */
-  std::vector<inp::FractureDeck *> d_fractureDeckSet;
 };
 
 } // namespace pp
