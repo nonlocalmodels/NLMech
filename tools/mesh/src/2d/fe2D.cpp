@@ -23,6 +23,7 @@ struct InpData {
   double d_h;
   std::string d_meshType;
   bool d_isFd;
+  std::string d_compressType;
 
   InpData()
       : d_domain(std::make_pair(std::vector<double>(2, 0.),
@@ -94,6 +95,9 @@ void readInputFile(InpData *data, YAML::Node config) {
     data->d_isFd = config["Is_FD"].as<bool>();
   else
     data->d_isFd = false;
+
+  if (config["Compress_Type"])
+    data->d_compressType = config["Compress_Type"].as<bool>();
 }
 
 } // namespace
@@ -151,7 +155,7 @@ void tools::mesh::uniformSquare(const std::string &filename) {
   if (data.d_isFd) {
 
     // write data to vtu file
-    auto writer = tools::mesh::VtkWriter(data.d_meshFile);
+    auto writer = tools::mesh::VtkWriter(data.d_meshFile, data.d_compressType);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
     writer.addTimeStep(0.);
@@ -181,7 +185,7 @@ void tools::mesh::uniformSquare(const std::string &filename) {
   std::vector<util::Point3> u(num_nodes, util::Point3());
 
   // write to vtu file
-  auto writer = tools::mesh::VtkWriter(data.d_meshFile);
+  auto writer = tools::mesh::VtkWriter(data.d_meshFile, data.d_compressType);
   writer.appendMesh(&nodes, element_type, &en_con, &u);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);
@@ -268,7 +272,7 @@ void tools::mesh::uniformTri(const std::string &filename) {
   if (data.d_isFd) {
 
     // write data to vtu file
-    auto writer = tools::mesh::VtkWriter(data.d_meshFile);
+    auto writer = tools::mesh::VtkWriter(data.d_meshFile, data.d_compressType);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
     writer.addTimeStep(0.);
@@ -324,7 +328,7 @@ void tools::mesh::uniformTri(const std::string &filename) {
   std::vector<util::Point3> u(num_nodes, util::Point3());
 
   // write to vtu file
-  auto writer = tools::mesh::VtkWriter(data.d_meshFile);
+  auto writer = tools::mesh::VtkWriter(data.d_meshFile, data.d_compressType);
   writer.appendMesh(&nodes, element_type, &en_con, &u);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);
@@ -477,7 +481,7 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
   if (data.d_isFd) {
 
     // write data to vtu file
-    auto writer = tools::mesh::VtkWriter(data.d_meshFile);
+    auto writer = tools::mesh::VtkWriter(data.d_meshFile, data.d_compressType);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
     writer.addTimeStep(0.);
@@ -555,7 +559,7 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
   std::vector<util::Point3> u(num_nodes, util::Point3());
 
   // write to vtu file
-  auto writer = tools::mesh::VtkWriter(data.d_meshFile);
+  auto writer = tools::mesh::VtkWriter(data.d_meshFile, data.d_compressType);
   writer.appendMesh(&nodes, element_type, &en_con, &u);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);

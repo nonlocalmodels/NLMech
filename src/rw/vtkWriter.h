@@ -28,8 +28,9 @@ public:
    * open till the close() function is invoked.
    *
    * @param filename Name of file which will be created
+   * @param compress_type Specify the compression type (optional)
    */
-  explicit VtkWriter(const std::string &filename);
+  VtkWriter(const std::string &filename, const std::string &compress_type = "");
 
   /**
    * @name Mesh data
@@ -187,6 +188,9 @@ private:
 
   /*! @brief Unstructured grid */
   vtkSmartPointer<vtkUnstructuredGrid> d_grid_p;
+
+  /*! @brief compression_type Specify the compressor (if any) */
+  std::string d_compressType;
 };
 
 } // namespace writer

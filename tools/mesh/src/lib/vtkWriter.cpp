@@ -14,7 +14,9 @@
 #include <vtkPoints.h>
 #include <vtkUnsignedIntArray.h>
 
-tools::mesh::VtkWriter::VtkWriter(const std::string &filename) {
+tools::mesh::VtkWriter::VtkWriter(const std::string &filename,
+                                  const std::string &compress_type) :
+                                  d_compressType(compress_type) {
 
   std::string f = filename + ".vtu";
 
@@ -210,7 +212,10 @@ void tools::mesh::VtkWriter::close() {
   d_writer_p->SetInputData(d_grid_p);
   d_writer_p->SetDataModeToAppended();
   d_writer_p->EncodeAppendedDataOn();
-  d_writer_p->SetCompressor(0);
+  if (d_compressType == "zlib")
+    d_writer_p->SetCompressorTypeToZLib();
+  else
+    d_writer_p->SetCompressor(0);
   d_writer_p->Write();
 }
 

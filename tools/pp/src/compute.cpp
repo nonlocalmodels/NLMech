@@ -256,6 +256,11 @@ void tools::pp::Compute::readComputeInstruction(
     data->d_outOnlyNodes =
         config["Compute"][set]["Output_Only_Nodes"].as<bool>();
 
+  // compress type
+  if (config["Compute"][set]["Compress_Type"])
+    data->d_compressType =
+      config["Compute"][set]["Compress_Type"].as<std::string>();
+
   // check if start and end time step are specified
   if (config["Compute"][set]["Dt_Start"])
     data->d_start = config["Compute"][set]["Dt_Start"].as<int>();
@@ -461,7 +466,7 @@ void tools::pp::Compute::initWriter(rw::writer::VtkWriterInterface *writer,
   if (d_writerReady)
     return;
 
-  writer->open(d_outFilename);
+  writer->open(d_outFilename, d_currentData->d_compressType);
   // append mesh (check if only nodes need to be written)
   if (d_currentData->d_outOnlyNodes)
     writer->appendNodes(d_mesh_p->getNodesP(), u);
@@ -749,7 +754,8 @@ void tools::pp::Compute::computeStrain(rw::writer::VtkWriterInterface *writer) {
     // create unstructured vtk output
     std::string fname = d_outPreTag + d_currentData->d_tagFilename +
                         "_quads_" + std::to_string(d_nOut);
-    auto writer1 = rw::writer::VtkWriterInterface(fname);
+    auto writer1 =
+        rw::writer::VtkWriterInterface(fname, d_currentData->d_compressType);
     writer1.appendNodes(&elem_quads);
     writer1.appendPointData("Strain_Tensor", &strain);
     writer1.appendPointData("Stress_Tensor", &stress);

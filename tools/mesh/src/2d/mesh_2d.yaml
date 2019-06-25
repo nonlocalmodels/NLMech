@@ -10,3 +10,5 @@ Mesh_Type: uniform_tri
 # true if this is for finite difference, in which case we do not
 # compute element-node connectivity, and supply nodal volume data
 Is_FD: true
+# specify compression type for .vtu file. Default is none.
+Compress_Type: zlib

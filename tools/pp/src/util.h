@@ -255,6 +255,9 @@ struct InstructionData {
    */
   bool d_removeElements;
 
+  /*! @brief Compression type for .vtu files */
+  std::string d_compressType;
+
   /*! @brief Transforming of displacement operation */
   tools::pp::TransformU *d_transformU_p;
 

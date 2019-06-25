@@ -648,7 +648,8 @@ void model::FDModel::output() {
                          std::to_string(d_n / d_outputDeck_p->d_dtOut);
 
   // open
-  auto writer = rw::writer::VtkWriterInterface(filename);
+  auto writer =
+      rw::writer::VtkWriterInterface(filename, d_outputDeck_p->d_compressType);
 
   // write mesh
   if (d_mesh_p->getNumElements() != 0 && d_outputDeck_p->d_performFEOut)

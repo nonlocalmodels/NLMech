@@ -559,6 +559,8 @@ void inp::Input::setOutputDeck() {
       d_outputDeck_p->d_debug = e["Debug"].as<size_t>();
     if (e["Perform_FE_Out"])
       d_outputDeck_p->d_performFEOut = e["Perform_FE_Out"].as<bool>();
+    if (e["Compress_Type"])
+      d_outputDeck_p->d_compressType = e["Compress_Type"].as<std::string>();
   }
 } // setOutputDeck
 

@@ -27,6 +27,8 @@ Compute:
     # set true if output nodal data and not whole mesh
     # default is true
     Output_Only_Nodes: true
+    # specify compression type (default is none) for .vtu files
+    Compress_Type: zlib
     # mark velocity as zero in given region
     Mark_V_0: 
       #####
@@ -66,6 +68,7 @@ Compute:
   Set_2:
     Tag_Filename: strain
     Output_Only_Nodes: false
+    Compress_Type: zlib
     # compute magnitude of strain tensor
     Magnitude_Strain_Tensor:
       # specify component if any

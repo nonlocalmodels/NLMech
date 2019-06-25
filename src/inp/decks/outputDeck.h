@@ -48,6 +48,9 @@ struct OutputDeck {
    */
   bool d_performFEOut;
 
+  /*! @brief Compressor type for .vtu files */
+  std::string d_compressType;
+
   /** @}*/
 
   /*!

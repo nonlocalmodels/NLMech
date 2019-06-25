@@ -8,15 +8,17 @@
 
 rw::writer::VtkWriterInterface::VtkWriterInterface() : d_vtkWriter_p(nullptr) {}
 
-rw::writer::VtkWriterInterface::VtkWriterInterface(const std::string &filename)
+rw::writer::VtkWriterInterface::VtkWriterInterface(
+    const std::string &filename, const std::string &compress_type)
     : d_vtkWriter_p(nullptr) {
 
-  d_vtkWriter_p = new rw::writer::VtkWriter(filename);
+  d_vtkWriter_p = new rw::writer::VtkWriter(filename, compress_type);
 }
 
-void rw::writer::VtkWriterInterface::open(const std::string &filename) {
+void rw::writer::VtkWriterInterface::open(const std::string &filename,
+                                          const std::string &compress_type) {
   if (!d_vtkWriter_p)
-    d_vtkWriter_p = new rw::writer::VtkWriter(filename);
+    d_vtkWriter_p = new rw::writer::VtkWriter(filename, compress_type);
 }
 
 rw::writer::VtkWriterInterface::~VtkWriterInterface() {
@@ -36,8 +38,7 @@ void rw::writer::VtkWriterInterface::appendNodes(
 
 void rw::writer::VtkWriterInterface::appendMesh(
     const std::vector<util::Point3> *nodes, const size_t &element_type,
-    const std::vector<size_t> *en_con,
-    const std::vector<util::Point3> *u) {
+    const std::vector<size_t> *en_con, const std::vector<util::Point3> *u) {
 
   d_vtkWriter_p->appendMesh(nodes, element_type, en_con, u);
 }
@@ -77,7 +78,8 @@ void rw::writer::VtkWriterInterface::appendPointData(
   d_vtkWriter_p->appendPointData(name, data);
 }
 
-void rw::writer::VtkWriterInterface::appendCellData(const std::string& name, const std::vector<float>* data){
+void rw::writer::VtkWriterInterface::appendCellData(
+    const std::string &name, const std::vector<float> *data) {
   d_vtkWriter_p->appendCellData(name, data);
 }
 

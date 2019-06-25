@@ -48,8 +48,10 @@ public:
    * open till the close() function is invoked.
    *
    * @param filename Name of file which will be created
+   * @param compress_type Specify the compression type (optional)
    */
-  explicit VtkWriterInterface(const std::string &filename);
+  VtkWriterInterface(const std::string &filename,
+                              const std::string &compress_type = "");
 
   /*! @brief Destructor */
   ~VtkWriterInterface();
@@ -58,8 +60,9 @@ public:
    * @brief Open a .vtu file
    *
    * @param filename Name of file which will be created
+   * @param compress_type Specify the compression type (optional)
    */
-  void open(const std::string &filename);
+  void open(const std::string &filename, const std::string &compress_type = "");
 
   /**
    * @name Mesh data
