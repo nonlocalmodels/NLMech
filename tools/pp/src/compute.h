@@ -457,17 +457,6 @@ private:
   void crackOutput();
 
   /*!
-   * @brief Finds minimum damage among set of damage which are greater than
-   * or equal to 1
-   *
-   * @param Z Vector of damage at nodes
-   * @param dmg Pointer to store damage value
-   * @param i Pointer to store node id
-   */
-  void findDamageForCrackTipSearch(const std::vector<double> *Z, double *dmg,
-                                   size_t *i);
-
-  /*!
    * @brief Creates sequence of rectangles for crack tip search, and finds
    * the ids of nodes in each rectangle and damage associated to the node.
    *

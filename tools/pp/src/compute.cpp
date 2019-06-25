@@ -1370,11 +1370,6 @@ void tools::pp::Compute::updateCrack(const double &time,
     auto pb = crack.d_pb;
     auto pt = crack.d_pt;
 
-    // find Z for reference
-    double search_Z;
-    size_t search_Z_id;
-    findDamageForCrackTipSearch(Z, &search_Z, &search_Z_id);
-
     // find maximum of damage
     double max_Z = util::methods::max(*Z);
 
@@ -1456,23 +1451,6 @@ void tools::pp::Compute::crackOutput() {
   }
 
   compute_data->d_updateCount++;
-}
-
-void tools::pp::Compute::findDamageForCrackTipSearch(
-    const std::vector<double> *Z, double *dmg, size_t *i) {
-
-  auto Z_new = std::vector<float>(d_mesh_p->getNumNodes(), -1.0E+12);
-
-  auto f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_mesh_p->getNumNodes(), [Z, &Z_new, this](boost::uint64_t i) {
-        if (util::compare::definitelyGreaterThan((*Z)[i], 1.))
-          Z_new[i] = -(*Z)[i];
-      }); // parallel loop over nodes
-  f.get();
-
-  // now find maximum
-  *dmg = -util::methods::max(Z_new, i);
 }
 
 void tools::pp::Compute::getRectsAndNodesForCrackTip(
