@@ -281,7 +281,8 @@ void rw::writer::VtkWriter::close() {
   d_writer_p->SetInputData(d_grid_p);
   d_writer_p->SetDataModeToAppended();
   d_writer_p->EncodeAppendedDataOn();
-  d_writer_p->SetCompressor(0);
+//  d_writer_p->SetCompressor(0);
+  d_writer_p->SetCompressorTypeToZLib();
   d_writer_p->Write();
 }
 

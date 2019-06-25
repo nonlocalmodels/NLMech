@@ -661,10 +661,12 @@ void model::FDModel::output() {
   // major simulation data
   //
   std::string tag = "Displacement";
-  writer.appendPointData(tag, &d_u);
+  if (d_outputDeck_p->isTagInOutput(tag))
+    writer.appendPointData(tag, &d_u);
 
   tag = "Velocity";
-  writer.appendPointData(tag, &d_v);
+  if (d_outputDeck_p->isTagInOutput(tag))
+    writer.appendPointData(tag, &d_v);
 
   tag = "Force";
   if (d_outputDeck_p->isTagInOutput(tag)) {
