@@ -267,9 +267,8 @@ public:
    * \f$ A^c(t) \f$. We compute the contribution of each node in \f$ A^c(t)
    * \f$ using pdForceWork.
    *
-   * @param writer Pointer to vtk writer
    */
-  void computeJIntegral(rw::writer::VtkWriterInterface *writer);
+  void computeJIntegral();
 
   /** @}*/
 
@@ -350,11 +349,14 @@ private:
    * @param up Displacement at the point p
    * @param vp Velocity at the point p
    * @param ids Global ids of vertices of triangle
+   * @param check_only True if only interested in whether the point belongs
+   * to triangle
    * @return status True if point is found in the triangle. Otherwise false.
    */
   bool triCheckAndInterpolateUV(const util::Point3 &p, util::Point3 &up,
                                 util::Point3 &vp,
-                                const std::vector<size_t> &ids);
+                                const std::vector<size_t> &ids, bool
+                                check_only = false);
 
   /*!
    * @brief Interpolates displacement and velocity at given point

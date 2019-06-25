@@ -60,7 +60,7 @@ tools::pp::Compute::Compute(const std::string &filename)
       std::cout << "  PP_fe2D: Processing compute set = " << d_nC + 1 << "\n";
 
       // filename for writing postprocessed data
-      d_outFilename = d_outPreTag + "_" + d_currentData->d_tagFilename + "_" +
+      d_outFilename = d_outPreTag + d_currentData->d_tagFilename + "_" +
                       std::to_string(d_nOut);
 
       // writer
@@ -80,7 +80,7 @@ tools::pp::Compute::Compute(const std::string &filename)
       if (!Z.empty())
         Z.shrink_to_fit();
 
-      computeJIntegral(&writer);
+      computeJIntegral();
 
       // close file
       if (d_writerReady)
@@ -124,11 +124,11 @@ void tools::pp::Compute::init() {
   else
     d_outPath = "./"; // default
 
-  if (config["Output"]["Filename"])
-    d_outPreTag =
-        d_outPath + "/" + config["Output"]["Filename"].as<std::string>();
-  else
-    d_outPreTag = d_outPath + "/pp";
+//  if (config["Output"]["Filename"])
+//    d_outPreTag =
+//        d_outPath + "/" + config["Output"]["Filename"].as<std::string>();
+//  else
+    d_outPreTag = d_outPath + "/";
 
   // create mesh
   std::cout << "PP_fe2D: Creating mesh.\n";
@@ -747,7 +747,7 @@ void tools::pp::Compute::computeStrain(rw::writer::VtkWriterInterface *writer) {
     f2.get();
 
     // create unstructured vtk output
-    std::string fname = d_outPreTag + "_" + d_currentData->d_tagFilename +
+    std::string fname = d_outPreTag + d_currentData->d_tagFilename +
                         "_quads_" + std::to_string(d_nOut);
     auto writer1 = rw::writer::VtkWriterInterface(fname);
     writer1.appendNodes(&elem_quads);
@@ -775,11 +775,9 @@ void tools::pp::Compute::computeDamage(rw::writer::VtkWriterInterface *writer,
   if (Z->size() != d_mesh_p->getNumNodes())
     Z->resize(d_mesh_p->getNumNodes());
 
-  auto Z_tag = std::vector<size_t>(d_mesh_p->getNumNodes(), 0);
-
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_mesh_p->getNumNodes(), [&Z, &Z_tag, this](boost::uint64_t i) {
+      d_mesh_p->getNumNodes(), [&Z, this](boost::uint64_t i) {
         auto xi = d_mesh_p->getNode(i);
 
         double locz = 0.;
@@ -800,9 +798,6 @@ void tools::pp::Compute::computeDamage(rw::writer::VtkWriterInterface *writer,
         } // loop over neighbors
 
         (*Z)[i] = locz;
-
-        if (locz > 0.9 && locz < 1.1)
-          Z_tag[i] = 10000;
       }); // parallel loop over nodes
   f.get();
 
@@ -872,8 +867,7 @@ void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
   crackOutput();
 }
 
-void tools::pp::Compute::computeJIntegral(
-    rw::writer::VtkWriterInterface *writer) {
+void tools::pp::Compute::computeJIntegral() {
 
   auto data = d_currentData->d_computeJInt_p;
   if (!data)
@@ -1096,7 +1090,7 @@ void tools::pp::Compute::computeJIntegral(
   // create file in first call
   if (!data->d_file) {
     std::string filename =
-        d_outPreTag + "_" + d_currentData->d_tagFilename + ".csv";
+        d_outPreTag + d_currentData->d_tagFilename + ".csv";
     data->d_file = fopen(filename.c_str(), "w");
 
     // write header
@@ -1177,6 +1171,7 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
   for (size_t e = 0; e < d_mesh_p->getNumElements(); e++) {
     auto ids = d_mesh_p->getElementConnectivity(e);
     bool add_e = false;
+
     // one of the node has to be inside the domain and at least one node
     // has to be outside
     for (auto i : ids) {
@@ -1199,6 +1194,45 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
         }
       }
     } // loop over nodes of element e
+
+    // special care is required for corner points
+    if (!add_e) {
+      // search element which contains any of the corner point
+      for (size_t corner = 0; corner < 4; corner++) {
+
+        if (add_e)
+          continue;
+
+        auto p = util::Point3();
+        if (corner == 0) {
+          p = cd.first;
+        } else if (corner == 1) {
+          p = cd.second;
+        } else if (corner == 2) {
+          p.d_x = cd.first.d_x;
+          p.d_y = cd.second.d_y;
+        } else if (corner == 3) {
+          p.d_x = cd.second.d_x;
+          p.d_y = cd.first.d_y;
+        }
+
+        // search
+        // cases
+        auto up = util::Point3();
+        auto vp = util::Point3();
+        if (d_mesh_p->getElementType() == util::vtk_type_triangle) {
+          add_e = triCheckAndInterpolateUV(p, up, vp, ids, true);
+        } else if (d_mesh_p->getElementType() == util::vtk_type_quad) {
+          // check in triangle {v1, v2, v3}
+          add_e = triCheckAndInterpolateUV(
+              p, up, vp, std::vector<size_t>{ids[0], ids[1], ids[2]}, true);
+
+          // check in triangle {v1, v3, v4}
+          add_e = triCheckAndInterpolateUV(
+              p, up, vp, std::vector<size_t>{ids[0], ids[2], ids[3]}, true);
+        }
+      } // loop over corners
+    }
 
     // add e to list
     if (add_e)
@@ -1226,7 +1260,7 @@ void tools::pp::Compute::decomposeSearchNodes(
 
 bool tools::pp::Compute::triCheckAndInterpolateUV(
     const util::Point3 &p, util::Point3 &up, util::Point3 &vp,
-    const std::vector<size_t> &ids) {
+    const std::vector<size_t> &ids, bool check_only) {
 
   // get triangle element object
   auto tri_quad = fe::TriElem(0);
@@ -1241,6 +1275,9 @@ bool tools::pp::Compute::triCheckAndInterpolateUV(
 
   if (util::compare::definitelyGreaterThan(sum_area, area))
     return false;
+
+  if (check_only)
+    return true;
 
   // point p is inside triangle and so we compute shape functions at this
   // point and perform interpolation
@@ -1310,6 +1347,21 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     // issue error since element containing the point is not found
     std::cerr << "Error: Can not find element for point p = (" << p.d_x << ", "
               << p.d_y << ") for interpolation.\n";
+
+    // for debug
+    std::vector<util::Point3> enodes;
+    for (auto e : *elements) {
+      for (auto n : d_mesh_p->getElementConnectivity(e))
+        enodes.emplace_back(d_mesh_p->getNode(n));
+    }
+    enodes.emplace_back(p);
+    std::vector<size_t> etags(enodes.size(), 1);
+    etags[etags.size() - 1] = 100;
+    auto writer1 = rw::writer::VtkWriterInterface(d_outPreTag +
+        d_currentData->d_tagFilename + "_debug_nodes_" + std::to_string(d_nOut));
+    writer1.appendNodes(&enodes);
+    writer1.appendPointData("Tag", &etags);
+    writer1.close();
     exit(1);
   }
 }
@@ -1426,10 +1478,10 @@ void tools::pp::Compute::crackOutput() {
   // create file in first call
   if (compute_data->d_updateCount == 0) {
     std::string filename =
-        d_outPreTag + "_" + d_currentData->d_tagFilename + "_t.csv";
+        d_outPreTag + d_currentData->d_tagFilename + "_t.csv";
     compute_data->d_filet = fopen(filename.c_str(), "w");
 
-    filename = d_outPreTag + "_" + d_currentData->d_tagFilename + "_b.csv";
+    filename = d_outPreTag + d_currentData->d_tagFilename + "_b.csv";
     compute_data->d_fileb = fopen(filename.c_str(), "w");
 
     // write header
@@ -1660,10 +1712,22 @@ util::Point3 tools::pp::Compute::findTipInRects(inp::EdgeCrack &crack,
     std::cout << "    Tip information: Bottom     \n";
   std::cout << "    max_Z = " << max_Z << "\n";
   std::cout << "    size rects = " << rects.size() << "\n";
+  // find size of rectangle with atleast one node
+  size_t rect_size_with_node = 0;
+  for (size_t r=0; r<rects.size(); r++) {
+    if (nodes[r].size() > 0)
+      rect_size_with_node++;
+  }
+  std::cout << "    size valid rects = " << rect_size_with_node << "\n";
 
+  // get old tip
   auto pold = crack.d_pt;
   if (!is_top)
     pold = crack.d_pb;
+
+  // if there are no rectangles with desired nodes, return old tip
+  if (rect_size_with_node == 0)
+    return pold;
 
   //
   // Step 2
