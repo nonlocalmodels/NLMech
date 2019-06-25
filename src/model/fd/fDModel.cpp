@@ -79,7 +79,8 @@ void model::FDModel::restart(inp::Input *deck) {
   d_time = double(d_n) * d_modelDeck_p->d_dt;
 
   // read displacement and velocity from restart file
-  rw::reader::readVtuFileRestart(d_restartDeck_p->d_file, &d_u, &d_v);
+  rw::reader::readVtuFileRestart(d_restartDeck_p->d_file, &d_u, &d_v,
+      d_mesh_p->getNodesP());
 
   // integrate in time
   integrate();

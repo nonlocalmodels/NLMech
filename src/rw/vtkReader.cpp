@@ -159,7 +159,25 @@ void rw::reader::VtkReader::readMesh(size_t dim,
   }
 }
 
-void rw::reader::VtkReader::readPointData(std::string name,
+void rw::reader::VtkReader::readNodes(std::vector<util::Point3> *nodes){
+
+  d_grid_p = d_reader_p->GetOutput();
+  vtkIdType num_nodes = d_grid_p->GetNumberOfPoints();
+
+  // resize data
+  nodes->resize(num_nodes);
+  for (size_t i = 0; i < num_nodes; i++) {
+    vtkIdType id = i;
+
+    double x[3];
+    d_grid_p->GetPoint(id, x);
+
+    util::Point3 i_node = util::Point3(x[0], x[1], x[2]);
+    (*nodes)[i] = i_node;
+  }
+}
+
+bool rw::reader::VtkReader::readPointData(std::string name,
                                           std::vector<util::Point3> *data) {
 
   // read point field data
@@ -167,11 +185,9 @@ void rw::reader::VtkReader::readPointData(std::string name,
   vtkPointData *p_field = d_grid_p->GetPointData();
 
   // handle for displacement, fixity and node element connectivity
-  if (p_field->HasArray(name.c_str()) == 0) {
-    std::cerr << "Error: VTK input data does not contain " << name
-              << " data.\n";
-    exit(1);
-  }
+  if (p_field->HasArray(name.c_str()) == 0)
+    return false;
+
   vtkDataArray *array = p_field->GetArray(name.c_str());
 
   // Below is not efficient. Later this can be improved.
@@ -186,6 +202,8 @@ void rw::reader::VtkReader::readPointData(std::string name,
     (*data)[i] = util::Point3(data_a->GetValue(0), data_a->GetValue(1),
       data_a->GetValue(2));
   }
+
+  return true;
 }
 
 void rw::reader::VtkReader::close() {

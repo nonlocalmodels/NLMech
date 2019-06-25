@@ -83,10 +83,12 @@ void readMshFile(const std::string &filename, size_t dim,
  * @param filename name of mesh file
  * @param u Pointer to vector of nodal displacement
  * @param v Pointer to vector of nodal velocity
+ * @param X Pointer to vector of nodal reference position (Optional)
  */
 void readVtuFileRestart(const std::string &filename,
                         std::vector<util::Point3> *u,
-                        std::vector<util::Point3> *v);
+                        std::vector<util::Point3> *v,
+                        const std::vector<util::Point3> *X = nullptr);
 
 } // namespace reader
 

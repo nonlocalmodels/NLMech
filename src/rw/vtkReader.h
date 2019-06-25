@@ -48,11 +48,19 @@ public:
                 std::vector<double> *volumes, bool is_fd = false);
 
   /*!
+   * @brief Reads nodal position
+   *
+   * @param nodes vector of nodes data
+   */
+  void readNodes(std::vector<util::Point3> *nodes);
+
+  /*!
    * @brief reads point data from .vtu file
    * @param name Name of data
    * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
    */
-  void readPointData(std::string name, std::vector<util::Point3> *data);
+  bool readPointData(std::string name, std::vector<util::Point3> *data);
 
   /*! @brief Close the file */
   void close();

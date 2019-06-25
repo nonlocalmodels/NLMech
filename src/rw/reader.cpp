@@ -82,10 +82,27 @@ void rw::reader::readMshFile(const std::string &filename, size_t dim,
 
 void rw::reader::readVtuFileRestart(const std::string &filename,
                                     std::vector<util::Point3> *u,
-                                    std::vector<util::Point3> *v) {
+                                    std::vector<util::Point3> *v,
+                                    const std::vector<util::Point3> *X) {
   // call vtk reader
   rw::reader::VtkReader rdr = rw::reader::VtkReader(filename);
-  rdr.readPointData("Displacement", u);
+  // if displacement is not in input file, use reference coordinate to get
+  // displacement
+  if (!rdr.readPointData("Displacement", u)) {
+    std::vector<util::Point3> y;
+    rdr.readNodes(&y);
+    if (y.size() != X->size()) {
+      std::cerr << "Error: Number of nodes in input file = " << filename
+                << " and number nodes in data X are not same.\n";
+      exit(1);
+    }
+
+    u->resize(y.size());
+    for (size_t i=0; i<y.size(); i++)
+      (*u)[i] = y[i] - (*X)[i];
+  }
+
+  // get velocity
   rdr.readPointData("Velocity", v);
   rdr.close();
 }

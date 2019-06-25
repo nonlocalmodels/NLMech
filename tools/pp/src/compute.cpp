@@ -48,7 +48,8 @@ tools::pp::Compute::Compute(const std::string &filename)
       continue;
 
     // get displacement and velocity
-    rw::reader::readVtuFileRestart(sim_out_filename, &d_u, &d_v);
+    rw::reader::readVtuFileRestart(sim_out_filename, &d_u, &d_v,
+      d_mesh_p->getNodesP());
 
     // loop over compute sets and do as instructed in input file
     for (d_nC = 0; d_nC < d_computeData.size(); d_nC++) {
