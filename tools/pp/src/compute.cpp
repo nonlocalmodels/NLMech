@@ -1379,8 +1379,8 @@ void tools::pp::Compute::updateCrack(const double &time,
     double max_Z = util::methods::max(*Z);
 
     if (util::compare::definitelyLessThan(max_Z, compute_data->d_minZAllowed)) {
-      updateTopTip(crack, pt, time);
-      updateBottomTip(crack, pb, time);
+      addNewCrackTip(crack, pt, time, true);
+      addNewCrackTip(crack, pb, time, false);
       return;
     }
 
@@ -1401,13 +1401,13 @@ void tools::pp::Compute::updateCrack(const double &time,
     // process top point
     if (crack.d_trackt) {
       auto pnew = findTipInRects(crack, max_Z, rects_t, nodes_t, Z_t, Z, true);
-      updateTopTip(crack, pnew, time);
+      addNewCrackTip(crack, pnew, time, true);
     }
 
     if (crack.d_trackb) {
       auto pnew = findTipInRects(crack, max_Z, rects_b, nodes_b, Z_b, Z,
           false);
-      updateBottomTip(crack, pnew, time);
+      addNewCrackTip(crack, pnew, time, false);
     }
   } // loop over cracks
 }
@@ -1641,34 +1641,31 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
   }   // loop over nodes
 }
 
-void tools::pp::Compute::updateTopTip(inp::EdgeCrack &crack, util::Point3 ptnew,
-                                      double time) {
+void tools::pp::Compute::addNewCrackTip(inp::EdgeCrack &crack, util::Point3 pnew,
+                                      double time, bool is_top) {
   auto compute_data = d_currentData->d_findCrackTip_p;
 
-  crack.d_oldPt = crack.d_pt;
-  crack.d_pt = ptnew;
-  auto diff = crack.d_pt - crack.d_oldPt;
-  auto delta_t = time - compute_data->d_timet;
-  crack.d_lt += diff.length();
-  crack.d_l += diff.length();
-  crack.d_vt =
-      util::Point3(diff.d_x / delta_t, diff.d_y / delta_t, diff.d_z / delta_t);
-  compute_data->d_timet = time;
-}
-
-void tools::pp::Compute::updateBottomTip(inp::EdgeCrack &crack,
-                                         util::Point3 pbnew, double time) {
-  auto compute_data = d_currentData->d_findCrackTip_p;
-
-  crack.d_oldPb = crack.d_pb;
-  crack.d_pb = pbnew;
-  auto diff = crack.d_pb - crack.d_oldPb;
-  auto delta_t = time - compute_data->d_timet;
-  crack.d_lb += diff.length();
-  crack.d_l += diff.length();
-  crack.d_vb =
-      util::Point3(diff.d_x / delta_t, diff.d_y / delta_t, diff.d_z / delta_t);
-  compute_data->d_timeb = time;
+  if (is_top) {
+    crack.d_oldPt = crack.d_pt;
+    crack.d_pt = pnew;
+    auto diff = crack.d_pt - crack.d_oldPt;
+    auto delta_t = time - compute_data->d_timet;
+    crack.d_lt += diff.length();
+    crack.d_l += diff.length();
+    crack.d_vt = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
+                              diff.d_z / delta_t);
+    compute_data->d_timet = time;
+  } else {
+    crack.d_oldPb = crack.d_pb;
+    crack.d_pb = pnew;
+    auto diff = crack.d_pb - crack.d_oldPb;
+    auto delta_t = time - compute_data->d_timet;
+    crack.d_lb += diff.length();
+    crack.d_l += diff.length();
+    crack.d_vb =
+        util::Point3(diff.d_x / delta_t, diff.d_y / delta_t, diff.d_z / delta_t);
+    compute_data->d_timeb = time;
+  }
 }
 
 util::Point3 tools::pp::Compute::findTipInRects(inp::EdgeCrack &crack,

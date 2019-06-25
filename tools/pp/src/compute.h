@@ -493,22 +493,15 @@ private:
       std::vector<std::vector<double>> &Z_b, const std::vector<double> *Z);
 
   /*!
-   * @brief Update data associated to top (right) tip of crack
+   * @brief Adds new tip to crack, computes velocity and crack length
    *
    * @param crack Crack data which will be updated
-   * @param ptnew New crack tip
+   * @param pnew New crack tip
    * @param time Time of update
+   * @param is_top True if this is top (right) tip otherwise false
    */
-  void updateTopTip(inp::EdgeCrack &crack, util::Point3 ptnew, double time);
-
-  /*!
-   * @brief Update data associated to bottom (left) tip of crack
-   *
-   * @param crack Crack data which will be updated
-   * @param ptnew New crack tip
-   * @param time Time of update
-   */
-  void updateBottomTip(inp::EdgeCrack &crack, util::Point3 ptnew, double time);
+  void addNewCrackTip(inp::EdgeCrack &crack, util::Point3 pnew, double time,
+      bool is_top);
 
   /*!
    * @brief Finds new crack tip location from the rectangle data
