@@ -32,9 +32,18 @@ double add(const std::vector<double> &data);
 /*!
  * @brief Returns the maximum from list of data
  * @param data List of real numbers
+ * @param i Pointer to store the id where maximum occurs
  * @return max Maximum value
  */
-double max(const std::vector<double> &data);
+double max(const std::vector<double> &data, size_t *i = nullptr);
+
+/*!
+ * @brief Returns the minimum from list of data
+ * @param data List of real numbers
+ * @param i Pointer to store the id where minimum occurs
+ * @return min Minimum value
+ */
+double min(const std::vector<double> &data, size_t *i = nullptr);
 
 /*!
  * @brief Returns the sum of data
@@ -46,9 +55,18 @@ float add(const std::vector<float> &data);
 /*!
  * @brief Returns the maximum from list of data
  * @param data List of real numbers
+ * @param i Pointer to store the id where maximum occurs
  * @return max Maximum value
  */
-float max(const std::vector<float> &data);
+float max(const std::vector<float> &data, size_t *i = nullptr);
+
+/*!
+ * @brief Returns the minimum from list of data
+ * @param data List of real numbers
+ * @param i Pointer to store the id where minimum occurs
+ * @return min Minimum value
+ */
+float min(const std::vector<float> &data, size_t *i = nullptr);
 
 /*!
  * @brief Returns the maximum length of point from list of points

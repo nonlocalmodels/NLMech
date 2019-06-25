@@ -16,6 +16,23 @@ namespace tools {
 namespace pp {
 
 /*!
+ * @brief Datatype used in sorting rectangles for crack tip search
+ */
+struct SortZ {
+
+  /*! @brief Id of node */
+  size_t d_i;
+
+  /*! @brief Id of rectangle */
+  size_t d_r;
+
+  /*! @brief Damage associated to the node */
+  double d_Z;
+
+  SortZ() : d_i(0), d_r(0), d_Z(0.){};
+};
+
+/*!
  * @brief Datatype to hold crack tip data
  */
 struct CrackTipData {
@@ -157,12 +174,19 @@ struct FindCrackTip {
   /*! @brief Set of edge cracks */
   std::vector<inp::EdgeCrack> d_cracks;
 
+  /*! @brief Set of edge cracks */
+  double d_minZAllowed;
+
+  /*! @brief Set of edge cracks */
+  double d_maxZAllowed;
+
   /*!
    * @brief Constructor
    */
   FindCrackTip()
       : d_crackSameDtOut(true), d_timet(0.), d_timeb(0.), d_updateCount(0),
-        d_filet(nullptr), d_fileb(nullptr){};
+        d_filet(nullptr), d_fileb(nullptr), d_minZAllowed(1.),
+        d_maxZAllowed(50.) {};
 };
 
 /*!

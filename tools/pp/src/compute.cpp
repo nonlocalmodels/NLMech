@@ -18,6 +18,10 @@
 #include <util/fastMethods.h>
 #include <yaml-cpp/yaml.h> // YAML reader
 
+bool minSortZ(tools::pp::SortZ a, tools::pp::SortZ b) {
+  return util::compare::definitelyLessThan(a.d_Z, b.d_Z);
+}
+
 tools::pp::Compute::Compute(const std::string &filename)
     : d_inpFilename(filename), d_nOut(0), d_nC(0), d_currentData(nullptr),
       d_writerReady(false), d_modelDeck_p(nullptr), d_outputDeck_p(nullptr),
@@ -178,7 +182,24 @@ void tools::pp::Compute::init() {
   for (auto &d : d_computeData) {
     if (d.d_findCrackTip_p) {
       d.d_findCrackTip_p->d_cracks = d_fractureDeck_p->d_cracks;
-      std::cout << "size 1 = " << d.d_findCrackTip_p->d_cracks.size() << "\n";
+
+      // check which point, top/bottom, we need to track
+      auto bbox = d_mesh_p->getBoundingBox();
+      for (auto &ck : d.d_findCrackTip_p->d_cracks) {
+
+        // point should be in smaller box inside bounding box
+        ck.d_trackt = util::geometry::isPointInsideRectangle(
+            ck.d_pt, bbox.first[0] + d_modelDeck_p->d_horizon,
+            bbox.second[0] - d_modelDeck_p->d_horizon,
+            bbox.first[1] + d_modelDeck_p->d_horizon,
+            bbox.second[1] - d_modelDeck_p->d_horizon);
+
+        ck.d_trackb = util::geometry::isPointInsideRectangle(
+            ck.d_pb, bbox.first[0] + d_modelDeck_p->d_horizon,
+            bbox.second[0] - d_modelDeck_p->d_horizon,
+            bbox.first[1] + d_modelDeck_p->d_horizon,
+            bbox.second[1] - d_modelDeck_p->d_horizon);
+      } // modify crack track status
     }
   }
 
@@ -748,8 +769,8 @@ void tools::pp::Compute::computeStrain(rw::writer::VtkWriterInterface *writer) {
 
 void tools::pp::Compute::computeDamage(rw::writer::VtkWriterInterface *writer,
                                        std::vector<double> *Z, bool perf_out) {
-//  if (!d_currentData->d_damageAtNodes)
-//    return;
+  //  if (!d_currentData->d_damageAtNodes)
+  //    return;
 
   if (Z->size() != d_mesh_p->getNumNodes())
     Z->resize(d_mesh_p->getNumNodes());
@@ -812,10 +833,9 @@ void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
         d_mesh_p->getNumNodes(), [this](boost::uint64_t i) {
-          d_u[i] -=
-              util::Point3(d_modelDeck_p->d_dt * d_v[i].d_x,
-                           d_modelDeck_p->d_dt * d_v[i].d_y,
-                           d_modelDeck_p->d_dt * d_v[i].d_z);
+          d_u[i] -= util::Point3(d_modelDeck_p->d_dt * d_v[i].d_x,
+                                 d_modelDeck_p->d_dt * d_v[i].d_y,
+                                 d_modelDeck_p->d_dt * d_v[i].d_z);
         });
     f.get();
 
@@ -1341,8 +1361,6 @@ void tools::pp::Compute::updateCrack(const double &time,
                                      const std::vector<double> *Z) {
   auto compute_data = d_currentData->d_findCrackTip_p;
 
-  std::cout << "size 2 = " << compute_data->d_cracks.size() << "\n";
-
   // loop over crack lines
   for (auto &crack : compute_data->d_cracks) {
 
@@ -1352,131 +1370,44 @@ void tools::pp::Compute::updateCrack(const double &time,
     auto pb = crack.d_pb;
     auto pt = crack.d_pt;
 
-    // search length
-    double search_length = 1000.;
+    // find Z for reference
+    double search_Z;
+    size_t search_Z_id;
+    findDamageForCrackTipSearch(Z, &search_Z, &search_Z_id);
 
-    // create search rectangle containing crack
-    double rect_t[4];
-    double rect_b[4];
+    // find maximum of damage
+    double max_Z = util::methods::max(*Z);
 
-    if (crack.d_o == -1) {
-      rect_t[0] = pt.d_x - d_modelDeck_p->d_horizon;
-      rect_t[1] = pt.d_y - d_modelDeck_p->d_horizon;
-      rect_t[2] = pt.d_x + d_modelDeck_p->d_horizon;
-      rect_t[3] = pt.d_y + search_length;
-
-      rect_b[0] = pb.d_x - d_modelDeck_p->d_horizon;
-      rect_b[1] = pb.d_y - search_length;
-      rect_b[2] = pb.d_x + d_modelDeck_p->d_horizon;
-      rect_b[3] = pb.d_y + d_modelDeck_p->d_horizon;
-    } else if (crack.d_o == 1) {
-      rect_t[0] = pt.d_x - d_modelDeck_p->d_horizon;
-      rect_t[1] = pt.d_y - d_modelDeck_p->d_horizon;
-      rect_t[2] = pt.d_x + search_length;
-      rect_t[3] = pt.d_y + d_modelDeck_p->d_horizon;
-
-      rect_b[0] = pb.d_x - search_length;
-      rect_b[1] = pb.d_y - d_modelDeck_p->d_horizon;
-      rect_b[2] = pb.d_x + d_modelDeck_p->d_horizon;
-      rect_b[3] = pb.d_y + d_modelDeck_p->d_horizon;
+    if (util::compare::definitelyLessThan(max_Z, compute_data->d_minZAllowed)) {
+      updateTopTip(crack, pt, time);
+      updateBottomTip(crack, pb, time);
+      return;
     }
 
-    // find and store id of node at crack tip
-    long ib = -1;
-    long it = -1;
-    double Zb = 1000.;
-    double Zt = 1000.;
-    double dist_mid_t = d_modelDeck_p->d_horizon;
-    double dist_mid_b = d_modelDeck_p->d_horizon;
+    //
+    // Step 1
+    //
+    // create vector of rectangle domain and data for nodes in each
+    // rectangle and its damage
+    std::vector<std::pair<util::Point3, util::Point3>> rects_t;
+    std::vector<std::pair<util::Point3, util::Point3>> rects_b;
+    std::vector<std::vector<size_t>> nodes_t;
+    std::vector<std::vector<size_t>> nodes_b;
+    std::vector<std::vector<double>> Z_t;
+    std::vector<std::vector<double>> Z_b;
+    getRectsAndNodesForCrackTip(crack, rects_t, rects_b, nodes_t, nodes_b, Z_t,
+                                Z_b, Z);
 
-    for (size_t i = 0; i < d_mesh_p->getNumNodes(); i++) {
-      auto yi = d_mesh_p->getNode(i) + d_u[i];
-      auto damage = (*Z)[i];
-
-      if (std::abs(damage - 1.) > 5.0E-02)
-        continue;
-
-      if (util::geometry::isPointInsideRectangle(yi, rect_t[0], rect_t[2],
-                                                 rect_t[1], rect_t[3])) {
-
-        // damage is within desired range and node is in the rectangle
-        // we now check if this node is more aligned to the crack line
-        if (crack.d_o == -1 && std::abs(yi.d_y - pt.d_y) < dist_mid_t) {
-          it = i;
-          Zt = damage;
-          dist_mid_t = std::abs(yi.d_y - pt.d_y);
-        }
-
-        if (crack.d_o == 1 && std::abs(yi.d_x - pt.d_x) < dist_mid_t) {
-          it = i;
-          Zt = damage;
-          dist_mid_t = std::abs(yi.d_x - pt.d_x);
-        }
-      }
-
-      if (util::geometry::isPointInsideRectangle(yi, rect_b[0], rect_b[2],
-                                                 rect_b[1], rect_b[3])) {
-
-        // damage is within desired range and node is in the rectangle
-        // we now check if this node is more aligned to the crack line
-        if (crack.d_o == -1 && std::abs(yi.d_y - pb.d_y) < dist_mid_b) {
-          ib = i;
-          Zb = damage;
-          dist_mid_b = std::abs(yi.d_y - pb.d_y);
-        }
-
-        if (crack.d_o == 1 && std::abs(yi.d_x - pb.d_x) < dist_mid_b) {
-          ib = i;
-          Zb = damage;
-          dist_mid_b = std::abs(yi.d_x - pb.d_x);
-        }
-      }
-    } // loop over nodes
-
-    if (it != -1) {
-      crack.d_it = it;
-      crack.d_pt = d_mesh_p->getNode(it) + d_u[it];
-      auto diff = crack.d_pt - pt;
-      auto delta_t = time - compute_data->d_timet;
-      crack.d_lt += diff.length();
-      crack.d_l += diff.length();
-      crack.d_vt = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
-                                diff.d_z / delta_t);
-      compute_data->d_timet = time;
-
-      std::cout << "Damage: i = " << it << ", Z = " << Zt << "\n";
-    } else {
-      std::cout << "Warning: Can not find crack tip.\n";
-
-      // keep old point as crack tip
-      auto diff = crack.d_pt - pt;
-      auto delta_t = time - compute_data->d_timet;
-      crack.d_lt += diff.length();
-      crack.d_l += diff.length();
-      crack.d_vt = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
-                                diff.d_z / delta_t);
-      compute_data->d_timet = time;
+    // process top point
+    if (crack.d_trackt) {
+      auto pnew = findTipInRects(crack, max_Z, rects_t, nodes_t, Z_t, Z, true);
+      updateTopTip(crack, pnew, time);
     }
 
-    if (ib != -1) {
-      crack.d_ib = ib;
-      crack.d_pb = d_mesh_p->getNode(ib) + d_u[ib];
-      auto diff = crack.d_pb - pb;
-      auto delta_t = time - compute_data->d_timeb;
-      crack.d_lb += diff.length();
-      crack.d_l += diff.length();
-      crack.d_vb = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
-                                diff.d_z / delta_t);
-      compute_data->d_timeb = time;
-    } else {
-      // keep old point as crack tip
-      auto diff = crack.d_pb - pb;
-      auto delta_t = time - compute_data->d_timeb;
-      crack.d_lb += diff.length();
-      crack.d_l += diff.length();
-      crack.d_vb = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
-                                diff.d_z / delta_t);
-      compute_data->d_timeb = time;
+    if (crack.d_trackb) {
+      auto pnew = findTipInRects(crack, max_Z, rects_b, nodes_b, Z_b, Z,
+          false);
+      updateBottomTip(crack, pnew, time);
     }
   } // loop over cracks
 }
@@ -1525,4 +1456,467 @@ void tools::pp::Compute::crackOutput() {
   }
 
   compute_data->d_updateCount++;
+}
+
+void tools::pp::Compute::findDamageForCrackTipSearch(
+    const std::vector<double> *Z, double *dmg, size_t *i) {
+
+  auto Z_new = std::vector<float>(d_mesh_p->getNumNodes(), -1.0E+12);
+
+  auto f = hpx::parallel::for_loop(
+      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      d_mesh_p->getNumNodes(), [Z, &Z_new, this](boost::uint64_t i) {
+        if (util::compare::definitelyGreaterThan((*Z)[i], 1.))
+          Z_new[i] = -(*Z)[i];
+      }); // parallel loop over nodes
+  f.get();
+
+  // now find maximum
+  *dmg = -util::methods::max(Z_new, i);
+}
+
+void tools::pp::Compute::getRectsAndNodesForCrackTip(
+    inp::EdgeCrack &crack,
+    std::vector<std::pair<util::Point3, util::Point3>> &rects_t,
+    std::vector<std::pair<util::Point3, util::Point3>> &rects_b,
+    std::vector<std::vector<size_t>> &nodes_t,
+    std::vector<std::vector<size_t>> &nodes_b,
+    std::vector<std::vector<double>> &Z_t,
+    std::vector<std::vector<double>> &Z_b, const std::vector<double> *Z) {
+  auto compute_data = d_currentData->d_findCrackTip_p;
+
+  //
+  // Method: For both pt and pb, create sequence of rectangles with
+  // increasing distance from pt and pb, and find nodes with suitable
+  // damage within each rectangle
+  //
+  auto pt = crack.d_pt;
+  auto pb = crack.d_pb;
+
+  auto h = d_mesh_p->getMeshSize();
+  auto horizon = d_modelDeck_p->d_horizon;
+  auto bbox = d_mesh_p->getBoundingBox();
+  auto bbox_small = bbox;
+  bbox_small.first[0] += horizon;
+  bbox_small.first[1] += horizon;
+  bbox_small.second[0] -= horizon;
+  bbox_small.second[1] -= horizon;
+  if (!util::geometry::isPointInsideRectangle(
+          pt, bbox_small.first[0], bbox_small.second[0], bbox_small.first[1],
+          bbox_small.second[1]))
+    crack.d_trackt = false;
+  if (!util::geometry::isPointInsideRectangle(
+          pb, bbox_small.first[0], bbox_small.second[0], bbox_small.first[1],
+          bbox_small.second[1]))
+    crack.d_trackb = false;
+
+  // size of rectangles for search
+  double seq_size = 2. * horizon;
+  int Nt = 0;
+  int Nb = 0;
+  if (crack.d_o == 1) {
+
+    if (crack.d_trackt) {
+      Nt = (bbox.second[0] - pt.d_x) / seq_size;
+      if (util::compare::definitelyLessThan(Nt * seq_size, bbox.second[0]))
+        Nt++;
+    }
+
+    if (crack.d_trackb) {
+      Nb = (pb.d_x - bbox.first[0]) / seq_size;
+      if (util::compare::definitelyLessThan(bbox.first[0] + Nb * seq_size,
+                                            pb.d_x))
+        Nb++;
+    }
+  } else if (crack.d_o == -1) {
+    if (crack.d_trackt) {
+      Nt = (bbox.second[1] - pt.d_y) / seq_size;
+      if (util::compare::definitelyLessThan(Nt * seq_size, bbox.second[1]))
+        Nt++;
+    }
+
+    if (crack.d_trackb) {
+      Nb = (pb.d_y - bbox.first[1]) / seq_size;
+      if (util::compare::definitelyLessThan(bbox.first[1] + Nb * seq_size,
+                                            pb.d_y))
+        Nb++;
+    }
+  }
+
+  // create rectangles
+  if (crack.d_trackt) {
+    // last rectangle may overstep bounding box but this will not create
+    // any problem
+    for (int i = 1; i <= Nt; i++) {
+      if (crack.d_o == 1)
+        rects_t.emplace_back(std::make_pair(
+            util::Point3(pt.d_x + (i - 1) * seq_size, pt.d_y - 2. * horizon,
+                         0.),
+            util::Point3(pt.d_x + i * seq_size, pt.d_y + 2. * horizon, 0.)));
+      else if (crack.d_o == -1)
+        rects_b.emplace_back(std::make_pair(
+            util::Point3(pt.d_x - 2. * horizon, pt.d_y + (i - 1) * seq_size,
+                         0.),
+            util::Point3(pt.d_x + 2. * horizon, pt.d_y + i * seq_size, 0.)));
+    }
+  }
+  if (crack.d_trackb) {
+    // last rectangle may overstep bounding box but this will not create
+    // any problem
+    for (int i = 1; i <= Nb; i++) {
+      if (crack.d_o == 1)
+        rects_t.emplace_back(std::make_pair(
+            util::Point3(pb.d_x - i * seq_size, pb.d_y - 2. * horizon, 0.),
+            util::Point3(pb.d_x - (i - 1) * seq_size, pb.d_y + 2. * horizon,
+                         0.)));
+      else if (crack.d_o == -1)
+        rects_b.emplace_back(std::make_pair(
+            util::Point3(pt.d_x - 2. * horizon, pt.d_y - i * seq_size, 0.),
+            util::Point3(pt.d_x + 2. * horizon, pt.d_y - (i - 1) * seq_size,
+                         0.)));
+    }
+  }
+
+  // resize nodes list and damage list
+  nodes_t.resize(rects_t.size());
+  nodes_b.resize(rects_b.size());
+  Z_t.resize(rects_t.size());
+  Z_b.resize(rects_b.size());
+
+  for (size_t i = 0; i < d_mesh_p->getNumNodes(); i++) {
+    auto xi = d_mesh_p->getNode(i);
+    auto damage = (*Z)[i];
+    if (util::compare::definitelyLessThan(damage,
+                                          compute_data->d_minZAllowed) ||
+        util::compare::definitelyGreaterThan(damage,
+                                             compute_data->d_maxZAllowed))
+      continue;
+
+    for (size_t r = 0; r < rects_t.size(); r++) {
+      if (util::geometry::isPointInsideRectangle(
+              xi, rects_t[r].first.d_x, rects_t[r].second.d_x,
+              rects_t[r].first.d_y, rects_t[r].second.d_y)) {
+        if (r == 0) {
+          nodes_t[r].emplace_back(i);
+          Z_t[r].emplace_back(damage);
+        } else {
+          // see if the node i is in the previous vector
+          bool found = false;
+          for (auto j : nodes_t[r - 1]) {
+            if (j == i) {
+              found = true;
+              continue;
+            }
+          }
+          if (!found) {
+            nodes_t[r].emplace_back(i);
+            Z_t[r].emplace_back(damage);
+          }
+        }
+      }
+    } // top point
+    for (size_t r = 0; r < rects_b.size(); r++) {
+      if (util::geometry::isPointInsideRectangle(
+              xi, rects_b[r].first.d_x, rects_b[r].second.d_x,
+              rects_b[r].first.d_y, rects_b[r].second.d_y)) {
+        if (r == 0) {
+          nodes_b[r].emplace_back(i);
+          Z_b[r].emplace_back(damage);
+        } else {
+          // see if the node i is in the previous vector
+          bool found = false;
+          for (auto j : nodes_b[r - 1]) {
+            if (j == i) {
+              found = true;
+              continue;
+            }
+          }
+          if (!found) {
+            nodes_b[r].emplace_back(i);
+            Z_b[r].emplace_back(damage);
+          }
+        }
+      }
+    } // bottom point
+  }   // loop over nodes
+}
+
+void tools::pp::Compute::updateTopTip(inp::EdgeCrack &crack, util::Point3 ptnew,
+                                      double time) {
+  auto compute_data = d_currentData->d_findCrackTip_p;
+
+  crack.d_oldPt = crack.d_pt;
+  crack.d_pt = ptnew;
+  auto diff = crack.d_pt - crack.d_oldPt;
+  auto delta_t = time - compute_data->d_timet;
+  crack.d_lt += diff.length();
+  crack.d_l += diff.length();
+  crack.d_vt =
+      util::Point3(diff.d_x / delta_t, diff.d_y / delta_t, diff.d_z / delta_t);
+  compute_data->d_timet = time;
+}
+
+void tools::pp::Compute::updateBottomTip(inp::EdgeCrack &crack,
+                                         util::Point3 pbnew, double time) {
+  auto compute_data = d_currentData->d_findCrackTip_p;
+
+  crack.d_oldPb = crack.d_pb;
+  crack.d_pb = pbnew;
+  auto diff = crack.d_pb - crack.d_oldPb;
+  auto delta_t = time - compute_data->d_timet;
+  crack.d_lb += diff.length();
+  crack.d_l += diff.length();
+  crack.d_vb =
+      util::Point3(diff.d_x / delta_t, diff.d_y / delta_t, diff.d_z / delta_t);
+  compute_data->d_timeb = time;
+}
+
+util::Point3 tools::pp::Compute::findTipInRects(inp::EdgeCrack &crack,
+    const double &max_Z,
+    const std::vector<std::pair<util::Point3, util::Point3>> &rects,
+    const std::vector<std::vector<size_t>> &nodes,
+    const std::vector<std::vector<double>> &Zs,
+    const std::vector<double> *Z,
+    bool is_top) {
+
+  if (is_top)
+    std::cout << "    Tip information: Top     \n";
+  else
+    std::cout << "    Tip information: Bottom     \n";
+  std::cout << "    max_Z = " << max_Z << "\n";
+  std::cout << "    size rects = " << rects.size() << "\n";
+
+  auto pold = crack.d_pt;
+  if (!is_top)
+    pold = crack.d_pb;
+
+  //
+  // Step 2
+  //
+  // order rectangles in increasing value of damage
+  // for each rectangle find minimum damage and then order rectangles based
+  // on the minimum value of damage
+  std::vector<tools::pp::SortZ> sortZ;
+  for (size_t r = 0; r < rects.size(); r++) {
+    auto a = tools::pp::SortZ();
+    size_t i = 0;
+    a.d_r = r;
+    if (Zs[r].size() > 0) {
+      a.d_Z = util::methods::min(Zs[r], &i);
+      a.d_i = nodes[r][i];
+      sortZ.emplace_back(a);
+    }
+  }
+  // sort the rectangles in increasing value of damage
+  std::sort(sortZ.begin(), sortZ.end(), minSortZ);
+
+  //
+  // Step 3
+  //
+  //
+  // for rectangle sortZ[0].r and sortZ[1].r we see if we can find a node
+  // more closer to the crack line
+  //
+  for (size_t r = 0; r < sortZ.size(); r++) {
+    if (r > 2)
+      continue;
+
+    auto mz = sortZ[r];
+    auto y0 = d_mesh_p->getNode(mz.d_i) + d_u[mz.d_i];
+    auto Z0 = mz.d_Z;
+    double diff_Z_for_alternate_point = 0.1;
+    if (sortZ.size() > r + 1) {
+      auto diff_p1 = sortZ[r + 1].d_Z - Z0;
+      if (util::compare::definitelyLessThan(diff_p1,
+                                            diff_Z_for_alternate_point))
+        diff_Z_for_alternate_point = diff_p1;
+    }
+    double dist_crack_line = 0.;
+    if (crack.d_o == -1)
+      dist_crack_line = std::abs(y0.d_x - pold.d_x);
+    else if (crack.d_o == 1)
+      dist_crack_line = std::abs(y0.d_y - pold.d_y);
+
+    long i_new = -1;
+    for (auto x : nodes[mz.d_r]) {
+      if (x == mz.d_i)
+        continue;
+
+      auto y = d_mesh_p->getNode(x) + d_u[x];
+      double dist = 0.;
+      if (crack.d_o == -1)
+        dist = std::abs(y.d_x - pold.d_x);
+      else if (crack.d_o == 1)
+        dist = std::abs(y.d_y - pold.d_y);
+
+      if (util::compare::definitelyLessThan(dist, dist_crack_line) &&
+          util::compare::definitelyLessThan(std::abs(Z0 - (*Z)[x]),
+                                            diff_Z_for_alternate_point)) {
+
+        i_new = x;
+        dist_crack_line = dist;
+      }
+    }
+
+    // update sortZ[r]
+    if (i_new >= 0) {
+      sortZ[r].d_i = i_new;
+      sortZ[r].d_Z = (*Z)[i_new];
+    }
+  }
+
+  //
+  // Step 4
+  //
+  //
+  // Our first choice is rectangle sortZ[0].r
+  // However, we see if rectangle sortZ[0].r and sortZ[1].r have symmetry
+  //
+  // Here by symmetry we mean if there are two nodes in opposite sides of
+  // crack line with same damage
+  //
+  std::vector<long> sym_rect(2, -1);
+  for (size_t r = 0; r < sortZ.size(); r++) {
+    if (r > 2)
+      continue;
+
+    auto mz = sortZ[r];
+    double diff_z = 1.0E-02;
+
+    //
+    // check if we find another node symmetrically opposite to crack line
+    // with damage closer to mz.d_Z
+    //
+    // for first attempt we use current crack line and for second attempt
+    // we use old crack line
+    //
+    for (size_t f = 0; f < 2; f++) {
+      auto p_search = pold;
+      if (f == 1) {
+        p_search = crack.d_oldPt;
+        if (!is_top)
+          p_search = crack.d_oldPb;
+      }
+
+      if (sym_rect[r] >= 0)
+        continue;
+
+      for (auto x : nodes[mz.d_r]) {
+
+        auto y = d_mesh_p->getNode(x) + d_u[x];
+        auto y0 = d_mesh_p->getNode(mz.d_i) + d_u[mz.d_i];
+        if (util::compare::definitelyLessThan(std::abs((*Z)[x] - mz.d_Z),
+                                              diff_z) &&
+            x != mz.d_i) {
+
+          // find if it is symmetrically opposite to the node i
+          if (crack.d_o == -1) {
+            // compare x coordinate
+            auto d0 = p_search.d_x - y0.d_x;
+            auto d = p_search.d_x - y.d_x;
+
+            if (util::compare::definitelyLessThan(d * d0, 0.)) {
+              sym_rect[r] = x;
+              diff_z = std::abs((*Z)[x] - mz.d_Z);
+            }
+          } else if (crack.d_o == 1) {
+            // compare y coordinate
+            auto d0 = p_search.d_y - y0.d_y;
+            auto d = p_search.d_y - y.d_y;
+
+            if (util::compare::definitelyLessThan(d * d0, 0.)) {
+              sym_rect[r] = x;
+              diff_z = std::abs((*Z)[x] - mz.d_Z);
+            }
+          }
+        }
+      } // loop over nodes within rectangle
+    }
+  } // loop over rectangle
+
+  // output data for debugging
+  std::cout << "    sortZ (r, i, Z) = {";
+  for (size_t i = 0; i < sortZ.size(); i++) {
+    std::cout << "(" << sortZ[i].d_r << "," << sortZ[i].d_i << ","
+              << sortZ[i].d_Z << ")";
+    if (i < sortZ.size() - 1)
+      std::cout << ", ";
+  }
+  std::cout << "}\n";
+  std::cout << "    sym_rect = {" << sym_rect[0] << ", " << sym_rect[1]
+            << "}\n";
+
+  //
+  // Step 5
+  //
+  // there are three cases
+  // 1. rect 0 is symmetric
+  // 2. rect 0 is not symmetric and rect 1 is symmetric
+  // 3. rect 0 is not symmetric and rect 0 is not symmetric
+  auto pnew = pold;
+  if (sym_rect[0] >= 0) {
+    // crack tip is given by average of symmetrically opposite points
+    size_t i1 = sortZ[0].d_i;
+    auto y1 = d_mesh_p->getNode(i1) + d_u[i1];
+    size_t i2 = sym_rect[0];
+    auto y2 = d_mesh_p->getNode(i2) + d_u[i2];
+    if (crack.d_o == -1) {
+      pnew.d_y = y1.d_y;
+      pnew.d_x = 0.5 * (y1.d_x + y2.d_x);
+    } else if (crack.d_o == 1) {
+      pnew.d_x = y1.d_x;
+      pnew.d_y = 0.5 * (y1.d_y + y2.d_y);
+    }
+
+    std::cout << "    Candidate 1 info: id = " << sortZ[0].d_i
+              << ", Z = " << sortZ[0].d_Z << ", r = " << sortZ[0].d_r
+              << ", p = (" << y1.d_x << ", " << y1.d_y << ")\n";
+    std::cout << "    Candidate 2 info: id = " << sym_rect[0]
+              << ", Z = " << (*Z)[sym_rect[0]] << ", r = " << sortZ[0].d_r
+              << ", p = (" << y2.d_x << ", " << y2.d_y << ")\n";
+  } // rect 0 is symmetric
+  else {
+    if (sym_rect[1] >= 0) {
+      size_t i1 = sortZ[1].d_i;
+      auto y1 = d_mesh_p->getNode(i1) + d_u[i1];
+      size_t i2 = sym_rect[1];
+      auto y2 = d_mesh_p->getNode(i2) + d_u[i2];
+      if (crack.d_o == -1) {
+        pnew.d_y = y1.d_y;
+        pnew.d_x = 0.5 * (y1.d_x + y2.d_x);
+      } else if (crack.d_o == 1) {
+        pnew.d_x = y1.d_x;
+        pnew.d_y = 0.5 * (y1.d_y + y2.d_y);
+      }
+      std::cout << "    Candidate 1 info: id = " << sortZ[1].d_i
+                << ", Z = " << sortZ[1].d_Z << ", r = " << sortZ[1].d_r
+                << ", p = (" << y1.d_x << ", " << y1.d_y << ")\n";
+      std::cout << "    Candidate 2 info: id = " << sym_rect[1]
+                << ", Z = " << (*Z)[sym_rect[1]] << ", r = " << sortZ[1].d_r
+                << ", p = (" << y2.d_x << ", " << y2.d_y << ")\n";
+    } // rect 1 is symmetric
+    else {
+      // use average between best node in rectangle and old tip
+      size_t i1 = sortZ[0].d_i;
+      auto y1 = d_mesh_p->getNode(i1) + d_u[i1];
+      auto y2 = pold;
+      if (crack.d_o == -1) {
+        pnew.d_y = y1.d_y;
+        pnew.d_x = 0.5 * (y1.d_x + y2.d_x);
+      } else if (crack.d_o == 1) {
+        pnew.d_x = y1.d_x;
+        pnew.d_y = 0.5 * (y1.d_y + y2.d_y);
+      }
+
+      std::cout << "    Candidate 1 info: id = " << sortZ[0].d_i
+                << ", Z = " << sortZ[0].d_Z << ", r = " << sortZ[0].d_r
+                << ", p = (" << y1.d_x << ", " << y1.d_y << ")\n";
+    } // rect 1 is not symmetric
+  }   // rect 0 is not symmetric
+
+  // output data for debugging
+  std::cout << "    Old tip = (" << pold.d_x << ", " << pold.d_y << "), "
+            << "New tip = (" << pnew.d_x << ", " << pnew.d_y << ").\n";
+
+  return pnew;
 }

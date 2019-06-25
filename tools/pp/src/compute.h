@@ -407,6 +407,47 @@ private:
   /*!
    * @brief Updates crack tip location and crack velocity
    *
+   * Method:
+   *
+   * - \b Step \b 1 - We consider sequence of rectangle starting from the tip
+   * of crack towards the end of material domain and find the ids and damage of nodes
+   * within each of these rectangles. We skip the nodes which have damage
+   * above specified bound (say 50) and below specified bound (say 1).
+   *
+   * - \b Step \b 2 - We find the minimum value of damage among nodes in
+   * each rectangle and sort the rectangle by increasing order of minimum
+   * damage. This way we attach two data to each rectangle in sequence of
+   * rectangle: minimum damage and the node which has that damage. Once we
+   * sort the rectangle in increasing order of damage associated to it, we
+   * take first and second rectangle as best choice of rectangle and find
+   * suitable crack tip in these two rectangles.
+   *
+   * - \b Step \b 3 - In first and second rectangle (after sorting in step
+   * 2) we find the node which has closest damage to the minimum damage in
+   * both these rectangle and which is also closest to the crack line defined
+   * by the old crack tip. If we find the node which has damage closer to the
+   * minimum and is more closer to the crack line, we update the damage and
+   * node of rectangle by the damage of new found node and id of new found node.
+   *
+   * - \b Step \b 4 - For rectangle 1 and 2, we now search for node which has
+   * damage very close to the damage associated to the rectangle and which is
+   * located opposite to the crack line. We use current crack tip to define
+   * the crack line. If we can not find the symmetrically opposite node with
+   * the current crack tip, we use crack line defined by the older crack tip.
+   * There are three possibilities
+   *    1. Rectangle 1 has symmetrically opposite node
+   *    2. Rectangle 1 does not have symmetrically opposite node and
+   *    rectangle 2 has symmetrically opposite node
+   *    3. Rectangle 1 and 2 both do not have symmetrically opposite node
+   *
+   * - \b Step \b 5 - We find crack tip from rectangle 1 if it is either case
+   * 1 or 3. In case of 2 we find crack tip from rectangle 2. We use average
+   * of two points in case of 1 and 2, and use average of nodal position of
+   * node associated to rectangle 1 and current crack tip to define new crack
+   * tip.
+   *
+   * Step 2 - 5 is implemented in Compute::findTipInRects.
+   *
    * @param time Current time
    * @param Z Vector of damage at nodes
    */
@@ -414,6 +455,81 @@ private:
 
   /*! @brief Performs output of crack tip data */
   void crackOutput();
+
+  /*!
+   * @brief Finds minimum damage among set of damage which are greater than
+   * or equal to 1
+   *
+   * @param Z Vector of damage at nodes
+   * @param dmg Pointer to store damage value
+   * @param i Pointer to store node id
+   */
+  void findDamageForCrackTipSearch(const std::vector<double> *Z, double *dmg,
+                                   size_t *i);
+
+  /*!
+   * @brief Creates sequence of rectangles for crack tip search, and finds
+   * the ids of nodes in each rectangle and damage associated to the node.
+   *
+   * We filter out the nodes which have damage above max
+   * threshold and below min threshold defined in tools::pp::FindCrackTip.
+   *
+   * @param crack Crack data
+   * @param rects_t Sequence of rectangles for search of new top (right) tip
+   * @param rects_b Sequence of rectangles for search of new bottom (left) tip
+   * @param nodes_t Vector of nodal ids in rectangles for top (right) tip
+   * @param nodes_b Vector of nodal ids in rectangles for bottom (left) tip
+   * @param Z_t Vector of nodal damages in rectangles for top (right) tip
+   * @param Z_b Vector of nodal damages in rectangles for bottom (left) tip
+   * @param Z Pointer to nodal damage data
+   */
+  void getRectsAndNodesForCrackTip(
+      inp::EdgeCrack &crack,
+      std::vector<std::pair<util::Point3, util::Point3>> &rects_t,
+      std::vector<std::pair<util::Point3, util::Point3>> &rects_b,
+      std::vector<std::vector<size_t>> &nodes_t,
+      std::vector<std::vector<size_t>> &nodes_b,
+      std::vector<std::vector<double>> &Z_t,
+      std::vector<std::vector<double>> &Z_b, const std::vector<double> *Z);
+
+  /*!
+   * @brief Update data associated to top (right) tip of crack
+   *
+   * @param crack Crack data which will be updated
+   * @param ptnew New crack tip
+   * @param time Time of update
+   */
+  void updateTopTip(inp::EdgeCrack &crack, util::Point3 ptnew, double time);
+
+  /*!
+   * @brief Update data associated to bottom (left) tip of crack
+   *
+   * @param crack Crack data which will be updated
+   * @param ptnew New crack tip
+   * @param time Time of update
+   */
+  void updateBottomTip(inp::EdgeCrack &crack, util::Point3 ptnew, double time);
+
+  /*!
+   * @brief Finds new crack tip location from the rectangle data
+   *
+   * In this method we implement Step 2 to 5 of Compute::updateCrack.
+   *
+   * @param crack Crack data
+   * @param max_Z Maximum value of damage
+   * @param rects Sequence of rectangles for search of new tip
+   * @param nodes Vector of nodal ids in rectangles
+   * @param Zs Vector of nodal damages in rectangles
+   * @param Z Pointer to nodal damage data
+   * @param is_top True if searching for new tip for top side of crack
+   * @return p New point
+   */
+  util::Point3 findTipInRects(
+      inp::EdgeCrack &crack, const double &max_Z,
+      const std::vector<std::pair<util::Point3, util::Point3>> &rects,
+      const std::vector<std::vector<size_t>> &nodes,
+      const std::vector<std::vector<double>> &Zs, const std::vector<double> *Z,
+      bool is_top);
 
   /** @}*/
 
