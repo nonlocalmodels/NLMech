@@ -104,5 +104,7 @@ Compute:
       Crack_Tip_File: crack_tip_data.csv
       # factor (for x and y direction) to compute the contour around crack tip
       Contour_Size: [4.0, 4.0]
+      # set lateral component of crack velocity zero
+      Set_V_Lateral_Comp_Zero: true
 HPX:
   Partitions: 1

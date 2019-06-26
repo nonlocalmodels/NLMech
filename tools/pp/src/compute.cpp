@@ -440,6 +440,10 @@ void tools::pp::Compute::readComputeInstruction(
                    "provided.\n";
       exit(1);
     }
+
+    if (e["Set_V_Lateral_Comp_Zero"])
+      data->d_computeJInt_p->d_setLateralCompVZero =
+          e["Set_V_Lateral_Comp_Zero"].as<bool>();
   }
 }
 
@@ -885,6 +889,14 @@ void tools::pp::Compute::computeJIntegral() {
 
   // get crack tip data
   auto ctip = data->d_crackTipData[d_nOut - data->d_start];
+
+  // set lateral component of crack velocity zero
+  if (data->d_setLateralCompVZero) {
+    if (data->d_crackOrient == -1)
+      ctip.d_v.d_x = 0.;
+    else if (data->d_crackOrient == 1)
+      ctip.d_v.d_y = 0.;
+  }
 
   // Schematic for horizontal crack (similar for vertical crack)
   //

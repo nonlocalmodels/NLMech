@@ -217,12 +217,15 @@ struct ComputeJIntegral {
   /*! @brief File to write J integral data */
   FILE *d_file;
 
+  /*! @brief Set lateral component of velocity as zero */
+  bool d_setLateralCompVZero;
+
   /*!
    * @brief Constructor
    */
   ComputeJIntegral()
       : d_crackOrient(0), d_crackId(1), d_start(-1), d_end(-1),
-        d_file(nullptr){};
+        d_file(nullptr), d_setLateralCompVZero(false) {};
 };
 
 /*!
