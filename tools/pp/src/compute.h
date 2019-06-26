@@ -433,10 +433,10 @@ private:
    *
    * - \b Step \b 4 - For rectangle 1 and 2, we now search for node which has
    * damage very close to the damage associated to the rectangle and which is
-   * located opposite to the crack line. We use current crack tip to define
-   * the crack line. If we can not find the symmetrically opposite node with
-   * the current crack tip, we use crack line defined by the older crack tip.
-   * There are three possibilities
+   * located opposite to the crack line. First choice of crack line is initial
+   * crack line, second choice is crack line given by old crack tip, and
+   * third choice is crack line given by current crack tip. There are
+   * three  possibilities
    *    1. Rectangle 1 has symmetrically opposite node
    *    2. Rectangle 1 does not have symmetrically opposite node and
    *    rectangle 2 has symmetrically opposite node

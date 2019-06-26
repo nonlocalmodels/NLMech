@@ -880,12 +880,10 @@ void tools::pp::Compute::computeJIntegral() {
   if (!data)
     return;
 
-  if (d_nOut == 1)
-    std::cout << "start = " << data->d_start << ", end = " << data->d_end
-              << "\n";
-
+  // to hold energy into crack
   double energy = 0.;
 
+  // get crack tip data
   auto ctip = data->d_crackTipData[d_nOut - data->d_start];
 
   // Schematic for horizontal crack (similar for vertical crack)
@@ -915,135 +913,120 @@ void tools::pp::Compute::computeJIntegral() {
       &search_nodes, &search_elems);
 
   //
-  // compute contribution from edge A-B and C-D
+  // Compute contour integral
   //
-  auto h = d_mesh_p->getMeshSize();
-  size_t N = (cd.second.d_x - cd.first.d_x) / h;
-  if (util::compare::definitelyLessThan(cd.first.d_x + double(N) * h,
-                                        cd.second.d_x))
-    N++;
-
   // create second order quadrature class for 1-d line element
   auto line_quad = fe::LineElem(2);
+  auto h = d_mesh_p->getMeshSize();
+  for (size_t E=0; E<2; E++) {
+    long N = 0;
+    if (E==0) {
+      // number of elements for horizontal edge
+      N = (cd.second.d_x - cd.first.d_x) / h;
+      if (util::compare::definitelyLessThan(cd.first.d_x + double(N) * h,
+                                            cd.second.d_x))
+        N++;
+    } else {
+      // number of elements for vertical edge
+      N = (cd.second.d_y - cd.first.d_y) / h;
+      if (util::compare::definitelyLessThan(cd.first.d_y + double(N) * h,
+                                            cd.second.d_y))
+        N++;
+    }
 
-  auto energies = std::vector<double>(N, 0.);
-  auto f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
-      [&energies, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
-       this](boost::uint64_t I) {
-        //  for (size_t I = 0; I < N; I++) {
-        double loc_energy = 0.;
+    auto energies = std::vector<double>(N, 0.);
+    auto f = hpx::parallel::for_loop(
+        hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
+        [&energies, N, h, cd, ctip, &line_quad, search_nodes, search_elems, E,
+         this](boost::uint64_t I) {
 
-        // line element
-        auto x1 = cd.first.d_x + double(I) * h;
-        auto x2 = cd.first.d_x + double(I + 1) * h;
-        if (I == N - 1)
-          x2 = cd.second.d_x;
+          double loc_energy = 0.;
 
-        // get quadrature points
-        auto qds = line_quad.getQuadPoints(std::vector<util::Point3>{
-            util::Point3(x1, 0., 0.), util::Point3(x2, 0., 0.)});
+          // line element
+          auto x1 = 0.;
+          auto x2 = 0.;
+          if (E==0) {
+            // discretization of horizontal line
+            x1 = cd.first.d_x + double(I) * h;
+            x2 = cd.first.d_x + double(I + 1) * h;
+            if (I == N - 1)
+              x2 = cd.second.d_x;
+          } else {
+            // discretization of vertical line
+            x1 = cd.first.d_y + double(I) * h;
+            x2 = cd.first.d_y + double(I + 1) * h;
+            if (I == N - 1)
+              x2 = cd.second.d_y;
+          }
 
-        // loop over quad points
-        for (auto qd : qds) {
-          // process edge A-B
-          qd.d_p.d_y = cd.first.d_y;
+          // get quadrature points
+          auto qds = line_quad.getQuadPoints(std::vector<util::Point3>{
+              util::Point3(x1, 0., 0.), util::Point3(x2, 0., 0.)});
 
-          // get contribution
-          // n dot v for edge A-B = - (y component of v)
-          loc_energy +=
-              getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-              (-ctip.d_v.d_y) * qd.d_w;
+          // loop over quad points
+          for (auto qd : qds) {
+            if (E==0) {
+              // process edge A-B
+              qd.d_p.d_y = cd.first.d_y;
 
-          // process edge C-D
-          qd.d_p.d_y = cd.second.d_y;
+              // get contribution
+              // n dot v for edge A-B = - (y component of v)
+              loc_energy +=
+                  getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
+                  (-ctip.d_v.d_y) * qd.d_w;
 
-          // get contribution
-          // n dot v for edge C-D = y component of v
-          loc_energy +=
-              getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-              ctip.d_v.d_y * qd.d_w;
-        }
+              // process edge C-D
+              qd.d_p.d_y = cd.second.d_y;
 
-        energies[I] = loc_energy;
-        //  }
-      });
-  f.get();
+              // get contribution
+              // n dot v for edge C-D = y component of v
+              loc_energy +=
+                  getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
+                  ctip.d_v.d_y * qd.d_w;
+            } else {
+              // process edge B-C
+              // transform quad point along vertical line to correct coordinate
+              auto p_temp = qd.d_p;
+              qd.d_p = util::Point3(cd.second.d_x, p_temp.d_x, 0.);
 
-  // add energies
-  energy += util::methods::add(energies);
+              // get contribution
+              // n dot v for edge B-C = (x component of v)
+              loc_energy +=
+                  getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
+                      ctip.d_v.d_x * qd.d_w;
 
-  //
-  // compute contribution from edge B-C and D-A
-  //
-  N = (cd.second.d_y - cd.first.d_y) / h;
-  if (util::compare::definitelyLessThan(cd.first.d_y + double(N) * h,
-                                        cd.second.d_y))
-    N++;
+              // process edge D-A
+              // transform quad point along vertical line to correct coordinate
+              qd.d_p = util::Point3(cd.first.d_x, p_temp.d_x, 0.);
 
-  energies = std::vector<double>(N, 0.);
-  f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
-      [&energies, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
-       this](boost::uint64_t I) {
-        //  for (size_t I = 0; I < N; I++) {
-        double loc_energy = 0.;
+              // get contribution
+              // n dot v for edge D-A = - (x component of v)
+              loc_energy +=
+                  getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
+                      (-ctip.d_v.d_x) * qd.d_w;
+            }
+          } // loop over quad points
 
-        // line element
-        auto y1 = cd.first.d_y + double(I) * h;
-        auto y2 = cd.first.d_y + double(I + 1) * h;
-        if (I == N - 1)
-          y2 = cd.second.d_y;
+          energies[I] = loc_energy;
+        });
+    f.get();
 
-        // get quadrature points
-        auto qds = line_quad.getQuadPoints(std::vector<util::Point3>{
-            util::Point3(y1, 0., 0.), util::Point3(y2, 0., 0.)});
-
-        // loop over quad points
-        for (auto qd : qds) {
-          // process edge B-C
-          // transform quad point along vertical line to correct coordinate
-          auto p_temp = qd.d_p;
-          qd.d_p = util::Point3(cd.second.d_x, p_temp.d_x, 0.);
-
-          // get contribution
-          // n dot v for edge B-C = (x component of v)
-          loc_energy +=
-              getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-              ctip.d_v.d_x * qd.d_w;
-
-          // process edge D-A
-          // transform quad point along vertical line to correct coordinate
-          qd.d_p = util::Point3(cd.first.d_x, p_temp.d_x, 0.);
-
-          // get contribution
-          // n dot v for edge D-A = - (x component of v)
-          loc_energy +=
-              getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-              (-ctip.d_v.d_x) * qd.d_w;
-        }
-
-        energies[I] = loc_energy;
-        //  }
-      });
-  f.get();
-
-  // add energies
-  energy += util::methods::add(energies);
+    // add energies
+    energy += util::methods::add(energies);
+  }
 
   //
   // Contribution from work done by peridynamic force
   //
-
   // decompose search_nodes list in two parts: one list for nodes outside
   // domain A formed by contour and other for nodes on contour and inside
   // domain A.
   std::vector<size_t> search_node_comp;
   decomposeSearchNodes(cd, &search_nodes, &search_node_comp);
-  energies = std::vector<double>(search_node_comp.size(), 0.);
+  auto energies = std::vector<double>(search_node_comp.size(), 0.);
 
   // loop over nodes in compliment of domain A
-  f = hpx::parallel::for_loop(
+  auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       search_node_comp.size(),
       [&energies, h, cd, &line_quad, search_nodes, search_node_comp,
@@ -1822,28 +1805,36 @@ util::Point3 tools::pp::Compute::findTipInRects(inp::EdgeCrack &crack,
   // crack line with same damage
   //
   std::vector<long> sym_rect(2, -1);
+
+  // Three choices of crack line in decreasing order of preference
+  // Choice 1: crack line defined by initial crack tip, i.e. initial crack line
+  // Choice 2: crack line defined by old crack tip
+  // Choice 3: crack line defined by current crack tip
+  auto p_choices = std::vector<util::Point3>{crack.d_initPt, crack.d_oldPt,
+                                             crack.d_pt};
+  if (!is_top)
+    p_choices = std::vector<util::Point3>{crack.d_initPb, crack.d_oldPb,
+                                          crack.d_pb};
   for (size_t r = 0; r < sortZ.size(); r++) {
+
+    // only consider first and second rectangle in sorted rectangle list
     if (r > 2)
       continue;
 
+    // get data for this rectangle
     auto mz = sortZ[r];
+
+    // do not consider node with large damage difference to the minimum
+    // damage in mz.d_Z
+    // diff_z will be further reduced to find node with closest damage to mz.d_Z
     double diff_z = 1.0E-02;
 
-    //
-    // check if we find another node symmetrically opposite to crack line
-    // with damage closer to mz.d_Z
-    //
-    // for first attempt we use current crack line and for second attempt
-    // we use old crack line
-    //
-    for (size_t f = 0; f < 2; f++) {
-      auto p_search = pold;
-      if (f == 1) {
-        p_search = crack.d_oldPt;
-        if (!is_top)
-          p_search = crack.d_oldPb;
-      }
+    // loop over crack line choices
+    for (size_t f = 0; f < p_choices.size(); f++) {
+      auto p_search = p_choices[f];
 
+      // check if we already found symmetrically opposite node for crack line
+      // before this crack line
       if (sym_rect[r] >= 0)
         continue;
 

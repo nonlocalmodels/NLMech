@@ -73,6 +73,12 @@ struct EdgeCrack {
   /*! @brief Bottom (left) crack tip location (old) */
   util::Point3 d_oldPb;
 
+  /*! @brief Top (right) crack tip location (initial) */
+  util::Point3 d_initPt;
+
+  /*! @brief Bottom (left) crack tip location (initial) */
+  util::Point3 d_initPb;
+
   /*! @brief Track top point (right) of crack */
   bool d_trackt;
 
@@ -89,6 +95,7 @@ struct EdgeCrack {
         d_vt(util::Point3()), d_vb(util::Point3()),
         d_pt(util::Point3()), d_pb(util::Point3()),
         d_oldPt(util::Point3()), d_oldPb(util::Point3()),
+        d_initPt(util::Point3()), d_initPb(util::Point3()),
         d_trackt(false), d_trackb(false) {};
 
   /*!
