@@ -1,4 +1,5 @@
 # Copyright (c) 2019    Prashant K. Jha
+#				2019    Patrick Diehl
 #
 # Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 # (See accompanying file LICENSE.txt)
@@ -39,7 +40,7 @@ if (VTK_VERSION VERSION_LESS "6")
     message(FATAL_ERROR "ERROR: Only VTK library 6+ supported")
 endif ()
 
-# Blas and Lapack
+# BLAS and LAPACK
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
@@ -61,7 +62,6 @@ endif ()
 
 # include important directories
 include_directories(src/external/)
-include_directories(src/external/blaze/include/)
 include_directories(${VTK_INCLUDE_DIRS})
 include_directories(${HPX_INCLUDE_DIRS})
 include_directories(src)
