@@ -91,6 +91,9 @@ Compute:
     Tag_Filename: crack_energy
     Dt_Start: 70
     Dt_End: 100
+    # specify number of simulation files to skip.
+    # Valid value is integer >= 1. Default is 1.
+    Dt_Interval: 10
     Output_Only_Nodes: true
     J_Integral:
       # specify the orientation of crack

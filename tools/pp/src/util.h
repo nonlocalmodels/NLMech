@@ -246,6 +246,12 @@ struct InstructionData {
   int d_end;
 
   /*!
+   * @brief Number which indicates how many simulation file we skip after
+   * processing 1 simulation file. Default is 1. Valid number >= 1.
+   */
+  int d_interval;
+
+  /*!
    * @brief Flag for performing only nodal output and not full fem output
    * (for large mesh, vtk produces error when writing element-node
    * connectivity)
@@ -280,10 +286,11 @@ struct InstructionData {
   tools::pp::ComputeJIntegral *d_computeJInt_p;
 
   InstructionData()
-      : d_start(-1), d_end(-1), d_outOnlyNodes(true), d_removeElements(false),
-        d_transformU_p(nullptr), d_transformV_p(nullptr), d_compStrain_p(nullptr),
+      : d_start(-1), d_end(-1), d_interval(1), d_outOnlyNodes(true),
+        d_removeElements(false), d_transformU_p(nullptr),
+        d_transformV_p(nullptr), d_compStrain_p(nullptr),
         d_findCrackTip_p(nullptr), d_damageAtNodes(false),
-        d_computeJInt_p(nullptr) {};
+        d_computeJInt_p(nullptr){};
 };
 
 } // namespace pp

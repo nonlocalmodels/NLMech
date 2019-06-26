@@ -58,6 +58,10 @@ tools::pp::Compute::Compute(const std::string &filename)
       if (d_nOut < d_currentData->d_start || d_nOut > d_currentData->d_end)
         continue;
 
+      // skip d_interval number of simulation file after processing 1 file
+      if (d_nOut % d_currentData->d_interval != 0)
+        continue;
+
       std::cout << "  PP_fe2D: Processing compute set = " << d_nC + 1 << "\n";
 
       // filename for writing postprocessed data
@@ -267,6 +271,13 @@ void tools::pp::Compute::readComputeInstruction(
     data->d_start = config["Compute"][set]["Dt_Start"].as<int>();
   if (config["Compute"][set]["Dt_End"])
     data->d_end = config["Compute"][set]["Dt_End"].as<int>();
+  if (config["Compute"][set]["Dt_Interval"])
+    data->d_interval = config["Compute"][set]["Dt_Interval"].as<int>();
+  if (data->d_interval < 1) {
+    std::cerr << "Error: Specify valid number (greater than or equal to 1) in"
+                 " Dt_Interval of compute " << set << ".\n";
+    exit(1);
+  }
 
   // Scale displacement
   if (config["Compute"][set]["Scale_U_Ouptut"]) {
