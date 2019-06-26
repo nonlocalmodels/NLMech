@@ -217,8 +217,9 @@ void tools::pp::Compute::init() {
       if (!data->d_crackTipData.empty()) {
         d.d_start = data->d_crackTipData[0].d_n;
         d.d_end = data->d_crackTipData[data->d_crackTipData.size() - 1].d_n;
-        data->d_start = data->d_crackTipData[0].d_n;
-        data->d_end = data->d_crackTipData[data->d_crackTipData.size() - 1].d_n;
+        if (data->d_crackTipData.size() > 1)
+          d.d_interval = data->d_crackTipData[1].d_n -
+              data->d_crackTipData[0].d_n;
       }
     }
   }
@@ -899,7 +900,13 @@ void tools::pp::Compute::computeJIntegral() {
   double energy = 0.;
 
   // get crack tip data
-  auto ctip = data->d_crackTipData[d_nOut - data->d_start];
+  auto ctip = data->d_crackTipData[(d_nOut - d_currentData->d_start) /
+                                   d_currentData->d_interval];
+  if (ctip.d_n != d_nOut) {
+    std::cerr << "Error: Output step (" << ctip.d_n << ") of crack tip data is"
+              << " not matching current output step (" << d_nOut << ").\n";
+    exit(1);
+  }
 
   // set lateral component of crack velocity zero
   if (data->d_setLateralCompVZero) {

@@ -208,12 +208,6 @@ struct ComputeJIntegral {
   /*! @brief Data to hold crack tip information */
   std::vector<tools::pp::CrackTipData> d_crackTipData;
 
-  /*! @brief Start step for J-integral calculation */
-  int d_start;
-
-  /*! @brief End step for J-integral calculation */
-  int d_end;
-
   /*! @brief File to write J integral data */
   FILE *d_file;
 
@@ -224,8 +218,8 @@ struct ComputeJIntegral {
    * @brief Constructor
    */
   ComputeJIntegral()
-      : d_crackOrient(0), d_crackId(1), d_start(-1), d_end(-1),
-        d_file(nullptr), d_setLateralCompVZero(false) {};
+      : d_crackOrient(0), d_crackId(1), d_file(nullptr),
+        d_setLateralCompVZero(false){};
 };
 
 /*!

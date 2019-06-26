@@ -27,6 +27,8 @@ Compute:
     # set true if output nodal data and not whole mesh
     # default is true
     Output_Only_Nodes: true
+    # Valid value is integer >= 1. Default is 1.
+    Dt_Interval: 10
     # specify compression type (default is none) for .vtu files
     Compress_Type: zlib
     # mark velocity as zero in given region
@@ -92,8 +94,6 @@ Compute:
     Dt_Start: 70
     Dt_End: 100
     # specify number of simulation files to skip.
-    # Valid value is integer >= 1. Default is 1.
-    Dt_Interval: 10
     Output_Only_Nodes: true
     J_Integral:
       # specify the orientation of crack
