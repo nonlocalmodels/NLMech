@@ -26,10 +26,6 @@ endif ()
 
 list(APPEND CMAKE_MODULE_PATH "${HPX_PREFIX}/../cmake/")
 
-#if (${HPX_FOUND})
-#    message("${HPX_INCLUDE_DIRS}")
-#endif ()
-
 # YAML
 find_package(YamlCpp REQUIRED)
 
@@ -42,7 +38,6 @@ endif ()
 
 # BLAZE
 find_package(blaze REQUIRED)
-
 
 # BLAS and LAPACK
 find_package(BLAS REQUIRED)
@@ -70,6 +65,9 @@ include_directories(${VTK_INCLUDE_DIRS})
 include_directories(${HPX_INCLUDE_DIRS})
 include_directories(src)
 link_directories(${HPX_LIBRARY_DIR})
+
+# blaze include directory (via -Dblaze_INCLUDE_DIR)
+include_directories(${blaze_INCLUDE_DIR})
 
 # Enable HPX inside blaze
 add_definitions(-DBLAZE_USE_HPX_THREADS)
