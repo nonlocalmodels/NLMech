@@ -1,13 +1,16 @@
-#
-# export paths
-#
+# local directory with external libraries
 local="/home/prashant/Softwares/local"
 
+# clean previous build files (optional)
 ./clean.sh
 
 # hpx
 hpx_ver="1.1.0"
 hpx_dir="$local""/hpx/hpx-""$hpx_ver"
+
+# vtk
+# for ubuntu 18.04, can install vtk dev using
+# sudo apt-get install libvtk7-dev
 
 # yaml-cpp
 yamlcpp_ver="0.5.3"
@@ -17,13 +20,13 @@ yamlcpp_dir="$local""/yaml-cpp/yaml-cpp-""$yamlcpp_ver"
 blaze_dir="$local""/blaze"
 
 #
-# target where we want to build PeridynamicsHPX
+# target 
 #
 PWD=$pwd
 target_build="$PWD"
 
 # source
-source="../NLMech-v0.1"
+source="../NLMech"
 
 #
 # run cmake with flags
