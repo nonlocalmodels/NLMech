@@ -1,3 +1,5 @@
+#!/bin/bash
+
 rm -r CMakeFiles src/fe src/geometry src/inp 
 rm -r src/loading src/material src/model src/rw src/util 
 rm -r tools/
