@@ -1,8 +1,9 @@
 // Copyright (c) 2019    Prashant K. Jha
-//
+//				 2019    Patrick Diehl
 // Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
 // (See accompanying file LICENSE.txt)
 
+#include <Config.h>
 #include <hpx/hpx_main.hpp>                     // Need main source file
 #include <hpx/util/high_resolution_clock.hpp>
 #include "inp/input.h"                          // Input class
@@ -33,10 +34,15 @@ int main(int argc, char *argv[]) {
     filename = vm["input-file"].as<std::string>();
 
   if (filename.empty()) {
-    std::cerr << argv[0] << " -i input.yaml --hpx:threads=n \n";
+    std::cerr << argv[0] << " (Version " << MAJOR_VERSION <<
+    		"." << MINOR_VERSION << "." << UPDATE_VERSION <<
+			") -i input.yaml --hpx:threads=n" << std::endl;
     exit(1);
   }
-
+  // Print program version
+  std::cout << argv[0] << " (Version " << MAJOR_VERSION <<
+  		"." << MINOR_VERSION << "." << UPDATE_VERSION <<
+			")" << std::endl;
   // record current time
   std::uint64_t begin = hpx::util::high_resolution_clock::now();
 
