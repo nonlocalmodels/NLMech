@@ -106,3 +106,10 @@ add_subdirectory(tools/pp)
 
 # Build executable
 add_hpx_executable(NLMech SOURCES src/main.cpp DEPENDENCIES Inp Model)
+
+# Build documentation
+set(Enable_Documentation FALSE CACHE BOOL "Generates target for generating the documentation")
+if(${Enable_Documentation})
+add_subdirectory(docs)
+endif()
+
