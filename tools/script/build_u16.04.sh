@@ -35,8 +35,12 @@ cmake -DHPX_DIR="$hpx_dir""/lib/cmake/HPX" \
  	  -Dblaze_DIR="$blaze_dir""/share/blaze/cmake" \
  	  -Dblaze_INCLUDE_DIR="$blaze_dir""/include" \
 	  -DCMAKE_INSTALL_PREFIX="$target_build" \
+	  -DEnable_Documentation=ON \
 	  -DCMAKE_BUILD_TYPE=Release \
 	  "$source"
 
 # make
 make -j 8
+
+# create documentation
+make doc 
