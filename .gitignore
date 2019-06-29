@@ -46,6 +46,10 @@ build_2
 .idea/workspace.xml
 
 
-# build directory
+# docs directory
 docs/doxy
 docs/doxy.log
+docs/conf.doxy
+
+# src directory
+src/Config.h 
