@@ -7,6 +7,16 @@
 cmake_minimum_required(VERSION 3.0)
 
 project(NLMech CXX)
+set (VERSION_MAJOR 0)
+set (VERSION_MINOR 1)
+set (VERSION_UPDATE 0)
+
+configure_file (
+  "${PROJECT_SOURCE_DIR}/Config.h.in"
+  "${PROJECT_SOURCE_DIR}/src/Config.h"
+  )
+
+#Enable ctest
 enable_testing()
 
 # Add own cmake scripts

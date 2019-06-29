@@ -1,0 +1,15 @@
+// Copyright (c) 2019    Patrick Diehl
+//
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+// (See accompanying file LICENSE.txt)
+
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#include<cstddef>
+
+size_t const MAJOR_VERSION = @VERSION_MAJOR@;
+size_t const MINOR_VERSION = @VERSION_MINOR@;
+size_t const UPDATE_VERSION = @VERSION_UPDATE@;
+
+#endif
