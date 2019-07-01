@@ -939,8 +939,8 @@ void tools::pp::Compute::computeJIntegral() {
   std::vector<size_t> search_nodes;
   std::vector<size_t> search_elems;
   listElemsAndNodesInDomain(
-      cd, d_modelDeck_p->d_horizon + 2. * d_mesh_p->getMeshSize(),
-      &search_nodes, &search_elems);
+      cd, d_modelDeck_p->d_horizon + 2. * d_mesh_p->getMeshSize(), 2. *
+      d_mesh_p->getMeshSize(), &search_nodes, &search_elems);
 
   //
   // Compute contour integral
@@ -1167,8 +1167,8 @@ size_t tools::pp::Compute::findNode(const util::Point3 &x,
 }
 
 void tools::pp::Compute::listElemsAndNodesInDomain(
-    const std::pair<util::Point3, util::Point3> &cd, const double &tol,
-    std::vector<size_t> *nodes, std::vector<size_t> *elements) {
+  const std::pair<util::Point3, util::Point3> &cd, const double &tol, const
+  double &tol_elem, std::vector<size_t> *nodes, std::vector<size_t> *elements) {
 
   // nodes list
   nodes->clear();
@@ -1178,11 +1178,11 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
 
     // check if node is in the bigger domain and not in smaller domain
     if (util::geometry::isPointInsideRectangle(
-            x, cd.first.d_x - tol, cd.second.d_x + tol, cd.first.d_y - tol,
-            cd.second.d_y + tol) &&
-        !util::geometry::isPointInsideRectangle(
-            x, cd.first.d_x + tol, cd.second.d_x - tol, cd.first.d_y + tol,
-            cd.second.d_y - tol))
+      x, cd.first.d_x - tol, cd.second.d_x + tol, cd.first.d_y - tol,
+      cd.second.d_y + tol) &&
+      !util::geometry::isPointInsideRectangle(
+        x, cd.first.d_x + tol, cd.second.d_x - tol, cd.first.d_y + tol,
+        cd.second.d_y - tol))
       addUniqueToList(i, nodes);
   }
 
@@ -1192,66 +1192,24 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
     auto ids = d_mesh_p->getElementConnectivity(e);
     bool add_e = false;
 
-    // one of the node has to be inside the domain and at least one node
-    // has to be outside
+    // idea: if any of the nodes of this element is inside a zone then we add
+    // the element to list.
+    // Zone is given by difference of two rectangles enveloping contour
+
     for (auto i : ids) {
       if (add_e)
-        continue;
-      // check if this node is inside the domain
-      if (util::geometry::isPointInsideRectangle(d_mesh_p->getNode(i),
-                                                 cd.first.d_x, cd.second.d_x,
-                                                 cd.first.d_y, cd.second.d_y)) {
+        break;
 
-        // now check if there is at least one node outside the domain
-        for (auto j : ids) {
-          if (j == i)
-            continue;
-          if (!util::geometry::isPointInsideRectangle(
-                  d_mesh_p->getNode(j), cd.first.d_x, cd.second.d_x,
-                  cd.first.d_y, cd.second.d_y)) {
-            add_e = true;
-          }
-        }
-      }
-    } // loop over nodes of element e
+      auto x = d_mesh_p->getNode(i);
 
-    // special care is required for corner points
-    if (!add_e) {
-      // search element which contains any of the corner point
-      for (size_t corner = 0; corner < 4; corner++) {
-
-        if (add_e)
-          continue;
-
-        auto p = util::Point3();
-        if (corner == 0) {
-          p = cd.first;
-        } else if (corner == 1) {
-          p = cd.second;
-        } else if (corner == 2) {
-          p.d_x = cd.first.d_x;
-          p.d_y = cd.second.d_y;
-        } else if (corner == 3) {
-          p.d_x = cd.second.d_x;
-          p.d_y = cd.first.d_y;
-        }
-
-        // search
-        // cases
-        auto up = util::Point3();
-        auto vp = util::Point3();
-        if (d_mesh_p->getElementType() == util::vtk_type_triangle) {
-          add_e = triCheckAndInterpolateUV(p, up, vp, ids, true);
-        } else if (d_mesh_p->getElementType() == util::vtk_type_quad) {
-          // check in triangle {v1, v2, v3}
-          add_e = triCheckAndInterpolateUV(
-              p, up, vp, std::vector<size_t>{ids[0], ids[1], ids[2]}, true);
-
-          // check in triangle {v1, v3, v4}
-          add_e = triCheckAndInterpolateUV(
-              p, up, vp, std::vector<size_t>{ids[0], ids[2], ids[3]}, true);
-        }
-      } // loop over corners
+      // check if node is in the bigger domain and not in smaller domain
+      if (util::geometry::isPointInsideRectangle(
+              x, cd.first.d_x - tol_elem, cd.second.d_x + tol_elem,
+              cd.first.d_y - tol_elem, cd.second.d_y + tol_elem) &&
+          !util::geometry::isPointInsideRectangle(
+              x, cd.first.d_x + tol_elem, cd.second.d_x - tol_elem,
+              cd.first.d_y + tol_elem, cd.second.d_y - tol_elem))
+        add_e = true;
     }
 
     // add e to list

@@ -307,16 +307,20 @@ private:
    * For nodes list, we consider domain which envelopes contour. Thickness of
    * domain is typically taken as size of horizon + 2 * mesh size.
    *
-   * For element list, we look for elements which intersect the contour.
+   * For element list, we look for element which has at least 1 node in the
+   * domain enveloping contour. The thickness of domain is typically taken as
+   * 2 * mesh size.
    *
    * @param cd Rectangle defining the contour
    * @param tol Thickness for node list search
+   * @param tol_elem Thickness for element list search
    * @param nodes Pointer to ids of nodes
    * @param elements Pointer to ids of elements
    */
   void
   listElemsAndNodesInDomain(const std::pair<util::Point3, util::Point3> &cd,
-                            const double &tol, std::vector<size_t> *nodes,
+                            const double &tol, const double &tol_elem,
+                            std::vector<size_t> *nodes,
                             std::vector<size_t> *elements);
 
   /*!
