@@ -97,7 +97,7 @@ void readInputFile(InpData *data, YAML::Node config) {
     data->d_isFd = false;
 
   if (config["Compress_Type"])
-    data->d_compressType = config["Compress_Type"].as<bool>();
+    data->d_compressType = config["Compress_Type"].as<std::string>();
 }
 
 } // namespace
