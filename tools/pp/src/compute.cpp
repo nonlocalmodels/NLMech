@@ -49,7 +49,7 @@ tools::pp::Compute::Compute(const std::string &filename)
 
     // get displacement and velocity
     rw::reader::readVtuFileRestart(sim_out_filename, &d_u, &d_v,
-      d_mesh_p->getNodesP());
+                                   d_mesh_p->getNodesP());
 
     // loop over compute sets and do as instructed in input file
     for (d_nC = 0; d_nC < d_computeData.size(); d_nC++) {
@@ -129,11 +129,11 @@ void tools::pp::Compute::init() {
   else
     d_outPath = "./"; // default
 
-//  if (config["Output"]["Filename"])
-//    d_outPreTag =
-//        d_outPath + "/" + config["Output"]["Filename"].as<std::string>();
-//  else
-    d_outPreTag = d_outPath + "/";
+  //  if (config["Output"]["Filename"])
+  //    d_outPreTag =
+  //        d_outPath + "/" + config["Output"]["Filename"].as<std::string>();
+  //  else
+  d_outPreTag = d_outPath + "/";
 
   // create mesh
   std::cout << "PP_fe2D: Creating mesh.\n";
@@ -218,8 +218,8 @@ void tools::pp::Compute::init() {
         d.d_start = data->d_crackTipData[0].d_n;
         d.d_end = data->d_crackTipData[data->d_crackTipData.size() - 1].d_n;
         if (data->d_crackTipData.size() > 1)
-          d.d_interval = data->d_crackTipData[1].d_n -
-              data->d_crackTipData[0].d_n;
+          d.d_interval =
+              data->d_crackTipData[1].d_n - data->d_crackTipData[0].d_n;
       }
     }
   }
@@ -265,7 +265,7 @@ void tools::pp::Compute::readComputeInstruction(
   // compress type
   if (config["Compute"][set]["Compress_Type"])
     data->d_compressType =
-      config["Compute"][set]["Compress_Type"].as<std::string>();
+        config["Compute"][set]["Compress_Type"].as<std::string>();
 
   // check if start and end time step are specified
   if (config["Compute"][set]["Dt_Start"])
@@ -276,7 +276,8 @@ void tools::pp::Compute::readComputeInstruction(
     data->d_interval = config["Compute"][set]["Dt_Interval"].as<int>();
   if (data->d_interval < 1) {
     std::cerr << "Error: Specify valid number (greater than or equal to 1) in"
-                 " Dt_Interval of compute " << set << ".\n";
+                 " Dt_Interval of compute "
+              << set << ".\n";
     exit(1);
   }
 
@@ -769,8 +770,8 @@ void tools::pp::Compute::computeStrain(rw::writer::VtkWriterInterface *writer) {
     f2.get();
 
     // create unstructured vtk output
-    std::string fname = d_outPreTag + d_currentData->d_tagFilename +
-                        "_quads_" + std::to_string(d_nOut);
+    std::string fname = d_outPreTag + d_currentData->d_tagFilename + "_quads_" +
+                        std::to_string(d_nOut);
     auto writer1 =
         rw::writer::VtkWriterInterface(fname, d_currentData->d_compressType);
     writer1.appendNodes(&elem_quads);
@@ -939,7 +940,7 @@ void tools::pp::Compute::computeJIntegral() {
   std::vector<size_t> search_nodes;
   std::vector<size_t> search_elems;
   listElemsAndNodesInDomain(
-      cd, d_modelDeck_p->d_horizon + 2. * d_mesh_p->getMeshSize(), 2. *
+      cd, d_modelDeck_p->d_horizon + 2. * d_mesh_p->getMeshSize(),
       d_mesh_p->getMeshSize(), &search_nodes, &search_elems);
 
   //
@@ -948,9 +949,9 @@ void tools::pp::Compute::computeJIntegral() {
   // create second order quadrature class for 1-d line element
   auto line_quad = fe::LineElem(2);
   auto h = d_mesh_p->getMeshSize();
-  for (size_t E=0; E<2; E++) {
+  for (size_t E = 0; E < 2; E++) {
     long N = 0;
-    if (E==0) {
+    if (E == 0) {
       // number of elements for horizontal edge
       N = (cd.second.d_x - cd.first.d_x) / h;
       if (util::compare::definitelyLessThan(cd.first.d_x + double(N) * h,
@@ -969,13 +970,12 @@ void tools::pp::Compute::computeJIntegral() {
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
         [&energies, N, h, cd, ctip, &line_quad, search_nodes, search_elems, E,
          this](boost::uint64_t I) {
-
           double loc_energy = 0.;
 
           // line element
           auto x1 = 0.;
           auto x2 = 0.;
-          if (E==0) {
+          if (E == 0) {
             // discretization of horizontal line
             x1 = cd.first.d_x + double(I) * h;
             x2 = cd.first.d_x + double(I + 1) * h;
@@ -995,7 +995,7 @@ void tools::pp::Compute::computeJIntegral() {
 
           // loop over quad points
           for (auto qd : qds) {
-            if (E==0) {
+            if (E == 0) {
               // process edge A-B
               qd.d_p.d_y = cd.first.d_y;
 
@@ -1023,7 +1023,7 @@ void tools::pp::Compute::computeJIntegral() {
               // n dot v for edge B-C = (x component of v)
               loc_energy +=
                   getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-                      ctip.d_v.d_x * qd.d_w;
+                  ctip.d_v.d_x * qd.d_w;
 
               // process edge D-A
               // transform quad point along vertical line to correct coordinate
@@ -1033,7 +1033,7 @@ void tools::pp::Compute::computeJIntegral() {
               // n dot v for edge D-A = - (x component of v)
               loc_energy +=
                   getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-                      (-ctip.d_v.d_x) * qd.d_w;
+                  (-ctip.d_v.d_x) * qd.d_w;
             }
           } // loop over quad points
 
@@ -1109,8 +1109,7 @@ void tools::pp::Compute::computeJIntegral() {
 
   // create file in first call
   if (!data->d_file) {
-    std::string filename =
-        d_outPreTag + d_currentData->d_tagFilename + ".csv";
+    std::string filename = d_outPreTag + d_currentData->d_tagFilename + ".csv";
     data->d_file = fopen(filename.c_str(), "w");
 
     // write header
@@ -1167,8 +1166,9 @@ size_t tools::pp::Compute::findNode(const util::Point3 &x,
 }
 
 void tools::pp::Compute::listElemsAndNodesInDomain(
-  const std::pair<util::Point3, util::Point3> &cd, const double &tol, const
-  double &tol_elem, std::vector<size_t> *nodes, std::vector<size_t> *elements) {
+    const std::pair<util::Point3, util::Point3> &cd, const double &tol,
+    const double &tol_elem, std::vector<size_t> *nodes,
+    std::vector<size_t> *elements) {
 
   // nodes list
   nodes->clear();
@@ -1178,11 +1178,11 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
 
     // check if node is in the bigger domain and not in smaller domain
     if (util::geometry::isPointInsideRectangle(
-      x, cd.first.d_x - tol, cd.second.d_x + tol, cd.first.d_y - tol,
-      cd.second.d_y + tol) &&
-      !util::geometry::isPointInsideRectangle(
-        x, cd.first.d_x + tol, cd.second.d_x - tol, cd.first.d_y + tol,
-        cd.second.d_y - tol))
+            x, cd.first.d_x - tol, cd.second.d_x + tol, cd.first.d_y - tol,
+            cd.second.d_y + tol) &&
+        !util::geometry::isPointInsideRectangle(
+            x, cd.first.d_x + tol, cd.second.d_x - tol, cd.first.d_y + tol,
+            cd.second.d_y - tol))
       addUniqueToList(i, nodes);
   }
 
@@ -1216,6 +1216,18 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
     if (add_e)
       addUniqueToList(e, elements);
   }
+
+  // for debug
+  //  std::vector<util::Point3> enodes;
+  //  for (auto e : *elements) {
+  //    for (auto n : d_mesh_p->getElementConnectivity(e))
+  //      enodes.emplace_back(d_mesh_p->getNode(n));
+  //  }
+  //  auto writer1 = rw::writer::VtkWriterInterface(d_outPreTag +
+  //      d_currentData->d_tagFilename + "_debug_elem_list_" + std::to_string
+  //      (d_nOut));
+  //  writer1.appendNodes(&enodes);
+  //  writer1.close();
 }
 
 void tools::pp::Compute::decomposeSearchNodes(
@@ -1335,8 +1347,9 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     enodes.emplace_back(p);
     std::vector<size_t> etags(enodes.size(), 1);
     etags[etags.size() - 1] = 100;
-    auto writer1 = rw::writer::VtkWriterInterface(d_outPreTag +
-        d_currentData->d_tagFilename + "_debug_nodes_" + std::to_string(d_nOut));
+    auto writer1 = rw::writer::VtkWriterInterface(
+        d_outPreTag + d_currentData->d_tagFilename + "_debug_nodes_" +
+        std::to_string(d_nOut));
     writer1.appendNodes(&enodes);
     writer1.appendPointData("Tag", &etags);
     writer1.close();
@@ -1430,8 +1443,7 @@ void tools::pp::Compute::updateCrack(const double &time,
     }
 
     if (crack.d_trackb) {
-      auto pnew = findTipInRects(crack, max_Z, rects_b, nodes_b, Z_b, Z,
-          false);
+      auto pnew = findTipInRects(crack, max_Z, rects_b, nodes_b, Z_b, Z, false);
       addNewCrackTip(crack, pnew, time, false);
     }
   } // loop over cracks
@@ -1649,8 +1661,9 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
   }   // loop over nodes
 }
 
-void tools::pp::Compute::addNewCrackTip(inp::EdgeCrack &crack, util::Point3 pnew,
-                                      double time, bool is_top) {
+void tools::pp::Compute::addNewCrackTip(inp::EdgeCrack &crack,
+                                        util::Point3 pnew, double time,
+                                        bool is_top) {
   auto compute_data = d_currentData->d_findCrackTip_p;
 
   if (is_top) {
@@ -1670,18 +1683,17 @@ void tools::pp::Compute::addNewCrackTip(inp::EdgeCrack &crack, util::Point3 pnew
     auto delta_t = time - compute_data->d_timet;
     crack.d_lb += diff.length();
     crack.d_l += diff.length();
-    crack.d_vb =
-        util::Point3(diff.d_x / delta_t, diff.d_y / delta_t, diff.d_z / delta_t);
+    crack.d_vb = util::Point3(diff.d_x / delta_t, diff.d_y / delta_t,
+                              diff.d_z / delta_t);
     compute_data->d_timeb = time;
   }
 }
 
-util::Point3 tools::pp::Compute::findTipInRects(inp::EdgeCrack &crack,
-    const double &max_Z,
+util::Point3 tools::pp::Compute::findTipInRects(
+    inp::EdgeCrack &crack, const double &max_Z,
     const std::vector<std::pair<util::Point3, util::Point3>> &rects,
     const std::vector<std::vector<size_t>> &nodes,
-    const std::vector<std::vector<double>> &Zs,
-    const std::vector<double> *Z,
+    const std::vector<std::vector<double>> &Zs, const std::vector<double> *Z,
     bool is_top) {
 
   if (is_top)
@@ -1692,7 +1704,7 @@ util::Point3 tools::pp::Compute::findTipInRects(inp::EdgeCrack &crack,
   std::cout << "    size rects = " << rects.size() << "\n";
   // find size of rectangle with atleast one node
   size_t rect_size_with_node = 0;
-  for (size_t r=0; r<rects.size(); r++) {
+  for (size_t r = 0; r < rects.size(); r++) {
     if (nodes[r].size() > 0)
       rect_size_with_node++;
   }
@@ -1798,11 +1810,11 @@ util::Point3 tools::pp::Compute::findTipInRects(inp::EdgeCrack &crack,
   // Choice 1: crack line defined by initial crack tip, i.e. initial crack line
   // Choice 2: crack line defined by old crack tip
   // Choice 3: crack line defined by current crack tip
-  auto p_choices = std::vector<util::Point3>{crack.d_initPt, crack.d_oldPt,
-                                             crack.d_pt};
+  auto p_choices =
+      std::vector<util::Point3>{crack.d_initPt, crack.d_oldPt, crack.d_pt};
   if (!is_top)
-    p_choices = std::vector<util::Point3>{crack.d_initPb, crack.d_oldPb,
-                                          crack.d_pb};
+    p_choices =
+        std::vector<util::Point3>{crack.d_initPb, crack.d_oldPb, crack.d_pb};
   for (size_t r = 0; r < sortZ.size(); r++) {
 
     // only consider first and second rectangle in sorted rectangle list

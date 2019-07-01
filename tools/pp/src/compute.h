@@ -309,7 +309,7 @@ private:
    *
    * For element list, we look for element which has at least 1 node in the
    * domain enveloping contour. The thickness of domain is typically taken as
-   * 2 * mesh size.
+   * mesh size.
    *
    * @param cd Rectangle defining the contour
    * @param tol Thickness for node list search
