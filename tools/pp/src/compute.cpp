@@ -431,7 +431,7 @@ void tools::pp::Compute::readComputeInstruction(
     }
 
     if (e["Crack_Id"])
-      data->d_computeJInt_p->d_crackId = e["Crack_Orient"].as<int>();
+      data->d_computeJInt_p->d_crackId = e["Crack_Id"].as<int>();
 
     if (e["Crack_Tip_File"])
       data->d_computeJInt_p->d_crackTipFile =
@@ -457,6 +457,22 @@ void tools::pp::Compute::readComputeInstruction(
     if (e["Set_V_Lateral_Comp_Zero"])
       data->d_computeJInt_p->d_setLateralCompVZero =
           e["Set_V_Lateral_Comp_Zero"].as<bool>();
+
+    if (e["Set_U_Lateral_Comp_Zero"])
+      data->d_computeJInt_p->d_setLateralCompUZero =
+          e["Set_U_Lateral_Comp_Zero"].as<bool>();
+
+    if (e["Set_X_Lateral_Comp"])
+      data->d_computeJInt_p->d_setLateralCompX =
+          e["Set_X_Lateral_Comp"].as<double>();
+    else {
+      if (data->d_computeJInt_p->d_setLateralCompUZero) {
+        std::cerr << "Error: Expecting value of lateral component of crack "
+                     "tip location as the flag Set_U_Lateral_Comp_Zero set to"
+                     " true.\n";
+        exit(1);
+      }
+    }
   }
 }
 
@@ -464,6 +480,7 @@ void tools::pp::Compute::readCrackTipData(
     const std::string &filename, int crack_id,
     std::vector<tools::pp::CrackTipData> *data) {
 
+  data->clear();
   // expected format of file:
   // <crack id>, <output step>, <tip x>, <tip y>, <tip vx>, <tip vy>
   io::CSVReader<6> in(filename);
@@ -915,6 +932,14 @@ void tools::pp::Compute::computeJIntegral() {
       ctip.d_v.d_x = 0.;
     else if (data->d_crackOrient == 1)
       ctip.d_v.d_y = 0.;
+  }
+
+  // set lateral component of displacement of crack tip zero
+  if (data->d_setLateralCompUZero) {
+    if (data->d_crackOrient == -1)
+      ctip.d_p.d_x = data->d_setLateralCompX;
+    else if (data->d_crackOrient == 1)
+      ctip.d_p.d_y = data->d_setLateralCompX;
   }
 
   // Schematic for horizontal crack (similar for vertical crack)
@@ -1526,7 +1551,8 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
 
     if (crack.d_trackt) {
       Nt = (bbox.second[0] - pt.d_x) / seq_size;
-      if (util::compare::definitelyLessThan(Nt * seq_size, bbox.second[0]))
+      if (util::compare::definitelyLessThan(pt.d_x + Nt * seq_size,
+                                            bbox.second[0]))
         Nt++;
     }
 
@@ -1539,7 +1565,8 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
   } else if (crack.d_o == -1) {
     if (crack.d_trackt) {
       Nt = (bbox.second[1] - pt.d_y) / seq_size;
-      if (util::compare::definitelyLessThan(Nt * seq_size, bbox.second[1]))
+      if (util::compare::definitelyLessThan(pt.d_y + Nt * seq_size,
+                                            bbox.second[1]))
         Nt++;
     }
 
@@ -1562,7 +1589,7 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
                          0.),
             util::Point3(pt.d_x + i * seq_size, pt.d_y + 2. * horizon, 0.)));
       else if (crack.d_o == -1)
-        rects_b.emplace_back(std::make_pair(
+        rects_t.emplace_back(std::make_pair(
             util::Point3(pt.d_x - 2. * horizon, pt.d_y + (i - 1) * seq_size,
                          0.),
             util::Point3(pt.d_x + 2. * horizon, pt.d_y + i * seq_size, 0.)));
@@ -1573,7 +1600,7 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
     // any problem
     for (int i = 1; i <= Nb; i++) {
       if (crack.d_o == 1)
-        rects_t.emplace_back(std::make_pair(
+        rects_b.emplace_back(std::make_pair(
             util::Point3(pb.d_x - i * seq_size, pb.d_y - 2. * horizon, 0.),
             util::Point3(pb.d_x - (i - 1) * seq_size, pb.d_y + 2. * horizon,
                          0.)));
@@ -1718,7 +1745,7 @@ util::Point3 tools::pp::Compute::findTipInRects(
     auto a = tools::pp::SortZ();
     size_t i = 0;
     a.d_r = r;
-    if (Zs[r].size() > 0) {
+    if (!Zs[r].empty()) {
       a.d_Z = util::methods::min(Zs[r], &i);
       a.d_i = nodes[r][i];
       sortZ.emplace_back(a);
@@ -1807,7 +1834,7 @@ util::Point3 tools::pp::Compute::findTipInRects(
 
     // only consider first and second rectangle in sorted rectangle list
     if (r > 2)
-      continue;
+      break;
 
     // get data for this rectangle
     auto mz = sortZ[r];
@@ -1818,13 +1845,11 @@ util::Point3 tools::pp::Compute::findTipInRects(
     double diff_z = 1.0E-02;
 
     // loop over crack line choices
-    for (size_t f = 0; f < p_choices.size(); f++) {
-      auto p_search = p_choices[f];
-
+    for (auto p_search : p_choices) {
       // check if we already found symmetrically opposite node for crack line
       // before this crack line
       if (sym_rect[r] >= 0)
-        continue;
+        break;
 
       for (auto x : nodes[mz.d_r]) {
 
@@ -1840,7 +1865,8 @@ util::Point3 tools::pp::Compute::findTipInRects(
             auto d0 = p_search.d_x - y0.d_x;
             auto d = p_search.d_x - y.d_x;
 
-            if (util::compare::definitelyLessThan(d * d0, 0.)) {
+            // using not(definitely greater than) to allow value to be 0 as well
+            if (!util::compare::definitelyGreaterThan(d * d0, 0.)) {
               sym_rect[r] = x;
               diff_z = std::abs((*Z)[x] - mz.d_Z);
             }
@@ -1849,7 +1875,8 @@ util::Point3 tools::pp::Compute::findTipInRects(
             auto d0 = p_search.d_y - y0.d_y;
             auto d = p_search.d_y - y.d_y;
 
-            if (util::compare::definitelyLessThan(d * d0, 0.)) {
+            // using not(definitely greater than) to allow value to be 0 as well
+            if (!util::compare::definitelyGreaterThan(d * d0, 0.)) {
               sym_rect[r] = x;
               diff_z = std::abs((*Z)[x] - mz.d_Z);
             }

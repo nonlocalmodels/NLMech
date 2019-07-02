@@ -211,15 +211,25 @@ struct ComputeJIntegral {
   /*! @brief File to write J integral data */
   FILE *d_file;
 
-  /*! @brief Set lateral component of velocity as zero */
+  /*! @brief Set lateral component of velocity of crack tip as zero */
   bool d_setLateralCompVZero;
+
+  /*! @brief Set lateral component of displacement of crack tip as zero */
+  bool d_setLateralCompUZero;
+
+  /*!
+   * @brief Set lateral component of crack tip location to given value (it
+   * should be initial value of lateral component of crack tip)
+   */
+  double d_setLateralCompX;
 
   /*!
    * @brief Constructor
    */
   ComputeJIntegral()
       : d_crackOrient(0), d_crackId(1), d_file(nullptr),
-        d_setLateralCompVZero(false){};
+        d_setLateralCompVZero(false), d_setLateralCompUZero(false),
+        d_setLateralCompX(0.){};
 };
 
 /*!

@@ -109,5 +109,10 @@ Compute:
       Contour_Size: [4.0, 4.0]
       # set lateral component of crack velocity zero
       Set_V_Lateral_Comp_Zero: true
+      # set lateral component of crack tip to initial value
+      Set_U_Lateral_Comp_Zero: true
+      # If Set_U_Lateral_Comp_Zero is set to true, specify the initial value
+      # of lateral component of crack tip
+      Set_X_Lateral_Comp: 0.05
 HPX:
   Partitions: 1
