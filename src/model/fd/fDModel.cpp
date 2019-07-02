@@ -617,7 +617,15 @@ void model::FDModel::computePostProcFields() {
 
 void model::FDModel::output() {
 
-  std::cout << "Output: time step = " << this->d_n << "\n";
+  std::cout << "Output: time step = " << d_n << "\n";
+
+  // write out % completion of simulation at 10% interval
+  {
+    float p = float(d_n) * 100. / d_modelDeck_p->d_Nt;
+    int m = std::max(1, int(d_modelDeck_p->d_Nt / 10));
+    if (d_n % m == 0 && int(p) > 0)
+      std::cout << "Message: Simulation " << int(p) << "% complete.\n";
+  }
 
   //
   // List of data that we need to output

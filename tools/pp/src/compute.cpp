@@ -1216,18 +1216,6 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
     if (add_e)
       addUniqueToList(e, elements);
   }
-
-  // for debug
-  //  std::vector<util::Point3> enodes;
-  //  for (auto e : *elements) {
-  //    for (auto n : d_mesh_p->getElementConnectivity(e))
-  //      enodes.emplace_back(d_mesh_p->getNode(n));
-  //  }
-  //  auto writer1 = rw::writer::VtkWriterInterface(d_outPreTag +
-  //      d_currentData->d_tagFilename + "_debug_elem_list_" + std::to_string
-  //      (d_nOut));
-  //  writer1.appendNodes(&enodes);
-  //  writer1.close();
 }
 
 void tools::pp::Compute::decomposeSearchNodes(
