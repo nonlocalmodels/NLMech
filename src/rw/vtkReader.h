@@ -27,6 +27,8 @@ public:
   /*!
    * @brief Constructor
    * @param filename name of mesh file
+   *
+   * @note filename is expected to have .vtu extension
    */
   explicit VtkReader(const std::string &filename);
 
@@ -60,7 +62,15 @@ public:
    * @param data Pointer to the vector of data
    * @return status True if data is found otherwise false
    */
-  bool readPointData(std::string name, std::vector<util::Point3> *data);
+  bool readPointData(const std::string &name, std::vector<util::Point3> *data);
+
+  /*!
+   * @brief reads point data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readPointData(const std::string &name, std::vector<double> *data);
 
   /*! @brief Close the file */
   void close();

@@ -89,6 +89,11 @@ Compute:
       # specify if we compute crack tip velocity using same
       # time step interval as the output interval
       Same_Dt_Out: true
+      # specify filename for damage (code it will append output number at the
+      # end of filename)
+      File_Z: .pp/Z/Z
+      # specify the tag of damage to read (Default is Damage)
+      Tag_Z: Damage_Z
   Set_4:
     Tag_Filename: crack_energy
     Dt_Start: 70

@@ -90,6 +90,16 @@ void readVtuFileRestart(const std::string &filename,
                         std::vector<util::Point3> *v,
                         const std::vector<util::Point3> *X = nullptr);
 
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename name of vtu file
+ * @param data Pointer to vector of point data
+ * @return bool true if found the data in file
+ */
+bool readVtuFilePointData(const std::string &filename,
+                          const std::string &tag,
+                        std::vector<double> *data);
+
 } // namespace reader
 
 } // namespace rw

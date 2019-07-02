@@ -415,6 +415,14 @@ void tools::pp::Compute::readComputeInstruction(
     if (config["Compute"][set]["Crack_Tip"]["Same_Dt_Out"])
       data->d_findCrackTip_p->d_crackSameDtOut =
           config["Compute"][set]["Crack_Tip"]["Same_Dt_Out"].as<bool>();
+
+    if (config["Compute"][set]["Crack_Tip"]["File_Z"])
+      data->d_findCrackTip_p->d_fileZ =
+          config["Compute"][set]["Crack_Tip"]["File_Z"].as<std::string>();
+
+    if (config["Compute"][set]["Crack_Tip"]["Tag_Z"])
+      data->d_findCrackTip_p->d_tagZ =
+          config["Compute"][set]["Crack_Tip"]["Tag_Z"].as<std::string>();
   }
 
   // J integral
@@ -887,19 +895,31 @@ void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
   // get current displacement
   n = d_nOut * d_outputDeck_p->d_dtOut;
   time = n * d_modelDeck_p->d_dt;
-  auto f2 = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_mesh_p->getNumNodes(), [this](boost::uint64_t i) {
-        d_u[i] += util::Point3(d_modelDeck_p->d_dt * d_v[i].d_x,
-                               d_modelDeck_p->d_dt * d_v[i].d_y,
-                               d_modelDeck_p->d_dt * d_v[i].d_z);
-      });
-  f2.get();
+  // revert to current displacement
+  if (!data->d_crackSameDtOut) {
+    auto f2 = hpx::parallel::for_loop(
+        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+        d_mesh_p->getNumNodes(), [this](boost::uint64_t i) {
+          d_u[i] += util::Point3(d_modelDeck_p->d_dt * d_v[i].d_x,
+                                 d_modelDeck_p->d_dt * d_v[i].d_y,
+                                 d_modelDeck_p->d_dt * d_v[i].d_z);
+        });
+    f2.get();
+  }
 
   // compute damage at current displacement
   if (Z->size() != d_mesh_p->getNumNodes())
     Z->resize(d_mesh_p->getNumNodes());
-  computeDamage(writer, Z, false);
+  if (data->d_fileZ.empty())
+    computeDamage(writer, Z, false);
+  else {
+    std::string fn = data->d_fileZ + "_" + std::to_string(d_nOut) + ".vtu";
+    if (!rw::reader::readVtuFilePointData(fn, data->d_tagZ, Z)) {
+      std::cerr << "Error: Can not read file = " << fn << " or data = "
+                << data->d_tagZ  << " not available in vtu file.\n";
+      exit(1);
+    }
+  }
 
   // compute crack tip location and crack tip velocity
   updateCrack(time, Z);
@@ -1612,6 +1632,20 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
     }
   }
 
+  // create a bigger rectangle which has all the rectangles inside
+  // we use this bigger rectangle to filter out the nodes not on it (to speed
+  // up)
+  // Not used currently
+  std::pair<util::Point3, util::Point3> glob_rect;
+  if (crack.d_o == 1)
+    glob_rect = std::make_pair(
+        util::Point3(bbox.first[0], crack.d_initPb.d_y - 2. * horizon, 0.),
+        util::Point3(bbox.second[0], crack.d_initPb.d_y + 2. * horizon, 0.));
+  else if (crack.d_o == -1)
+    glob_rect = std::make_pair(
+        util::Point3(crack.d_initPb.d_x - 2. * horizon, bbox.first[1], 0.),
+        util::Point3(crack.d_initPb.d_x + 2. * horizon, bbox.second[1], 0.));
+
   // resize nodes list and damage list
   nodes_t.resize(rects_t.size());
   nodes_b.resize(rects_b.size());
@@ -1640,7 +1674,7 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
           for (auto j : nodes_t[r - 1]) {
             if (j == i) {
               found = true;
-              continue;
+              break;
             }
           }
           if (!found) {
@@ -1663,7 +1697,7 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
           for (auto j : nodes_b[r - 1]) {
             if (j == i) {
               found = true;
-              continue;
+              break;
             }
           }
           if (!found) {
@@ -1674,6 +1708,9 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
       }
     } // bottom point
   }   // loop over nodes
+
+  std::cout << "Max Z allowed = " << compute_data->d_maxZAllowed
+            << ", min Z allowed = " << compute_data->d_minZAllowed << "\n";
 }
 
 void tools::pp::Compute::addNewCrackTip(inp::EdgeCrack &crack,
