@@ -23,7 +23,7 @@ bool minSortZ(tools::pp::SortZ a, tools::pp::SortZ b) {
 }
 
 tools::pp::Compute::Compute(const std::string &filename)
-    : d_inpFilename(filename), d_tagZ("Damage"), d_nOut(0), d_nC(0),
+    : d_inpFilename(filename), d_tagZ("Damage_Z"), d_nOut(0), d_nC(0),
       d_currentData(nullptr), d_writerReady(false), d_modelDeck_p(nullptr),
       d_outputDeck_p(nullptr), d_fractureDeck_p(nullptr), d_matDeck_p(nullptr),
       d_mesh_p(nullptr), d_fracture_p(nullptr), d_neighbor_p(nullptr),

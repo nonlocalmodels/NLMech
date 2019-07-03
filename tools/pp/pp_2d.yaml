@@ -22,7 +22,7 @@ Compute:
   # specify filename for damage (code it will append output number at the
   # end of filename)
   File_Z: .pp/Z/Z
-  # specify the tag of damage to read (Default is Damage)
+  # specify the tag of damage to read (Default is Damage_Z)
   Tag_Z: Damage_Z
   Sets: 4
   Set_1:
