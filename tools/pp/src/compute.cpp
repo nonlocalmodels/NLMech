@@ -23,11 +23,11 @@ bool minSortZ(tools::pp::SortZ a, tools::pp::SortZ b) {
 }
 
 tools::pp::Compute::Compute(const std::string &filename)
-    : d_inpFilename(filename), d_nOut(0), d_nC(0), d_currentData(nullptr),
-      d_writerReady(false), d_modelDeck_p(nullptr), d_outputDeck_p(nullptr),
-      d_fractureDeck_p(nullptr), d_matDeck_p(nullptr), d_mesh_p(nullptr),
-      d_fracture_p(nullptr), d_neighbor_p(nullptr), d_input_p(nullptr),
-      d_material_p(nullptr) {
+    : d_inpFilename(filename), d_tagZ("Damage"), d_nOut(0), d_nC(0),
+      d_currentData(nullptr), d_writerReady(false), d_modelDeck_p(nullptr),
+      d_outputDeck_p(nullptr), d_fractureDeck_p(nullptr), d_matDeck_p(nullptr),
+      d_mesh_p(nullptr), d_fracture_p(nullptr), d_neighbor_p(nullptr),
+      d_input_p(nullptr), d_material_p(nullptr) {
 
   init();
 
@@ -169,6 +169,13 @@ void tools::pp::Compute::init() {
     d_matDeck_p->d_matData.d_mu = d_matDeck_p->d_matData.d_lambda;
   }
 
+  // check if damage data file is provided
+  if (config["Compute"]["File_Z"])
+    d_fileZ = config["Compute"]["File_Z"].as<std::string>();
+
+  if (config["Compute"]["Tag_Z"])
+    d_tagZ = config["Compute"]["Tag_Z"].as<std::string>();
+
   // read compute instruction
   auto num_compute = config["Compute"]["Sets"].as<size_t>();
   for (size_t c = 0; c < num_compute; c++) {
@@ -290,8 +297,16 @@ void tools::pp::Compute::readComputeInstruction(
   }
 
   // Compute damage at nodes
-  if (config["Compute"][set]["Damage_Z"])
+  if (config["Compute"][set]["Damage_Z"]) {
     data->d_damageAtNodes = config["Compute"][set]["Damage_Z"].as<bool>();
+
+    if (data->d_damageAtNodes && !d_fileZ.empty()) {
+      std::cerr << "Error: Damage file is specified in Compute:File_Z and at "
+                << "the same time damage is asked to be computed in compute "
+                << " set = " << set << ".\n";
+      exit(1);
+    }
+  }
 
   // Mark velocity as zero
   if (config["Compute"][set]["Mark_V_0"]) {
@@ -416,13 +431,13 @@ void tools::pp::Compute::readComputeInstruction(
       data->d_findCrackTip_p->d_crackSameDtOut =
           config["Compute"][set]["Crack_Tip"]["Same_Dt_Out"].as<bool>();
 
-    if (config["Compute"][set]["Crack_Tip"]["File_Z"])
-      data->d_findCrackTip_p->d_fileZ =
-          config["Compute"][set]["Crack_Tip"]["File_Z"].as<std::string>();
+    if (config["Compute"][set]["Crack_Tip"]["Max_Z_Allowed"])
+      data->d_findCrackTip_p->d_maxZAllowed =
+          config["Compute"][set]["Crack_Tip"]["Max_Z_Allowed"].as<double>();
 
-    if (config["Compute"][set]["Crack_Tip"]["Tag_Z"])
-      data->d_findCrackTip_p->d_tagZ =
-          config["Compute"][set]["Crack_Tip"]["Tag_Z"].as<std::string>();
+    if (config["Compute"][set]["Crack_Tip"]["Min_Z_Allowed"])
+      data->d_findCrackTip_p->d_minZAllowed =
+          config["Compute"][set]["Crack_Tip"]["Min_Z_Allowed"].as<double>();
   }
 
   // J integral
@@ -910,13 +925,13 @@ void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
   // compute damage at current displacement
   if (Z->size() != d_mesh_p->getNumNodes())
     Z->resize(d_mesh_p->getNumNodes());
-  if (data->d_fileZ.empty())
+  if (d_fileZ.empty())
     computeDamage(writer, Z, false);
   else {
-    std::string fn = data->d_fileZ + "_" + std::to_string(d_nOut) + ".vtu";
-    if (!rw::reader::readVtuFilePointData(fn, data->d_tagZ, Z)) {
+    std::string fn = d_fileZ + "_" + std::to_string(d_nOut) + ".vtu";
+    if (!rw::reader::readVtuFilePointData(fn, d_tagZ, Z)) {
       std::cerr << "Error: Can not read file = " << fn << " or data = "
-                << data->d_tagZ  << " not available in vtu file.\n";
+                << d_tagZ  << " not available in vtu file.\n";
       exit(1);
     }
   }

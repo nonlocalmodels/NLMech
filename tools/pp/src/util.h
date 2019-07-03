@@ -174,12 +174,6 @@ struct FindCrackTip {
   /*! @brief Set of edge cracks */
   double d_maxZAllowed;
 
-  /*! @brief Filename (if any) to read damage at nodes */
-  std::string d_fileZ;
-
-  /*! @brief Tag of damage function Z in vtu file */
-  std::string d_tagZ;
-
   /*! @brief File (for top tip) to which crack data will be written */
   FILE *d_filet;
 
@@ -191,8 +185,8 @@ struct FindCrackTip {
    */
   FindCrackTip()
       : d_crackSameDtOut(true), d_timet(0.), d_timeb(0.), d_updateCount(0),
-        d_minZAllowed(1. - 1.0e-2), d_maxZAllowed(50.), d_tagZ("Damage"),
-        d_filet(nullptr), d_fileb(nullptr){};
+        d_minZAllowed(1.), d_maxZAllowed(50.), d_filet(nullptr),
+        d_fileb(nullptr){};
 };
 
 /*!

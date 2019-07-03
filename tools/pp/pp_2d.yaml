@@ -19,6 +19,11 @@ Output:
   Filename: pp
 # specify what to compute
 Compute:
+  # specify filename for damage (code it will append output number at the
+  # end of filename)
+  File_Z: .pp/Z/Z
+  # specify the tag of damage to read (Default is Damage)
+  Tag_Z: Damage_Z
   Sets: 4
   Set_1:
     # Provide unique tag for filename for this set
@@ -82,18 +87,17 @@ Compute:
     Dt_Start: 70
     Dt_End: 100
     Output_Only_Nodes: true
-    # compute damage function Z
-    Damage_Z: true
     # compute crack tip location and velocity
     Crack_Tip:
       # specify if we compute crack tip velocity using same
       # time step interval as the output interval
       Same_Dt_Out: true
-      # specify filename for damage (code it will append output number at the
-      # end of filename)
-      File_Z: .pp/Z/Z
-      # specify the tag of damage to read (Default is Damage)
-      Tag_Z: Damage_Z
+      # specify the max value of damage to be considered in searching for tip
+      # default is 50
+      Max_Z_Allowed: 50.0
+      # specify the min value of damage to be considered in searching for tip
+      # default is 1
+      Min_Z_Allowed: 1.0
   Set_4:
     Tag_Filename: crack_energy
     Dt_Start: 70
@@ -119,5 +123,13 @@ Compute:
       # If Set_U_Lateral_Comp_Zero is set to true, specify the initial value
       # of lateral component of crack tip
       Set_X_Lateral_Comp: 0.05
+  Set_5:
+    Tag_Filename: damage
+    Dt_Start: 70
+    Dt_End: 100
+    Output_Only_Nodes: true
+    # compute damage function Z
+    Damage_Z: true
+    Compress_Type: zlib
 HPX:
   Partitions: 1

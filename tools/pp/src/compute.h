@@ -527,6 +527,12 @@ private:
   /*! @brief List of compute sets */
   std::vector<tools::pp::InstructionData> d_computeData;
 
+  /*! @brief Filename (if any) to read damage at nodes */
+  std::string d_fileZ;
+
+  /*! @brief Tag of damage function Z in vtu file */
+  std::string d_tagZ;
+
   /*! @brief Current active simulation output step */
   int d_nOut;
 
