@@ -566,6 +566,9 @@ private:
   /*! @brief State of writer class */
   bool d_writerReady;
 
+  /*! @brief Specify if we consider u(n+1) or u(n) */
+  bool d_uPlus;
+
   /*! @brief Displacement of nodes */
   std::vector<util::Point3> d_u;
 

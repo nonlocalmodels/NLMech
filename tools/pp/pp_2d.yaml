@@ -1,5 +1,3 @@
-# type: fe_2d or fe_truss_2d
-Type: fe_2d
 # provide input files used in running simulation
 Source_Path: ./
 Simulation_Input_File: input.yaml
@@ -24,6 +22,10 @@ Compute:
   File_Z: .pp/Z/Z
   # specify the tag of damage to read (Default is Damage_Z)
   Tag_Z: Damage_Z
+  # Specify if we consider u(n+1) or u(n). default is u(n) i.e. false
+  # some calculation such as Damage and crack tip may give better result with
+  # u(n+1)
+  Take_U_Plus: true
   Sets: 4
   Set_1:
     # Provide unique tag for filename for this set

@@ -24,8 +24,9 @@ bool minSortZ(tools::pp::SortZ a, tools::pp::SortZ b) {
 
 tools::pp::Compute::Compute(const std::string &filename)
     : d_inpFilename(filename), d_tagZ("Damage_Z"), d_nOut(0), d_nC(0),
-      d_currentData(nullptr), d_writerReady(false), d_modelDeck_p(nullptr),
-      d_outputDeck_p(nullptr), d_fractureDeck_p(nullptr), d_matDeck_p(nullptr),
+      d_currentData(nullptr), d_writerReady(false), d_uPlus(false),
+      d_modelDeck_p(nullptr), d_outputDeck_p(nullptr),
+      d_fractureDeck_p(nullptr), d_matDeck_p(nullptr),
       d_mesh_p(nullptr), d_fracture_p(nullptr), d_neighbor_p(nullptr),
       d_input_p(nullptr), d_material_p(nullptr) {
 
@@ -50,6 +51,17 @@ tools::pp::Compute::Compute(const std::string &filename)
     // get displacement and velocity
     rw::reader::readVtuFileRestart(sim_out_filename, &d_u, &d_v,
                                    d_mesh_p->getNodesP());
+
+    if (d_uPlus) {
+      auto f2 = hpx::parallel::for_loop(
+          hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+          d_mesh_p->getNumNodes(), [this](boost::uint64_t i) {
+            d_u[i] += util::Point3(d_modelDeck_p->d_dt * d_v[i].d_x,
+                                   d_modelDeck_p->d_dt * d_v[i].d_y,
+                                   d_modelDeck_p->d_dt * d_v[i].d_z);
+          });
+      f2.get();
+    }
 
     // loop over compute sets and do as instructed in input file
     for (d_nC = 0; d_nC < d_computeData.size(); d_nC++) {
@@ -175,6 +187,9 @@ void tools::pp::Compute::init() {
 
   if (config["Compute"]["Tag_Z"])
     d_tagZ = config["Compute"]["Tag_Z"].as<std::string>();
+
+  if (config["Compute"]["Take_U_Plus"])
+    d_uPlus = config["Compute"]["Take_U_Plus"].as<bool>();
 
   // read compute instruction
   auto num_compute = config["Compute"]["Sets"].as<size_t>();
