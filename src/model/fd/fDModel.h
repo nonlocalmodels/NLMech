@@ -225,11 +225,6 @@ private:
    */
   void output();
 
-  /*!
-   * @brief Check if criterial is met to modify the output frequency.
-   */
-  void checkOutputCriteria();
-
   /** @}*/
 
 private:

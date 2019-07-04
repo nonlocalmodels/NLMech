@@ -152,18 +152,6 @@ void model::FDModel::init() {
   if (d_policy_p->populateData("Model_d_hS"))
     d_hS = std::vector<double>(nnodes, 0.0);
 
-  // check if enable post processing flag in Policy is in conflict with
-  // the criteria for output frequency of simulation data
-  if (d_policy_p->enablePostProcessing() && d_outputDeck_p->d_criteriaOut ==
-  "Z_max") {
-    std::cerr << "Error: Post processing is disabled. Output criteria = "
-              << d_outputDeck_p->d_criteriaOut << " requires computation of "
-              << "post processing quantity = damage function Z. \n"
-              << "Run simulation again by enabling post processing or removing "
-              << "the criteria from input file\n";
-    exit(1);
-  }
-
   // initialize minor simulation data
   if (d_policy_p->enablePostProcessing()) {
 
@@ -240,7 +228,6 @@ void model::FDModel::integrate() {
       computePostProcFields();
 
     output();
-    checkOutputCriteria();
   }
 
   // start time integration
@@ -788,12 +775,4 @@ void model::FDModel::output() {
     writer.appendFieldData(tag, d_teF);
 
   writer.close();
-}
-
-void model::FDModel::checkOutputCriteria() {
-
-  if (d_outputDeck_p->d_criteriaOut == "Z_max") {
-
-    
-  }
 }
