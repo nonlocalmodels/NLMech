@@ -132,9 +132,6 @@ void tools::pp::Compute::init() {
   d_outputDeck_p = d_input_p->getOutputDeck();
   d_fractureDeck_p = d_input_p->getFractureDeck();
 
-  // get policy deck (Policy deck must be initialized)
-  auto policy = inp::Policy::getInstance(d_input_p->getPolicyDeck());
-
   // get output path directory
   if (config["Output"]["Path"])
     d_outPath = config["Output"]["Path"].as<std::string>();

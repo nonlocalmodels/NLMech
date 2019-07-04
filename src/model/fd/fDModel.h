@@ -190,8 +190,45 @@ private:
 
   /*!
    * @brief Output the snapshot of data at current time step
+   *
+   * Name of data in the output simulation file and the name of data they
+   * refer to
+   *
+   * Major simulation data
+   * | Name in output file          | Data name             |
+   * | ---------------------------- | --------------------- |
+   * | Displacement                 | model::Model::d_u     |
+   * | Velocity                     | model::Model::d_v     |
+   * | Force                        | model::Model::d_f * nodal volume |
+   * | time                         | model::Model::d_time  |
+   *
+   * Minor simulation data (if these are populated and computed). Calculation
+   * and population of post-processing data can be controlled by specifying
+   * memory control level in inp::PolicyDeck::d_memControlFlag or by
+   * enabling/disabling post-processing calculation in
+   * inp::PolicyDeck::d_enablePostProcessing.
+   * | Name in output file          | Data name             |
+   * | ---------------------------- | --------------------- |
+   * | Force_Density                | model::Model::d_f     |
+   * | Strain_Energy                | model::Model::d_e    |
+   * | Work_Done                    | model::Model::d_w     |
+   * | Fixity                       | fe::Mesh::getFixityP() |
+   * | Node_Volume                  | fe::Mesh::getNodalVolumeP() |
+   * | Damage_Phi                   | model::Model::d_phi    |
+   * | Damage_Z                     | model::Model::d_Z      |
+   * | Fracture_Perienergy_Bond     | model::Model::d_eFB    |
+   * | Fracture_Perienergy_Total    | model::Model::d_eF     |
+   * | Total_Energy                 | model::Model::d_Z      |
+   * | Total_Fracture_Perienergy_Bond   | model::Model::d_teFB   |
+   * | Total_Fracture_Perienergy_Total  | model::Model::d_teF    |
+   *
    */
   void output();
+
+  /*!
+   * @brief Check if criterial is met to modify the output frequency.
+   */
+  void checkOutputCriteria();
 
   /** @}*/
 

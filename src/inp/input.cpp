@@ -559,12 +559,18 @@ void inp::Input::setOutputDeck() {
 
     if (e["Output_Interval"])
       d_outputDeck_p->d_dtOut = e["Output_Interval"].as<size_t>();
+    if (e["Factor_Output_Interval"])
+      d_outputDeck_p->d_factorDtOut = e["Factor_Output_Interval"].as<size_t>();
+    if (e["Output_Criteria"])
+      d_outputDeck_p->d_criteriaOut = e["Output_Criteria"].as<std::string>();
     if (e["Debug"])
       d_outputDeck_p->d_debug = e["Debug"].as<size_t>();
     if (e["Perform_FE_Out"])
       d_outputDeck_p->d_performFEOut = e["Perform_FE_Out"].as<bool>();
     if (e["Compress_Type"])
       d_outputDeck_p->d_compressType = e["Compress_Type"].as<std::string>();
+
+    d_outputDeck_p->d_dtOutInit = d_outputDeck_p->d_dtOut;
   }
 } // setOutputDeck
 

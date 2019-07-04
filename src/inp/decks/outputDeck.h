@@ -36,6 +36,23 @@ struct OutputDeck {
   /*! @brief Size of time steps (or frequency) for output operation */
   size_t d_dtOut;
 
+  /*! @brief Factor to increase dt out */
+  size_t d_factorDtOut;
+
+  /*! @brief Initial size of time steps (or frequency) for output operation */
+  size_t d_dtOutInit;
+
+  /*!
+   * @brief Criteria to be used in deciding when to increase the output
+   * frequency (more details will be in the model where criteria based
+   * output frequency is implemented, e.g. model::FDModel)
+   *
+   * Valid values are
+   * - ""
+   * - "Z_max"
+   */
+  std::string d_criteriaOut;
+
   /*! @brief Flag specifying debug level */
   size_t d_debug;
 
@@ -56,7 +73,9 @@ struct OutputDeck {
   /*!
    * @brief Constructor
    */
-  OutputDeck() : d_dtOut(0), d_debug(0), d_performFEOut(true){};
+  OutputDeck()
+      : d_dtOut(0), d_dtOutInit(0), d_factorDtOut(1), d_debug(0),
+        d_performFEOut(true){};
 
   /*!
    * @brief Searches list of tags and returns true if the asked tag is in the
