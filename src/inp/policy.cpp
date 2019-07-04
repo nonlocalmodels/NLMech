@@ -7,7 +7,7 @@
 #include "decks/policyDeck.h"
 #include <iostream>
 
-static void addTag(std::vector<std::string> list, const std::string &tag) {
+static void addTag(std::vector<std::string> &list, const std::string &tag) {
 
   bool found = false;
   for (const auto &s : list)

@@ -164,7 +164,7 @@ void model::FDModel::init() {
     }
     else {
       // this data is not asked in output thus we disable it
-      d_policy_p->addToTags(0, tag);
+      d_policy_p->addToTags(0, "Model_d_e");
     }
 
     tag = "Work_Done";
@@ -173,7 +173,7 @@ void model::FDModel::init() {
         d_w = std::vector<float>(nnodes, 0.0);
     }
     else
-      d_policy_p->addToTags(0, tag);
+      d_policy_p->addToTags(0, "Model_d_w");
 
     tag = "Damage_Phi";
     if (d_outputDeck_p->isTagInOutput(tag)) {
@@ -181,7 +181,7 @@ void model::FDModel::init() {
         d_phi = std::vector<float>(nnodes, 0.0);
     }
     else
-      d_policy_p->addToTags(0, tag);
+      d_policy_p->addToTags(0, "Model_d_phi");
 
     tag = "Damage_Z";
     if (d_outputDeck_p->isTagInOutput(tag)) {
@@ -189,7 +189,7 @@ void model::FDModel::init() {
         d_Z = std::vector<float>(nnodes, 0.0);
     }
     else
-      d_policy_p->addToTags(0, tag);
+      d_policy_p->addToTags(0, "Model_d_Z");
 
     tag = "Fracture_Perienergy_Total";
     if (d_outputDeck_p->isTagInOutput(tag)) {
@@ -197,7 +197,7 @@ void model::FDModel::init() {
         d_eF = std::vector<float>(nnodes, 0.0);
     }
     else
-      d_policy_p->addToTags(0, tag);
+      d_policy_p->addToTags(0, "Model_d_eF");
 
     tag = "Fracture_Perienergy_Bond";
     if (d_outputDeck_p->isTagInOutput(tag)) {
@@ -205,7 +205,7 @@ void model::FDModel::init() {
         d_eFB = std::vector<float>(nnodes, 0.0);
     }
     else
-      d_policy_p->addToTags(0, tag);
+      d_policy_p->addToTags(0, "Model_d_eFB");
   }
 }
 
