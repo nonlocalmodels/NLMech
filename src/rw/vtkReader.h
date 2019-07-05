@@ -17,7 +17,7 @@ namespace rw {
 namespace reader {
 
 /*!
- * @brief A class to read vtk (vtu) mesh files
+ * @brief A class to read VTK (.vtu) mesh files
  *
  * @note Depends on VTK library.
  */
@@ -26,7 +26,7 @@ class VtkReader {
 public:
   /*!
    * @brief Constructor
-   * @param filename name of mesh file
+   * @param filename Name of mesh file
    *
    * @note filename is expected to have .vtu extension
    */
@@ -35,13 +35,13 @@ public:
   /*!
    * @brief Reads mesh data into node file and element file
    * @param dim Dimension
-   * @param nodes vector of nodes data
-   * @param element_type type of element
-   * @param num_elem number of elements
-   * @param enc vector holding element-node connectivity
-   * @param nec vector holding node-element connectivity
-   * @param volumes vector holding volume of the nodes
-   * @param is_fd flag indicating if this mesh is for finite_difference
+   * @param nodes Vector of nodes data
+   * @param element_type Type of element
+   * @param num_elem Number of elements
+   * @param enc Vector holding element-node connectivity
+   * @param nec Vector holding node-element connectivity
+   * @param volumes Vector holding volume of the nodes
+   * @param is_fd Flag indicating if this mesh is for finite_difference
    * simulation
    */
   void readMesh(size_t dim, std::vector<util::Point3> *nodes,
@@ -52,7 +52,7 @@ public:
   /*!
    * @brief Reads nodal position
    *
-   * @param nodes vector of nodes data
+   * @param nodes Vector of nodal coordinates
    */
   void readNodes(std::vector<util::Point3> *nodes);
 
@@ -76,10 +76,6 @@ public:
   void close();
 
 private:
-  /**
-   * @name Internal data
-   */
-  /**@{*/
 
   /*! @brief Counter */
   static size_t d_count;
@@ -89,8 +85,6 @@ private:
 
   /*! @brief Unstructured grid */
   vtkSmartPointer<vtkUnstructuredGrid> d_grid_p;
-
-  /** @}*/
 };
 
 } // namespace reader

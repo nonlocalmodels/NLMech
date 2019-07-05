@@ -17,11 +17,6 @@ namespace inp {
 /*! @brief A structure to edge crack of any orientation */
 struct EdgeCrack {
 
-  /**
-   * @name Data members
-   */
-  /**@{*/
-
   /*!
    * @brief Orientation of crack
    *
@@ -84,8 +79,6 @@ struct EdgeCrack {
 
   /*! @brief Track bottom point (left) of crack */
   bool d_trackb;
-
-  /** @}*/
 
   /*!
    * @brief Constructor
@@ -189,15 +182,8 @@ struct EdgeCrack {
 /*! @brief Structure to read and store fracture related input data */
 struct FractureDeck {
 
-  /**
-   * @name Data members
-   */
-  /**@{*/
-
   /*! @brief Vector of pre-crack data*/
   std::vector<inp::EdgeCrack> d_cracks;
-
-  /** @}*/
 
   /*!
    * @brief Constructor

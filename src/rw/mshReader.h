@@ -22,20 +22,20 @@ class MshReader {
 public:
   /*!
    * @brief Constructor
-   * @param filename name of mesh file
+   * @param filename Name of the mesh file
    */
   explicit MshReader(const std::string &filename);
 
   /*!
    * @brief Reads mesh data into node file and element file
    * @param dim Dimension
-   * @param nodes vector of nodes data
-   * @param element_type type of element
-   * @param num_elem number of elements
-   * @param enc vector holding element-node connectivity
-   * @param nec vector holding node-element connectivity
-   * @param volumes vector holding volume of the nodes
-   * @param is_fd flag indicating if this mesh is for finite_difference
+   * @param nodes Vector of nodes data
+   * @param element_type Type of element
+   * @param num_elem Number of elements
+   * @param enc Vector holding element-node connectivity
+   * @param nec Vector holding node-element connectivity
+   * @param volumes Vector holding volume of the nodes
+   * @param is_fd Flag indicating if this mesh is for finite_difference
    * simulation
    */
   void readMesh(size_t dim, std::vector<util::Point3> *nodes,
@@ -44,15 +44,8 @@ public:
                 std::vector<double> *volumes, bool is_fd = false);
 
 private:
-  /**
-   * @name Internal data
-   */
-  /**@{*/
-
   /*! @brief filename */
   const std::string d_filename;
-
-  /** @}*/
 };
 
 } // namespace reader

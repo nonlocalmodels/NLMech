@@ -7,19 +7,14 @@
 #define FE_QUADELEM_H
 
 #include "baseElem.h"     // base class BaseElem
-#include "quadData.h"     // definition of QuadData
 
 namespace fe {
 
 /*!
- * @brief A class for quadrature related operations for bi-linear quadrangle
- * element
+ * @brief A class for mapping and quadrature related operations for bi-linear
+ * quadrangle element
  *
- * This class provides methods such as quadrature points for integration,
- * shape functions at quadrature points, and derivative of shape functions.
- * They are specific to linear quadrangle element.
- *
- * The reference quadrangle element \f$ T^0 \f$ is made of four vertex at point
+ * The reference quadrangle element \f$ T^0 \f$ is given by vertices
  * \f$ (-1, -1), \, (1,-1), \, (1,1), \, (-1,1) \f$.
  *
  * 1. The shape functions at point \f$ (\xi, \eta ) \in T^0 \f$ are
@@ -43,12 +38,12 @@ namespace fe {
  * N^0_4
  * (\xi, \eta)}{d\eta} = \frac{(1 - \xi)}{4}. \f]
  *
- * 3. Map \f$ (\xi, \eta) \in T^0 \to (x,y) \in T \f$ is given by
+ * 3. Map \f$ \Phi: T^0 \to T\f$ is given by
  * \f[ x(\xi, \eta) = \sum_{i=1}^4 N^0_i(\xi, \eta) v^i_x, \quad y(\xi, \eta)
  * = \sum_{i=1}^4 N^0_i(\xi, \eta) v^i_y \f]
  * where \f$ v^1, v^2, v^3, v^4\f$ are vertices of element \f$ T \f$.
  *
- * 4. Jacobian of the map \f$ (\xi, \eta) \in T^0 \to (x,y) \in T \f$ is
+ * 4. Jacobian of the map \f$ \Phi: T^0 \to T\f$ is
  * given by
  * \f[ J = \left[ {
  * \begin{array}{cc}
@@ -78,25 +73,24 @@ public:
    * \f[ area(T) = \frac{(-v^1_1 + v^2_1 + v^3_1 - v^4_1) (-v^1_2 - v^2_2 +
    * v^3_2 + v^4_2) - (-v^1_1 - v^2_1 + v^3_1 + v^4_1) (-v^1_2 + v^2_2 + v^3_2
    * - v^4_2)}{4}, \f]
-   * where \f$ v^i_1, v^i_2 \f$ is the x and y component of point \f$ v^i \f$.
+   * where \f$ v^i_1, v^i_2 \f$ are the x and y component of point \f$ v^i \f$.
    *
-   * Alternatively, area can also be computed using the Jacobian of map from
-   * \f$ T^0 \to T \f$. Area of element \f$ T \f$ is
+   * Note that area and Jacobian of map \f$ \Phi: T^0 \to T \f$ are related as
    * \f[ area(T) = area(T^0) \times det(J(\xi = 0, \eta = 0)), \f]
-   * where \f$ area(T^0) = 4 \f$ and \f$ J(\xi = 0, \eta = 0) \f$ is Jacobian
-   * of map at point \f$ (0,0) \in T^0 \f$.
+   * where \f$ area(T^0) = 4 \f$ and \f$ J(\xi = 0, \eta = 0) \f$ is the
+   * Jacobian of map at point \f$ (0,0) \in T^0 \f$.
    *
    * @param nodes Vertices of element
-   * @return Vector of shape functions at point p
+   * @return vector Vector of shape functions at point p
    */
   double elemSize(const std::vector<util::Point3> &nodes) override;
 
   /*!
    * @brief Get vector of quadrature data
    *
-   * Given element vertices, this method returns the quadrature point, where
-   * order of quadrature approximation and element type is set in the
-   * constructor. For each quadrature point, data includes
+   * Given element vertices, this method returns the list of quadrature point
+   * and essential quantities at quadrature points. Here, order of quadrature
+   * approximation is set in the constructor. List of data
    * - quad point
    * - quad weight
    * - shape function evaluated at quad point
@@ -108,13 +102,8 @@ public:
    * and let \f$ T^0 \f$ is the reference element.
    *
    * 1. To compute quadrature point, we first compute the quadrature points
-   * on \f$ T^0 \f$, and then map the point on \f$ T^0 \f$ to  point on \f$ T
-   * \f$. The map from \f$ (\xi, \eta) \in T^0 \f$ to \f$ (x,y) \in T \f$ is
-   * given by
-   * \f[ x = \sum_{i=1}^4 N^0_i(\xi, \eta) v^i_x, \qquad y = \sum_{i=1}^4 N^0_i
-   * (\xi, \eta) v^i_y,\f]
-   * where \f$ N^0_1, N^0_2, N^0_3, N^0_4 \f$ are shape function associated to
-   * the element \f$ T^0 \f$ and described in QuadElem.
+   * on \f$ T^0 \f$, and then map the point on \f$ T^0 \f$ to the point on \f$ T
+   * \f$ using the map \f$ \Phi: T^0 \to T\f$.
    *
    * 2. To compute the quadrature weight, we compute the quadrature weight
    * associated to the quadrature point in reference triangle \f$ T^0 \f$.
@@ -124,22 +113,22 @@ public:
    * \eta_q)) \in T \f$ is given by
    * \f[ w_q = w^0_q * det(J(\xi_q, \eta_q)) \f]
    * where \f$ det(J) \f$ is the determinant of the Jacobian \f$ J \f$ of map
-   * from \f$ (\xi, \eta) \in T^0 \f$ to \f$ (x,y) \in T \f$. \f$ J(\xi_q,
-   * \eta_q)\f$ is the evaluation of \f$ J \f$ at point \f$ (\xi_q, \eta_q)
+   * \f$ \Phi: T^0 \to T \f$. \f$ J(\xi_q,
+   * \eta_q)\f$ is the value of \f$ J \f$ at point \f$ (\xi_q, \eta_q)
    * \in T^0 \f$.
    *
    * 3. We compute shape functions \f$ N_1, N_2, N_3, N_4\f$ associated to \f$ T
-   * \f$ at quadrature point \f$ (x(\xi_q, \eta_q), y(\xi_q,\eta_q)) \f$
+   * \f$ at the quadrature point \f$ (x(\xi_q, \eta_q), y(\xi_q,\eta_q)) \f$
    * using formula
    * \f[ N_i(x(\xi_q, \eta_q), y(\xi_q, \eta_q)) = N^0_i(\xi_q, \eta_q). \f]
    *
-   * 5. To compute derivative of shape functions such as \f$ \frac{\partial
+   * 5. To compute the derivatives of shape functions such as \f$ \frac{\partial
    * N_i}{\partial x}, \frac{\partial N_i}{\partial y}\f$ associated to \f$ T
    * \f$, we use the relation between derivatives of shape function in \f$ T
-   * \f$ and \f$ T^0 \f$ described in TriElem::getDerShapes.
+   * \f$ and \f$ T^0 \f$ described in fe::TriElem::getDerShapes.
    *
    * @param nodes Vector of vertices of an element
-   * @return Vector of QuadData
+   * @return vector Vector of QuadData
    */
   std::vector<fe::QuadData>
   getQuadDatas(const std::vector<util::Point3> &nodes) override;
@@ -147,9 +136,9 @@ public:
   /*!
    * @brief Get vector of quadrature data
    *
-   * Given element vertices, this method returns the quadrature point, where
-   * order of quadrature approximation and element type is set in the
-   * constructor. For each quadrature point, data includes
+   * Given element vertices, this method returns the list of quadrature point
+   * and essential quantities at quadrature points. Here, order of quadrature
+   * approximation is set in the constructor. List of data
    * - quad point
    * - quad weight
    * - shape function evaluated at quad point
@@ -157,7 +146,7 @@ public:
    * This function is lite version of QuadElem::getQuadDatas.
    *
    * @param nodes Vector of vertices of an element
-   * @return Vector of QuadData
+   * @return vector Vector of QuadData
    */
   std::vector<fe::QuadData>
   getQuadPoints(const std::vector<util::Point3> &nodes) override;
@@ -167,7 +156,7 @@ private:
    * @brief Returns the values of shape function at point p on reference element
    *
    * @param p Location of point
-   * @return Vector of shape functions at point p
+   * @return vector Vector of shape functions at point p
    */
   std::vector<double> getShapes(const util::Point3 &p) override;
 
@@ -176,13 +165,12 @@ private:
    * reference element
    *
    * @param p Location of point
-   * @return Vector of derivative of shape functions
+   * @return vector Vector of derivative of shape functions
    */
   std::vector<std::vector<double>> getDerShapes(const util::Point3 &p) override;
 
   /*!
-   * @brief Computes Jacobian of map from reference element \f$ T^0 \f$ to
-   * given element \f$ T \f$
+   * @brief Computes the Jacobian of map \f$ \Phi: T^0 \to T \f$
    *
    * @param p Location of point in reference element
    * @param nodes Vertices of element
@@ -194,7 +182,7 @@ private:
                      std::vector<std::vector<double>> *J) override;
 
   /*!
-   * @brief Compute the quadrature points for triangle element
+   * @brief Compute the quadrature points for quadrangle element
    */
   void init() override;
 

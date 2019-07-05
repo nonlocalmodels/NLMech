@@ -19,31 +19,29 @@ namespace inp {
 /*! @brief A class to enforce certain policies to reduce memory loads
  *
  * We implement simple method to control population of data in simulation.
- * Implementation can be made specific to particular model by simplay
- * assigning a tag to d_modelTag and defining a rule for the tag in the init().
+ * Implementation can be made specific to particular model by simply
+ * assigning a tag to d_modelTag and defining a new rule for the tag in the
+ * inp::Policy::init.
  *
- * For given memory control flag i (can be 0,1,2,3), we look at the list of
- * tags in d_lTags to know whether we populate the data (given by tag, e.g.
- * tag for data d_u in model::Model is Model_g_u) in the simulation. If it is
- * in the list d_lTags[i] then we do not populate this data in the simulation.
+ * For a given memory control flag i (can be 0,1,2,3), we look at the list of
+ * tags in inp::Policy::d_lTags to know whether we populate the data (given
+ * by tag, e.g. tag for data d_u in model::Model is Model_g_u) in the
+ * simulation. If it is in the list inp::Policy::d_lTags[i] then we do not
+ * populate this data in the simulation.
  *
- * d_lTags data is created in init() which is called when the getInstance()
- * is invoked first time.
+ * inp::Policy::d_lTags data is created in init() which is called when the
+ * getInstance() is invoked for the first time.
  *
- * @note If d_enablePostProcessing is set to false then no postprocessing
- * calculation will be carried out and no postprocessing data will be
- * populated. So in a way d_enablePostProcessing = false acts as strictest
- * control.
+ * @note If inp::Policy::d_enablePostProcessing is set to false then no
+ * postprocessing calculation will be carried out and no postprocessing data
+ * will be populated. So in a way inp::Policy::d_enablePostProcessing = false
+ * acts as  strictest control.
  *
  * @todo Modify constructor and getInstance() to set d_modelTag.
  */
 class Policy {
 
 public:
-  /**
-   * @name Get and destroy instance
-   */
-  /**@{*/
 
   /*!
    * @brief Returns the pointer to static class. Creates instance in its
@@ -57,8 +55,6 @@ public:
    * @brief Destroys the instance
    */
   static void destroyInstance();
-
-  /** @}*/
 
   /**
    * @name Setter method
@@ -126,20 +122,8 @@ private:
   /*! @brief Private destructor */
   ~Policy();
 
-  /**
-   * @name Private methods
-   */
-  /**@{*/
-
   /*! @brief Initializes the data */
   void init();
-
-  /** @}*/
-
-  /**
-   * @name Internal data
-   */
-  /**@{*/
 
   /*! @brief Static instance of Policy class */
   static Policy *d_instance_p;
@@ -169,8 +153,6 @@ private:
    * memory control
    */
   std::vector<std::vector<std::string>> d_lTags;
-
-  /** @}*/
 };
 
 } // namespace inp

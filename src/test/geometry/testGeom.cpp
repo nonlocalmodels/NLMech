@@ -11,7 +11,7 @@ int main() {
   //
   // test Fracture class and specifically the bitwise operation
   //
-  testFracture();
+  test::testFracture();
 
   return EXIT_SUCCESS;
 }

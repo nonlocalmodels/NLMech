@@ -13,13 +13,11 @@ namespace inp {
  */
 /**@{*/
 
-/*! @brief Structure to read and store interior flags (no-fail region) */
+/*!
+ * @brief Structure to read and store inout data for interior flags (**no-fail
+ * region**)
+ */
 struct InteriorFlagsDeck {
-
-  /**
-   * @name Data members
-   */
-  /**@{*/
 
   /*! @brief Flag which indicates if no-fail region is active */
   bool d_noFailActive;
@@ -30,8 +28,6 @@ struct InteriorFlagsDeck {
 
   /*! @brief Tolerance to decide if the point is in interior/exterior */
   double d_noFailTol;
-
-  /** @}*/
 
   /*!
    * @brief Constructor

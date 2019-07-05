@@ -179,11 +179,6 @@ struct MatData {
 /*! @brief Structure to read and store material related data */
 struct MaterialDeck {
 
-  /**
-   * @name Data members
-   */
-  /**@{*/
-
   /*!
    * @brief Indicates if the 2-d simulation is of plane-strain type (thick
    * material) or plane-stress type (thin material)
@@ -232,8 +227,6 @@ struct MaterialDeck {
 
   /*! @brief Density of material */
   double d_density;
-
-  /** @}*/
 
   /*!
    * @brief Constructor

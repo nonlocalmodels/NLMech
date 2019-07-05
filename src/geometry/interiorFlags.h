@@ -19,8 +19,7 @@ namespace geometry {
 
 /*! @brief An abstraction class to store interior/exterior flags of node
  *
- * This class is used if no-fail region is not active. It simply returns true
- * flag for all the nodes.
+ * This is a default class and is used when *no-fail* region is not specified.
  */
 class BaseInterior {
 public:
@@ -34,34 +33,35 @@ public:
                std::pair<std::vector<double>, std::vector<double>> bbox);
 
   /*!
-   * @brief Returns true for all the nodes
+   * @brief Get interior flag of node
+   *
+   * Returns true for all the nodes.
+   *
    * @param i Nodal id
    * @param x Nodal coordinate
-   * @return True Always returns true as this is default class
+   * @return True Always returns true as this is a default class
    */
   virtual bool getInteriorFlag(const size_t &i, const util::Point3 &x);
 
 protected:
   /*!
    * @brief Interior flags. For given node i the flag is d_intFlags[i%8]. We
-   * store flag in 1 bit per node.
+   * use 1 bit per node.
    */
   std::vector<uint8_t> d_intFlags;
 
   /*! @brief Bounding box */
   std::pair<std::vector<double>, std::vector<double>> d_bbox;
 
-  /*! @brief Tolerance to decide if the point is in interior/exterior */
+  /*! @brief Tolerance to check if the point is in interior/exterior */
   double d_noFailTol;
 };
 
 /*!
  * @brief A class to check if the node is in interior or exterior
  *
- * This class is activated when we do not want to store the flag data for
- * each node, instead we compute the flags as and when needed. This method is
- * only preferred if the memory resource is less or if problem is extremely
- * large that we need to reduce the memory load.
+ * This class checks the relative position of node on the fly instead of
+ * dedicating a data for the flags.
  */
 class ComputeInterior : public BaseInterior {
 public:
@@ -120,8 +120,8 @@ public:
 /*! @brief A class to store interior/exterior flags of node
  *
  * In this class we store the the flag which indicates if the node is inside
- * the material domain or it is near the boundary. This is useful when we
- * implement \a no-fail \a region in \b Peridynamics.
+ * the material domain or if it is near the boundary. This required to
+ * implement *no-fail region* in Peridynamics.
  */
 class InteriorFlags {
 
