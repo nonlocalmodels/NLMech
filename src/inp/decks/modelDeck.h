@@ -18,13 +18,8 @@ namespace inp {
  */
 /**@{*/
 
-/*! @brief Structure to read and store model related data input */
+/*! @brief Structure to read and store model related input data */
 struct ModelDeck {
-
-  /**
-   * @name Data members
-   */
-  /**@{*/
 
   /*!
    * @brief Simulation type
@@ -42,10 +37,10 @@ struct ModelDeck {
    * @brief Tag for spatial discretization
    *
    * List of allowed values are:
-   * - \a finite_difference
-   * - \a weak_finite_element
-   * - \a nodal_finite_element
-   * - \a truss_finite_element
+   * - \a **finite_difference**
+   * - \a **weak_finite_element**
+   * - \a **nodal_finite_element**
+   * - \a **truss_finite_element**
    */
   std::string d_spatialDiscretization;
 
@@ -53,9 +48,9 @@ struct ModelDeck {
    * @brief Tag for time discretization
    *
    * List of allowed values are:
-   * - "" -- none
-   * - \a central_difference
-   * - \a velocity_verlet
+   * - *empty string*
+   * - \a **central_difference**
+   * - \a **velocity_verlet**
    */
   std::string d_timeDiscretization;
 
@@ -77,14 +72,12 @@ struct ModelDeck {
   /*!
    * @brief Ratio of Horizon to mesh size
    *
-   * E.g. ratio = 4 means mesh size is 1/4th of horizon.
+   * E.g. ratio = 4 means mesh size is 1/4th of the horizon.
    */
   int d_rh;
 
   /*! @brief Mesh size */
   double d_h;
-
-  /** @}*/
 
   /*!
    * @brief Constructor

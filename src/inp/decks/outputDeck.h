@@ -19,15 +19,10 @@ namespace inp {
  */
 /**@{*/
 
-/*! @brief Structure to read and store output data */
+/*! @brief Structure to read input data for performing simulation output */
 struct OutputDeck {
 
-  /**
-   * @name Data members
-   */
-  /**@{*/
-
-  /*! @brief Output format: currently supports vtk output */
+  /*! @brief Output format: currently supports .vtu (i.e. VTK) output */
   std::string d_outFormat;
 
   /*! @brief Output Path where the files will be written */
@@ -46,26 +41,24 @@ struct OutputDeck {
    * @brief Flag specifying if element-node connectivity should not be
    * dumped
    *
-   * for large mesh, writing element-node connectivity using vtk writer
-   * creates problem.
+   * For large mesh, vtk writer crashes when writing element-node connectivity.
    */
   bool d_performFEOut;
 
   /*! @brief Compressor type for .vtu files */
   std::string d_compressType;
 
-  /** @}*/
-
   /*!
    * @brief Constructor
    */
-  OutputDeck() : d_dtOut(0), d_debug(0), d_performFEOut(true){};
+  OutputDeck()
+      : d_dtOut(0), d_debug(0), d_performFEOut(true){};
 
   /*!
    * @brief Searches list of tags and returns true if the asked tag is in the
    * list
    * @param tag Tag to search
-   * @return True/false If tag is find return true or else false
+   * @return bool True/false If tag is find return true or else false
    */
   bool isTagInOutput(const std::string &tag) {
 

@@ -13,15 +13,11 @@
 #include <string>
 #include <vector>
 
-/**
- * @defgroup TestFe TestFe
- */
-/**@{*/
+/*! @brief Namespace to group the methods used in testing of the library */
+namespace test {
 
 /*!
  * @brief Perform test on quadrature points on line elements
- *
- * TODO Implement this method!
  *
  * This function performs accuracy test of the quadrature points for
  * integration over reference line with vertices at {-1, 1}. List of tests
@@ -61,6 +57,8 @@
  * order of approximation we are testing.
  *
  * @param n Order of quadrature point approximation
+ *
+ * @todo Implement this method!
  */
 void testLineElem(size_t n);
 
@@ -211,5 +209,7 @@ double getExactIntegrationRefQuad(size_t alpha, size_t beta);
  * @return Value Value of "n choose r"
  */
 double getNChooseR(size_t n, size_t r);
+
+} // namespace test
 
 #endif // TESTFELIB_H

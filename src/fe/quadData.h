@@ -15,7 +15,7 @@
 namespace fe {
 
 /*!
- * @brief A struct to store the quadrature data
+ * @brief A struct to store the quadrature data. List of data are
  */
 struct QuadData {
 

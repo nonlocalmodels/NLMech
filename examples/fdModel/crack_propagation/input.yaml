@@ -1,0 +1,75 @@
+Model: 
+  Dimension: 2 
+  Discretization_Type: 
+    Spatial: finite_difference 
+    Time: central_difference 
+  Final_Time: 0.000140 
+  Time_Steps: 35000 
+  Horizon: 0.002000 
+  Horizon_h_Ratio: 4 
+Policy: 
+  Enable_PostProcessing: false 
+Mesh: 
+  File: mesh.vtu 
+Material: 
+  Type: PDBond 
+  Density: 1200.000000 
+  Compute_From_Classical: true 
+  E: 37500000000.000000 
+  Gc: 500.000000 
+  Bond_Potential: 
+    Type: 1 
+    Check_Sc_Factor: 10.0 
+    Irreversible_Bond_Fracture: true 
+  Influence_Function: 
+    Type: 1 
+Fracture: 
+  Cracks: 
+    Sets: 1 
+    Set_1: 
+      Orientation: -1 
+      Line: [5.000500e-02, 0.000000e+00, 5.000500e-02, 2.000000e-02]
+Displacement_BC: 
+  Sets: 3 
+  Set_1:  
+    Location:   
+      Rectangle: [0.000000e+00, 9.800000e-02, 1.000000e-01, 1.000000e-01]
+    Direction: [1,2] 
+    Time_Function: 
+      Type: constant 
+      Parameters: 
+        - 0.0 
+    Spatial_Function: 
+      Type: constant 
+  Set_2:  
+    Location:   
+      Rectangle: [0.000000e+00, 0.000000e+00, 5.000000e-02, 2.000000e-03]
+    Direction: [1]  
+    Time_Function: 
+      Type: linear 
+      Parameters: 
+        - -1.000000 
+    Spatial_Function: 
+      Type: constant 
+  Set_3:  
+    Location:   
+      Rectangle: [5.012500e-02, 0.000000e+00, 1.000000e-01, 2.000000e-03]
+    Direction: [1]  
+    Time_Function: 
+      Type: linear 
+      Parameters: 
+        - 1.000000 
+    Spatial_Function: 
+      Type: constant 
+Output: 
+  Path: ./ 
+  Tags: 
+    - Displacement
+    - Velocity
+    - Force 
+    - Damage_Z
+  Output_Interval: 500 
+  Compress_Type: zlib 
+  Perform_FE_Out: false 
+HPX: 
+    Partitions: 1 

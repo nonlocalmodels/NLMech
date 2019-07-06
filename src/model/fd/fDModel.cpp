@@ -134,7 +134,6 @@ void model::FDModel::initHObjects() {
 }
 
 void model::FDModel::init() {
-
   std::cout << "FDModel: Initializing basic datas.\n";
 
   d_n = 0;
@@ -158,18 +157,58 @@ void model::FDModel::init() {
 
   // initialize minor simulation data
   if (d_policy_p->enablePostProcessing()) {
-    if (d_policy_p->populateData("Model_d_e"))
-      d_e = std::vector<float>(nnodes, 0.0);
-    if (d_policy_p->populateData("Model_d_w"))
-      d_w = std::vector<float>(nnodes, 0.0);
-    if (d_policy_p->populateData("Model_d_phi"))
-      d_phi = std::vector<float>(nnodes, 0.0);
-    if (d_policy_p->populateData("Model_d_Z"))
-      d_Z = std::vector<float>(nnodes, 0.0);
-    if (d_policy_p->populateData("Model_d_eF"))
-      d_eF = std::vector<float>(nnodes, 0.0);
-    if (d_policy_p->populateData("Model_d_eFB"))
-      d_eFB = std::vector<float>(nnodes, 0.0);
+
+    std::string tag = "Strain_Energy";
+    if (d_outputDeck_p->isTagInOutput(tag)) {
+      // this data is asked in output file
+      // but check if policy allows its population
+      if (d_policy_p->populateData("Model_d_e"))
+        d_e = std::vector<float>(nnodes, 0.0);
+    }
+    else {
+      // this data is not asked in output thus we disable it
+      d_policy_p->addToTags(0, "Model_d_e");
+    }
+
+    tag = "Work_Done";
+    if (d_outputDeck_p->isTagInOutput(tag)) {
+      if (d_policy_p->populateData("Model_d_w"))
+        d_w = std::vector<float>(nnodes, 0.0);
+    }
+    else
+      d_policy_p->addToTags(0, "Model_d_w");
+
+    tag = "Damage_Phi";
+    if (d_outputDeck_p->isTagInOutput(tag)) {
+      if (d_policy_p->populateData("Model_d_phi"))
+        d_phi = std::vector<float>(nnodes, 0.0);
+    }
+    else
+      d_policy_p->addToTags(0, "Model_d_phi");
+
+    tag = "Damage_Z";
+    if (d_outputDeck_p->isTagInOutput(tag)) {
+      if (d_policy_p->populateData("Model_d_Z"))
+        d_Z = std::vector<float>(nnodes, 0.0);
+    }
+    else
+      d_policy_p->addToTags(0, "Model_d_Z");
+
+    tag = "Fracture_Perienergy_Total";
+    if (d_outputDeck_p->isTagInOutput(tag)) {
+      if (d_policy_p->populateData("Model_d_eF"))
+        d_eF = std::vector<float>(nnodes, 0.0);
+    }
+    else
+      d_policy_p->addToTags(0, "Model_d_eF");
+
+    tag = "Fracture_Perienergy_Bond";
+    if (d_outputDeck_p->isTagInOutput(tag)) {
+      if (d_policy_p->populateData("Model_d_eFB"))
+        d_eFB = std::vector<float>(nnodes, 0.0);
+    }
+    else
+      d_policy_p->addToTags(0, "Model_d_eFB");
   }
 }
 
@@ -178,6 +217,8 @@ void model::FDModel::integrate() {
   // apply initial loading
   if (d_n == 0)
     d_initialCondition_p->apply(&d_u, &d_v, d_mesh_p);
+
+  // apply loading
   d_uLoading_p->apply(d_time, &d_u, &d_v, d_mesh_p);
   d_fLoading_p->apply(d_time, &d_f, d_mesh_p);
 
@@ -620,32 +661,15 @@ void model::FDModel::computePostProcFields() {
 
 void model::FDModel::output() {
 
-  std::cout << "Output: time step = " << this->d_n << "\n";
+  std::cout << "Output: time step = " << d_n << "\n";
 
-  //
-  // List of data that we need to output
-  //
-  // Major simulation data
-  // 1. Displacement (vector)
-  // 2. Velocity (vector)
-  // 3. Force (vector)
-  // 4. time (single data)
-  //
-  // Minor simulation data (if these are computed)
-  // 1. Force_Density (vector)
-  // 2. Strain_Energy (scalar)
-  // 3. Energy (scalar)
-  // 4. Work_Done (scalar)
-  // 5. Fixity (scalar)
-  // 6. Node_Volume (scalar)
-  // 7. Damage (scalar)
-  // 8. Damage Z (scalar)
-  // 9. Fracture_Perienergy_Bond (scalar)
-  // 10. Fracture_Perienergy_Total (scalar) if StateFracture material
-  // 11. Total energy (single data)
-  // 12. Total fracture energy bond (single data)
-  // 13. Total fracture energy total if StateFracture material (single data)
-  //
+  // write out % completion of simulation at 10% interval
+  {
+    float p = float(d_n) * 100. / d_modelDeck_p->d_Nt;
+    int m = std::max(1, int(d_modelDeck_p->d_Nt / 10));
+    if (d_n % m == 0 && int(p) > 0)
+      std::cout << "Message: Simulation " << int(p) << "% complete.\n";
+  }
 
   // filename
   std::string filename = d_outputDeck_p->d_path + "output_" +
@@ -704,11 +728,6 @@ void model::FDModel::output() {
       d_policy_p->populateData("Model_d_e"))
     writer.appendPointData(tag, &d_e);
 
-  tag = "Strain_Energy";
-  if (d_outputDeck_p->isTagInOutput(tag) &&
-      d_policy_p->populateData("Model_d_e"))
-    writer.appendPointData(tag, &d_e);
-
   tag = "Work_Done";
   if (d_outputDeck_p->isTagInOutput(tag) &&
       d_policy_p->populateData("Model_d_w"))
@@ -721,11 +740,6 @@ void model::FDModel::output() {
   tag = "Node_Volume";
   if (d_outputDeck_p->isTagInOutput(tag))
     writer.appendPointData(tag, d_mesh_p->getNodalVolumeP());
-
-  tag = "Damage";
-  if (d_outputDeck_p->isTagInOutput(tag) &&
-      d_policy_p->populateData("Model_d_phi"))
-    writer.appendPointData(tag, &d_phi);
 
   tag = "Damage_Phi";
   if (d_outputDeck_p->isTagInOutput(tag) &&
@@ -752,11 +766,6 @@ void model::FDModel::output() {
   if (d_outputDeck_p->isTagInOutput(tag) &&
       d_policy_p->populateData("Model_d_e"))
     writer.appendFieldData(tag, te);
-
-  tag = "Total_Strain_Energy";
-  if (d_outputDeck_p->isTagInOutput(tag) &&
-      d_policy_p->populateData("Model_d_e"))
-    writer.appendFieldData(tag, d_te);
 
   tag = "Total_Fracture_Perienergy_Bond";
   if (d_outputDeck_p->isTagInOutput(tag) &&

@@ -10,7 +10,7 @@
 #include "decks/policyDeck.h"
 #include <iostream>
 
-static void addTag(std::vector<std::string> list, const std::string &tag) {
+static void addTag(std::vector<std::string> &list, const std::string &tag) {
 
   bool found = false;
   for (const auto &s : list)
@@ -23,13 +23,6 @@ static void addTag(std::vector<std::string> list, const std::string &tag) {
 
 inp::Policy *inp::Policy::d_instance_p = nullptr;
 
-inp::Policy *inp::Policy::getInstance() {
-  if (d_instance_p == nullptr)
-    d_instance_p = new inp::Policy();
-
-  return d_instance_p;
-}
-
 inp::Policy *inp::Policy::getInstance(inp::PolicyDeck *deck) {
   if (d_instance_p == nullptr)
     d_instance_p = new inp::Policy(deck);
@@ -39,172 +32,80 @@ inp::Policy *inp::Policy::getInstance(inp::PolicyDeck *deck) {
 
 void inp::Policy::destroyInstance() { delete d_instance_p; }
 
-inp::Policy::Policy() {
-  d_policyDeck_p = new inp::PolicyDeck();
-  d_policyDeck_p->d_memControlFlag = 0; // default
-  init();
-}
-
 inp::Policy::~Policy() = default;
 
-inp::Policy::Policy(inp::PolicyDeck *deck) {
-  d_policyDeck_p = deck;
+inp::Policy::Policy(inp::PolicyDeck *deck): d_enablePostProcessing(true),
+d_memControlFlag(0), d_modelTag("Model"), d_maxLevel(0) {
+  if (deck != nullptr) {
+    d_enablePostProcessing = deck->d_enablePostProcessing;
+    d_memControlFlag = deck->d_memControlFlag;
+  }
   init();
 }
 
 void inp::Policy::init() {
 
-  if (d_l1Tags.empty() == 0) {
+  if (d_modelTag == "Model") {
+    d_maxLevel = 3;
+    if (d_lTags.empty()) {
+      d_lTags.resize(d_maxLevel+1);
 
-    // level 0 tags: none
-    d_l0Tags = std::vector<std::string>(0);
+      // level 0 tags: none
+      d_lTags[0] = std::vector<std::string>(0);
 
-    // level 1 tags
-    d_l1Tags.emplace_back("Model_d_e");
-    d_l1Tags.emplace_back("Model_d_w");
-    d_l1Tags.emplace_back("Model_d_phi");
-    d_l1Tags.emplace_back("Model_d_strain");
-    d_l1Tags.emplace_back("Model_d_stress");
+      // level 1 tags
+      d_lTags[1].emplace_back("Model_d_e");
+      d_lTags[1].emplace_back("Model_d_w");
+      d_lTags[1].emplace_back("Model_d_phi");
+      d_lTags[1].emplace_back("Model_d_strain");
+      d_lTags[1].emplace_back("Model_d_stress");
 
-    // level 2 tags
-    d_l2Tags.emplace_back("Model_d_Z");
-    d_l2Tags.emplace_back("Model_d_eF");
-    d_l2Tags.emplace_back("Model_d_eFB");
+      // level 2 tags
+      d_lTags[2] = d_lTags[1];
+      d_lTags[2].emplace_back("Model_d_eF");
+      d_lTags[2].emplace_back("Model_d_eFB");
+
+      // level 3 tags
+      d_lTags[3] = d_lTags[2];
+      d_lTags[3].emplace_back("Model_d_Z");
+    }
   }
 }
 
 void inp::Policy::addToTags(const size_t &level, const std::string &tag) {
 
-  if (level == 0)
-    addTag(d_l0Tags, tag);
-  else if (level == 1)
-    addTag(d_l1Tags, tag);
-  else if (level == 2)
-    addTag(d_l2Tags, tag);
+  if (level >= 0 && level <= d_maxLevel)
+    for (size_t i=level; i<=d_maxLevel; i++)
+      addTag(d_lTags[i], tag);
 }
 
 void inp::Policy::removeTag(const std::string &tag) {
 
-  // depending on level find if variable_name is in any of the
-  // tag list
-  switch (d_policyDeck_p->d_memControlFlag) {
-
-  case 0: {
-    std::vector<std::string> temp;
-    for (const auto &s : d_l0Tags) {
-      if (s == tag)
-        continue;
-      temp.emplace_back(s);
-    }
-    d_l0Tags = temp;
-  } break;
-
-  case 1: {
-
-    std::vector<std::string> temp;
-    for (const auto &s : d_l0Tags) {
-      if (s == tag)
-        continue;
-      temp.emplace_back(s);
-    }
-    d_l0Tags = temp;
-
-    temp.clear();
-    for (const auto &s : d_l1Tags) {
-      if (s == tag)
-        continue;
+  // find tag in d_memControlFlag and remove it from tag list
+  std::vector<std::string> temp;
+  for (const auto &s : d_lTags[d_memControlFlag]) {
+    if (s == tag)
+      continue;
     temp.emplace_back(s);
-    }
-    d_l1Tags = temp;
-  } break;
-
-  case 2: {
-    std::vector<std::string> temp;
-    for (const auto &s : d_l0Tags) {
-      if (s == tag)
-        continue;
-      temp.emplace_back(s);
-    }
-    d_l0Tags = temp;
-
-    temp.clear();
-    for (const auto &s : d_l1Tags) {
-      if (s == tag)
-        continue;
-      temp.emplace_back(s);
-    }
-    d_l1Tags = temp;
-
-    temp.clear();
-    for (const auto &s : d_l2Tags) {
-      if (s == tag)
-        continue;
-      temp.emplace_back(s);
-    }
-    d_l2Tags = temp;
-  } break;
-
-  default: {
-    std::cerr << "Error: Check memory consumption flag.\n";
-    exit(1);
-  } break;
   }
+  d_lTags[d_memControlFlag] = temp;
 }
 
 bool inp::Policy::populateData(const std::string &tag) {
 
   // depending on level find if variable_name is in any of the
   // tag list
-  switch (d_policyDeck_p->d_memControlFlag) {
+  for (const auto &s : d_lTags[d_memControlFlag])
+    if (s == tag)
+      return false;
 
-  case 0: {
-    for (const auto &s : d_l0Tags)
-      if (s == tag)
-        return false;
-
-    return true;
-  } break;
-
-  case 1: {
-
-    for (const auto &s : d_l0Tags)
-      if (s == tag)
-        return false;
-
-    for (const auto &s : d_l1Tags)
-      if (s == tag)
-        return false;
-
-    return true;
-  } break;
-
-  case 2: {
-    for (const auto &s : d_l0Tags)
-      if (s == tag)
-        return false;
-
-    for (const auto &s : d_l1Tags)
-      if (s == tag)
-        return false;
-
-    for (const auto &s : d_l2Tags)
-      if (s == tag)
-        return false;
-
-    return true;
-  } break;
-
-  default: {
-    std::cerr << "Error: Check memory consumption flag.\n";
-    exit(1);
-  } break;
-  }
+  return true;
 }
 
 int inp::Policy::getMemoryControlFlag() {
-  return d_policyDeck_p->d_memControlFlag;
+  return d_memControlFlag;
 }
 
 bool inp::Policy::enablePostProcessing() {
-  return d_policyDeck_p->d_enablePostProcessing;
+  return d_enablePostProcessing;
 }

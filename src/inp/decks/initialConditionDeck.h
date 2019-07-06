@@ -13,13 +13,8 @@
 
 namespace inp {
 
-/*! @brief Structure for initial condition data */
+/*! @brief Structure to store initial condition input data */
 struct ICData {
-
-  /**
-   * @name Data members
-   */
-  /**@{*/
 
   /*! @brief Filename (if any) to read velocity/displacement */
   std::string d_file;
@@ -37,8 +32,6 @@ struct ICData {
   /*! @brief List of parameters */
   std::vector<double> d_params;
 
-  /** @}*/
-
   /*!
    * @brief Constructor
    */
@@ -53,18 +46,11 @@ struct ICData {
 /*! @brief Structure to read and store policy data */
 struct InitialConditionDeck {
 
-  /**
-   * @name Data members
-   */
-  /**@{*/
-
   /*! @brief Initial condition data for displacement */
   inp::ICData d_uICData;
 
   /*! @brief Initial condition data for velocity */
   inp::ICData d_vICData;
-
-  /** @}*/
 
   /*!
    * @brief Constructor

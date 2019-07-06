@@ -42,7 +42,7 @@ static void printBits(const std::string &filename,
   myfile.close();
 }
 
-void testFracture() {
+void test::testFracture() {
 
   auto *deck = new inp::FractureDeck();
 

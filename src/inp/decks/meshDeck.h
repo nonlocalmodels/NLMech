@@ -21,11 +21,6 @@ namespace inp {
 /*! @brief Structure to read and store mesh related input data */
 struct MeshDeck {
 
-  /**
-   * @name Data members
-   */
-  /**@{*/
-
   /*! @brief Dimension */
   size_t d_dim;
 
@@ -48,8 +43,6 @@ struct MeshDeck {
 
   /*! @brief Mesh size */
   double d_h;
-
-  /** @}*/
 
   /*!
    * @brief Constructor

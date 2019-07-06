@@ -1,0 +1,8 @@
+Output: 
+  Path: .
+  Mesh: mesh
+Domain: [0.000000e+00, 0.000000e+00, 1.000000e-01, 1.000000e-01]
+Horizon: 2.000000e-02
+Horizon_h_Ratio: 4
+Mesh_Type: uniform_tri
+Compress_Type: zlib 

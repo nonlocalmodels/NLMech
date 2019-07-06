@@ -21,33 +21,30 @@ namespace inp {
 
 /*! @brief A class to enforce certain policies to reduce memory loads
  *
- * This class introduces policies which restrict population (declaration) of
- * post-processing data which are not important for running simulation and
- * are postprocessing data.
+ * We implement simple method to control population of data in simulation.
+ * Implementation can be made specific to particular model by simply
+ * assigning a tag to d_modelTag and defining a new rule for the tag in the
+ * inp::Policy::init.
  *
- * For example, if the simulation is large, this class will restrict
- * population of data such as fracture energy, damage data, strain and stress
- * data, etc.
+ * For a given memory control flag i (can be 0,1,2,3), we look at the list of
+ * tags in inp::Policy::d_lTags to know whether we populate the data (given
+ * by tag, e.g. tag for data d_u in model::Model is Model_g_u) in the
+ * simulation. If it is in the list inp::Policy::d_lTags[i] then we do not
+ * populate this data in the simulation.
  *
- * This class also enforces lumping approximation of mass matrix if the level
- * of restriction is set to 2 or higher.
+ * inp::Policy::d_lTags data is created in init() which is called when the
+ * getInstance() is invoked for the first time.
  *
- * The level of memory restriction can be set in the input file. Default
- * value is 0 which means no restriction.
+ * @note If inp::Policy::d_enablePostProcessing is set to false then no
+ * postprocessing calculation will be carried out and no postprocessing data
+ * will be populated. So in a way inp::Policy::d_enablePostProcessing = false
+ * acts as  strictest control.
+ *
+ * @todo Modify constructor and getInstance() to set d_modelTag.
  */
 class Policy {
 
 public:
-  /**
-   * @name Get and destroy instance
-   */
-  /**@{*/
-
-  /*!
-   * @brief Returns the pointer to static class. Creates instance in its
-   * first call
-   */
-  static Policy *getInstance();
 
   /*!
    * @brief Returns the pointer to static class. Creates instance in its
@@ -55,14 +52,12 @@ public:
    * @param deck Input deck which contains user-specified information
    * @return Policy instance of static class Policy
    */
-  static Policy *getInstance(inp::PolicyDeck *deck);
+  static Policy *getInstance(inp::PolicyDeck *deck = nullptr);
 
   /*!
    * @brief Destroys the instance
    */
   static void destroyInstance();
-
-  /** @}*/
 
   /**
    * @name Setter method
@@ -77,7 +72,8 @@ public:
   void addToTags(const size_t &level, const std::string &tag);
 
   /*!
-   * @brief Looks for tag and if present removes it
+   * @brief Looks for tag in the level d_memControlFlag and if present
+   * removes it
    * @param tag Tag to be appended to list
    */
   void removeTag(const std::string &tag);
@@ -92,7 +88,7 @@ public:
   /*!
    * @brief Returns true/false depending on whether tag is found
    * @param tag Tag to search for
-   * @return True/False
+   * @return bool True if it can be populated, false otherwise
    */
   bool populateData(const std::string &tag);
 
@@ -113,14 +109,9 @@ public:
 private:
   /*!
    * @brief Private constructor
-   */
-  Policy();
-
-  /*!
-   * @brief Private constructor
    * @param deck Input deck which contains user-specified information
    */
-  explicit Policy(inp::PolicyDeck *deck);
+  explicit Policy(inp::PolicyDeck *deck = nullptr);
 
   /*! @brief Private operator */
   Policy(Policy const &);
@@ -134,36 +125,37 @@ private:
   /*! @brief Private destructor */
   ~Policy();
 
-  /**
-   * @name Private methods
-   */
-  /**@{*/
-
   /*! @brief Initializes the data */
   void init();
-
-  /** @}*/
-
-  /**
-   * @name Internal data
-   */
-  /**@{*/
 
   /*! @brief Static instance of Policy class */
   static Policy *d_instance_p;
 
-  /*! @brief Policy deck which contains input data */
-  inp::PolicyDeck *d_policyDeck_p;
+  /*!
+   * @brief Flag which indicates level of memory control to be enforced
+   *
+   * Default is 0 which means no control. Max at present is 2 which means as
+   * much control as possible.
+   */
+  int d_memControlFlag;
+
+  /*!
+   * @brief Enable post-processing calculation
+   *
+   * Default is true.
+   */
+  bool d_enablePostProcessing;
+
+  /*! @brief Specify model tag */
+  std::string d_modelTag;
+
+  /*! @brief Specify maximum level of memory control */
+  size_t d_maxLevel;
 
   /*! @brief List of variable names in different levels to help enforce the
    * memory control
    */
-  std::vector<std::string> d_l0Tags;
-  std::vector<std::string> d_l1Tags;
-  std::vector<std::string> d_l2Tags;
-  std::vector<std::string> d_otherTags;
-
-  /** @}*/
+  std::vector<std::vector<std::string>> d_lTags;
 };
 
 } // namespace inp

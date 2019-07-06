@@ -21,18 +21,11 @@ namespace inp {
 /*! @brief Structure to read and store restart related data input */
 struct RestartDeck {
 
-  /**
-   * @name Data members
-   */
-  /**@{*/
-
   /*! @brief restart filename */
   std::string d_file;
 
   /*! @brief Restart time step */
   size_t d_step;
-
-  /** @}*/
 
   /*!
    * @brief Constructor

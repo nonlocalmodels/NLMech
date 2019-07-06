@@ -168,12 +168,6 @@ struct FindCrackTip {
   /*! @brief Total number of updates at current time */
   size_t d_updateCount;
 
-  /*! @brief File (for top tip) to which crack data will be written */
-  FILE *d_filet;
-
-  /*! @brief File (for bottom tip) to which crack data will be written */
-  FILE *d_fileb;
-
   /*! @brief Set of edge cracks */
   std::vector<inp::EdgeCrack> d_cracks;
 
@@ -183,13 +177,19 @@ struct FindCrackTip {
   /*! @brief Set of edge cracks */
   double d_maxZAllowed;
 
+  /*! @brief File (for top tip) to which crack data will be written */
+  FILE *d_filet;
+
+  /*! @brief File (for bottom tip) to which crack data will be written */
+  FILE *d_fileb;
+
   /*!
    * @brief Constructor
    */
   FindCrackTip()
       : d_crackSameDtOut(true), d_timet(0.), d_timeb(0.), d_updateCount(0),
-        d_filet(nullptr), d_fileb(nullptr), d_minZAllowed(1.),
-        d_maxZAllowed(50.) {};
+        d_minZAllowed(1.), d_maxZAllowed(50.), d_filet(nullptr),
+        d_fileb(nullptr){};
 };
 
 /*!
@@ -214,15 +214,25 @@ struct ComputeJIntegral {
   /*! @brief File to write J integral data */
   FILE *d_file;
 
-  /*! @brief Set lateral component of velocity as zero */
+  /*! @brief Set lateral component of velocity of crack tip as zero */
   bool d_setLateralCompVZero;
+
+  /*! @brief Set lateral component of displacement of crack tip as zero */
+  bool d_setLateralCompUZero;
+
+  /*!
+   * @brief Set lateral component of crack tip location to given value (it
+   * should be initial value of lateral component of crack tip)
+   */
+  double d_setLateralCompX;
 
   /*!
    * @brief Constructor
    */
   ComputeJIntegral()
       : d_crackOrient(0), d_crackId(1), d_file(nullptr),
-        d_setLateralCompVZero(false){};
+        d_setLateralCompVZero(false), d_setLateralCompUZero(false),
+        d_setLateralCompX(0.){};
 };
 
 /*!

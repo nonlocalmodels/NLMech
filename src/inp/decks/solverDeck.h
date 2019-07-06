@@ -22,11 +22,6 @@ namespace inp {
 /*! @brief Structure to read and store solver related input data */
 struct SolverDeck {
 
-  /**
-   * @name Data members
-   */
-  /**@{*/
-
   /*! @brief Solver type */
   std::string d_solverType;
 
@@ -35,8 +30,6 @@ struct SolverDeck {
 
   /*! @brief Tolerance */
   double d_tol;
-
-  /** @}*/
 
   /*!
    * @brief Constructor

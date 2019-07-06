@@ -180,7 +180,7 @@ void rw::reader::VtkReader::readNodes(std::vector<util::Point3> *nodes){
   }
 }
 
-bool rw::reader::VtkReader::readPointData(std::string name,
+bool rw::reader::VtkReader::readPointData(const std::string &name,
                                           std::vector<util::Point3> *data) {
 
   // read point field data
@@ -204,6 +204,34 @@ bool rw::reader::VtkReader::readPointData(std::string name,
     array->GetTuples(i, i, data_a);
     (*data)[i] = util::Point3(data_a->GetValue(0), data_a->GetValue(1),
       data_a->GetValue(2));
+  }
+
+  return true;
+}
+
+bool rw::reader::VtkReader::readPointData(const std::string &name,
+                                          std::vector<double> *data) {
+
+  // read point field data
+  d_grid_p = d_reader_p->GetOutput();
+  vtkPointData *p_field = d_grid_p->GetPointData();
+
+  // handle for displacement, fixity and node element connectivity
+  if (p_field->HasArray(name.c_str()) == 0)
+    return false;
+
+  vtkDataArray *array = p_field->GetArray(name.c_str());
+
+  // Below is not efficient. Later this can be improved.
+  // declare another array data to hold the ux,uy,uz
+  auto data_a = vtkSmartPointer<vtkDoubleArray>::New();
+  data_a->SetNumberOfComponents(1);
+  data_a->Allocate(1, 1); // allocate memory
+
+  (*data).resize(array->GetNumberOfTuples());
+  for (size_t i = 0; i < array->GetNumberOfTuples(); i++) {
+    array->GetTuples(i, i, data_a);
+    (*data)[i] = data_a->GetValue(0);
   }
 
   return true;
