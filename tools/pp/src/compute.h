@@ -310,16 +310,20 @@ private:
    * For nodes list, we consider domain which envelopes contour. Thickness of
    * domain is typically taken as size of horizon + 2 * mesh size.
    *
-   * For element list, we look for elements which intersect the contour.
+   * For element list, we look for element which has at least 1 node in the
+   * domain enveloping contour. The thickness of domain is typically taken as
+   * mesh size.
    *
    * @param cd Rectangle defining the contour
    * @param tol Thickness for node list search
+   * @param tol_elem Thickness for element list search
    * @param nodes Pointer to ids of nodes
    * @param elements Pointer to ids of elements
    */
   void
   listElemsAndNodesInDomain(const std::pair<util::Point3, util::Point3> &cd,
-                            const double &tol, std::vector<size_t> *nodes,
+                            const double &tol, const double &tol_elem,
+                            std::vector<size_t> *nodes,
                             std::vector<size_t> *elements);
 
   /*!
@@ -526,6 +530,12 @@ private:
   /*! @brief List of compute sets */
   std::vector<tools::pp::InstructionData> d_computeData;
 
+  /*! @brief Filename (if any) to read damage at nodes */
+  std::string d_fileZ;
+
+  /*! @brief Tag of damage function Z in vtu file */
+  std::string d_tagZ;
+
   /*! @brief Current active simulation output step */
   int d_nOut;
 
@@ -558,6 +568,9 @@ private:
 
   /*! @brief State of writer class */
   bool d_writerReady;
+
+  /*! @brief Specify if we consider u(n+1) or u(n) */
+  bool d_uPlus;
 
   /*! @brief Displacement of nodes */
   std::vector<util::Point3> d_u;

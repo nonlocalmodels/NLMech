@@ -15,40 +15,42 @@
 namespace fe {
 
 /*!
- * @brief A base class to compute and store quadrature data
+ * @brief A base class which provides methods to map points to/from reference
+ * element and to compute quadrature data
  *
- * This class provides methods such as quadrature points for integration,
- * shape functions at quadrature points, and derivative of shape functions.
+ * - At present, all types of element employ [isoparametric mapping]
+ * (http://www.softeng.rl.ac.uk/st/projects/felib4/Docs/html/Intro/intro
+ * -node31.html) to map points on reference element to any other element of
+ * same type.
  *
- * Intrinsic each type of element, there are data types. These are as follows
+ * For any type of element, such as fe::LineElem, fe::TriElem, fe::QuadElem,
+ * we have following important points
  *
- * 1. A simple element is considered as reference element \f$ T^0 \f$. For
- * example, in triangle element a triangle formed by points \f$(0,0), (1,0),
- * (0,1) \f$ is considered as reference element.
+ * 1. A simple element with predefined vertices is considered as a reference
+ * element \f$ T^0 \f$. E.g., reference element in fe::TriElem is a triangle
+ * with vertices at \f$(0,0), (1,0), (0,1) \f$.
  *
- * 2. Points in reference element \f$ T^0 \f$ is described by \f$ (\xi, \eta,
+ * 2. Points in reference element \f$ T^0 \f$ are described by \f$ (\xi, \eta,
  * \zeta)\f$ (in 3-d), \f$ (\xi, \eta) \f$ (in 2-d), and \f$ \xi\f$ (in 1-d).
- * Points in any other element \f$ T \f$ is described by \f$ (x,y,z)\f$ (in
- * 3-d), \f$ (x,y) \f$ (in 2-d), and \f$ x\f$ (in 1-d). In what follows, we
- * will present theory for general 3-d element. For 2-d, reader should ignore
- * coordinates \f$\zeta \f$ and \f$ z\f$, and similarly for 1-d reader should
- * ignore \f$ \eta, \zeta \f$ and \f$ y,z\f$.
+ * Points in any other element \f$ T \f$ are described by \f$ (x,y,z)\f$ (in
+ * 3-d), \f$ (x,y) \f$ (in 2-d), and \f$ x\f$ (in 1-d). Here, we restrict
+ * discussion to 3-d element. For 2-d, one should ignore coordinate \f$\zeta \f$
+ * and \f$ z\f$, and for 1-d, one should ignore \f$ \eta, \zeta \f$
+ * and \f$ y,z\f$.
  *
- * 3. Associated to vertices of element \f$ T^0 \f$ we have shape function
- * \f$ N^0_1, N^0_2, ..., N^0_n \f$, where \f$ n \f$ is the number of
+ * 3. Associated to vertices of the element \f$ T^0 \f$ we have shape
+ * functions \f$ N^0_1, N^0_2, ..., N^0_n \f$, where \f$ n \f$ is the number of
  * vertices in the element. Shape functions \f$ N^0_i \f$ are functions of
- * point \f$ (\xi, \eta, \zeta) \in T^0 \f$. For each type of fem element, \f$ n
- * \f$ is fixed. E.g., for TriElem, \f$ n = 3\f$, QuadElem \f$ n= 4\f$, LineElem
- * \f$ n = 2 \f$.
+ * point \f$ (\xi, \eta, \zeta) \in T^0 \f$. For each type of element, \f$ n
+ * \f$ is fixed.
  *
- * 4. For any element \f$ T \f$ shape functions are denoted as \f$ N_1, N_2,
+ * 4. For any element \f$ T \f$, shape functions are denoted as \f$ N_1, N_2,
  * ..., N_n \f$ and are functions of point \f$ (x,y,z) \in T \f$.
  *
  * 5. Element \f$ T \f$ is described by vertices \f$ v^1, v^2, ..., v^n \f$.
  *
  * 6. A map \f$\Phi : T^0 \to T \f$ , where \f$ T \f$ is a given
- * element formed by vertices \f$ v^1, v^2, ..., v^n \f$, and \f$ T^0 \f$ is a
- * reference element, is defined as follows:
+ * element formed by vertices \f$ v^1, v^2, ..., v^n \f$, is defined as follows:
  * \f[x(\xi, \eta, \zeta) = \sum_{i=1}^n N^0_i(\xi, \eta, \zeta) v^i_x, \quad
  * y(\xi, \eta, \zeta) = \sum_{i=1}^n N^0_i(\xi, \eta, \zeta) v^i_y, \quad z
  * (\xi, \eta, \zeta) = \sum_{i=1}^n N^0_i(\xi, \eta, \zeta) v^i_z \f]
@@ -72,10 +74,10 @@ namespace fe {
  * } \right]. \f]
  * For 1-d element it is
  * \f[ J = \frac{dx}{d\xi}. \f]
- * For 2-d and 3-d element, determinant of Jacobian is also used in many
- * calculation.
+ * Determinant of the Jacobian is an important quantity and is used to
+ * compute the quadrature points, and inverse map \f$ \Phi^{-1} : T \to T^0 \f$.
  *
- * @sa LineElem, TriElem, QuadElem
+ * @sa fe::LineElem, fe::TriElem, fe::QuadElem
  */
 class BaseElem {
 
@@ -84,7 +86,7 @@ public:
    * @brief Constructor
    *
    * @param order Order of quadrature point approximation
-   * @param element_type Type of element in the mesh
+   * @param element_type Type of element
    */
   BaseElem(size_t order, size_t element_type);
 
@@ -111,16 +113,25 @@ public:
    * in 3-d element)
    *
    * @param nodes Vertices of element
-   * @return Vector of shape functions at point p
+   * @return size Size of the element
    */
   virtual double elemSize(const std::vector<util::Point3> &nodes) = 0;
 
   /*!
    * @brief Returns the values of shape function at point p
    *
+   * The point p is assumed to be inside an element \f$ T\f$ given by nodes.
+   * The idea is to first map point p to the point \f$ p^0\f$ in reference
+   * element \f$ T^0 \f$ and then compute shape functions at \f$ p^0 \f$.
+   *
+   * The map from any element \f$ T \f$ to reference element is \f$ T^0 \f$
+   * gets complex for elements like fe::QuadElem. For elements fe:LineElem
+   * and fe::TriElem, this is simple to compute. Therefore, this method is
+   * only implemented for fe::TriElem and fe::LineElem.
+   *
    * @param p Location of point
    * @param nodes Vertices of element
-   * @return Vector of shape functions at point p
+   * @return vector Vector of shape functions at point p
    */
   virtual std::vector<double>
   getShapes(const util::Point3 &p, const std::vector<util::Point3> &nodes);
@@ -130,7 +141,7 @@ public:
    *
    * @param p Location of point
    * @param nodes Vertices of element
-   * @return Vector of derivative of shape functions
+   * @return vector Vector of derivative of shape functions
    */
   virtual std::vector<std::vector<double>>
   getDerShapes(const util::Point3 &p,
@@ -139,9 +150,10 @@ public:
   /*!
    * @brief Get vector of quadrature data
    *
-   * Given element vertices, this method returns the quadrature point, where
-   * order of quadrature approximation and element type is set in the
-   * constructor. For each quadrature point, data includes
+   * Given element vertices, this method returns the list of quadrature point
+   * and associated quantities. Here, order of quadrature
+   * approximation and element type are set in the constructor. List of data
+   * for each quad point:
    * - quad point
    * - quad weight
    * - shape function evaluated at quad point
@@ -150,7 +162,7 @@ public:
    * - determinant of the Jacobian
    *
    * @param nodes Vector of vertices of an element
-   * @return Vector of QuadData
+   * @return vector Vector of QuadData
    */
   virtual std::vector<fe::QuadData>
   getQuadDatas(const std::vector<util::Point3> &nodes) = 0;
@@ -158,47 +170,49 @@ public:
   /*!
    * @brief Get vector of quadrature data
    *
-   * Given element vertices, this method returns the quadrature point, where
-   * order of quadrature approximation and element type is set in the
-   * constructor. For each quadrature point, data includes
+   * Given element vertices, this method returns the list of quadrature point
+   * and essential quantities at quadrature points. Here, order of quadrature
+   * approximation and element type are set in the constructor. List of data
+   * for each quad point:
    * - quad point
    * - quad weight
    * - shape function evaluated at quad point
    *
-   * This function is lite version of BaseElem::getQuadDatas.
+   * This function is a lite version of fe::BaseElem::getQuadDatas.
    *
    * @param nodes Vector of vertices of an element
-   * @return Vector of QuadData
+   * @return vector Vector of QuadData
    */
   virtual std::vector<fe::QuadData>
   getQuadPoints(const std::vector<util::Point3> &nodes) = 0;
 
 protected:
   /*!
-   * @brief Returns the values of shape function at point p (reference element)
+   * @brief Returns the values of shape function at point p on reference
+   * element
    *
    * @param p Location of point
-   * @return Vector of shape functions at point p
+   * @return vector Vector of shape functions at point p
    */
   virtual std::vector<double> getShapes(const util::Point3 &p) = 0;
 
   /*!
-   * @brief Returns the values of derivative of shape function at point p
-   * (reference element)
+   * @brief Returns the values of derivative of shape function at point p on
+   * reference element
    *
    * @param p Location of point
-   * @return Vector of derivative of shape functions
+   * @return vector Vector of derivative of shape functions
    */
   virtual std::vector<std::vector<double>>
   getDerShapes(const util::Point3 &p) = 0;
 
   /*!
-   * @brief Maps point p in given element to the reference element and
+   * @brief Maps point p in a given element to the reference element and
    * returns the mapped point
    *
    * @param p Location of point
    * @param nodes Vertices of element
-   * @return Vector of shape functions at point p
+   * @return vector Vector of shape functions at point p
    */
   virtual util::Point3
   mapPointToRefElem(const util::Point3 &p,

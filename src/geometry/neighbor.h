@@ -24,10 +24,10 @@ namespace geometry {
  *
  * Currently, nested vector is used for list. However, this is not memory
  * efficient, as the vectors have small memory overhead and the total
- * overhead then is N times the overhead of vector, where N is the number of
+ * overhead is N times the overhead of vector, where N is the number of
  * nodes. When N is large, the total overhead becomes very large.
  *
- * @note Require further memory optimization.
+ * @todo Require further memory optimization.
  */
 class Neighbor {
 
@@ -43,16 +43,16 @@ public:
 
   /*!
    * @brief Get neighbor list of node i (element i in case of
-   * weak_finite_element)
+   * **weak_finite_element**)
    *
    * @param i Id of node
-   * @return Vec vector of neighboring nodes
+   * @return vector Vector of neighboring nodes
    */
   const std::vector<size_t> &getNeighbors(const size_t &i);
 
   /*!
-   * @brief Get pointer to full neighbor list
-   * @return Vec Neighborlist
+   * @brief Get the pointer to full neighbor list
+   * @return pointer Pointer of neighbor list data
    */
   const std::vector<std::vector<size_t>> *getNeighborsP();
 

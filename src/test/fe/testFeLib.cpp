@@ -87,7 +87,7 @@ static bool checkRefIntegration(const size_t &n, const size_t &i,
 // Interface methods
 //
 
-double getNChooseR(size_t n, size_t r) {
+double test::getNChooseR(size_t n, size_t r) {
 
   if (r == 0)
     return 1.;
@@ -99,21 +99,21 @@ double getNChooseR(size_t n, size_t r) {
   return a;
 }
 
-double getExactIntegrationRefTri(size_t alpha, size_t beta) {
+double test::getExactIntegrationRefTri(size_t alpha, size_t beta) {
 
   // compute exact integration of s^\alpha t^\beta
   double I = 0.;
   for (size_t k = 0; k <= beta + 1; k++) {
     if (k % 2 == 0)
-      I += getNChooseR(beta + 1, k) / double((alpha + 1 + k) * (beta + 1));
+      I += test::getNChooseR(beta + 1, k) / double((alpha + 1 + k) * (beta + 1));
     else
-      I -= getNChooseR(beta + 1, k) / double((alpha + 1 + k) * (beta + 1));
+      I -= test::getNChooseR(beta + 1, k) / double((alpha + 1 + k) * (beta + 1));
   }
 
   return I;
 }
 
-double getExactIntegrationRefQuad(size_t alpha, size_t beta) {
+double test::getExactIntegrationRefQuad(size_t alpha, size_t beta) {
 
   // compute exact integration of s^\alpha t^\beta
   if (alpha % 2 == 0 and beta % 2 == 0)
@@ -122,11 +122,11 @@ double getExactIntegrationRefQuad(size_t alpha, size_t beta) {
     return 0.;
 }
 
-void testLineElem(size_t n) {
+void test::testLineElem(size_t n) {
   return;
 }
 
-void testTriElem(size_t n) {
+void test::testTriElem(size_t n) {
 
   //
   // Test1: We test accuracy of integrals of polynomials over reference
@@ -178,7 +178,7 @@ void testTriElem(size_t n) {
         qds = quad.getQuadPoints(nodes);
         // test integration of polynomial f(s,t) = s^i t^j
         // get the exact integration
-        double I_exact = getExactIntegrationRefTri(i, j);
+        double I_exact = test::getExactIntegrationRefTri(i, j);
         if (!checkRefIntegration(n, i, j, qds, I_exact))
           error_test_1++;
 
@@ -278,7 +278,7 @@ void testTriElem(size_t n) {
   std::cout << "\n";
 }
 
-void testQuadElem(size_t n) {
+void test::testQuadElem(size_t n) {
 
   //
   // Test1: We test accuracy of integrals of polynomials over reference
@@ -328,7 +328,7 @@ void testQuadElem(size_t n) {
         qds = quad.getQuadPoints(nodes);
         // test integration of polynomial f(s,t) = s^i t^j
         // get the exact integration
-        double I_exact = getExactIntegrationRefQuad(i, j);
+        double I_exact = test::getExactIntegrationRefQuad(i, j);
         if (!checkRefIntegration(n, i, j, qds, I_exact))
           error_test_1++;
 
@@ -428,7 +428,7 @@ void testQuadElem(size_t n) {
   std::cout << (error_test_2 == 0 ? "TEST 2 : PASS. \n" : "TEST 2 : FAIL. \n");
 }
 
-void testTriElemTime(size_t n, size_t N) {
+void test::testTriElemTime(size_t n, size_t N) {
 
   // get Quadrature
   auto quad = fe::TriElem(n);

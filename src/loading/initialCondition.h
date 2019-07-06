@@ -57,7 +57,7 @@ private:
    * @param x Coordinate of point
    * @param dof Degree of freedom (0 for X, 1 for Y, 2 for Z)
    * @param dim Dimension
-   * @return Value Value of formula at the point
+   * @return value Value of formula at the point
    */
   double getICFormula(const std::string &fn_type,
                       const std::vector<double> &params, const util::Point3 &x,

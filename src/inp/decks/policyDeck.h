@@ -20,12 +20,6 @@ namespace inp {
 
 /*! @brief Structure to read and store policy related input data */
 struct PolicyDeck {
-
-  /**
-   * @name Data members
-   */
-  /**@{*/
-
   /*!
    * @brief Flag which indicates level of memory control to be enforced
    *
@@ -40,8 +34,6 @@ struct PolicyDeck {
    * Default is true.
    */
   bool d_enablePostProcessing;
-
-  /** @}*/
 
   /*!
    * @brief Constructor

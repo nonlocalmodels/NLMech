@@ -28,21 +28,23 @@ class BaseInfluenceFn;
 /*!
  * @brief Collection of methods and database related to material
  *
- * This namespace provides collection of different materials, such as
- * peridynamic material, etc.
- *
- * At present we have implemented both bond-based and state-based model which
- * can also. We consider \b RNP regularized potential as well \b PMB material.
+ * This namespace provides collection of different materials. Currently we
+ * only have peridynamic material models.
  */
 namespace material {
 
 /*!
  * @brief Collection of methods and database related to peridynamic material
  *
- * At present we have implemented both bond-based and state-based model which
- * can also. We consider \b RNP regularized potential as well \b PMB material.
- *
- * @sa Material
+ * At present we have implemented both bond-based and state-based model. We
+ * consider \b RNP regularized potential proposed and studied in [Lipton
+ * 2016](https://link.springer.com/article/10.1007/s10659-015-9564-z),
+ * [Jha and Lipton 2018](https://doi.org/10.1137/17M1112236), [Diehl et al
+ * 2018](https://arxiv.org/abs/1806.06917),
+ * [Jha and Lipton 2019](https://doi.org/10.1016/j.cma.2019.03.024). We have
+ * also implemented PMB material model (Prototypical micro-elastic brittle
+ * material), see [Silling 2000](https://www.sciencedirect
+ * .com/science/article/pii/S0022509699000290).
  */
 
 namespace pd {
@@ -64,7 +66,7 @@ public:
 
   /*!
    * @brief Returns true if state-based potential is active
-   * @return True/false
+   * @return bool True/false
    */
   bool isStateActive();
 
@@ -76,7 +78,7 @@ public:
    * @param fs Bond fracture state
    * @param break_bonds Flag specifying if bond's fracture state is to be
    * modified (needed to implement \a no-fail region
-   * @return Value Pair of energy and force
+   * @return pair Pair of energy and force
    */
   std::pair<double, double> getBondEF(const double &r, const double &s,
                                       bool &fs, const bool &break_bonds);
@@ -85,7 +87,7 @@ public:
    * @brief Returns hydrostatic energy density
    *
    * @param theta Hydrostatic strain
-   * @return Value Energy density
+   * @return energy Energy density
    */
   double getStateEnergy(const double &theta);
 
@@ -94,7 +96,7 @@ public:
    *
    * @param theta Hydrostatic strain
    * @param r Reference (initial) bond length
-   * @return Value Force density
+   * @return force Force density
    */
   double getStateForce(const double &theta, const double &r);
 
@@ -102,7 +104,7 @@ public:
    * @brief Returns true if bond contributes to hydrostatic force
    * @param S Bond strain
    * @param r Reference bond length
-   * @return True/false
+   * @return bool True/false
    */
   bool doesBondContribToState(const double &S, const double &r);
 
@@ -111,7 +113,7 @@ public:
    *
    * @param S Bond strain
    * @param r Reference (initial) bond length
-   * @return Value Contribution to hydrostatic strain
+   * @return strain Contribution to hydrostatic strain
    */
   double getBondContribToHydroStrain(const double &S, const double &r);
 
@@ -119,7 +121,7 @@ public:
    * @brief Returns the bond strain
    * @param dx Reference bond vector
    * @param du Difference of displacement
-   * @return Value Bond strain \f$ S = \frac{du \cdot dx}{|dx|^2} \f$
+   * @return strain Bond strain \f$ S = \frac{du \cdot dx}{|dx|^2} \f$
    */
   double getS(const util::Point3 &dx, const util::Point3 &du);
 
@@ -127,7 +129,7 @@ public:
    * @brief Returns critical bond strain
    *
    * @param r Reference length of bond
-   * @return Value Critical strain
+   * @return strain Critical strain
    */
   double getSc(const double &r);
 
@@ -141,7 +143,7 @@ public:
    * @brief Returns the value of influence function
    *
    * @param r Reference (initial) bond length
-   * @return Value Influence function at r
+   * @return value Influence function at r
    */
   double getInfFn(const double &r);
 
@@ -152,7 +154,7 @@ public:
    * i^{th}\f$ moment is given by \f[ M_i = \int_0^1 J(r) r^i dr. \f]
    *
    * @param i ith moment
-   * @return Value Moment
+   * @return value Moment
    */
   double getMoment(const size_t &i);
 
@@ -163,10 +165,6 @@ public:
   inp::MaterialDeck *getMaterialDeck();
 
 private:
-  /**
-   * @name Internal data
-   */
-  /**@{*/
 
   /*! @brief Flag indicating if peridynamic state potential is active */
   bool d_stateActive;
@@ -179,8 +177,6 @@ private:
 
   /*! @brief Density */
   double d_density;
-
-  /** @}*/
 
   /**
    * @name Base objects implementing particular material model

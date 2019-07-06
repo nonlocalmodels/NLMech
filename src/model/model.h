@@ -24,15 +24,15 @@
  * E.g., in FDModel we implement finite difference discretization with
  * explicit time integration of Peridynamic equation.
  *
- * @sa FDModel
+ * Model class is at top in hierarchy graph. It is in the model class, we
+ * implement particular type of model/simulation. Rest of the libraries
+ * provide support in the implementation. We can have different models which
+ * implements Peridynamics, nonlocal-diffusion, etc.
  */
 namespace model {
 
 /*!
- * @brief A base class for different models
- *
- * This class provides a base for specific models, such as FDModel.
- */
+ * @brief A base class for different model implementation */
 class Model {
 
 public:
@@ -62,7 +62,7 @@ protected:
   /**
    * @name Major simulation data
    *
-   * Major simulation data are those which play direct role in the simulation
+   * Major simulation data are those which play direct role in the simulation,
    * and without declaring these simulation will not work. For Peridynamics,
    * displacement at current time, velocity at current time, and total force
    * are the major simulation data.
@@ -101,9 +101,11 @@ protected:
   /**
    * @name Minor simulation data
    *
-   * These datas are postprocessing data and have no role in simulation.
-   * Since they do not play direct role in simulation, we can compromise in
-   * their accuracy and use 'float' instead of 'double'.
+   * These datas are postprocessing data and have no role in the simulation.
+   * Since they do not play direct role in the simulation, we can compromise in
+   * their accuracy and use 'float' instead of 'double'. We may also choose
+   * to not declare these data and not perform post-processing calculation.
+   * This is done via inp::Policy.
    */
   /**@{*/
 

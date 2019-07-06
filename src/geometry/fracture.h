@@ -21,21 +21,12 @@ struct EdgeCrack;
 struct FractureDeck;
 } // namespace inp
 
-/*!
- * @brief Collection of methods and database related to geometry
- *
- * This namespace provides methods and data members specific to geometry. It
- * consists of class Fracture, InteriorFlags, and Neighbor.
- *
- * @sa Fracture, InteriorFlags, Neighbor
- */
+/*! @brief Collection of methods and data related to geometry */
 namespace geometry {
 
 /*! @brief A class for fracture state of bonds
  *
- * In this class fracture state of each bonds (i.e. whether the bond is
- * broken or not) is stored. It also comes with the access to the state
- * of bond.
+ * This class provides method to read and modify fracture state of bonds
  */
 class Fracture {
 
@@ -65,26 +56,25 @@ public:
   void setBondState(const size_t &i, const size_t &j, const bool &state);
 
   /*!
-   * @brief Sets the bond state
+   * @brief Read bond state
    *
    * @param i Nodal id
    * @param j Local id of bond in neighbor list of i
-   * @return state True if bond is fractured otherwise false
+   * @return bool True if bond is fractured otherwise false
    */
   bool getBondState(const size_t &i, const size_t &j);
 
   /*!
-   * @brief Returns the bonds of given node i
+   * @brief Returns the list of bonds of node i
    *
    * @param i Nodal id
-   * @return List Bonds of node i
+   * @return list Bonds of node i
    */
   const std::vector<uint8_t> getBonds(const size_t &i);
 
 private:
   /*!
-   * @brief Sets flag of bonds of i as fractured which intersect the
-   * pre-crack
+   * @brief Sets state of bond which intersect the pre-crack line as fractured
    *
    * @param i Nodal id
    * @param crack Pointer to the pre-crack
@@ -103,8 +93,7 @@ private:
    * Given node i, vector d_fracture[i] is the list of state of bonds of node
    * i.
    *
-   * This is the most memory efficient data where 1 bit represents the state
-   * of bond.
+   * We only use 1 bit per bond of node to store the state.
    */
   std::vector<std::vector<uint8_t>> d_fracture;
 };

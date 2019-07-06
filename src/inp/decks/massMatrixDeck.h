@@ -20,12 +20,6 @@ namespace inp {
 
 /*! @brief Structure to read and store mass matrix related input data */
 struct MassMatrixDeck {
-
-  /**
-   * @name Data members
-   */
-  /**@{*/
-
   /*!
    * @brief Mass matrix approximation type
    *
@@ -34,8 +28,6 @@ struct MassMatrixDeck {
    * - \a lumped -- lumping of mass matrix
    */
   std::string d_MApproxType;
-
-  /** @}*/
 
   /*!
    * @brief Constructor

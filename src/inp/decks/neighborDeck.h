@@ -19,11 +19,6 @@ namespace inp {
 /*! @brief Structure to read and store neighbor list related input data */
 struct NeighborDeck {
 
-  /**
-   * @name Data members
-   */
-  /**@{*/
-
   /*! @brief Safety factor for neighbor list calculation */
   double d_safetyFactor;
 
@@ -36,8 +31,6 @@ struct NeighborDeck {
    * neighbor list
    */
   bool d_addPartialElems;
-
-  /** @}*/
 
   /*!
    * @brief Constructor

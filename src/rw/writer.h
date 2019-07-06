@@ -26,7 +26,7 @@ namespace rw {
 /*!
  * @brief Collection of methods and database related to writing
  *
- * This namespace provides methods and data members specific to wiriting of
+ * This namespace provides methods and data members specific to writing of
  * the mesh data and simulation data. Currently, .vtu is supported.
  */
 namespace writer {
@@ -48,7 +48,8 @@ public:
    * @brief Constructor
    *
    * Creates and opens .vtu file of name given by filename. The file remains
-   * open till the close() function is invoked.
+   * open till the close() function is invoked or if the instance of this
+   * class is destroyed.
    *
    * @param filename Name of file which will be created
    * @param compress_type Specify the compression type (optional)
@@ -63,7 +64,7 @@ public:
    * @brief Open a .vtu file
    *
    * @param filename Name of file which will be created
-   * @param compress_type Specify the compression type (optional)
+   * @param compress_type Compression type (optional)
    */
   void open(const std::string &filename, const std::string &compress_type = "");
 
@@ -109,7 +110,7 @@ public:
   /*!
    * @brief Writes the scalar point data to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendPointData(const std::string &name,
                        const std::vector<uint8_t> *data);
@@ -117,7 +118,7 @@ public:
   /*!
    * @brief Writes the scalar point data to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendPointData(const std::string &name,
                        const std::vector<size_t> *data);
@@ -125,21 +126,21 @@ public:
   /*!
    * @brief Writes the scalar point data to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendPointData(const std::string &name, const std::vector<int> *data);
 
   /*!
    * @brief Writes the scalar point data to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendPointData(const std::string &name, const std::vector<float> *data);
 
   /*!
    * @brief Writes the scalar point data to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendPointData(const std::string &name,
                        const std::vector<double> *data);
@@ -147,7 +148,7 @@ public:
   /*!
    * @brief Writes the vector point data to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendPointData(const std::string &name,
                        const std::vector<util::Point3> *data);
@@ -156,7 +157,7 @@ public:
  * @brief Writes the symmetric matrix data associated to nodes to the
  * file
  * @param name Name of the data
- * @param data The vector containing the data
+ * @param data Vector containing the data
  */
   void appendPointData(const std::string &name,
                        const std::vector<util::SymMatrix3> *data);
@@ -171,14 +172,14 @@ public:
   /*!
    * @brief Writes the float data associated to cells to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendCellData(const std::string &name, const std::vector<float> *data);
 
   /*!
    * @brief Writes the symmetric matrix data associated to cells to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendCellData(const std::string &name,
                       const std::vector<util::SymMatrix3> *data);

@@ -20,17 +20,17 @@ namespace fe {
 
 /*! @brief A class for mass matrix
  *
- * In this class we compute and store inverse of a mass matrix. We can either
- * compute exact mass matrix and its inverse (using Blaze library) or we can
- * use row-sum approximation (lumping) to approximate the matrix as diagonal
+ * In this class we compute and store the inverse of a mass matrix. We can
+ * either compute the exact mass matrix and its inverse (using Blaze library) or
+ * we can use row-sum approximation (lumping) to approximate the matrix as diagonal
  * matrix.
  *
- * User can specify the order of quadrature approximation in computation of
- * elements of mass matrix.
+ * Order of quadrature approximation in computation of elements of mass
+ * matrix can be specified in the input file, see inp::MassMatrixDeck.
  *
  * @note This class is needed only when the discretization is of
- * weak_finite_element type. It depends on the Mesh::d_gMap and Mesh::d_gInvMap
- * of Mesh class.
+ * \b weak_finite_element type. This class requires data fe::Mesh::d_gMap and
+ * fe::Mesh::d_gInvMap.
  *
  */
 
@@ -48,31 +48,17 @@ private:
    *
    * Deck contains information such as order of quadrature approximation and
    * type of approximation to be used for mass matrix.
-   *
-   * @sa inp::MassMatrixDeck
-   * */
+   */
   inp::MassMatrixDeck *d_massMatrixDeck_p;
 
-  /**
-   * @name Mass matrix
-   */
-  /**@{*/
-
-  /*! @brief Inverse of a diagonal mass matrix stored in a vector */
+  /*! @brief Inverse of a diagonal mass matrix stored as a vector */
   std::vector<double> d_invMDiag;
 
-  /*! @brief Inverse of exact mass matrix stored
+  /*! @brief Inverse of the exact mass matrix
    *
-   * We use Blaze matrix data type.
-   *
-   * Currently we use float for each element of matrix to reduce the memory
-   * load.
-   *
-   * @sa util::SymMatrixFij
+   * We use Blaze matrix library with float data type.
    */
   util::SymMatrixFij d_invM;
-
-  /** @}*/
 };
 
 } // namespace fe
