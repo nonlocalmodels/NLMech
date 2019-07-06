@@ -5,7 +5,11 @@
 
 #include "writer.h"
 #include "vtkWriter.h"
+#include "legacyVtkWriter.h"
 
+//
+// VtkWriterInterface
+//
 rw::writer::VtkWriterInterface::VtkWriterInterface() : d_vtkWriter_p(nullptr) {}
 
 rw::writer::VtkWriterInterface::VtkWriterInterface(
@@ -102,4 +106,44 @@ void rw::writer::VtkWriterInterface::appendFieldData(const std::string &name,
 void rw::writer::VtkWriterInterface::appendFieldData(const std::string &name,
                                                      const float &data) {
   d_vtkWriter_p->appendFieldData(name, data);
+}
+
+//
+// LegacyVtkWriterInterface
+//
+rw::writer::LegacyVtkWriterInterface::LegacyVtkWriterInterface() : d_vtkWriter_p(nullptr) {}
+
+rw::writer::LegacyVtkWriterInterface::LegacyVtkWriterInterface(
+  const std::string &filename, const std::string &compress_type)
+  : d_vtkWriter_p(nullptr) {
+
+  d_vtkWriter_p = new rw::writer::LegacyVtkWriter(filename, compress_type);
+}
+
+void rw::writer::LegacyVtkWriterInterface::open(const std::string &filename,
+                                          const std::string &compress_type) {
+  if (!d_vtkWriter_p)
+    d_vtkWriter_p = new rw::writer::LegacyVtkWriter(filename, compress_type);
+}
+
+rw::writer::LegacyVtkWriterInterface::~LegacyVtkWriterInterface() {
+  delete (d_vtkWriter_p);
+}
+
+void rw::writer::LegacyVtkWriterInterface::appendNodes(
+  const std::vector<util::Point3> *nodes) {
+  d_vtkWriter_p->appendNodes(nodes);
+}
+
+void rw::writer::LegacyVtkWriterInterface::appendNodes(
+  const std::vector<util::Point3> *nodes,
+  const std::vector<util::Point3> *u) {
+  d_vtkWriter_p->appendNodes(nodes, u);
+}
+
+void rw::writer::LegacyVtkWriterInterface::appendMesh(
+  const std::vector<util::Point3> *nodes, const size_t &element_type,
+  const std::vector<size_t> *en_con, const std::vector<util::Point3> *u) {
+
+  d_vtkWriter_p->appendMesh(nodes, element_type, en_con, u);
 }
