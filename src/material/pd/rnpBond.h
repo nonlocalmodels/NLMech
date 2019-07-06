@@ -21,10 +21,10 @@ namespace pd {
 /*! @brief A Class implementing regularized nonlinear peridynamic model
  *
  * Provides method to compute energy and force using nonlinear bond-based
- * model introduced and studied in <a href="https://doi.org/10
- * .1007/s10659-015-9564-z>Lipton2016</a>, <a href="https://epubs.siam
- * .org/doi/10.1137/17M1112236">JhaLipton2018</a>, and <a href="https://doi
- * .org/10.1007/s42102-019-00010-0">LiptonJha2019</a>.
+ * model introduced and studied in
+ * [Lipton 2016](https://doi.org/10.1007/s10659-015-9564-z),
+ * [Jha and Lipton 2018](https://epubs.siam.org/doi/10.1137/17M1112236), and
+ * [Lipton and Jha 2019](https://doi.org/10.1007/s42102-019-00010-0).
  *
  * 1. The pairwise energy is
  * \f[ E_{bond} = \int_D \frac{1}{|B_\epsilon(x)|} \int_{B_\epsilon(x)} |y-x|
@@ -92,7 +92,7 @@ public:
    * @param s Bond strain
    * @param J Influence function at r, i.e. \f$ J^\epsilon(r) \f$
    * @param fs Bond fracture state
-   * @return Value Pair of energy and force
+   * @return value Pair of energy and force
    */
   std::pair<double, double> getBondEF(const double &r, const double &s,
                                       const double &J, bool &fs) override;
@@ -123,7 +123,7 @@ public:
    * @param r Reference (initial) bond length
    * @param s Bond strain
    * @param J Influence function at r, i.e. \f$ J^\epsilon(r) \f$
-   * @return Value Pair of energy and force
+   * @return value Pair of energy and force
    */
   std::pair<double, double> getBondEFNoFail(const double &r, const double &s,
                                             const double &J) override;
@@ -132,7 +132,7 @@ public:
    * @brief Returns critical bond strain
    *
    * @param r Reference length of bond
-   * @return Value Critical strain
+   * @return strain Critical strain
    */
   double getSc(const double &r) override;
 
@@ -146,7 +146,7 @@ private:
    * parameters \f$ \lambda, \mu \f$ where \f$ \mu = \lambda \f$ for bond-based.
    *
    * With lame parameters, we use following formula, see Equation (5.7) & (5
-   * .8) of <a href="https://doi.org/10.1007/s10659-015-9564-z>Lipton2016</a>
+   * .8) of [Lipton 2016](https://doi.org/10.1007/s10659-015-9564-z)
    * - if \f$ d=2 \f$
    * \f[ \lambda = \mu = \frac{\psi'(0)}{4} M_2, \qquad Gc = \frac{4
    * \psi_{\infty}}{\pi} M_2. \f]
@@ -175,11 +175,10 @@ private:
    * @brief Computes elastic and fracture properties from the rnp material
    * parameters
    *
-   * This function is does opposite of computeParameters(). From peridynamic
-   * material properties, it uses the relation between lame parameters and
-   * peridynamic parameters (see computeParameters() description) to compute
-   * lame parameters, and from lame parameters it computes the elastic
-   * constants.
+   * This function does opposite of pd::Material::RNPBond::computeParameters.
+   * From peridynamic material properties, it uses the relation between lame
+   * parameters and peridynamic parameters to compute the lame parameters, and
+   * from lame parameters it computes the elastic constants.
    *
    * @param deck Input material deck
    * @param M Moment of influence function

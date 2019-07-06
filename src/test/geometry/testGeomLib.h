@@ -10,10 +10,7 @@
 #include <string>
 #include <vector>
 
-/**
- * @defgroup TestGeometry TestGeometry
- */
-/**@{*/
+namespace test {
 
 /*!
  * @brief Perform test on Fracture class and check if bitwise functions are
@@ -21,6 +18,6 @@
  */
 void testFracture();
 
-/** @}*/
+} // namespace test
 
 #endif // TEST_GEOMLIB_H

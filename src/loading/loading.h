@@ -20,8 +20,6 @@ struct BCData;
  *
  * This namespace provides methods and data members specific to application
  * of displacement and force boundary condition and also initial condition.
- *
- * @sa Loading, InitialCondition
  */
 namespace loading {
 
@@ -40,18 +38,11 @@ public:
   Loading() = default;
 
 protected:
-  /**
-   * @name Internal data
-   */
-  /**@{*/
-
   /*! @brief List of displacement bcs */
   std::vector<inp::BCData> d_bcData;
 
   /*! @brief List of nodal ids on which bc is to be applied */
   std::vector<std::vector<size_t>> d_bcNodes;
-
-  /** @}*/
 };
 
 } // namespace loading

@@ -16,11 +16,6 @@ namespace inp {
 /*! @brief Structure to read and store quadrature point related input data */
 struct QuadratureDeck {
 
-  /**
-   * @name Data members
-   */
-  /**@{*/
-
   /*! @brief Order of quadrature point integration approximation */
   size_t d_quadOrder;
 
@@ -29,8 +24,6 @@ struct QuadratureDeck {
    * mass matrix
    */
   size_t d_quadOrderM;
-
-  /** @}*/
 
   /*!
    * @brief Constructor

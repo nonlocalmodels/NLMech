@@ -12,15 +12,16 @@
  * @brief Collection of methods and database related to input
  *
  * This namespace provides methods and data members specific to reading input
- * data. It provides struct definitions to read and store data. Each struct
- * is unique and is used in initialization of higher level objects such as
- * fe::Mesh, geometry::Fracture, material::Material, loading::Loading, etc.
+ * data. We partition the input data into number of small collection of input
+ * data referred to as decks, e.g. inp::FractureDeck, inp::MeshDeck, etc. We
+ * use structs to define the deck.
+ * *
+ * Each deck is unique and is designed to initialize the higher level object
+ * associated to it without needing information from other decks. For example,
+ * fe::Mesh is initialized by inp::MeshDeck.
  *
  * The namespace consists of Input and Policy member classes. Input class is
- * the main class responsible of creating struct data and reading input file
- * into those structs.
- *
- * @sa Input, Policy
+ * the main class responsible of reading input data into various decks.
  */
 namespace inp {
 
@@ -50,15 +51,15 @@ struct SolverDeck;
 /*!
  * @brief A class to read input file
  *
- * In this class we create struct data types, and read input file and store
- * in the respective structs. The class depends on the YAML library.
+ * In this class we read input file and read the data into various decks.
+ * Input file is a YAML file.
  */
 class Input {
 
 public:
   /*!
    * @brief Constructor
-   * @param filename of input file
+   * @param filename Filename of input file
    */
   explicit Input(const std::string &filename);
 
@@ -156,12 +157,12 @@ public:
    *
    * Return value can be of four kind:
    * - "" (none)
-   * - finite_difference
-   * - weak_finite_element
-   * - nodal_finite_element
-   * - truss_finite_element
+   * - **finite_difference**
+   * - **weak_finite_element**
+   * - **nodal_finite_element**
+   * - **truss_finite_element**
    *
-   * @return Tag
+   * @return string Name of discretization
    */
   const std::string getSpatialDiscretization();
 
@@ -171,7 +172,7 @@ private:
   /**
    * @name Setter methods
    *
-   * Reads input file into the respective structs
+   * Reads input file into the respective decks
    */
   /**@{*/
 
@@ -258,7 +259,7 @@ private:
   /** @}*/
 
   /**
-   * @name Struct data
+   * @name Decks
    */
   /**@{*/
 

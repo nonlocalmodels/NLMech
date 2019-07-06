@@ -17,11 +17,6 @@ namespace util {
  */
 namespace methods {
 
-/**
- * \defgroup FastMethods FastMethods
- */
-/**@{*/
-
 /*!
  * @brief Returns the sum of data
  * @param data List of real numbers

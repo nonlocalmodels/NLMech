@@ -50,28 +50,23 @@ namespace model {
  */
 /**@{*/
 
-/*! @brief A class for \a finite \a difference \a approximation of
- * \b Peridynamics
+/*! @brief A class for *finite difference approximation* of **Peridynamics**
  *
- * In this class we implement the \a finite \a difference \a approximation of
- * \b peridynamics.
+ * We consider *explicit* schemes such as *central difference* and
+ * *velocity verlet* for time integration.
  *
- * We consider \a explicit \a scheme such as \a central \a difference and
- * \a velocity \a verlet for time integration.
- *
- * This class acts as a link to lower rank classes, such as Mesh, Loading,
+ * This class acts as a holder of lower rank classes, such as Mesh, Loading,
  * InitialCondition, Fracture, etc, and uses the methods and data of the
- * lower rank classes to run simulations.
+ * lower rank classes to perform calculation.
  *
  * @note 1. We can run finite difference on any finite element mesh as long as
- * mesh consists of only one type of elements. Therefore, we are restricted
- * to run finite difference simulation only on uniform grids. User can
- * prepare a mesh using \b Gmsh and use its .msh file to run the finite
- * difference approximation.
+ * the mesh consists of only one type of elements. We can mesh the domain
+ * using **Gmsh** and use its **.msh** file to run the finite difference
+ * approximation.
  *
  * @note 2. Currently only dimension 2 is supported.
  *
- * @note 3. Either triangle or quadrangle element mesh are supported.
+ * @note 3. Either triangle or quadrangle elements are supported.
  */
 class FDModel : public Model {
 
@@ -190,6 +185,38 @@ private:
 
   /*!
    * @brief Output the snapshot of data at current time step
+   *
+   * Name of data in the output simulation file and the name of data they
+   * refer to
+   *
+   * Major simulation data
+   * | Name in output file          | Data name             |
+   * | ---------------------------- | --------------------- |
+   * | Displacement                 | model::Model::d_u     |
+   * | Velocity                     | model::Model::d_v     |
+   * | Force                        | model::Model::d_f * nodal volume |
+   * | time                         | model::Model::d_time  |
+   *
+   * Minor simulation data (if these are populated and computed). Calculation
+   * and population of post-processing data can be controlled by specifying
+   * memory control level in inp::PolicyDeck::d_memControlFlag or by
+   * enabling/disabling post-processing calculation in
+   * inp::PolicyDeck::d_enablePostProcessing.
+   * | Name in output file          | Data name             |
+   * | ---------------------------- | --------------------- |
+   * | Force_Density                | model::Model::d_f     |
+   * | Strain_Energy                | model::Model::d_e    |
+   * | Work_Done                    | model::Model::d_w     |
+   * | Fixity                       | fe::Mesh::getFixityP() |
+   * | Node_Volume                  | fe::Mesh::getNodalVolumeP() |
+   * | Damage_Phi                   | model::Model::d_phi    |
+   * | Damage_Z                     | model::Model::d_Z      |
+   * | Fracture_Perienergy_Bond     | model::Model::d_eFB    |
+   * | Fracture_Perienergy_Total    | model::Model::d_eF     |
+   * | Total_Energy                 | model::Model::d_Z      |
+   * | Total_Fracture_Perienergy_Bond   | model::Model::d_teFB   |
+   * | Total_Fracture_Perienergy_Total  | model::Model::d_teF    |
+   *
    */
   void output();
 
@@ -210,81 +237,37 @@ private:
    */
   /**@{*/
 
-  /*!
-   * @brief Pointer to Mass matrix object containing mass matrix (if any)
-   *
-   * @sa MassMatrix
-   */
+  /*! @brief Pointer to Mass matrix object containing mass matrix (if any) */
   fe::MassMatrix *d_massMatrix_p;
 
-  /*!
-   * @brief Pointer to Mesh object
-   *
-   * @sa Mesh
-   */
+  /*! @brief Pointer to Mesh object */
   fe::Mesh *d_mesh_p;
 
-  /*!
-   * @brief Pointer to Fracture object
-   *
-   * @sa Fracture
-   */
+  /*! @brief Pointer to Fracture object */
   geometry::Fracture *d_fracture_p;
 
-  /*!
-   * @brief Pointer to Neighbor object
-   *
-   * @sa Neighbor
-   */
+  /*! @brief Pointer to Neighbor object */
   geometry::Neighbor *d_neighbor_p;
 
-  /*!
-   * @brief Pointer to InteriorFlags object
-   *
-   * @sa InteriorFlags
-   */
+  /*! @brief Pointer to InteriorFlags object */
   geometry::InteriorFlags *d_interiorFlags_p;
 
-  /*!
-   * @brief Pointer to Input object
-   *
-   * @sa Input
-   */
+  /*! @brief Pointer to Input object */
   inp::Input *d_input_p;
 
-  /*!
-   * @brief Pointer to Policy object
-   *
-   * @sa Policy
-   */
+  /*! @brief Pointer to Policy object */
   inp::Policy *d_policy_p;
 
-  /*!
-   * @brief Pointer to InitialCondition object
-   *
-   * @sa InitialCondition
-   */
+  /*! @brief Pointer to InitialCondition object */
   loading::InitialCondition *d_initialCondition_p;
 
-  /*!
-   * @brief Pointer to displacement Loading object
-   *
-   * @sa ULoading
-   */
+  /*! @brief Pointer to displacement Loading object */
   loading::ULoading *d_uLoading_p;
 
-  /*!
-   * @brief Pointer to force Loading object
-   *
-   * @sa FLoading
-   */
+  /*! @brief Pointer to force Loading object */
   loading::FLoading *d_fLoading_p;
 
-  /*!
-   * @brief Pointer to Material object
-   *
-   * @sa Material
-   */
+  /*! @brief Pointer to Material object */
   material::pd::Material *d_material_p;
 
   /** @}*/

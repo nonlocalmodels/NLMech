@@ -11,13 +11,8 @@
 
 namespace inp {
 
-/*! @brief Structure for displacement/force boundary condition data */
+/*! @brief Structure for displacement/force boundary condition input data */
 struct BCData {
-
-  /**
-   * @name Data members
-   */
-  /**@{*/
 
   /*!
    * @brief Type of region over which the bc will be applied
@@ -83,8 +78,6 @@ struct BCData {
   /*! @brief List of parameters for function wrt spatial coordinate */
   std::vector<double> d_spatialFnParams;
 
-  /** @}*/
-
   /*!
    * @brief Constructor
    */
@@ -99,18 +92,11 @@ struct BCData {
 /*! @brief Structure to read and store policy data */
 struct LoadingDeck {
 
-  /**
-   * @name Data members
-   */
-  /**@{*/
-
   /*! @brief List of displacement bcs */
   std::vector<inp::BCData> d_uBCData;
 
   /*! @brief List of force bcs */
   std::vector<inp::BCData> d_fBCData;
-
-  /** @}*/
 
   /*!
    * @brief Constructor

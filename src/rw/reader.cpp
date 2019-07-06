@@ -106,3 +106,14 @@ void rw::reader::readVtuFileRestart(const std::string &filename,
   rdr.readPointData("Velocity", v);
   rdr.close();
 }
+
+bool rw::reader::readVtuFilePointData(const std::string &filename,
+                                      const std::string &tag,
+                                      std::vector<double> *data) {
+  // call vtk reader
+  rw::reader::VtkReader rdr = rw::reader::VtkReader(filename);
+  // get velocity
+  auto st = rdr.readPointData(tag, data);
+  rdr.close();
+  return st;
+}

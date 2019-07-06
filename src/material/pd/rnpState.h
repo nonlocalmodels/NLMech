@@ -21,9 +21,9 @@ namespace pd {
 /*! @brief A Class implementing regularized nonlinear peridynamic model
  *
  * Provides method to compute energy and force using nonlinear state-based
- * model introduced and studied in <a
- * href="https://doi.org/10.1007/978-3-319-22977-5_33-1">Lipton2018</a>, <a
- * href="https://www.sciencedirect.com/science/article/pii/S0045782519301537">JhaLipton2019</a>.
+ * model introduced and studied in [Lipton 2018](https://doi.org/10
+ * .1007/978-3-319-22977-5_33-1), [Jha and Lipton 2019](https://www
+ * .sciencedirect.com/science/article/pii/S0045782519301537).
  *
  * 1. The pairwise energy and hydrostatic energy are
  * \f[ E_{bond} = \int_D \frac{1}{|B_\epsilon(x)|} \int_{B_\epsilon(x)} |y-x|
@@ -139,7 +139,7 @@ public:
    * @param r Reference (initial) bond length
    * @param s Bond strain
    * @param J Influence function at r, i.e. \f$ J^\epsilon(r) \f$
-   * @return Value Pair of energy and force
+   * @return pair Pair of energy and force
    */
   std::pair<double, double> getBondEFNoFail(const double &r, const double &s,
                                             const double &J) override;
@@ -155,7 +155,7 @@ public:
    * \frac{g(\theta)}{\epsilon^2}\f$.
    *
    * @param theta Hydrostatic strain
-   * @return Value Energy density
+   * @return energy Energy density
    */
   double getStateEnergy(const double &theta) override;
 
@@ -174,7 +174,7 @@ public:
    *
    * @param theta Hydrostatic strain
    * @param J Influence function at r
-   * @return Value Force density
+   * @return force Force density
    */
   double getStateForce(const double &theta, const double &J) override;
 
@@ -182,7 +182,7 @@ public:
    * @brief Returns true if bond contributes to hydrostatic force
    * @param S Bond strain
    * @param r Reference bond length
-   * @return True/false
+   * @return bool True/false
    */
   bool doesBondContribToState(const double &S, const double &r) override;
 
@@ -199,7 +199,7 @@ public:
    * @param S Bond strain
    * @param r Reference (initial) bond length
    * @param J Influence function at r
-   * @return Value Contribution to hydrostatic strain
+   * @return strain Contribution to hydrostatic strain
    */
   double getBondContribToHydroStrain(const double &S, const double &r,
                                      const double &J) override;
@@ -208,7 +208,7 @@ public:
    * @brief Returns critical bond strain
    *
    * @param r Reference length of bond
-   * @return Value Critical strain
+   * @return strain Critical strain
    */
   double getSc(const double &r) override;
 
@@ -219,11 +219,9 @@ private:
    * Either Young's modulus E or bulk modulus K, and Poisson ratio \f$ \nu \f$,
    * and either critical energy release rate Gc or critical stress intensity
    * factor KIc are needed. We first compute lame
-   * parameters \f$ \lambda, \mu \f$.
-   *
-   * With lame parameters, we use following formula, see Equations (94), (95)
-   * & (97) of <a
-   * href="https://doi.org/10.1007/978-3-319-22977-5_33-1">Lipton2018</a>
+   * parameters \f$ \lambda, \mu \f$ from K (or E) and \f$ \nu \f$. With lame
+   * parameters, we use following formula, see Equations (94), (95)
+   * & (97) of [Lipton 2018](https://doi.org/10.1007/978-3-319-22977-5_33-1)
    * - if \f$ d=2 \f$
    * \f[ \mu = \frac{\psi'(0)}{4} M_2, \qquad \lambda = \mu + \frac{g''(0)}{2}
    * M_2^2, \qquad Gc = \frac{4\psi_{\infty}}{\pi} M_2. \f]

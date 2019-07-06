@@ -24,7 +24,7 @@ public:
    * @brief Returns the value of influence function
    *
    * @param r Reference (initial) bond length
-   * @return Value Influence function at r
+   * @return value Influence function at r
    */
   virtual double getInfFn(const double &r) = 0;
 
@@ -35,7 +35,7 @@ public:
    * i^{th} \f$ moment is given by \f[ M_i = \int_0^1 J(r) r^i dr. \f]
    *
    * @param i ith moment
-   * @return Value Moment
+   * @return moment Moment
    */
   virtual double getMoment(const size_t &i) = 0;
 };
@@ -55,7 +55,7 @@ public:
    * @brief Returns the value of influence function
    *
    * @param r Reference (initial) bond length
-   * @return Value Influence function at r
+   * @return value Influence function at r
    */
   double getInfFn(const double &r) override;
 
@@ -66,7 +66,7 @@ public:
    * i^{th}\f$ moment is given by \f[ M_i = \int_0^1 J(r) r^i dr. \f]
    *
    * @param i ith moment
-   * @return Value Moment
+   * @return moment Moment
    */
   double getMoment(const size_t &i) override;
 
@@ -82,18 +82,18 @@ private:
 class LinearInfluenceFn : public BaseInfluenceFn {
 
 public:
-    /*!
-     * @brief Constructor
-     *  @param params List of parameters
-     *  @param dim Dimension
-     */
+  /*!
+   * @brief Constructor
+   *  @param params List of parameters
+   *  @param dim Dimension
+   */
   LinearInfluenceFn(const std::vector<double> &params, const size_t &dim);
 
   /*!
    * @brief Returns the value of influence function
    *
    * @param r Reference (initial) bond length
-   * @return Value Influence function at r
+   * @return value Influence function at r
    */
   double getInfFn(const double &r) override;
 
@@ -104,7 +104,7 @@ public:
    * i^{th}\f$ moment is given by \f[ M_i = \int_0^1 J(r) r^i dr. \f]
    *
    * @param i ith moment
-   * @return Value Moment
+   * @return moment Moment
    */
   double getMoment(const size_t &i) override;
 
@@ -123,18 +123,18 @@ private:
 class GaussianInfluenceFn : public BaseInfluenceFn {
 
 public:
-    /*!
-     * @brief Constructor
-     *  @param params List of parameters
-     *  @param dim Dimension
-     */
+  /*!
+   * @brief Constructor
+   *  @param params List of parameters
+   *  @param dim Dimension
+   */
   GaussianInfluenceFn(const std::vector<double> &params, const size_t &dim);
 
   /*!
    * @brief Returns the value of influence function
    *
    * @param r Reference (initial) bond length
-   * @return Value Influence function at r
+   * @return value Influence function at r
    */
   double getInfFn(const double &r) override;
 
@@ -145,7 +145,7 @@ public:
    * i^{th}\f$ moment is given by \f[ M_i = \int_0^1 J(r) r^i dr. \f]
    *
    * @param i ith moment
-   * @return Value Moment
+   * @return moment Moment
    */
   double getMoment(const size_t &i) override;
 

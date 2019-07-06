@@ -1,0 +1,41 @@
+# provide input files used in running simulation
+Source_Path: ./
+Simulation_Input_File: input.yaml
+# name of the vtu file which contains data like
+# displacement, velocity
+# default name is used in below if it is not provided
+Filename_To_Read: output
+# check input file for simulation and only if elastic properties are not there, provide them here. These are required for stress calculation.
+Material:
+  Poisson_Ratio: 0.25
+  E: 1.0
+Output:
+  # specify output directory
+  Path: pp/modify_v/new/
+# specify what to compute
+Compute:
+  Sets: 2
+  Set_1:
+    Tag_Filename: damage
+    # start index (optional) 
+    Dt_Start: 11
+    # end index (optional)
+    # Dt_End: 100
+    # interval (optional)
+    Dt_Interval: 2
+    Output_Only_Nodes: true
+    # compute damage function Z
+    Damage_Z: true
+    Compress_Type: zlib
+  Set_2:
+    Tag_Filename: strain
+    Output_Only_Nodes: false
+    Compress_Type: zlib
+    # compute magnitude of strain tensor
+    Magnitude_Strain_Tensor:
+      # specify component if any
+      Component: yy
+    # compute strain and stress
+    Strain_Stress: true  
+HPX:
+  Partitions: 1
