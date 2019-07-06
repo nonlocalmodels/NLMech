@@ -13,8 +13,6 @@ Material:
 Output:
   # specify output directory
   Path: pp/modify_v/new/
-  # output filename
-  Filename: pp
 # specify what to compute
 Compute:
   # specify filename for damage (code it will append output number at the
