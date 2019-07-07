@@ -8,10 +8,10 @@
 // utils
 #include "rw/reader.h"
 #include "rw/writer.h"
+#include "util/compare.h"
 #include "util/fastMethods.h"
 #include "util/matrix.h"
 #include "util/point.h"
-#include "util/compare.h"
 
 // include high level class declarations
 #include "fe/massMatrix.h"
@@ -92,6 +92,9 @@ void model::FDModel::initHObjects() {
   std::cout << "FDModel: Creating mesh.\n";
   d_mesh_p = new fe::Mesh(d_input_p->getMeshDeck());
   d_mesh_p->clearElementData();
+
+  std::cout << "number of nodes = " << d_mesh_p->getNumNodes()
+            << " number of elements = " << d_mesh_p->getNumElements() << "\n";
 
   // create neighbor list
   std::cout << "FDModel: Creating neighbor list.\n";
@@ -673,8 +676,8 @@ void model::FDModel::output() {
                          std::to_string(d_n / d_outputDeck_p->d_dtOut);
 
   // open
-  auto writer =
-      rw::writer::VtkWriterInterface(filename, d_outputDeck_p->d_compressType);
+  auto writer = rw::writer::WriterInterface(
+      filename, d_outputDeck_p->d_outFormat, d_outputDeck_p->d_compressType);
 
   // write mesh
   if (d_mesh_p->getNumElements() != 0 && d_outputDeck_p->d_performFEOut)

@@ -54,6 +54,10 @@ static const int vtk_type_pyramid = 14;
 static int vtk_map_element_to_num_nodes[16] = {0, 1, -1, 2, -1, 3, -1, -1,
                                                4, 4, 4,  8, 8,  6, 5,  -1};
 
+/*! @brief Map from vtk element type to msh element type */
+static int vtk_to_msh_element_type_map[16] = {-1, 15, -1, 1, -1, 2, -1, -1,
+                                               -1, 3, 4, -1, 5, 6, 7, -1};
+
 /**
  * @name Gmsh Element types
  */

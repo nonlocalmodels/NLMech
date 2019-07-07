@@ -24,18 +24,6 @@ rw::writer::VtkWriter::VtkWriter(const std::string &filename,
   d_writer_p->SetFileName(const_cast<char *>(f.c_str()));
 }
 
-void rw::writer::VtkWriter::appendNodes(
-    const std::vector<util::Point3> *nodes) {
-
-  auto points = vtkSmartPointer<vtkPoints>::New();
-
-  for (auto p : *nodes)
-    points->InsertNextPoint(p.d_x, p.d_y, p.d_z);
-
-  d_grid_p = vtkSmartPointer<vtkUnstructuredGrid>::New();
-  d_grid_p->SetPoints(points);
-}
-
 void rw::writer::VtkWriter::appendNodes(const std::vector<util::Point3> *nodes,
                                         const std::vector<util::Point3> *u) {
 
@@ -43,7 +31,9 @@ void rw::writer::VtkWriter::appendNodes(const std::vector<util::Point3> *nodes,
 
   for (size_t i = 0; i < nodes->size(); i++) {
 
-    util::Point3 p = (*nodes)[i] + (*u)[i];
+    util::Point3 p = (*nodes)[i];
+    if (u)
+      p = p + (*u)[i];
     points->InsertNextPoint(p.d_x, p.d_y, p.d_z);
   }
 

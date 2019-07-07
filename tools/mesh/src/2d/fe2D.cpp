@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE.txt)
 
 #include "fe2D.h"
-#include "../lib/vtkWriter.h"  // definition of VtkWriter
+#include "rw/writer.h"    // definition of vtk and msh writer interface
 #include "util/point.h" // definition of Point3
 #include "util/feElementDefs.h"   // definition of fe element type
 #include "util/compare.h"         // compare real numbers
@@ -17,6 +17,7 @@ namespace {
 struct InpData {
   std::string d_pathFile;
   std::string d_meshFile;
+  std::string d_outFormat;
   std::pair<std::vector<double>, std::vector<double>> d_domain;
   double d_horizon;
   size_t d_r;
@@ -45,6 +46,11 @@ void readInputFile(InpData *data, YAML::Node config) {
       data->d_meshFile += config["Output"]["Mesh"].as<std::string>();
     else
       data->d_meshFile += "mesh";
+
+    if (config["Output"]["File_Format"])
+      data->d_outFormat = config["Output"]["File_Format"].as<std::string>();
+    else
+      data->d_outFormat = "vtu";
   }
 
   if (config["Domain"]) {
@@ -154,8 +160,9 @@ void tools::mesh::uniformSquare(const std::string &filename) {
   // we do not require element-node connectivity
   if (data.d_isFd) {
 
-    // write data to vtu file
-    auto writer = tools::mesh::VtkWriter(data.d_meshFile, data.d_compressType);
+    // write data to file
+    auto writer = rw::writer::WriterInterface(
+        data.d_meshFile, data.d_outFormat, data.d_compressType);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
     writer.addTimeStep(0.);
@@ -181,12 +188,10 @@ void tools::mesh::uniformSquare(const std::string &filename) {
       en_con[4 * n + 3] = (j + 1) * (nx + 1) + i;
     }
 
-  // dummy displacement field
-  std::vector<util::Point3> u(num_nodes, util::Point3());
-
-  // write to vtu file
-  auto writer = tools::mesh::VtkWriter(data.d_meshFile, data.d_compressType);
-  writer.appendMesh(&nodes, element_type, &en_con, &u);
+  // write data to file
+  auto writer = rw::writer::WriterInterface(data.d_meshFile, data.d_outFormat,
+                                            data.d_compressType);
+  writer.appendMesh(&nodes, element_type, &en_con);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);
   writer.close();
@@ -271,8 +276,9 @@ void tools::mesh::uniformTri(const std::string &filename) {
   // we do not require element-node connectivity
   if (data.d_isFd) {
 
-    // write data to vtu file
-    auto writer = tools::mesh::VtkWriter(data.d_meshFile, data.d_compressType);
+    // write data to file
+    auto writer = rw::writer::WriterInterface(
+      data.d_meshFile, data.d_outFormat, data.d_compressType);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
     writer.addTimeStep(0.);
@@ -324,12 +330,10 @@ void tools::mesh::uniformTri(const std::string &filename) {
       }
     } // loop over i
 
-  // dummy displacement field
-  std::vector<util::Point3> u(num_nodes, util::Point3());
-
-  // write to vtu file
-  auto writer = tools::mesh::VtkWriter(data.d_meshFile, data.d_compressType);
-  writer.appendMesh(&nodes, element_type, &en_con, &u);
+  // write data to file
+  auto writer = rw::writer::WriterInterface(data.d_meshFile, data.d_outFormat,
+                                            data.d_compressType);
+  writer.appendMesh(&nodes, element_type, &en_con);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);
   writer.close();
@@ -480,8 +484,9 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
   // we do not require element-node connectivity
   if (data.d_isFd) {
 
-    // write data to vtu file
-    auto writer = tools::mesh::VtkWriter(data.d_meshFile, data.d_compressType);
+    // write data to file
+    auto writer = rw::writer::WriterInterface(
+        data.d_meshFile, data.d_outFormat, data.d_compressType);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
     writer.addTimeStep(0.);
@@ -555,12 +560,10 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
       en_con[3 * T + 2] = ns[4];
     } // loop over i
 
-  // dummy displacement field
-  std::vector<util::Point3> u(num_nodes, util::Point3());
-
-  // write to vtu file
-  auto writer = tools::mesh::VtkWriter(data.d_meshFile, data.d_compressType);
-  writer.appendMesh(&nodes, element_type, &en_con, &u);
+  // write data to file
+  auto writer = rw::writer::WriterInterface(data.d_meshFile, data.d_outFormat,
+                                            data.d_compressType);
+  writer.appendMesh(&nodes, element_type, &en_con);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);
   writer.close();

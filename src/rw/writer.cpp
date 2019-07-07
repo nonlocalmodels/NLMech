@@ -6,144 +6,198 @@
 #include "writer.h"
 #include "vtkWriter.h"
 #include "legacyVtkWriter.h"
+#include "mshWriter.h"
 
-//
-// VtkWriterInterface
-//
-rw::writer::VtkWriterInterface::VtkWriterInterface() : d_vtkWriter_p(nullptr) {}
+rw::writer::WriterInterface::WriterInterface()
+    : d_vtkWriter_p(nullptr), d_legacyVtkWriter_p(nullptr),
+      d_mshWriter_p(nullptr), d_format("vtu") {}
 
-rw::writer::VtkWriterInterface::VtkWriterInterface(
-    const std::string &filename, const std::string &compress_type)
-    : d_vtkWriter_p(nullptr) {
-
-  d_vtkWriter_p = new rw::writer::VtkWriter(filename, compress_type);
+rw::writer::WriterInterface::WriterInterface(const std::string &filename,
+                                             const std::string &format,
+                                             const std::string &compress_type)
+    : d_vtkWriter_p(nullptr), d_legacyVtkWriter_p(nullptr),
+      d_mshWriter_p(nullptr), d_format("vtu") {
+  open(filename, format, compress_type);
 }
 
-void rw::writer::VtkWriterInterface::open(const std::string &filename,
-                                          const std::string &compress_type) {
-  if (!d_vtkWriter_p)
+void rw::writer::WriterInterface::open(const std::string &filename,
+                                       const std::string &format,
+                                       const std::string &compress_type) {
+  d_format = format;
+  if (d_format == "vtu")
     d_vtkWriter_p = new rw::writer::VtkWriter(filename, compress_type);
+  else if (d_format == "msh")
+    d_mshWriter_p = new rw::writer::MshWriter(filename, compress_type);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p =
+        new rw::writer::LegacyVtkWriter(filename, compress_type);
 }
 
-rw::writer::VtkWriterInterface::~VtkWriterInterface() {
+rw::writer::WriterInterface::~WriterInterface() {
   delete (d_vtkWriter_p);
 }
 
-void rw::writer::VtkWriterInterface::appendNodes(
-    const std::vector<util::Point3> *nodes) {
-  d_vtkWriter_p->appendNodes(nodes);
-}
-
-void rw::writer::VtkWriterInterface::appendNodes(
+void rw::writer::WriterInterface::appendNodes(
     const std::vector<util::Point3> *nodes,
     const std::vector<util::Point3> *u) {
-  d_vtkWriter_p->appendNodes(nodes, u);
+
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendNodes(nodes, u);
+  else if (d_format == "msh")
+    d_mshWriter_p->appendNodes(nodes, u);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->appendNodes(nodes, u);
 }
 
-void rw::writer::VtkWriterInterface::appendMesh(
+void rw::writer::WriterInterface::appendMesh(
     const std::vector<util::Point3> *nodes, const size_t &element_type,
     const std::vector<size_t> *en_con, const std::vector<util::Point3> *u) {
 
-  d_vtkWriter_p->appendMesh(nodes, element_type, en_con, u);
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendMesh(nodes, element_type, en_con, u);
+  else if (d_format == "msh")
+    d_mshWriter_p->appendMesh(nodes, element_type, en_con, u);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->appendMesh(nodes, element_type, en_con, u);
 }
 
-void rw::writer::VtkWriterInterface::appendPointData(
+void rw::writer::WriterInterface::appendPointData(
     const std::string &name, const std::vector<uint8_t> *data) {
-  d_vtkWriter_p->appendPointData(name, data);
+
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendPointData(name, data);
+  else if (d_format == "msh")
+    d_mshWriter_p->appendPointData(name, data);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->appendPointData(name, data);
 }
 
-void rw::writer::VtkWriterInterface::appendPointData(
+void rw::writer::WriterInterface::appendPointData(
     const std::string &name, const std::vector<size_t> *data) {
-  d_vtkWriter_p->appendPointData(name, data);
+
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendPointData(name, data);
+  else if (d_format == "msh")
+    d_mshWriter_p->appendPointData(name, data);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->appendPointData(name, data);
 }
 
-void rw::writer::VtkWriterInterface::appendPointData(
+void rw::writer::WriterInterface::appendPointData(
     const std::string &name, const std::vector<int> *data) {
-  d_vtkWriter_p->appendPointData(name, data);
+
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendPointData(name, data);
+  else if (d_format == "msh")
+    d_mshWriter_p->appendPointData(name, data);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->appendPointData(name, data);
 }
 
-void rw::writer::VtkWriterInterface::appendPointData(
+void rw::writer::WriterInterface::appendPointData(
     const std::string &name, const std::vector<float> *data) {
-  d_vtkWriter_p->appendPointData(name, data);
+
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendPointData(name, data);
+  else if (d_format == "msh")
+    d_mshWriter_p->appendPointData(name, data);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->appendPointData(name, data);
 }
 
-void rw::writer::VtkWriterInterface::appendPointData(
+void rw::writer::WriterInterface::appendPointData(
     const std::string &name, const std::vector<double> *data) {
-  d_vtkWriter_p->appendPointData(name, data);
+
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendPointData(name, data);
+  else if (d_format == "msh")
+    d_mshWriter_p->appendPointData(name, data);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->appendPointData(name, data);
 }
 
-void rw::writer::VtkWriterInterface::appendPointData(
+void rw::writer::WriterInterface::appendPointData(
     const std::string &name, const std::vector<util::Point3> *data) {
-  d_vtkWriter_p->appendPointData(name, data);
+
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendPointData(name, data);
+  else if (d_format == "msh")
+    d_mshWriter_p->appendPointData(name, data);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->appendPointData(name, data);
 }
 
-void rw::writer::VtkWriterInterface::appendPointData(
+void rw::writer::WriterInterface::appendPointData(
     const std::string &name, const std::vector<util::SymMatrix3> *data) {
-  d_vtkWriter_p->appendPointData(name, data);
+
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendPointData(name, data);
+  else if (d_format == "msh")
+    d_mshWriter_p->appendPointData(name, data);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->appendPointData(name, data);
 }
 
-void rw::writer::VtkWriterInterface::appendCellData(
+void rw::writer::WriterInterface::appendCellData(
     const std::string &name, const std::vector<float> *data) {
-  d_vtkWriter_p->appendCellData(name, data);
+
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendCellData(name, data);
+  else if (d_format == "msh")
+    d_mshWriter_p->appendCellData(name, data);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->appendCellData(name, data);
 }
 
-void rw::writer::VtkWriterInterface::appendCellData(
+void rw::writer::WriterInterface::appendCellData(
     const std::string &name, const std::vector<util::SymMatrix3> *data) {
-  d_vtkWriter_p->appendCellData(name, data);
+
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendCellData(name, data);
+  else if (d_format == "msh")
+    d_mshWriter_p->appendCellData(name, data);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->appendCellData(name, data);
 }
 
-void rw::writer::VtkWriterInterface::addTimeStep(const double &timestep) {
-  d_vtkWriter_p->addTimeStep(timestep);
+void rw::writer::WriterInterface::addTimeStep(const double &timestep) {
+
+  if (d_format == "vtu")
+    d_vtkWriter_p->addTimeStep(timestep);
+  else if (d_format == "msh")
+    d_mshWriter_p->addTimeStep(timestep);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->addTimeStep(timestep);
 }
 
-void rw::writer::VtkWriterInterface::close() { d_vtkWriter_p->close(); }
-
-void rw::writer::VtkWriterInterface::appendFieldData(const std::string &name,
+void rw::writer::WriterInterface::appendFieldData(const std::string &name,
                                                      const double &data) {
-  d_vtkWriter_p->appendFieldData(name, data);
+
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendFieldData(name, data);
+  else if (d_format == "msh")
+    d_mshWriter_p->appendFieldData(name, data);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->appendFieldData(name, data);
 }
 
-void rw::writer::VtkWriterInterface::appendFieldData(const std::string &name,
+void rw::writer::WriterInterface::appendFieldData(const std::string &name,
                                                      const float &data) {
-  d_vtkWriter_p->appendFieldData(name, data);
+
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendFieldData(name, data);
+  else if (d_format == "msh")
+    d_mshWriter_p->appendFieldData(name, data);
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->appendFieldData(name, data);
 }
 
-//
-// LegacyVtkWriterInterface
-//
-rw::writer::LegacyVtkWriterInterface::LegacyVtkWriterInterface() : d_vtkWriter_p(nullptr) {}
+void rw::writer::WriterInterface::close() {
 
-rw::writer::LegacyVtkWriterInterface::LegacyVtkWriterInterface(
-  const std::string &filename, const std::string &compress_type)
-  : d_vtkWriter_p(nullptr) {
-
-  d_vtkWriter_p = new rw::writer::LegacyVtkWriter(filename, compress_type);
-}
-
-void rw::writer::LegacyVtkWriterInterface::open(const std::string &filename,
-                                          const std::string &compress_type) {
-  if (!d_vtkWriter_p)
-    d_vtkWriter_p = new rw::writer::LegacyVtkWriter(filename, compress_type);
-}
-
-rw::writer::LegacyVtkWriterInterface::~LegacyVtkWriterInterface() {
-  delete (d_vtkWriter_p);
-}
-
-void rw::writer::LegacyVtkWriterInterface::appendNodes(
-  const std::vector<util::Point3> *nodes) {
-  d_vtkWriter_p->appendNodes(nodes);
-}
-
-void rw::writer::LegacyVtkWriterInterface::appendNodes(
-  const std::vector<util::Point3> *nodes,
-  const std::vector<util::Point3> *u) {
-  d_vtkWriter_p->appendNodes(nodes, u);
-}
-
-void rw::writer::LegacyVtkWriterInterface::appendMesh(
-  const std::vector<util::Point3> *nodes, const size_t &element_type,
-  const std::vector<size_t> *en_con, const std::vector<util::Point3> *u) {
-
-  d_vtkWriter_p->appendMesh(nodes, element_type, en_con, u);
+  if (d_format == "vtu")
+    d_vtkWriter_p->close();
+  else if (d_format == "msh")
+    d_mshWriter_p->close();
+  else if (d_format == "legacy_vtk")
+    d_legacyVtkWriter_p->close();
 }

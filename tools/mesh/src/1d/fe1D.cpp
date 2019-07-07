@@ -4,7 +4,7 @@
 // (See accompanying file LICENSE.txt)
 
 #include "fe1D.h"
-#include "../lib/vtkWriter.h"  // definition of VtkWriter
+#include "rw/writer.h"    // definition of vtk and msh writer interface
 #include "util/point.h" // definition of Point3
 #include "util/feElementDefs.h"   // definition of fe element type
 #include <cmath>
@@ -16,10 +16,12 @@ namespace {
 struct InpData {
   std::string d_pathFile;
   std::string d_meshFile;
+  std::string d_outFormat;
   std::pair<double, double> d_domain;
   double d_horizon;
   size_t d_r;
   double d_h;
+  std::string d_compressType;
 
   InpData()
       : d_domain(std::make_pair(0., 0.)), d_horizon(0.), d_r(1), d_h(0.){};
@@ -38,7 +40,18 @@ void readInputFile(InpData *data, YAML::Node config) {
     if (config["Output"]["Mesh"])
       data->d_meshFile += config["Output"]["Mesh"].as<std::string>();
     else
-      data->d_meshFile += "mesh.vtu";
+      data->d_meshFile += "mesh";
+
+    if (config["Output"]["File_Format"])
+      data->d_outFormat = config["Output"]["File_Format"].as<std::string>();
+    else
+      data->d_outFormat = "vtu";
+
+    if (data->d_outFormat == "msh") {
+      std::cerr << "Error: For 1-d msh format for mesh output is not "
+                   "implemented.\n";
+      exit(1);
+    }
   }
 
   if (config["Domain"]) {
@@ -74,6 +87,9 @@ void readInputFile(InpData *data, YAML::Node config) {
       exit(1);
     }
   }
+
+  if (config["Compress_Type"])
+    data->d_compressType = config["Compress_Type"].as<std::string>();
 }
 
 } // namespace
@@ -108,12 +124,10 @@ void tools::mesh::fe1D(const std::string &filename) {
     en_con[2 * i + 1] = i + 1;
   }
 
-  // dummy displacement field
-  std::vector<util::Point3> u(num_nodes, util::Point3());
-
   // write to vtu file
-  auto writer = tools::mesh::VtkWriter(data.d_meshFile);
-  writer.appendMesh(&nodes, element_type, &en_con, &u);
+  auto writer = rw::writer::WriterInterface(data.d_meshFile, data.d_outFormat,
+                                            data.d_compressType);
+  writer.appendMesh(&nodes, element_type, &en_con);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);
   writer.close();

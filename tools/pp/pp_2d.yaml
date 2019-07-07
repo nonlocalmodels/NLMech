@@ -32,6 +32,8 @@ Compute:
     # set true if output nodal data and not whole mesh
     # default is true
     Output_Only_Nodes: true
+    # specify file format for output
+    File_Format: vtu
     # Valid value is integer >= 1. Default is 1.
     Dt_Interval: 10
     # specify compression type (default is none) for .vtu files

@@ -60,7 +60,7 @@ public:
   void appendMesh(const std::vector<util::Point3> *nodes,
                   const size_t &element_type,
                   const std::vector<size_t> *en_con,
-                  const std::vector<util::Point3> *u);
+                  const std::vector<util::Point3> *u = nullptr);
 
   /** @}*/
 

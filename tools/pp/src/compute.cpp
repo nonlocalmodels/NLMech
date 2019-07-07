@@ -4,18 +4,27 @@
 // (See accompanying file LICENSE.txt)
 
 #include "compute.h"
-#include "external/csv.h"       // csv reader
+#include "inp/input.h"              // definition of Input
+#include "inp/decks/materialDeck.h" // definition of MaterialDeck
+#include "inp/decks/modelDeck.h"    // definition of ModelDeck
+#include "inp/decks/outputDeck.h"   // definition of OutputDeck
+#include "inp/policy.h"         // definition of Policy
+#include "fe/mesh.h"                // definition of Mesh
 #include "fe/lineElem.h"        // definition of LineElem
 #include "fe/quadElem.h"        // definition of QuadElem
 #include "fe/triElem.h"         // definition of TriElem
-#include "inp/policy.h"         // definition of Policy
+#include "geometry/fracture.h"      // definition of Fracture
+#include "geometry/neighbor.h"      // definition of Neighbor
+#include "material/pdMaterial.h"    // definition of Material
+#include "rw/writer.h"              // definition of WriterInterface
 #include "rw/reader.h"          // definition of readVtuFileRestart
+#include "external/csv.h"       // csv reader
 #include "util/feElementDefs.h" // definition of fe element type
 #include "util/utilGeom.h"      // definition of isPointInsideRectangle
+#include "util/fastMethods.h"   // max and min operation
 #include <cmath>
 #include <hpx/include/parallel_algorithm.hpp>
 #include <iostream>
-#include <util/fastMethods.h>
 #include <yaml-cpp/yaml.h> // YAML reader
 
 bool minSortZ(tools::pp::SortZ a, tools::pp::SortZ b) {
@@ -49,8 +58,12 @@ tools::pp::Compute::Compute(const std::string &filename)
       continue;
 
     // get displacement and velocity
-    rw::reader::readVtuFileRestart(sim_out_filename, &d_u, &d_v,
+    if (d_outputDeck_p->d_outFormat == "vtu")
+      rw::reader::readVtuFileRestart(sim_out_filename, &d_u, &d_v,
                                    d_mesh_p->getNodesP());
+    else if (d_outputDeck_p->d_outFormat == "msh")
+      rw::reader::readMshFileRestart(sim_out_filename, &d_u, &d_v,
+                                     d_mesh_p->getNodesP());
 
     if (d_uPlus) {
       auto f2 = hpx::parallel::for_loop(
@@ -81,7 +94,7 @@ tools::pp::Compute::Compute(const std::string &filename)
                       std::to_string(d_nOut);
 
       // writer
-      rw::writer::VtkWriterInterface writer;
+      rw::writer::WriterInterface writer;
       d_writerReady = false;
 
       // apply postprocessing
@@ -275,6 +288,12 @@ void tools::pp::Compute::readComputeInstruction(
     // we work with default filename of form pp_set_1_0.vtu
     data->d_tagFilename = set;
   }
+
+  if (config["Compute"][set]["File_Format"])
+    data->d_outFormat =
+        config["Compute"][set]["File_Format"].as<std::string>();
+  
+  // read format of output file
 
   // Output only nodes
   if (config["Compute"][set]["Output_Only_Nodes"])
@@ -531,12 +550,13 @@ void tools::pp::Compute::readCrackTipData(
   }
 }
 
-void tools::pp::Compute::initWriter(rw::writer::VtkWriterInterface *writer,
+void tools::pp::Compute::initWriter(rw::writer::WriterInterface *writer,
                                     std::vector<util::Point3> *u) {
   if (d_writerReady)
     return;
 
-  writer->open(d_outFilename, d_currentData->d_compressType);
+  writer->open(d_outFilename, d_currentData->d_outFormat,
+               d_currentData->d_compressType);
   // append mesh (check if only nodes need to be written)
   if (d_currentData->d_outOnlyNodes)
     writer->appendNodes(d_mesh_p->getNodesP(), u);
@@ -550,7 +570,7 @@ void tools::pp::Compute::initWriter(rw::writer::VtkWriterInterface *writer,
 //
 // compute methods
 //
-void tools::pp::Compute::transformU(rw::writer::VtkWriterInterface *writer) {
+void tools::pp::Compute::transformU(rw::writer::WriterInterface *writer) {
 
   if (!d_currentData->d_transformU_p)
     return;
@@ -579,7 +599,7 @@ void tools::pp::Compute::transformU(rw::writer::VtkWriterInterface *writer) {
   }
 }
 
-void tools::pp::Compute::transformV(rw::writer::VtkWriterInterface *writer) {
+void tools::pp::Compute::transformV(rw::writer::WriterInterface *writer) {
 
   if (!d_currentData->d_transformV_p)
     return;
@@ -683,7 +703,7 @@ void tools::pp::Compute::transformV(rw::writer::VtkWriterInterface *writer) {
   }
 }
 
-void tools::pp::Compute::computeStrain(rw::writer::VtkWriterInterface *writer) {
+void tools::pp::Compute::computeStrain(rw::writer::WriterInterface *writer) {
 
   if (!d_currentData->d_compStrain_p)
     return;
@@ -824,8 +844,8 @@ void tools::pp::Compute::computeStrain(rw::writer::VtkWriterInterface *writer) {
     // create unstructured vtk output
     std::string fname = d_outPreTag + d_currentData->d_tagFilename + "_quads_" +
                         std::to_string(d_nOut);
-    auto writer1 =
-        rw::writer::VtkWriterInterface(fname, d_currentData->d_compressType);
+    auto writer1 = rw::writer::WriterInterface(
+        fname, d_currentData->d_outFormat, d_currentData->d_compressType);
     writer1.appendNodes(&elem_quads);
     writer1.appendPointData("Strain_Tensor", &strain);
     writer1.appendPointData("Stress_Tensor", &stress);
@@ -843,7 +863,7 @@ void tools::pp::Compute::computeStrain(rw::writer::VtkWriterInterface *writer) {
   }
 }
 
-void tools::pp::Compute::computeDamage(rw::writer::VtkWriterInterface *writer,
+void tools::pp::Compute::computeDamage(rw::writer::WriterInterface *writer,
                                        std::vector<double> *Z, bool perf_out) {
   //  if (!d_currentData->d_damageAtNodes)
   //    return;
@@ -887,7 +907,7 @@ void tools::pp::Compute::computeDamage(rw::writer::VtkWriterInterface *writer,
 }
 
 void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
-                                      rw::writer::VtkWriterInterface *writer) {
+                                      rw::writer::WriterInterface *writer) {
 
   auto data = d_currentData->d_findCrackTip_p;
   if (!data)
@@ -1407,7 +1427,7 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     enodes.emplace_back(p);
     std::vector<size_t> etags(enodes.size(), 1);
     etags[etags.size() - 1] = 100;
-    auto writer1 = rw::writer::VtkWriterInterface(
+    auto writer1 = rw::writer::WriterInterface(
         d_outPreTag + d_currentData->d_tagFilename + "_debug_nodes_" +
         std::to_string(d_nOut));
     writer1.appendNodes(&enodes);

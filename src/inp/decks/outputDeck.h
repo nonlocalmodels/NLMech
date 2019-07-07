@@ -19,10 +19,16 @@ namespace inp {
 /*! @brief Structure to read input data for performing simulation output */
 struct OutputDeck {
 
-  /*! @brief Output format: currently supports .vtu (i.e. VTK) output */
+  /*! @brief Output format: currently supports vtu, msh, legacy_vtk output
+   *
+   * Default is vtu format.
+   */
   std::string d_outFormat;
 
-  /*! @brief Output Path where the files will be written */
+  /*! @brief Output Path where the files will be written
+   *
+   * Default is current working directory
+   */
   std::string d_path;
 
   /*! @brief List of tags of data to be dumped */
@@ -49,7 +55,8 @@ struct OutputDeck {
    * @brief Constructor
    */
   OutputDeck()
-      : d_dtOut(0), d_debug(0), d_performFEOut(true){};
+      : d_outFormat("vtu"), d_path("./"), d_dtOut(0), d_debug(0),
+        d_performFEOut(true){};
 
   /*!
    * @brief Searches list of tags and returns true if the asked tag is in the

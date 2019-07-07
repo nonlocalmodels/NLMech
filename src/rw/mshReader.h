@@ -6,7 +6,8 @@
 #ifndef RW_MSHREADER_H
 #define RW_MSHREADER_H
 
-#include "util/point.h"           // definition of Point3
+#include "util/point.h" // definition of Point3
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -16,6 +17,8 @@ namespace reader {
 
 /*!
  * @brief A class to read Gmsh (msh) mesh files
+ *
+ * This class can only handle Gmsh version 2.0, 2.1, 2.2.
  */
 class MshReader {
 
@@ -43,9 +46,38 @@ public:
                 std::vector<size_t> *enc, std::vector<std::vector<size_t>> *nec,
                 std::vector<double> *volumes, bool is_fd = false);
 
+  /*!
+   * @brief Reads nodal position
+   *
+   * @param nodes Vector of nodal coordinates
+   */
+  void readNodes(std::vector<util::Point3> *nodes);
+
+  /*!
+   * @brief reads point data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readPointData(const std::string &name, std::vector<util::Point3> *data);
+
+  /*!
+   * @brief reads point data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readPointData(const std::string &name, std::vector<double> *data);
+
+  /*! @brief Close the file */
+  void close();
+
 private:
   /*! @brief filename */
-  const std::string d_filename;
+  std::string d_filename;
+
+  /*! @brief vtk/vtu file */
+  std::ifstream d_file;
 };
 
 } // namespace reader

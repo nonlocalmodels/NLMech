@@ -6,18 +6,38 @@
 #ifndef TOOLS_PP_COMPUTE_H
 #define TOOLS_PP_COMPUTE_H
 
-#include "fe/mesh.h"                // definition of Mesh
-#include "geometry/fracture.h"      // definition of Fracture
-#include "geometry/neighbor.h"      // definition of Neighbor
-#include "inp/decks/materialDeck.h" // definition of MaterialDeck
-#include "inp/decks/modelDeck.h"    // definition of ModelDeck
-#include "inp/decks/outputDeck.h"   // definition of OutputDeck
-#include "inp/decks/fractureDeck.h"   // definition of FractureDeck
-#include "inp/input.h"              // definition of Input
-#include "material/pdMaterial.h"    // definition of Material
 #include "util.h"
 #include "util/matrix.h" // definition of SymMatrix3
-#include "rw/writer.h"              // definition of VtkWriterInterface
+
+// forward declarations of decks
+namespace inp {
+class Input;
+struct MaterialDeck;
+struct FractureDeck;
+struct ModelDeck;
+struct OutputDeck;
+} // namespace inp
+
+namespace fe {
+class Mesh;
+}
+
+namespace geometry {
+class Fracture;
+class Neighbor;
+}
+
+namespace material {
+namespace pd {
+class Material;
+}
+}
+
+namespace rw {
+namespace writer {
+class WriterInterface;
+}
+}
 
 namespace tools {
 
@@ -90,7 +110,7 @@ public:
    * @param writer Pointer to vtk writer
    * @param u Pointer to nodal displacement vector
    */
-  void initWriter(rw::writer::VtkWriterInterface *writer,
+  void initWriter(rw::writer::WriterInterface *writer,
                   std::vector<util::Point3> *u);
 
   /**
@@ -106,7 +126,7 @@ public:
    *
    * @param writer Pointer to vtk writer
    */
-  void transformU(rw::writer::VtkWriterInterface *writer);
+  void transformU(rw::writer::WriterInterface *writer);
 
   /*!
    * @brief Transform velocity
@@ -117,7 +137,7 @@ public:
    *
    * @param writer Pointer to vtk writer
    */
-  void transformV(rw::writer::VtkWriterInterface *writer);
+  void transformV(rw::writer::WriterInterface *writer);
 
   /*!
    * @brief Compute strain and stress
@@ -164,7 +184,7 @@ public:
    *
    * @param writer Pointer to vtk writer
    */
-  void computeStrain(rw::writer::VtkWriterInterface *writer);
+  void computeStrain(rw::writer::WriterInterface *writer);
 
   /*!
    * @brief Compute damage at nodes
@@ -179,7 +199,7 @@ public:
    * @param Z Pointer to nodal damage
    * @param perf_out Flag to perform output of damage data
    */
-  void computeDamage(rw::writer::VtkWriterInterface *writer,
+  void computeDamage(rw::writer::WriterInterface *writer,
       std::vector<double> *Z, bool perf_out = false);
 
   /*!
@@ -199,7 +219,7 @@ public:
    * @param Z Pointer to nodal damage
    * @param writer Pointer to vtk writer
    */
-  void findCrackTip(std::vector<double> *Z, rw::writer::VtkWriterInterface
+  void findCrackTip(std::vector<double> *Z, rw::writer::WriterInterface
   *writer);
 
   /*!

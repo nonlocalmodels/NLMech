@@ -243,6 +243,12 @@ struct InstructionData {
    */
   std::string d_tagFilename;
 
+  /*! @brief Specify format of the output file, e.g. msh, vtu, legacy_vtk
+   *
+   * Default is vtu format
+   */
+  std::string d_outFormat;
+
   /*! @brief Start output step */
   int d_start;
 
@@ -290,8 +296,8 @@ struct InstructionData {
   tools::pp::ComputeJIntegral *d_computeJInt_p;
 
   InstructionData()
-      : d_start(-1), d_end(-1), d_interval(1), d_outOnlyNodes(true),
-        d_removeElements(false), d_transformU_p(nullptr),
+      : d_outFormat("vtu"), d_start(-1), d_end(-1), d_interval(1),
+        d_outOnlyNodes(true), d_removeElements(false), d_transformU_p(nullptr),
         d_transformV_p(nullptr), d_compStrain_p(nullptr),
         d_findCrackTip_p(nullptr), d_damageAtNodes(false),
         d_computeJInt_p(nullptr){};

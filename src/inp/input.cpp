@@ -550,9 +550,10 @@ void inp::Input::setOutputDeck() {
 
   if (config["Output"]) {
     auto e = config["Output"];
-    if (e["Format"])
-      d_outputDeck_p->d_outFormat = e["Format"].as<std::string>();
-    d_outputDeck_p->d_path = e["Path"].as<std::string>();
+    if (e["File_Format"])
+      d_outputDeck_p->d_outFormat = e["File_Format"].as<std::string>();
+    if (e["Path"])
+      d_outputDeck_p->d_path = e["Path"].as<std::string>();
     if (e["Tags"])
       for (auto f : e["Tags"])
         d_outputDeck_p->d_outTags.push_back(f.as<std::string>());
