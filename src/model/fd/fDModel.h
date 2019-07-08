@@ -274,6 +274,9 @@ private:
   /*! @brief Output deck */
   inp::OutputDeck *d_outputDeck_p;
 
+  /*! @brief flag to stop the simulation midway */
+  bool d_stop;
+
   /**
    * @name Data: High level objects
    */
