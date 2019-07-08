@@ -210,6 +210,37 @@ void model::FDModel::init() {
     else
       d_policy_p->addToTags(0, "Model_d_eFB");
   }
+
+  if (d_outputDeck_p->d_outCriteria == "max_Z") {
+
+    if (d_outputDeck_p->d_outCriteriaParams.size() < 1) {
+      std::cerr << "Error: Output criteria " << d_outputDeck_p->d_outCriteria
+                << " requires 1 parameter.\n";
+      exit(1);
+    }
+
+    // issue warning when postprocessing is turned off as we need damage data
+    // to compute output criteria
+    if(!d_policy_p->enablePostProcessing()) {
+      std::cout << "Warning: Output criteria " <<
+      d_outputDeck_p->d_outCriteria << " requires Damage data Z but either "
+                                       "postprocessing is set to off. "
+                                       "Therefore setting output criteria to "
+                                       "null.\n";
+      d_outputDeck_p->d_outCriteria.clear();
+    } else {
+      // check if damage data is allocated
+      if (d_Z.size() != d_mesh_p->getNumNodes()) {
+        // allocate data
+        d_Z = std::vector<float>(nnodes, 0.0);
+
+        // check if damage data is allowed in policy class (if not, need to
+        // allow it by removing the tag related to damage function Z)
+        if (!d_policy_p->populateData("Model_d_Z"))
+          d_policy_p->removeTag("Model_d_Z");
+      }
+    }
+  } // handle output criteria exceptions
 }
 
 void model::FDModel::integrate() {
@@ -250,6 +281,9 @@ void model::FDModel::integrate() {
         computePostProcFields();
 
       output();
+
+      // check if we need to modify the output frequency
+      checkOutputCriteria();
     }
   } // loop over time steps
 }
@@ -672,11 +706,13 @@ void model::FDModel::output() {
   }
 
   // filename
-  std::string filename = d_outputDeck_p->d_path + "output_" +
-                         std::to_string(d_n / d_outputDeck_p->d_dtOut);
+  // use smaller dt_out as the tag for files
+  size_t dt_out = d_outputDeck_p->d_dtOutCriteria;
+  std::string filename =
+      d_outputDeck_p->d_path + "output_" + std::to_string(d_n / dt_out);
 
   // open
-  auto writer = rw::writer::WriterInterface(
+  auto writer = rw::writer::Writer(
       filename, d_outputDeck_p->d_outFormat, d_outputDeck_p->d_compressType);
 
   // write mesh
@@ -778,4 +814,31 @@ void model::FDModel::output() {
     writer.appendFieldData(tag, d_teF);
 
   writer.close();
+}
+
+void model::FDModel::checkOutputCriteria() {
+
+  // if we two output frequency specified by user is same then we do nothing
+  if (d_outputDeck_p->d_dtOutOld == d_outputDeck_p->d_dtOutCriteria)
+    return;
+
+  // if output criteria is empty then we do nothing
+  if (d_outputDeck_p->d_outCriteria.empty())
+    return;
+
+  if (d_outputDeck_p->d_outCriteria == "max_Z") {
+
+    // since damage function will not reduce once attaining desired maximum
+    // value, we do not check if the criteria was met in the past
+    if (d_outputDeck_p->d_dtOut == d_outputDeck_p->d_dtOutCriteria)
+      return;
+
+    // get maximum from the damage data
+    auto max = util::methods::max(d_Z);
+
+    // check if it is desired range and change output frequency
+    if (util::compare::definitelyGreaterThan(max,
+                                             d_outputDeck_p->d_outCriteriaParams[0]))
+      d_outputDeck_p->d_dtOut = d_outputDeck_p->d_dtOutCriteria;
+  }
 }

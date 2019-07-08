@@ -37,6 +37,9 @@ struct OutputDeck {
   /*! @brief Size of time steps (or frequency) for output operation */
   size_t d_dtOut;
 
+  /*! @brief Size of time steps (or frequency) for output operation */
+  size_t d_dtOutOld;
+
   /*! @brief Flag specifying debug level */
   size_t d_debug;
 
@@ -51,12 +54,28 @@ struct OutputDeck {
   /*! @brief Compressor type for .vtu files */
   std::string d_compressType;
 
+  /*! @brief Specify output criteria to change output frequency
+   *
+   * Specify the method used in changing the output frequency. If not
+   * specified then we do not change the output frequency from d_dtOut.
+   * */
+  std::string d_outCriteria;
+
+  /*! @brief Specify output frequency if output criteria is met
+   *
+   * If criteria is met, then this number if used as output frequency.
+   * */
+  size_t d_dtOutCriteria;
+
+  /*! @brief List of parameters required in checking output criteria */
+  std::vector<double> d_outCriteriaParams;
+
   /*!
    * @brief Constructor
    */
   OutputDeck()
-      : d_outFormat("vtu"), d_path("./"), d_dtOut(0), d_debug(0),
-        d_performFEOut(true){};
+      : d_outFormat("vtu"), d_path("./"), d_dtOut(0), d_dtOutOld(0), d_debug(0),
+        d_performFEOut(true), d_dtOutCriteria(0){};
 
   /*!
    * @brief Searches list of tags and returns true if the asked tag is in the

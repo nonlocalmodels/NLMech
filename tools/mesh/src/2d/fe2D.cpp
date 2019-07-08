@@ -161,7 +161,7 @@ void tools::mesh::uniformSquare(const std::string &filename) {
   if (data.d_isFd) {
 
     // write data to file
-    auto writer = rw::writer::WriterInterface(
+    auto writer = rw::writer::Writer(
         data.d_meshFile, data.d_outFormat, data.d_compressType);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
@@ -189,8 +189,8 @@ void tools::mesh::uniformSquare(const std::string &filename) {
     }
 
   // write data to file
-  auto writer = rw::writer::WriterInterface(data.d_meshFile, data.d_outFormat,
-                                            data.d_compressType);
+  auto writer = rw::writer::Writer(data.d_meshFile, data.d_outFormat,
+                                   data.d_compressType);
   writer.appendMesh(&nodes, element_type, &en_con);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);
@@ -277,7 +277,7 @@ void tools::mesh::uniformTri(const std::string &filename) {
   if (data.d_isFd) {
 
     // write data to file
-    auto writer = rw::writer::WriterInterface(
+    auto writer = rw::writer::Writer(
       data.d_meshFile, data.d_outFormat, data.d_compressType);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
@@ -331,8 +331,8 @@ void tools::mesh::uniformTri(const std::string &filename) {
     } // loop over i
 
   // write data to file
-  auto writer = rw::writer::WriterInterface(data.d_meshFile, data.d_outFormat,
-                                            data.d_compressType);
+  auto writer = rw::writer::Writer(data.d_meshFile, data.d_outFormat,
+                                   data.d_compressType);
   writer.appendMesh(&nodes, element_type, &en_con);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);
@@ -485,7 +485,7 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
   if (data.d_isFd) {
 
     // write data to file
-    auto writer = rw::writer::WriterInterface(
+    auto writer = rw::writer::Writer(
         data.d_meshFile, data.d_outFormat, data.d_compressType);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
@@ -561,8 +561,8 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
     } // loop over i
 
   // write data to file
-  auto writer = rw::writer::WriterInterface(data.d_meshFile, data.d_outFormat,
-                                            data.d_compressType);
+  auto writer = rw::writer::Writer(data.d_meshFile, data.d_outFormat,
+                                   data.d_compressType);
   writer.appendMesh(&nodes, element_type, &en_con);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);

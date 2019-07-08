@@ -33,7 +33,8 @@ bool minSortZ(tools::pp::SortZ a, tools::pp::SortZ b) {
 
 tools::pp::Compute::Compute(const std::string &filename)
     : d_inpFilename(filename), d_tagZ("Damage_Z"), d_nOut(0), d_nC(0),
-      d_currentData(nullptr), d_writerReady(false), d_uPlus(false),
+      d_currentData(nullptr), d_dtOutChange(0),
+      d_writerReady(false), d_uPlus(false),
       d_modelDeck_p(nullptr), d_outputDeck_p(nullptr),
       d_fractureDeck_p(nullptr), d_matDeck_p(nullptr),
       d_mesh_p(nullptr), d_fracture_p(nullptr), d_neighbor_p(nullptr),
@@ -41,10 +42,24 @@ tools::pp::Compute::Compute(const std::string &filename)
 
   init();
 
-  // loop over output steps
-  int N = d_modelDeck_p->d_Nt / d_outputDeck_p->d_dtOut;
+  // take the smaller output interval as dt_out
+  size_t dt_out = d_outputDeck_p->d_dtOutCriteria;
+  size_t dt_out_old = d_outputDeck_p->d_dtOutOld;
+  size_t N = d_modelDeck_p->d_Nt / dt_out;
+
   for (d_nOut = 1; d_nOut <= N; d_nOut++) {
-    std::cout << "PP_fe2D: Processing output file = " << d_nOut << "\n";
+    size_t current_step = d_nOut * dt_out;
+    // proceed every dt_out_old interval if the current time step is
+    // less than the time step when the change in output will happen
+    bool process_iN = true;
+    if (d_nOut < d_dtOutChange)
+      if (current_step % dt_out_old != 0)
+        process_iN = false;
+
+    if(!process_iN)
+      continue;
+
+    std::cout << "PP_fe2D: Processing output file = " << d_nOut  << "\n";
 
     // mesh filename to read displacement and velocity
     std::string sim_out_filename =
@@ -94,7 +109,7 @@ tools::pp::Compute::Compute(const std::string &filename)
                       std::to_string(d_nOut);
 
       // writer
-      rw::writer::WriterInterface writer;
+      rw::writer::Writer writer;
       d_writerReady = false;
 
       // apply postprocessing
@@ -156,6 +171,11 @@ void tools::pp::Compute::init() {
   //        d_outPath + "/" + config["Output"]["Filename"].as<std::string>();
   //  else
   d_outPreTag = d_outPath + "/";
+
+  // handle change in output interval
+  d_dtOutChange = d_modelDeck_p->d_Nt;
+  if (config["Dt_Out_Change"])
+    d_dtOutChange = config["Dt_Out_Change"].as<size_t>();
 
   // create mesh
   std::cout << "PP_fe2D: Creating mesh.\n";
@@ -550,7 +570,7 @@ void tools::pp::Compute::readCrackTipData(
   }
 }
 
-void tools::pp::Compute::initWriter(rw::writer::WriterInterface *writer,
+void tools::pp::Compute::initWriter(rw::writer::Writer *writer,
                                     std::vector<util::Point3> *u) {
   if (d_writerReady)
     return;
@@ -570,7 +590,7 @@ void tools::pp::Compute::initWriter(rw::writer::WriterInterface *writer,
 //
 // compute methods
 //
-void tools::pp::Compute::transformU(rw::writer::WriterInterface *writer) {
+void tools::pp::Compute::transformU(rw::writer::Writer *writer) {
 
   if (!d_currentData->d_transformU_p)
     return;
@@ -599,7 +619,7 @@ void tools::pp::Compute::transformU(rw::writer::WriterInterface *writer) {
   }
 }
 
-void tools::pp::Compute::transformV(rw::writer::WriterInterface *writer) {
+void tools::pp::Compute::transformV(rw::writer::Writer *writer) {
 
   if (!d_currentData->d_transformV_p)
     return;
@@ -703,7 +723,7 @@ void tools::pp::Compute::transformV(rw::writer::WriterInterface *writer) {
   }
 }
 
-void tools::pp::Compute::computeStrain(rw::writer::WriterInterface *writer) {
+void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
 
   if (!d_currentData->d_compStrain_p)
     return;
@@ -844,7 +864,7 @@ void tools::pp::Compute::computeStrain(rw::writer::WriterInterface *writer) {
     // create unstructured vtk output
     std::string fname = d_outPreTag + d_currentData->d_tagFilename + "_quads_" +
                         std::to_string(d_nOut);
-    auto writer1 = rw::writer::WriterInterface(
+    auto writer1 = rw::writer::Writer(
         fname, d_currentData->d_outFormat, d_currentData->d_compressType);
     writer1.appendNodes(&elem_quads);
     writer1.appendPointData("Strain_Tensor", &strain);
@@ -863,7 +883,7 @@ void tools::pp::Compute::computeStrain(rw::writer::WriterInterface *writer) {
   }
 }
 
-void tools::pp::Compute::computeDamage(rw::writer::WriterInterface *writer,
+void tools::pp::Compute::computeDamage(rw::writer::Writer *writer,
                                        std::vector<double> *Z, bool perf_out) {
   //  if (!d_currentData->d_damageAtNodes)
   //    return;
@@ -907,7 +927,7 @@ void tools::pp::Compute::computeDamage(rw::writer::WriterInterface *writer,
 }
 
 void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
-                                      rw::writer::WriterInterface *writer) {
+                                      rw::writer::Writer *writer) {
 
   auto data = d_currentData->d_findCrackTip_p;
   if (!data)
@@ -1427,7 +1447,7 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     enodes.emplace_back(p);
     std::vector<size_t> etags(enodes.size(), 1);
     etags[etags.size() - 1] = 100;
-    auto writer1 = rw::writer::WriterInterface(
+    auto writer1 = rw::writer::Writer(
         d_outPreTag + d_currentData->d_tagFilename + "_debug_nodes_" +
         std::to_string(d_nOut));
     writer1.appendNodes(&enodes);

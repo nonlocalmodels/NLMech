@@ -220,6 +220,48 @@ private:
    */
   void output();
 
+  /*! @brief Checks if output frequency is to be modified
+   *
+   * 1. If valid criteria is specified, this method modifes the current output
+   * interval to new output interval.
+   *
+   * 2. This is useful when we require snapshot of simulation at small intervals
+   * only when results are interesting. For example, for crack propagation
+   * problem, we need more snapshots of simulation during time when the crack
+   * is propagating. We do not need many snapshots of time when crack is not
+   * growing or moving.
+   *
+   * 3. Currently we have implemented `max_Z` criteria which checks the maximum
+   * value of damage at nodes. If maximum value exceeds the user specified
+   * value, we change the output interval to small value as specified by user
+   * . Until maximum of damage touches value given by user, the code produces
+   * output at larger interval.
+   *
+   * 4. We next discuss the naming of output files. We will take the
+   * smaller output interval as a basis for naming the output files. Let us
+   * look at simple example:
+   *
+   *    - Suppose total number of time steps `N=1500`,
+   *    - `dt_out_large = 150` when the criteria `max_Z` is not met
+   *    - `dt_out_small = 50` when criteria is met
+   *    - Suppose `max_Z` criteria is not met till `1200`th step, then upto
+   *    `1200`th step, output files will be:
+   *        * `output_0.vtu, output_3.vtu, output_6.vtu, ... output_21.vtu,
+   *        output_24.vtu`
+   *        * Files above correspond to time steps
+   *    `0, 3*dt_out_small = 150, 6*dt_out_small = 300, ..., 1050, 1200`
+   *    - From `1200` step onwards output files will be:
+   *        * `output_25.vtu, output_26.vtu, output_27.vtu, ..., output_30.vtu`
+   *        * Files above correspond to time steps
+   *    `25*dt_out_small = 1250, 26*dt_out_small = 1300, ..., 1500`
+   *
+   *    - So in brief, we consider `dt_out_small` to get the tag for output file
+   * . Output intervals however depend on the criteria, and can be at
+   * `dt_out_large`, or it can be at the same interval as `dt_out_small`.
+   *
+   */
+  void checkOutputCriteria();
+
   /** @}*/
 
 private:

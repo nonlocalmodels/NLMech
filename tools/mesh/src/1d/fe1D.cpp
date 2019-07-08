@@ -125,8 +125,8 @@ void tools::mesh::fe1D(const std::string &filename) {
   }
 
   // write to vtu file
-  auto writer = rw::writer::WriterInterface(data.d_meshFile, data.d_outFormat,
-                                            data.d_compressType);
+  auto writer = rw::writer::Writer(data.d_meshFile, data.d_outFormat,
+                                   data.d_compressType);
   writer.appendMesh(&nodes, element_type, &en_con);
   writer.appendPointData("Node_Volume", &nodal_vols);
   writer.addTimeStep(0.);

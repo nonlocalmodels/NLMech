@@ -5,6 +5,8 @@ Simulation_Input_File: input.yaml
 # displacement, velocity
 # default name is used in below if it is not provided
 Filename_To_Read: output
+# Specify the number at which change in interval takes place
+Dt_Out_Change: 10
 # provide necessary material properties if not provided in the simulation
 # input file above
 Material:

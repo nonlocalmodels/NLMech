@@ -26,22 +26,22 @@ namespace rw {
  * @brief Collection of methods and database related to writing
  *
  * This namespace provides methods and data members specific to writing of
- * the mesh data and simulation data. Currently, .vtu is supported.
+ * the mesh data and simulation data. Currently, .vtu and .msh is supported.
  */
 namespace writer {
 
 /*!
- * @brief A interface class writing data using vtk writer
+ * @brief A interface class writing data
  *
  * This interface separates the caller from vtk library.
  */
-class WriterInterface {
+class Writer {
 
 public:
   /*!
    * @brief Constructor
    */
-  WriterInterface();
+  Writer();
 
   /*!
    * @brief Constructor
@@ -54,11 +54,11 @@ public:
    * @param format Format of the output file, e.g. "vtu", "msh"
    * @param compress_type Specify the compression type (optional)
    */
-  WriterInterface(const std::string &filename, const std::string &format =
+  explicit Writer(const std::string &filename, const std::string &format =
     "vtu", const std::string &compress_type = "");
 
   /*! @brief Destructor */
-  ~WriterInterface();
+  ~Writer();
 
   /*!
    * @brief Open a .vtu file
@@ -227,381 +227,7 @@ private:
   /*! @brief Format of output file */
   std::string d_format;
 
-}; // class VtkWriterInterface
-
-/*!
- * @brief A interface class writing data using vtk writer
- *
- * This interface separates the caller from vtk library.
- */
-class LegacyVtkWriterInterface {
-
-public:
-  /*!
-   * @brief Constructor
-   */
-  LegacyVtkWriterInterface();
-
-  /*!
-   * @brief Constructor
-   *
-   * Creates and opens .vtu file of name given by filename. The file remains
-   * open till the close() function is invoked or if the instance of this
-   * class is destroyed.
-   *
-   * @param filename Name of file which will be created
-   * @param compress_type Specify the compression type (optional)
-   */
-  LegacyVtkWriterInterface(const std::string &filename,
-                     const std::string &compress_type = "");
-
-  /*! @brief Destructor */
-  ~LegacyVtkWriterInterface();
-
-  /*!
-   * @brief Open a .vtu file
-   *
-   * @param filename Name of file which will be created
-   * @param compress_type Compression type (optional)
-   */
-  void open(const std::string &filename, const std::string &compress_type = "");
-
-  /**
-   * @name Mesh data
-   */
-  /**@{*/
-
-  /*!
-   * @brief Writes the nodes to the file
-   * @param nodes Reference positions of the nodes
-   * @param u Nodal displacements
-   */
-  void appendNodes(const std::vector<util::Point3> *nodes,
-                   const std::vector<util::Point3> *u = nullptr);
-
-  /*!
-   * @brief Writes the mesh data to file
-   *
-   * @param nodes Vector of nodal coordinates
-   * @param element_type Type of element
-   * @param en_con Vector of element-node connectivity
-   * @param u Vector of nodal displacement
-   */
-  void appendMesh(const std::vector<util::Point3> *nodes,
-                  const size_t &element_type,
-                  const std::vector<size_t> *en_con,
-                  const std::vector<util::Point3> *u = nullptr);
-
-  /** @}*/
-
-  /**
-   * @name Point data
-   */
-  /**@{*/
-
-  /*!
-   * @brief Writes the scalar point data to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name,
-                       const std::vector<uint8_t> *data);
-
-  /*!
-   * @brief Writes the scalar point data to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name,
-                       const std::vector<size_t> *data);
-
-  /*!
-   * @brief Writes the scalar point data to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name, const std::vector<int> *data);
-
-  /*!
-   * @brief Writes the scalar point data to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name, const std::vector<float> *data);
-
-  /*!
-   * @brief Writes the scalar point data to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name,
-                       const std::vector<double> *data);
-
-  /*!
-   * @brief Writes the vector point data to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name,
-                       const std::vector<util::Point3> *data);
-
-  /*!
-   * @brief Writes the symmetric matrix data associated to nodes to the
-   * file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name,
-                       const std::vector<util::SymMatrix3> *data);
-
-  /** @}*/
-
-  /**
-   * @name Cell data
-   */
-  /**@{*/
-
-  /*!
-   * @brief Writes the float data associated to cells to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendCellData(const std::string &name, const std::vector<float> *data);
-
-  /*!
-   * @brief Writes the symmetric matrix data associated to cells to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendCellData(const std::string &name,
-                      const std::vector<util::SymMatrix3> *data);
-
-  /** @}*/
-
-  /**
-   * @name Field data
-   */
-  /**@{*/
-
-  /*!
-   * @brief Writes the scalar field data to the file
-   * @param name Name of the data
-   * @param data Value
-   */
-  void appendFieldData(const std::string &name, const double &data);
-
-  /*!
-   * @brief Writes the scalar field data to the file
-   * @param name Name of the data
-   * @param data Value
-   */
-  void appendFieldData(const std::string &name, const float &data);
-
-  /*!
-   * @brief Writes the time step to the file
-   * @param timestep Current time step of the simulation
-   */
-  void addTimeStep(const double &timestep);
-
-  /** @}*/
-
-  /*!
-   * @brief Closes the file and store it to the hard disk
-   */
-  void close();
-
-private:
-  /*! @brief Pointer to the vtk writer class */
-  rw::writer::LegacyVtkWriter *d_writer_p;
-
-}; // class LegacyVtkWriterInterface
-
-/*!
- * @brief A interface class writing data using msh writer
- *
- * This interface separates the caller from msh library.
- */
-class MshWriterInterface {
-
-public:
-  /*!
-   * @brief Constructor
-   */
-  MshWriterInterface();
-
-  /*!
-   * @brief Constructor
-   *
-   * Creates and opens .vtu file of name given by filename. The file remains
-   * open till the close() function is invoked or if the instance of this
-   * class is destroyed.
-   *
-   * @param filename Name of file which will be created
-   * @param compress_type Specify the compression type (optional)
-   */
-  MshWriterInterface(const std::string &filename,
-                           const std::string &compress_type = "");
-
-  /*! @brief Destructor */
-  ~MshWriterInterface();
-
-  /*!
-   * @brief Open a .vtu file
-   *
-   * @param filename Name of file which will be created
-   * @param compress_type Compression type (optional)
-   */
-  void open(const std::string &filename, const std::string &compress_type = "");
-
-  /**
-   * @name Mesh data
-   */
-  /**@{*/
-
-  /*!
-   * @brief Writes the nodes to the file
-   * @param nodes Reference positions of the nodes
-   * @param u Nodal displacements
-   */
-  void appendNodes(const std::vector<util::Point3> *nodes,
-                   const std::vector<util::Point3> *u = nullptr);
-
-  /*!
-   * @brief Writes the mesh data to file
-   *
-   * @param nodes Vector of nodal coordinates
-   * @param element_type Type of element
-   * @param en_con Vector of element-node connectivity
-   * @param u Vector of nodal displacement
-   */
-  void appendMesh(const std::vector<util::Point3> *nodes,
-                  const size_t &element_type,
-                  const std::vector<size_t> *en_con,
-                  const std::vector<util::Point3> *u = nullptr);
-
-  /** @}*/
-
-  /**
-   * @name Point data
-   */
-  /**@{*/
-
-  /*!
-   * @brief Writes the scalar point data to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name,
-                       const std::vector<uint8_t> *data);
-
-  /*!
-   * @brief Writes the scalar point data to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name,
-                       const std::vector<size_t> *data);
-
-  /*!
-   * @brief Writes the scalar point data to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name, const std::vector<int> *data);
-
-  /*!
-   * @brief Writes the scalar point data to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name, const std::vector<float> *data);
-
-  /*!
-   * @brief Writes the scalar point data to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name,
-                       const std::vector<double> *data);
-
-  /*!
-   * @brief Writes the vector point data to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name,
-                       const std::vector<util::Point3> *data);
-
-  /*!
-   * @brief Writes the symmetric matrix data associated to nodes to the
-   * file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendPointData(const std::string &name,
-                       const std::vector<util::SymMatrix3> *data);
-
-  /** @}*/
-
-  /**
-   * @name Cell data
-   */
-  /**@{*/
-
-  /*!
-   * @brief Writes the float data associated to cells to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendCellData(const std::string &name, const std::vector<float> *data);
-
-  /*!
-   * @brief Writes the symmetric matrix data associated to cells to the file
-   * @param name Name of the data
-   * @param data Vector containing the data
-   */
-  void appendCellData(const std::string &name,
-                      const std::vector<util::SymMatrix3> *data);
-
-  /** @}*/
-
-  /**
-   * @name Field data
-   */
-  /**@{*/
-
-  /*!
-   * @brief Writes the scalar field data to the file
-   * @param name Name of the data
-   * @param data Value
-   */
-  void appendFieldData(const std::string &name, const double &data);
-
-  /*!
-   * @brief Writes the scalar field data to the file
-   * @param name Name of the data
-   * @param data Value
-   */
-  void appendFieldData(const std::string &name, const float &data);
-
-  /*!
-   * @brief Writes the time step to the file
-   * @param timestep Current time step of the simulation
-   */
-  void addTimeStep(const double &timestep);
-
-  /** @}*/
-
-  /*!
- * @brief Closes the file and store it to the hard disk
- */
-  void close();
-
-private:
-  /*! @brief Pointer to the vtk writer class */
-  rw::writer::MshWriter *d_writer_p;
-
-}; // class LegacyVtkWriterInterface
+}; // class Writer
 
 } // namespace writer
 

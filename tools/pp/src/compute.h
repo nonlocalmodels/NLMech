@@ -35,7 +35,7 @@ class Material;
 
 namespace rw {
 namespace writer {
-class WriterInterface;
+class Writer;
 }
 }
 
@@ -110,7 +110,7 @@ public:
    * @param writer Pointer to vtk writer
    * @param u Pointer to nodal displacement vector
    */
-  void initWriter(rw::writer::WriterInterface *writer,
+  void initWriter(rw::writer::Writer *writer,
                   std::vector<util::Point3> *u);
 
   /**
@@ -126,7 +126,7 @@ public:
    *
    * @param writer Pointer to vtk writer
    */
-  void transformU(rw::writer::WriterInterface *writer);
+  void transformU(rw::writer::Writer *writer);
 
   /*!
    * @brief Transform velocity
@@ -137,7 +137,7 @@ public:
    *
    * @param writer Pointer to vtk writer
    */
-  void transformV(rw::writer::WriterInterface *writer);
+  void transformV(rw::writer::Writer *writer);
 
   /*!
    * @brief Compute strain and stress
@@ -184,7 +184,7 @@ public:
    *
    * @param writer Pointer to vtk writer
    */
-  void computeStrain(rw::writer::WriterInterface *writer);
+  void computeStrain(rw::writer::Writer *writer);
 
   /*!
    * @brief Compute damage at nodes
@@ -199,7 +199,7 @@ public:
    * @param Z Pointer to nodal damage
    * @param perf_out Flag to perform output of damage data
    */
-  void computeDamage(rw::writer::WriterInterface *writer,
+  void computeDamage(rw::writer::Writer *writer,
       std::vector<double> *Z, bool perf_out = false);
 
   /*!
@@ -219,7 +219,7 @@ public:
    * @param Z Pointer to nodal damage
    * @param writer Pointer to vtk writer
    */
-  void findCrackTip(std::vector<double> *Z, rw::writer::WriterInterface
+  void findCrackTip(std::vector<double> *Z, rw::writer::Writer
   *writer);
 
   /*!
@@ -582,6 +582,20 @@ private:
    * simulation)
    */
   std::string d_simOutFilename;
+
+  /*!
+   * @brief Time step at which output interval changes
+   *
+   * Since we now support criteria based output intervals, we need to know
+   * when the transition from one interval to another happens. See
+   * model::FDModel::checkOutputCriteria() for details about the criteria
+   * based output intervals.
+   *
+   * Default value is total number of simulation steps. For this value, we
+   * always read output files which correspond to time steps in the interval
+   * Dt, where Dt is maximum of two intervals in the simulation input file.
+   */
+  size_t d_dtOutChange;
 
   /*! @brief State of writer class */
   bool d_writerReady;
