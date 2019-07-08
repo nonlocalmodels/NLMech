@@ -56,6 +56,11 @@ struct OutputDeck {
 
   /*! @brief Specify output criteria to change output frequency
    *
+   * Choices are:
+   * - <none>
+   * - max_Z
+   * - max_Z_stop
+   *
    * Specify the method used in changing the output frequency. If not
    * specified then we do not change the output frequency from d_dtOut.
    * */

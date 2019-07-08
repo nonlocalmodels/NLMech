@@ -12,6 +12,7 @@
 #include "util/fastMethods.h"
 #include "util/matrix.h"
 #include "util/point.h"
+#include "util/utilGeom.h"
 
 // include high level class declarations
 #include "fe/massMatrix.h"
@@ -211,22 +212,27 @@ void model::FDModel::init() {
       d_policy_p->addToTags(0, "Model_d_eFB");
   }
 
-  if (d_outputDeck_p->d_outCriteria == "max_Z") {
+  if (d_outputDeck_p->d_outCriteria == "max_Z" or
+      d_outputDeck_p->d_outCriteria == "max_Z_stop") {
+    size_t num_params = 1;
+    if (d_outputDeck_p->d_outCriteria == "max_Z_stop")
+      num_params = 6;
 
-    if (d_outputDeck_p->d_outCriteriaParams.size() < 1) {
+    if (d_outputDeck_p->d_outCriteriaParams.size() < num_params) {
       std::cerr << "Error: Output criteria " << d_outputDeck_p->d_outCriteria
-                << " requires 1 parameter.\n";
+                << " requires " << num_params << " parameters. \n";
       exit(1);
     }
 
     // issue warning when postprocessing is turned off as we need damage data
     // to compute output criteria
-    if(!d_policy_p->enablePostProcessing()) {
+    if (!d_policy_p->enablePostProcessing()) {
       std::cout << "Warning: Output criteria " <<
-      d_outputDeck_p->d_outCriteria << " requires Damage data Z but either "
-                                       "postprocessing is set to off. "
-                                       "Therefore setting output criteria to "
-                                       "null.\n";
+                d_outputDeck_p->d_outCriteria
+                << " requires Damage data Z but either "
+                   "postprocessing is set to off. "
+                   "Therefore setting output criteria to "
+                   "null.\n";
       d_outputDeck_p->d_outCriteria.clear();
     } else {
       // check if damage data is allocated
@@ -826,10 +832,10 @@ void model::FDModel::checkOutputCriteria() {
   if (d_outputDeck_p->d_outCriteria.empty())
     return;
 
-  if (d_outputDeck_p->d_outCriteria == "max_Z") {
 
-    // since damage function will not reduce once attaining desired maximum
-    // value, we do not check if the criteria was met in the past
+  // since damage function will not reduce once attaining desired maximum
+  // value, we do not check if the criteria was met in the past
+  if (d_outputDeck_p->d_outCriteria == "max_Z") {
     if (d_outputDeck_p->d_dtOut == d_outputDeck_p->d_dtOutCriteria)
       return;
 
@@ -838,7 +844,84 @@ void model::FDModel::checkOutputCriteria() {
 
     // check if it is desired range and change output frequency
     if (util::compare::definitelyGreaterThan(max,
-                                             d_outputDeck_p->d_outCriteriaParams[0]))
+                                             d_outputDeck_p->d_outCriteriaParams[0])) {
       d_outputDeck_p->d_dtOut = d_outputDeck_p->d_dtOutCriteria;
+
+      std::cout << "Message: Changing output interval to smaller value.\n";
+
+      // dump this value
+      std::ofstream fdump(d_outputDeck_p->d_path + "dt_out_change.info",
+                      std::ios::app);
+      fdump << "Large_Dt_To_Small_Dt:\n";
+      fdump << "  N: " << d_n << "\n";
+      fdump << "  dN: " << d_n / d_outputDeck_p->d_dtOutCriteria << "\n";
+      fdump.close();
+    }
+  }
+
+  // we now check (only if max_Z_stop is flag is provided) if we need to
+  // revert to large time interval
+  // we do this if time interval is small at present
+  if (d_outputDeck_p->d_outCriteria == "max_Z_stop" &&
+      d_outputDeck_p->d_dtOut < d_outputDeck_p->d_dtOutOld) {
+    // check maximum of Z function in the rectangle
+    auto rect = std::make_pair(util::Point3(), util::Point3());
+    auto ps = d_outputDeck_p->d_outCriteriaParams;
+    auto refZ = ps[1];
+    if (ps.size() == 6) {
+      rect.first = util::Point3(ps[2], ps[3], 0.);
+      rect.second = util::Point3(ps[4], ps[5], 0.);
+    } else if (ps.size() == 8) {
+      rect.first = util::Point3(ps[2], ps[3], ps[4]);
+      rect.second = util::Point3(ps[5], ps[6], ps[7]);
+    }
+
+    // we divide the total number of nodes in parts and check in parallel
+    size_t N = 1000;
+    if (d_mesh_p->getNumNodes() < N)
+      N = d_mesh_p->getNumNodes();
+
+    auto check= std::vector<int>(N, -1);
+    auto f = hpx::parallel::for_loop(
+        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+        N, [this, N, rect, refZ, &check](boost::uint64_t i) {
+
+            bool stat = false;
+            size_t ibegin = i * d_mesh_p->getNumNodes() / N;
+            size_t iend = ibegin + N;
+            if (iend > d_mesh_p->getNumNodes())
+              iend = d_mesh_p->getNumNodes();
+            for (size_t j = ibegin; j < iend; j++)
+              if (util::geometry::isPointInsideRectangle(d_mesh_p->getNode(j),
+                                                         rect.first,
+                                                         rect.second) &&
+                  util::compare::definitelyGreaterThan(d_Z[j],
+                                                       refZ))
+                stat = true;
+
+            check[i] = stat;
+        }
+    );
+    f.get();
+
+    bool change_dt = false;
+    for (auto b: check)
+      if (b) {
+        change_dt = true;
+        break;
+      }
+    if (change_dt) {
+      d_outputDeck_p->d_dtOut = d_outputDeck_p->d_dtOutOld;
+
+      std::cout << "Message: Changing output interval to larger value.\n";
+
+      // dump this value
+      std::ofstream fdump(d_outputDeck_p->d_path + "dt_out_change.info",
+                      std::ios::app);
+      fdump << "Small_Dt_To_Large_Dt:\n";
+      fdump << "  N: " << d_n << "\n";
+      fdump << "  dN: " << d_n / d_outputDeck_p->d_dtOutCriteria << "\n";
+      fdump.close();
+    }
   }
 }
