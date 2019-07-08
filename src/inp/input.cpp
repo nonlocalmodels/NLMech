@@ -561,6 +561,7 @@ void inp::Input::setOutputDeck() {
     if (e["Output_Interval"])
       d_outputDeck_p->d_dtOut = e["Output_Interval"].as<size_t>();
     d_outputDeck_p->d_dtOutOld = d_outputDeck_p->d_dtOut;
+    d_outputDeck_p->d_dtOutCriteria = d_outputDeck_p->d_dtOut;
     if (e["Debug"])
       d_outputDeck_p->d_debug = e["Debug"].as<size_t>();
     if (e["Perform_FE_Out"])
@@ -573,8 +574,6 @@ void inp::Input::setOutputDeck() {
       if (e["Output_Criteria"]["New_Interval"])
         d_outputDeck_p->d_dtOutCriteria =
             e["Output_Criteria"]["New_Interval"].as<size_t>();
-      else
-        d_outputDeck_p->d_dtOutCriteria = d_outputDeck_p->d_dtOut;
       if (e["Output_Criteria"]["Parameters"]) {
         auto ps = e["Output_Criteria"]["Parameters"];
         for (auto p : ps)
