@@ -881,12 +881,12 @@ void model::FDModel::checkOutputCriteria() {
     if (d_mesh_p->getNumNodes() < N)
       N = d_mesh_p->getNumNodes();
 
-    auto check= std::vector<int>(N, -1);
+    auto check= std::vector<float>(N, -1.);
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
         N, [this, N, rect, refZ, &check](boost::uint64_t i) {
 
-            bool stat = false;
+            float stat = -1.;
             size_t ibegin = i * d_mesh_p->getNumNodes() / N;
             size_t iend = ibegin + N;
             if (iend > d_mesh_p->getNumNodes())
@@ -897,20 +897,15 @@ void model::FDModel::checkOutputCriteria() {
                                                          rect.second) &&
                   util::compare::definitelyGreaterThan(d_Z[j],
                                                        refZ))
-                stat = true;
+                stat = 100.;
 
             check[i] = stat;
         }
     );
     f.get();
 
-    bool change_dt = false;
-    for (auto b: check)
-      if (b) {
-        change_dt = true;
-        break;
-      }
-    if (change_dt) {
+    int change_dt = util::methods::max(check);
+    if (change_dt > 1) {
       d_outputDeck_p->d_dtOut = d_outputDeck_p->d_dtOutOld;
 
       std::cout << "Message: Changing output interval to larger value.\n";
