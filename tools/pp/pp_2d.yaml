@@ -1,10 +1,15 @@
-# provide input files used in running simulation
+# provide directory where simulation input file is located
 Source_Path: ./
+# provide simulation input file name
 Simulation_Input_File: input.yaml
 # name of the vtu file which contains data like
 # displacement, velocity
 # default name is used in below if it is not provided
 Filename_To_Read: output
+# Specify start and end output step for processing
+# This overrides the compute set if compute set does not specify them
+Dt_Start: 5
+Dt_End: 20
 # Specify the number at which change in interval takes place
 Dt_Out_Change: 10
 # provide necessary material properties if not provided in the simulation

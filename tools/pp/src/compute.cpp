@@ -34,7 +34,7 @@ bool minSortZ(tools::pp::SortZ a, tools::pp::SortZ b) {
 tools::pp::Compute::Compute(const std::string &filename)
     : d_inpFilename(filename), d_tagZ("Damage_Z"), d_nOut(0), d_nC(0),
       d_currentData(nullptr), d_dtOutChange(0),
-      d_writerReady(false), d_uPlus(false),
+      d_writerReady(false), d_uPlus(false), d_dtN(0), d_dtStart(0), d_dtEnd(0),
       d_modelDeck_p(nullptr), d_outputDeck_p(nullptr),
       d_fractureDeck_p(nullptr), d_matDeck_p(nullptr),
       d_mesh_p(nullptr), d_fracture_p(nullptr), d_neighbor_p(nullptr),
@@ -45,9 +45,8 @@ tools::pp::Compute::Compute(const std::string &filename)
   // take the smaller output interval as dt_out
   size_t dt_out = d_outputDeck_p->d_dtOutCriteria;
   size_t dt_out_old = d_outputDeck_p->d_dtOutOld;
-  size_t N = d_modelDeck_p->d_Nt / dt_out;
 
-  for (d_nOut = 1; d_nOut <= N; d_nOut++) {
+  for (d_nOut = 1; d_nOut <= d_dtN; d_nOut++) {
     size_t current_step = d_nOut * dt_out;
     // proceed every dt_out_old interval if the current time step is
     // less than the time step when the change in output will happen
@@ -140,18 +139,19 @@ void tools::pp::Compute::init() {
   auto config = YAML::LoadFile(d_inpFilename);
 
   // get simulation filename
-  auto source_path = config["Source_Path"].as<std::string>();
-  d_simInpFilename =
-      source_path + "/" + config["Simulation_Input_File"].as<std::string>();
+  std::string source_path;
+  if (config["Source_Path"])
+    source_path = config["Source_Path"].as<std::string>();
+  else
+    source_path = ".";
 
-  // get simulation results filename
-  if (!config["Source_Path"] || !config["Filename_To_Read"]) {
-    std::cerr << "Error: Either Source_Path or Filename_To_Read is not "
-                 "provided in postprocessing input (yaml) file.\n";
+  if (config["Simulation_Input_File"])
+    d_simInpFilename =
+      source_path + "/" + config["Simulation_Input_File"].as<std::string>();
+  else {
+    std::cerr << "Error: Simulation input file is not provided.\n";
     exit(1);
   }
-  d_simOutFilename = config["Source_Path"].as<std::string>() + "/" +
-                     config["Filename_To_Read"].as<std::string>() + "_";
 
   // read input data
   std::cout << "PP_fe2D: Reading simulation input file.\n";
@@ -159,6 +159,14 @@ void tools::pp::Compute::init() {
   d_modelDeck_p = d_input_p->getModelDeck();
   d_outputDeck_p = d_input_p->getOutputDeck();
   d_fractureDeck_p = d_input_p->getFractureDeck();
+
+  // to get path for simulation output files, append output path present in
+  // the simulation input file
+  d_simOutFilename = source_path + "/" + d_outputDeck_p->d_path;
+  if (config["Filename_To_Read"])
+    d_simOutFilename += config["Filename_To_Read"].as<std::string>() + "_";
+  else
+    d_simOutFilename += "output_";
 
   // get output path directory
   if (config["Output"]["Path"])
@@ -171,6 +179,17 @@ void tools::pp::Compute::init() {
   //        d_outPath + "/" + config["Output"]["Filename"].as<std::string>();
   //  else
   d_outPreTag = d_outPath + "/";
+
+  // maximum number of output files to process
+  d_dtN = d_modelDeck_p->d_Nt / d_outputDeck_p->d_dtOutCriteria;
+
+  // read global start and end output step if provided
+  d_dtStart = 1;
+  if (config["Dt_Start"])
+    d_dtStart = config["Dt_Start"].as<int>();
+  d_dtEnd = d_dtN;
+  if (config["Dt_End"])
+    d_dtEnd = config["Dt_End"].as<int>();
 
   // handle change in output interval
   d_dtOutChange = d_modelDeck_p->d_Nt;
@@ -228,9 +247,9 @@ void tools::pp::Compute::init() {
     auto data = tools::pp::InstructionData();
     readComputeInstruction(set, &data);
     if (data.d_start == -1)
-      data.d_start = 1;
+      data.d_start = d_dtStart;
     if (data.d_end == -1)
-      data.d_end = d_modelDeck_p->d_Nt / d_outputDeck_p->d_dtOut;
+      data.d_end = d_dtEnd;
 
     d_computeData.emplace_back(data);
   }

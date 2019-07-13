@@ -603,6 +603,18 @@ private:
   /*! @brief Specify if we consider u(n+1) or u(n) */
   bool d_uPlus;
 
+  /*! @brief Total number of output files to process */
+  size_t d_dtN;
+
+  /*! @brief Global output start step. Default is 1. */
+  size_t d_dtStart;
+
+  /*!
+   * @brief Global output start step. Default is maximum output step for the
+   * simulation, i.e. d_dtN.
+   */
+  size_t d_dtEnd;
+
   /*! @brief Displacement of nodes */
   std::vector<util::Point3> d_u;
 
