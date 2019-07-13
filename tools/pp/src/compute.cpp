@@ -1074,107 +1074,111 @@ void tools::pp::Compute::computeJIntegral() {
       cd, d_modelDeck_p->d_horizon + 2. * d_mesh_p->getMeshSize(),
       d_mesh_p->getMeshSize(), &search_nodes, &search_elems);
 
+  //  //
+  //  // Compute contour integral
+  //  //
+  //  // create second order quadrature class for 1-d line element
+  //  auto line_quad = fe::LineElem(2);
+  //  auto h = d_mesh_p->getMeshSize();
+  //  for (size_t E = 0; E < 2; E++) {
+  //    long N = 0;
+  //    if (E == 0) {
+  //      // number of elements for horizontal edge
+  //      N = (cd.second.d_x - cd.first.d_x) / h;
+  //      if (util::compare::definitelyLessThan(cd.first.d_x + double(N) * h,
+  //                                            cd.second.d_x))
+  //        N++;
+  //    } else {
+  //      // number of elements for vertical edge
+  //      N = (cd.second.d_y - cd.first.d_y) / h;
+  //      if (util::compare::definitelyLessThan(cd.first.d_y + double(N) * h,
+  //                                            cd.second.d_y))
+  //        N++;
+  //    }
   //
-  // Compute contour integral
+  //    auto energies = std::vector<double>(N, 0.);
+  //    auto f = hpx::parallel::for_loop(
+  //        hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
+  //        [&energies, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
+  //        E,
+  //         this](boost::uint64_t I) {
+  //          double loc_energy = 0.;
   //
-  // create second order quadrature class for 1-d line element
-  auto line_quad = fe::LineElem(2);
-  auto h = d_mesh_p->getMeshSize();
-  for (size_t E = 0; E < 2; E++) {
-    long N = 0;
-    if (E == 0) {
-      // number of elements for horizontal edge
-      N = (cd.second.d_x - cd.first.d_x) / h;
-      if (util::compare::definitelyLessThan(cd.first.d_x + double(N) * h,
-                                            cd.second.d_x))
-        N++;
-    } else {
-      // number of elements for vertical edge
-      N = (cd.second.d_y - cd.first.d_y) / h;
-      if (util::compare::definitelyLessThan(cd.first.d_y + double(N) * h,
-                                            cd.second.d_y))
-        N++;
-    }
-
-    auto energies = std::vector<double>(N, 0.);
-    auto f = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
-        [&energies, N, h, cd, ctip, &line_quad, search_nodes, search_elems, E,
-         this](boost::uint64_t I) {
-          double loc_energy = 0.;
-
-          // line element
-          auto x1 = 0.;
-          auto x2 = 0.;
-          if (E == 0) {
-            // discretization of horizontal line
-            x1 = cd.first.d_x + double(I) * h;
-            x2 = cd.first.d_x + double(I + 1) * h;
-            if (I == N - 1)
-              x2 = cd.second.d_x;
-          } else {
-            // discretization of vertical line
-            x1 = cd.first.d_y + double(I) * h;
-            x2 = cd.first.d_y + double(I + 1) * h;
-            if (I == N - 1)
-              x2 = cd.second.d_y;
-          }
-
-          // get quadrature points
-          auto qds = line_quad.getQuadPoints(std::vector<util::Point3>{
-              util::Point3(x1, 0., 0.), util::Point3(x2, 0., 0.)});
-
-          // loop over quad points
-          for (auto qd : qds) {
-            if (E == 0) {
-              // process edge A-B
-              qd.d_p.d_y = cd.first.d_y;
-
-              // get contribution
-              // n dot v for edge A-B = - (y component of v)
-              loc_energy +=
-                  getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-                  (-ctip.d_v.d_y) * qd.d_w;
-
-              // process edge C-D
-              qd.d_p.d_y = cd.second.d_y;
-
-              // get contribution
-              // n dot v for edge C-D = y component of v
-              loc_energy +=
-                  getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-                  ctip.d_v.d_y * qd.d_w;
-            } else {
-              // process edge B-C
-              // transform quad point along vertical line to correct coordinate
-              auto p_temp = qd.d_p;
-              qd.d_p = util::Point3(cd.second.d_x, p_temp.d_x, 0.);
-
-              // get contribution
-              // n dot v for edge B-C = (x component of v)
-              loc_energy +=
-                  getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-                  ctip.d_v.d_x * qd.d_w;
-
-              // process edge D-A
-              // transform quad point along vertical line to correct coordinate
-              qd.d_p = util::Point3(cd.first.d_x, p_temp.d_x, 0.);
-
-              // get contribution
-              // n dot v for edge D-A = - (x component of v)
-              loc_energy +=
-                  getContourContribJInt(qd.d_p, &search_nodes, &search_elems) *
-                  (-ctip.d_v.d_x) * qd.d_w;
-            }
-          } // loop over quad points
-
-          energies[I] = loc_energy;
-        });
-    f.get();
-
-    // add energies
-    energy += util::methods::add(energies);
-  }
+  //          // line element
+  //          auto x1 = 0.;
+  //          auto x2 = 0.;
+  //          if (E == 0) {
+  //            // discretization of horizontal line
+  //            x1 = cd.first.d_x + double(I) * h;
+  //            x2 = cd.first.d_x + double(I + 1) * h;
+  //            if (I == N - 1)
+  //              x2 = cd.second.d_x;
+  //          } else {
+  //            // discretization of vertical line
+  //            x1 = cd.first.d_y + double(I) * h;
+  //            x2 = cd.first.d_y + double(I + 1) * h;
+  //            if (I == N - 1)
+  //              x2 = cd.second.d_y;
+  //          }
+  //
+  //          // get quadrature points
+  //          auto qds = line_quad.getQuadPoints(std::vector<util::Point3>{
+  //              util::Point3(x1, 0., 0.), util::Point3(x2, 0., 0.)});
+  //
+  //          // loop over quad points
+  //          for (auto qd : qds) {
+  //            if (E == 0) {
+  //              // process edge A-B
+  //              qd.d_p.d_y = cd.first.d_y;
+  //
+  //              // get contribution
+  //              // n dot v for edge A-B = - (y component of v)
+  //              loc_energy +=
+  //                  getContourContribJInt(qd.d_p, &search_nodes,
+  //                  &search_elems) *
+  //                  (-ctip.d_v.d_y) * qd.d_w;
+  //
+  //              // process edge C-D
+  //              qd.d_p.d_y = cd.second.d_y;
+  //
+  //              // get contribution
+  //              // n dot v for edge C-D = y component of v
+  //              loc_energy +=
+  //                  getContourContribJInt(qd.d_p, &search_nodes,
+  //                  &search_elems) * ctip.d_v.d_y * qd.d_w;
+  //            } else {
+  //              // process edge B-C
+  //              // transform quad point along vertical line to correct
+  //              coordinate auto p_temp = qd.d_p; qd.d_p =
+  //              util::Point3(cd.second.d_x, p_temp.d_x, 0.);
+  //
+  //              // get contribution
+  //              // n dot v for edge B-C = (x component of v)
+  //              loc_energy +=
+  //                  getContourContribJInt(qd.d_p, &search_nodes,
+  //                  &search_elems) * ctip.d_v.d_x * qd.d_w;
+  //
+  //              // process edge D-A
+  //              // transform quad point along vertical line to correct
+  //              coordinate qd.d_p = util::Point3(cd.first.d_x, p_temp.d_x,
+  //              0.);
+  //
+  //              // get contribution
+  //              // n dot v for edge D-A = - (x component of v)
+  //              loc_energy +=
+  //                  getContourContribJInt(qd.d_p, &search_nodes,
+  //                  &search_elems) *
+  //                  (-ctip.d_v.d_x) * qd.d_w;
+  //            }
+  //          } // loop over quad points
+  //
+  //          energies[I] = loc_energy;
+  //        });
+  //    f.get();
+  //
+  //    // add energies
+  //    energy += util::methods::add(energies);
+  //  }
 
   //
   // Contribution from work done by peridynamic force
@@ -1187,10 +1191,11 @@ void tools::pp::Compute::computeJIntegral() {
   auto energies = std::vector<double>(search_node_comp.size(), 0.);
 
   // loop over nodes in compliment of domain A
+  auto h = d_mesh_p->getMeshSize();
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       search_node_comp.size(),
-      [&energies, h, cd, &line_quad, search_nodes, search_node_comp,
+      [&energies, h, cd, search_nodes, search_node_comp,
        this](boost::uint64_t i) {
         auto id = search_node_comp[i];
         auto xi = d_mesh_p->getNode(id);
@@ -1225,13 +1230,15 @@ void tools::pp::Compute::computeJIntegral() {
           auto ef = d_material_p->getBondEF(rji, Sji, fracture_state, true);
 
           // compute the contribution
-          energy_loc -= ef.second * volj *
+          // need factor half (see the formula for J integral and formula for
+          // value returned by getBondEF()
+          energy_loc += 0.5 * ef.second * volj *
                         (xji.d_x * v_sum.d_x + xji.d_y * v_sum.d_y +
                          xji.d_z * v_sum.d_z) /
                         rji;
         } // loop over neighboring nodes
 
-        energies[i] = energy_loc * voli;
+        energies[i] -= energy_loc * voli;
       });
   f.get();
 

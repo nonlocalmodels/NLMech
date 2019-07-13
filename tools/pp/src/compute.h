@@ -244,10 +244,9 @@ public:
    * Let contour is denoted as \f$ \Gamma(t) \f$, where \f$ t \f$ indicates
    * contour moves with crack tip. Let domain inside contour is defined as
    * \f$ A(t) \f$. Let the outward normal to the domain \f$ A(t) \f$ is \f$ n
-   * \f$ and the crack velocity is \f$ v \f$. Then the energy into crack is
-   * given by
-   * \f[ E(t) = \int_{\Gamma(t)} \left[ \frac{1}{2} \rho |\dot{u}(t)|^2 dt +
-   * \bar{W}(x; u(t)) \right] v\cdot n dx - \frac{2}{\epsilon |B_\epsilon(0)|}
+   * \f$ and the crack velocity is \f$ v \f$. Then the energy associated to
+   * crack is given by
+   * \f[ E(t) = \frac{1}{|B_\epsilon(0)|}
    * \int_{A^c(t)} \int_{A(t) \cap B_\epsilon(x)} \partial_S W(S(y,x;
    * u(t))) \frac{y-x}{|y-x|} \cdot (\dot{u}(x,t) + \dot{u}(y,t)) dy dx. \f]
    * Here \f$ \bar{W}(x;u(t)) \f$ is the energy density at point \f$ x\f$ given
