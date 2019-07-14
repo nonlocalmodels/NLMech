@@ -45,6 +45,7 @@ tools::pp::Compute::Compute(const std::string &filename)
   // take the smaller output interval as dt_out
   size_t dt_out = d_outputDeck_p->d_dtOutCriteria;
   size_t dt_out_old = d_outputDeck_p->d_dtOutOld;
+  size_t dt_interval_factor = dt_out_old / dt_out;
 
   for (d_nOut = 1; d_nOut <= d_dtN; d_nOut++) {
     size_t current_step = d_nOut * dt_out;
@@ -57,6 +58,9 @@ tools::pp::Compute::Compute(const std::string &filename)
 
     if(!process_iN)
       continue;
+
+    if (d_nOut >=  d_dtOutChange)
+      dt_interval_factor = 1;
 
     std::cout << "PP_fe2D: Processing output file = " << d_nOut  << "\n";
 
@@ -98,7 +102,7 @@ tools::pp::Compute::Compute(const std::string &filename)
         continue;
 
       // skip d_interval number of simulation file after processing 1 file
-      if (d_nOut % d_currentData->d_interval != 0)
+      if (d_nOut % (dt_interval_factor * d_currentData->d_interval) != 0)
         continue;
 
       std::cout << "  PP_fe2D: Processing compute set = " << d_nC + 1 << "\n";
