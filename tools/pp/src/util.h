@@ -150,11 +150,6 @@ struct ComputeStrain {
  * @brief Data for crack tip computation
  */
 struct FindCrackTip {
-  /*!
-   * @brief Specify if we use giving output interval as delta t for crack
-   * tip calculation or use size of time step
-   */
-  bool d_crackSameDtOut;
 
   /*! @brief Old update time for top (right) side of crack */
   double d_timet;
@@ -184,7 +179,7 @@ struct FindCrackTip {
    * @brief Constructor
    */
   FindCrackTip()
-      : d_crackSameDtOut(true), d_timet(0.), d_timeb(0.), d_updateCount(0),
+      : d_timet(0.), d_timeb(0.), d_updateCount(0),
         d_minZAllowed(1.), d_maxZAllowed(50.), d_filet(nullptr),
         d_fileb(nullptr){};
 };

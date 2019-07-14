@@ -558,6 +558,9 @@ private:
   /*! @brief Current active compute set */
   size_t d_nC;
 
+  /*! @brief Current time */
+  double d_time;
+
   /*! @brief Current active compute data */
   tools::pp::InstructionData *d_currentData;
 

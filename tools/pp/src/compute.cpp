@@ -33,12 +33,12 @@ bool minSortZ(tools::pp::SortZ a, tools::pp::SortZ b) {
 
 tools::pp::Compute::Compute(const std::string &filename)
     : d_inpFilename(filename), d_tagZ("Damage_Z"), d_nOut(0), d_nC(0),
-      d_currentData(nullptr), d_dtOutChange(0),
+      d_time(0.), d_currentData(nullptr), d_dtOutChange(0),
       d_writerReady(false), d_uPlus(false), d_dtN(0), d_dtStart(0), d_dtEnd(0),
       d_modelDeck_p(nullptr), d_outputDeck_p(nullptr),
-      d_fractureDeck_p(nullptr), d_matDeck_p(nullptr),
-      d_mesh_p(nullptr), d_fracture_p(nullptr), d_neighbor_p(nullptr),
-      d_input_p(nullptr), d_material_p(nullptr) {
+      d_fractureDeck_p(nullptr), d_matDeck_p(nullptr), d_mesh_p(nullptr),
+      d_fracture_p(nullptr), d_neighbor_p(nullptr), d_input_p(nullptr),
+      d_material_p(nullptr) {
 
   init();
 
@@ -59,8 +59,12 @@ tools::pp::Compute::Compute(const std::string &filename)
     if(!process_iN)
       continue;
 
+    // get correct factor for dt interval
     if (d_nOut >=  d_dtOutChange)
       dt_interval_factor = 1;
+
+    // current time
+    d_time = current_step * d_modelDeck_p->d_dt;
 
     std::cout << "PP_fe2D: Processing output file = " << d_nOut  << "\n";
 
@@ -501,10 +505,6 @@ void tools::pp::Compute::readComputeInstruction(
     if (!data->d_findCrackTip_p)
       data->d_findCrackTip_p = new tools::pp::FindCrackTip();
 
-    if (config["Compute"][set]["Crack_Tip"]["Same_Dt_Out"])
-      data->d_findCrackTip_p->d_crackSameDtOut =
-          config["Compute"][set]["Crack_Tip"]["Same_Dt_Out"].as<bool>();
-
     if (config["Compute"][set]["Crack_Tip"]["Max_Z_Allowed"])
       data->d_findCrackTip_p->d_maxZAllowed =
           config["Compute"][set]["Crack_Tip"]["Max_Z_Allowed"].as<double>();
@@ -607,6 +607,10 @@ void tools::pp::Compute::initWriter(rw::writer::Writer *writer,
     writer->appendMesh(d_mesh_p->getNodesP(), d_mesh_p->getElementType(),
                        d_mesh_p->getElementConnectivitiesP(), u);
 
+  // append current time
+  writer->addTimeStep(d_time);
+
+  // set flag
   d_writerReady = true;
 }
 
@@ -902,6 +906,8 @@ void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
 
       writer1.appendPointData("Mark_Mag_Strain", &magS);
     }
+
+    writer1.addTimeStep(d_time);
     writer1.close();
   }
 }
@@ -956,47 +962,6 @@ void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
   if (!data)
     return;
 
-  auto n = d_nOut * d_outputDeck_p->d_dtOut;
-  auto time = n * d_modelDeck_p->d_dt;
-
-  // compute displacement, damage, and crack tip at k-1 step if
-  // crack update is not same as simulation output interval
-  if (!data->d_crackSameDtOut) {
-    n -= 1;
-    time -= d_modelDeck_p->d_dt;
-    auto f = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        d_mesh_p->getNumNodes(), [this](boost::uint64_t i) {
-          d_u[i] -= util::Point3(d_modelDeck_p->d_dt * d_v[i].d_x,
-                                 d_modelDeck_p->d_dt * d_v[i].d_y,
-                                 d_modelDeck_p->d_dt * d_v[i].d_z);
-        });
-    f.get();
-
-    // compute damage at n-1
-    if (Z->size() != d_mesh_p->getNumNodes())
-      Z->resize(d_mesh_p->getNumNodes());
-    computeDamage(writer, Z, false);
-
-    // compute crack tip location and crack tip velocity
-    updateCrack(time, Z);
-  }
-
-  // get current displacement
-  n = d_nOut * d_outputDeck_p->d_dtOut;
-  time = n * d_modelDeck_p->d_dt;
-  // revert to current displacement
-  if (!data->d_crackSameDtOut) {
-    auto f2 = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        d_mesh_p->getNumNodes(), [this](boost::uint64_t i) {
-          d_u[i] += util::Point3(d_modelDeck_p->d_dt * d_v[i].d_x,
-                                 d_modelDeck_p->d_dt * d_v[i].d_y,
-                                 d_modelDeck_p->d_dt * d_v[i].d_z);
-        });
-    f2.get();
-  }
-
   // compute damage at current displacement
   if (Z->size() != d_mesh_p->getNumNodes())
     Z->resize(d_mesh_p->getNumNodes());
@@ -1012,7 +977,7 @@ void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
   }
 
   // compute crack tip location and crack tip velocity
-  updateCrack(time, Z);
+  updateCrack(d_time, Z);
 
   // perform output
   crackOutput();

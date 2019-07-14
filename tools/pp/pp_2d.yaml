@@ -98,9 +98,6 @@ Compute:
     Output_Only_Nodes: true
     # compute crack tip location and velocity
     Crack_Tip:
-      # specify if we compute crack tip velocity using same
-      # time step interval as the output interval
-      Same_Dt_Out: true
       # specify the max value of damage to be considered in searching for tip
       # default is 50
       Max_Z_Allowed: 50.0
