@@ -106,8 +106,22 @@ tools::pp::Compute::Compute(const std::string &filename)
         continue;
 
       // skip d_interval number of simulation file after processing 1 file
-      if (d_nOut % (dt_interval_factor * d_currentData->d_interval) != 0)
+      // For now, we have different method to check when compute set includes 
+      // crack tip calculation
+      bool skip_nout = false;
+      if (d_currentData->d_computeJInt_p) {
+        if ((d_nOut - d_currentData->d_start) % (dt_interval_factor * d_currentData->d_interval) != 0)
+          skip_nout = true;
+      }
+      else {
+        if (d_nOut % (dt_interval_factor * d_currentData->d_interval) != 0)
+          skip_nout = true;
+      }
+
+      if (skip_nout)
         continue;
+
+
 
       std::cout << "  PP_fe2D: Processing compute set = " << d_nC + 1 << "\n";
 
