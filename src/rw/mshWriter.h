@@ -1,26 +1,25 @@
-////////////////////////////////////////////////////////////////////////////////
-//  Copyright (c) 2019 Prashant K. Jha
-//  Copyright (c) 2019 Patrick Diehl
+// Copyright (c) 2019    Prashant K. Jha
 //
-//  Distributed under the Boost Software License, Version 1.0. (See accompanying
-//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-////////////////////////////////////////////////////////////////////////////////
+// Distributed under the GNU GENERAL PUBLIC LICENSE, Version 3.0.
+// (See accompanying file LICENSE.txt)
 
-#ifndef TOOLS_MESH_VTKWRITER_H
-#define TOOLS_MESH_VTKWRITER_H
+#ifndef RW_MSHWRITER_H
+#define RW_MSHWRITER_H
 
-#include <vtkSmartPointer.h>
-#include <vtkUnstructuredGrid.h>
-#include <vtkXMLUnstructuredGridWriter.h>
+#include "util/matrix.h" // definition of SymMatrix3
+#include "util/point.h"  // definition of Point3
+#include <fstream>
+#include <vector>
 
-#include "util/point.h"           // definition of Point3
+namespace rw {
 
-namespace tools {
+namespace writer {
 
-namespace mesh {
-
-/*! @brief A vtk writer for simple point data and complex fem mesh data */
-class VtkWriter {
+/*! @brief A .msh writer for simple point data and complex fem mesh data
+ *
+ * We are using Gmsh 2.0 format.
+ */
+class MshWriter {
 
 public:
   /*!
@@ -30,9 +29,9 @@ public:
    * open till the close() function is invoked.
    *
    * @param filename Name of file which will be created
-   * @param compress_type Specify the compression type (optional)
+   * @param compress_type Compression method (optional)
    */
-  VtkWriter(const std::string &filename, const std::string &compress_type = "");
+  explicit MshWriter(const std::string &filename, const std::string &compress_type = "");
 
   /**
    * @name Mesh data
@@ -41,17 +40,11 @@ public:
 
   /*!
    * @brief Writes the nodes to the file
-   * @param nodes Current positions of the nodes
-   */
-  void appendNodes(const std::vector<util::Point3> *nodes);
-
-  /*!
-   * @brief Writes the nodes to the file
    * @param nodes Reference positions of the nodes
    * @param u Nodal displacements
    */
   void appendNodes(const std::vector<util::Point3> *nodes,
-                   const std::vector<util::Point3> *u);
+                   const std::vector<util::Point3> *u = nullptr);
 
   /*!
    * @brief Writes the mesh data to file
@@ -64,7 +57,7 @@ public:
   void appendMesh(const std::vector<util::Point3> *nodes,
                   const size_t &element_type,
                   const std::vector<size_t> *en_con,
-                  const std::vector<util::Point3> *u);
+                  const std::vector<util::Point3> *u = nullptr);
 
   /** @}*/
 
@@ -76,7 +69,7 @@ public:
   /*!
    * @brief Writes the scalar point data to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendPointData(const std::string &name,
                        const std::vector<uint8_t> *data);
@@ -84,7 +77,7 @@ public:
   /*!
    * @brief Writes the scalar point data to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendPointData(const std::string &name,
                        const std::vector<size_t> *data);
@@ -92,21 +85,21 @@ public:
   /*!
    * @brief Writes the scalar point data to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendPointData(const std::string &name, const std::vector<int> *data);
 
   /*!
    * @brief Writes the scalar point data to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendPointData(const std::string &name, const std::vector<float> *data);
 
   /*!
    * @brief Writes the scalar point data to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendPointData(const std::string &name,
                        const std::vector<double> *data);
@@ -114,10 +107,41 @@ public:
   /*!
    * @brief Writes the vector point data to the file
    * @param name Name of the data
-   * @param data The vector containing the data
+   * @param data Vector containing the data
    */
   void appendPointData(const std::string &name,
                        const std::vector<util::Point3> *data);
+
+  /*!
+   * @brief Writes the symmetric matrix data associated to nodes to the
+   * file
+   * @param name Name of the data
+   * @param data Vector containing the data
+   */
+  void appendPointData(const std::string &name,
+                       const std::vector<util::SymMatrix3> *data);
+
+  /** @}*/
+
+  /**
+   * @name Cell data
+   */
+  /**@{*/
+
+  /*!
+   * @brief Writes the float data associated to cells to the file
+   * @param name Name of the data
+   * @param data Vector containing the data
+   */
+  void appendCellData(const std::string &name, const std::vector<float> *data);
+
+  /*!
+   * @brief Writes the symmetric matrix data associated to cells to the file
+   * @param name Name of the data
+   * @param data Vector containing the data
+   */
+  void appendCellData(const std::string &name,
+                       const std::vector<util::SymMatrix3> *data);
 
   /** @}*/
 
@@ -154,18 +178,29 @@ public:
   void close();
 
 private:
-  /*! @brief XML unstructured grid writer */
-  vtkSmartPointer<vtkXMLUnstructuredGridWriter> d_writer_p;
+  /*! @brief utility function
+   *
+   * field_type:
+   * - 1 - scalar with 1 component
+   * - 2 - vector with 2 component
+   * - 3 - vector with 3 component
+   * - 6 - symmetric tensor with 6 component
+   */
+  void writeMshDataHeader(const std::string &name, int field_type,
+                          size_t num_data, bool is_node_data = true);
 
-  /*! @brief Unstructured grid */
-  vtkSmartPointer<vtkUnstructuredGrid> d_grid_p;
+  /*! @brief filename */
+  std::string d_filename;
 
   /*! @brief compression_type Specify the compressor (if any) */
   std::string d_compressType;
+
+  /*! @brief vtk/vtu file */
+  FILE *d_file;
 };
 
-} // namespace mesh
+} // namespace writer
 
-} // namespace tools
+} // namespace rw
 
-#endif // TOOLS_MESH_VTKWRITER_H
+#endif // RW_MSHWRITER_H

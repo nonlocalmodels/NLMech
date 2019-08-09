@@ -6,72 +6,32 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef RW_WRITER_H
-#define RW_WRITER_H
+#ifndef RW_LEGACY_VTKWRITER_H
+#define RW_LEGACY_VTKWRITER_H
 
-#include "util/point.h"           // definition of Point3
-#include "util/matrix.h"          // definition of SymMatrix3
-#include <string>
+#include "util/matrix.h" // definition of SymMatrix3
+#include "util/point.h"  // definition of Point3
+#include <fstream>
 #include <vector>
 
-// forward declaration
-namespace rw {
-namespace writer {
-class VtkWriter;
-class LegacyVtkWriter;
-class MshWriter;
-}
-} // namespace rw
-
 namespace rw {
 
-/*!
- * @brief Collection of methods and database related to writing
- *
- * This namespace provides methods and data members specific to writing of
- * the mesh data and simulation data. Currently, .vtu and .msh is supported.
- */
 namespace writer {
 
-/*!
- * @brief A interface class writing data
- *
- * This interface separates the caller from vtk library.
- */
-class Writer {
+/*! @brief A vtk writer for simple point data and complex fem mesh data */
+class LegacyVtkWriter {
 
 public:
   /*!
    * @brief Constructor
-   */
-  Writer();
-
-  /*!
-   * @brief Constructor
    *
    * Creates and opens .vtu file of name given by filename. The file remains
-   * open till the close() function is invoked or if the instance of this
-   * class is destroyed.
+   * open till the close() function is invoked.
    *
    * @param filename Name of file which will be created
-   * @param format Format of the output file, e.g. "vtu", "msh"
-   * @param compress_type Specify the compression type (optional)
+   * @param compress_type Compression method (optional)
    */
-  explicit Writer(const std::string &filename, const std::string &format =
-    "vtu", const std::string &compress_type = "");
-
-  /*! @brief Destructor */
-  ~Writer();
-
-  /*!
-   * @brief Open a .vtu file
-   *
-   * @param filename Name of file which will be created
-   * @param format Format of the output file, e.g. "vtu", "msh"
-   * @param compress_type Compression type (optional)
-   */
-  void open(const std::string &filename, const std::string &format = "vtu",
-            const std::string &compress_type = "");
+  explicit LegacyVtkWriter(const std::string &filename, const std::string &compress_type = "");
 
   /**
    * @name Mesh data
@@ -80,11 +40,17 @@ public:
 
   /*!
    * @brief Writes the nodes to the file
+   * @param nodes Current positions of the nodes
+   */
+  void appendNodes(const std::vector<util::Point3> *nodes);
+
+  /*!
+   * @brief Writes the nodes to the file
    * @param nodes Reference positions of the nodes
    * @param u Nodal displacements
    */
   void appendNodes(const std::vector<util::Point3> *nodes,
-                   const std::vector<util::Point3> *u = nullptr);
+                   const std::vector<util::Point3> *u);
 
   /*!
    * @brief Writes the mesh data to file
@@ -153,11 +119,11 @@ public:
                        const std::vector<util::Point3> *data);
 
   /*!
- * @brief Writes the symmetric matrix data associated to nodes to the
- * file
- * @param name Name of the data
- * @param data Vector containing the data
- */
+   * @brief Writes the symmetric matrix data associated to nodes to the
+   * file
+   * @param name Name of the data
+   * @param data Vector containing the data
+   */
   void appendPointData(const std::string &name,
                        const std::vector<util::SymMatrix3> *data);
 
@@ -181,7 +147,7 @@ public:
    * @param data Vector containing the data
    */
   void appendCellData(const std::string &name,
-                      const std::vector<util::SymMatrix3> *data);
+                       const std::vector<util::SymMatrix3> *data);
 
   /** @}*/
 
@@ -218,22 +184,18 @@ public:
   void close();
 
 private:
-  /*! @brief Pointer to the vtk writer class */
-  rw::writer::VtkWriter *d_vtkWriter_p;
+  /*! @brief filename */
+  std::string d_filename;
 
-  /*! @brief Pointer to the vtk writer class */
-  rw::writer::LegacyVtkWriter *d_legacyVtkWriter_p;
+  /*! @brief compression_type Specify the compressor (if any) */
+  std::string d_compressType;
 
-  /*! @brief Pointer to the vtk writer class */
-  rw::writer::MshWriter *d_mshWriter_p;
-
-  /*! @brief Format of output file */
-  std::string d_format;
-
-}; // class Writer
+  /*! @brief vtk/vtu file */
+  std::ofstream d_file;
+};
 
 } // namespace writer
 
 } // namespace rw
 
-#endif // RW_WRITER_H
+#endif // RW_LEGACY_VTKWRITER_H

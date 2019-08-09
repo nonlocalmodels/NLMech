@@ -61,6 +61,29 @@ void readVtuFile(const std::string &filename, size_t dim,
 /*!
  * @brief Reads mesh data into node file and element file
  * @param filename Name of mesh file
+ * @param u Pointer to vector of nodal displacement
+ * @param v Pointer to vector of nodal velocity
+ * @param X Pointer to vector of nodal reference position (Optional)
+ */
+void readVtuFileRestart(const std::string &filename,
+                        std::vector<util::Point3> *u,
+                        std::vector<util::Point3> *v,
+                        const std::vector<util::Point3> *X = nullptr);
+
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename Name of mesh file
+ * @param tag Name of point data to be read from .vtu file
+ * @param data Pointer to vector of point data
+ * @return bool True if found the data in file
+ */
+bool readVtuFilePointData(const std::string &filename,
+                          const std::string &tag,
+                        std::vector<double> *data);
+
+/*!
+ * @brief Reads mesh data into node file and element file
+ * @param filename Name of mesh file
  * @param dim Dimension
  * @param nodes Vector of nodes data
  * @param element_type Type of element
@@ -84,21 +107,21 @@ void readMshFile(const std::string &filename, size_t dim,
  * @param v Pointer to vector of nodal velocity
  * @param X Pointer to vector of nodal reference position (Optional)
  */
-void readVtuFileRestart(const std::string &filename,
+void readMshFileRestart(const std::string &filename,
                         std::vector<util::Point3> *u,
                         std::vector<util::Point3> *v,
                         const std::vector<util::Point3> *X = nullptr);
 
 /*!
  * @brief Reads data of specified tag from the vtu file
- * @param filename Name of vtu file
+ * @param filename Name of mesh file
  * @param tag Name of point data to be read from .vtu file
  * @param data Pointer to vector of point data
  * @return bool True if found the data in file
  */
-bool readVtuFilePointData(const std::string &filename,
+bool readMshFilePointData(const std::string &filename,
                           const std::string &tag,
-                        std::vector<double> *data);
+                          std::vector<double> *data);
 
 } // namespace reader
 

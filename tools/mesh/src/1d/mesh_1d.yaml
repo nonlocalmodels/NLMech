@@ -1,9 +1,10 @@
 Output:
   Path: ./mesh_fe
   Mesh: mesh
+  File_Format: vtu
 Domain:
   - 0.0
   - 1.0
 Horizon: 0.01
 Horizon_h_Ratio: 5
-# Mesh_Size: 0.001
+Compress_Type: zlib

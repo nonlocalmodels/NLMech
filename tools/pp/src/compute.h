@@ -9,18 +9,38 @@
 #ifndef TOOLS_PP_COMPUTE_H
 #define TOOLS_PP_COMPUTE_H
 
-#include "fe/mesh.h"                // definition of Mesh
-#include "geometry/fracture.h"      // definition of Fracture
-#include "geometry/neighbor.h"      // definition of Neighbor
-#include "inp/decks/materialDeck.h" // definition of MaterialDeck
-#include "inp/decks/modelDeck.h"    // definition of ModelDeck
-#include "inp/decks/outputDeck.h"   // definition of OutputDeck
-#include "inp/decks/fractureDeck.h"   // definition of FractureDeck
-#include "inp/input.h"              // definition of Input
-#include "material/pdMaterial.h"    // definition of Material
 #include "util.h"
 #include "util/matrix.h" // definition of SymMatrix3
-#include "rw/writer.h"              // definition of VtkWriterInterface
+
+// forward declarations of decks
+namespace inp {
+class Input;
+struct MaterialDeck;
+struct FractureDeck;
+struct ModelDeck;
+struct OutputDeck;
+} // namespace inp
+
+namespace fe {
+class Mesh;
+}
+
+namespace geometry {
+class Fracture;
+class Neighbor;
+}
+
+namespace material {
+namespace pd {
+class Material;
+}
+}
+
+namespace rw {
+namespace writer {
+class Writer;
+}
+}
 
 namespace tools {
 
@@ -93,7 +113,7 @@ public:
    * @param writer Pointer to vtk writer
    * @param u Pointer to nodal displacement vector
    */
-  void initWriter(rw::writer::VtkWriterInterface *writer,
+  void initWriter(rw::writer::Writer *writer,
                   std::vector<util::Point3> *u);
 
   /**
@@ -109,7 +129,7 @@ public:
    *
    * @param writer Pointer to vtk writer
    */
-  void transformU(rw::writer::VtkWriterInterface *writer);
+  void transformU(rw::writer::Writer *writer);
 
   /*!
    * @brief Transform velocity
@@ -120,7 +140,7 @@ public:
    *
    * @param writer Pointer to vtk writer
    */
-  void transformV(rw::writer::VtkWriterInterface *writer);
+  void transformV(rw::writer::Writer *writer);
 
   /*!
    * @brief Compute strain and stress
@@ -167,7 +187,7 @@ public:
    *
    * @param writer Pointer to vtk writer
    */
-  void computeStrain(rw::writer::VtkWriterInterface *writer);
+  void computeStrain(rw::writer::Writer *writer);
 
   /*!
    * @brief Compute damage at nodes
@@ -182,7 +202,7 @@ public:
    * @param Z Pointer to nodal damage
    * @param perf_out Flag to perform output of damage data
    */
-  void computeDamage(rw::writer::VtkWriterInterface *writer,
+  void computeDamage(rw::writer::Writer *writer,
       std::vector<double> *Z, bool perf_out = false);
 
   /*!
@@ -202,7 +222,7 @@ public:
    * @param Z Pointer to nodal damage
    * @param writer Pointer to vtk writer
    */
-  void findCrackTip(std::vector<double> *Z, rw::writer::VtkWriterInterface
+  void findCrackTip(std::vector<double> *Z, rw::writer::Writer
   *writer);
 
   /*!
@@ -227,10 +247,9 @@ public:
    * Let contour is denoted as \f$ \Gamma(t) \f$, where \f$ t \f$ indicates
    * contour moves with crack tip. Let domain inside contour is defined as
    * \f$ A(t) \f$. Let the outward normal to the domain \f$ A(t) \f$ is \f$ n
-   * \f$ and the crack velocity is \f$ v \f$. Then the energy into crack is
-   * given by
-   * \f[ E(t) = \int_{\Gamma(t)} \left[ \frac{1}{2} \rho |\dot{u}(t)|^2 dt +
-   * \bar{W}(x; u(t)) \right] v\cdot n dx - \frac{2}{\epsilon |B_\epsilon(0)|}
+   * \f$ and the crack velocity is \f$ v \f$. Then the energy associated to
+   * crack is given by
+   * \f[ E(t) = \frac{1}{|B_\epsilon(0)|}
    * \int_{A^c(t)} \int_{A(t) \cap B_\epsilon(x)} \partial_S W(S(y,x;
    * u(t))) \frac{y-x}{|y-x|} \cdot (\dot{u}(x,t) + \dot{u}(y,t)) dy dx. \f]
    * Here \f$ \bar{W}(x;u(t)) \f$ is the energy density at point \f$ x\f$ given
@@ -542,6 +561,9 @@ private:
   /*! @brief Current active compute set */
   size_t d_nC;
 
+  /*! @brief Current time */
+  double d_time;
+
   /*! @brief Current active compute data */
   tools::pp::InstructionData *d_currentData;
 
@@ -566,11 +588,37 @@ private:
    */
   std::string d_simOutFilename;
 
+  /*!
+   * @brief Time step at which output interval changes
+   *
+   * Since we now support criteria based output intervals, we need to know
+   * when the transition from one interval to another happens. See
+   * model::FDModel::checkOutputCriteria() for details about the criteria
+   * based output intervals.
+   *
+   * Default value is total number of simulation steps. For this value, we
+   * always read output files which correspond to time steps in the interval
+   * Dt, where Dt is maximum of two intervals in the simulation input file.
+   */
+  size_t d_dtOutChange;
+
   /*! @brief State of writer class */
   bool d_writerReady;
 
   /*! @brief Specify if we consider u(n+1) or u(n) */
   bool d_uPlus;
+
+  /*! @brief Total number of output files to process */
+  size_t d_dtN;
+
+  /*! @brief Global output start step. Default is 1. */
+  size_t d_dtStart;
+
+  /*!
+   * @brief Global output start step. Default is maximum output step for the
+   * simulation, i.e. d_dtN.
+   */
+  size_t d_dtEnd;
 
   /*! @brief Displacement of nodes */
   std::vector<util::Point3> d_u;

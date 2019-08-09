@@ -553,21 +553,36 @@ void inp::Input::setOutputDeck() {
 
   if (config["Output"]) {
     auto e = config["Output"];
-    if (e["Format"])
-      d_outputDeck_p->d_outFormat = e["Format"].as<std::string>();
-    d_outputDeck_p->d_path = e["Path"].as<std::string>();
+    if (e["File_Format"])
+      d_outputDeck_p->d_outFormat = e["File_Format"].as<std::string>();
+    if (e["Path"])
+      d_outputDeck_p->d_path = e["Path"].as<std::string>();
     if (e["Tags"])
       for (auto f : e["Tags"])
         d_outputDeck_p->d_outTags.push_back(f.as<std::string>());
 
     if (e["Output_Interval"])
       d_outputDeck_p->d_dtOut = e["Output_Interval"].as<size_t>();
+    d_outputDeck_p->d_dtOutOld = d_outputDeck_p->d_dtOut;
+    d_outputDeck_p->d_dtOutCriteria = d_outputDeck_p->d_dtOut;
     if (e["Debug"])
       d_outputDeck_p->d_debug = e["Debug"].as<size_t>();
     if (e["Perform_FE_Out"])
       d_outputDeck_p->d_performFEOut = e["Perform_FE_Out"].as<bool>();
     if (e["Compress_Type"])
       d_outputDeck_p->d_compressType = e["Compress_Type"].as<std::string>();
+    if (e["Output_Criteria"]) {
+      if (e["Output_Criteria"]["Type"])
+        d_outputDeck_p->d_outCriteria = e["Output_Criteria"]["Type"].as<std::string>();
+      if (e["Output_Criteria"]["New_Interval"])
+        d_outputDeck_p->d_dtOutCriteria =
+            e["Output_Criteria"]["New_Interval"].as<size_t>();
+      if (e["Output_Criteria"]["Parameters"]) {
+        auto ps = e["Output_Criteria"]["Parameters"];
+        for (auto p : ps)
+          d_outputDeck_p->d_outCriteriaParams.emplace_back(p.as<double>());
+      }
+    }
   }
 } // setOutputDeck
 

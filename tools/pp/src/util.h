@@ -153,11 +153,6 @@ struct ComputeStrain {
  * @brief Data for crack tip computation
  */
 struct FindCrackTip {
-  /*!
-   * @brief Specify if we use giving output interval as delta t for crack
-   * tip calculation or use size of time step
-   */
-  bool d_crackSameDtOut;
 
   /*! @brief Old update time for top (right) side of crack */
   double d_timet;
@@ -187,7 +182,7 @@ struct FindCrackTip {
    * @brief Constructor
    */
   FindCrackTip()
-      : d_crackSameDtOut(true), d_timet(0.), d_timeb(0.), d_updateCount(0),
+      : d_timet(0.), d_timeb(0.), d_updateCount(0),
         d_minZAllowed(1.), d_maxZAllowed(50.), d_filet(nullptr),
         d_fileb(nullptr){};
 };
@@ -246,6 +241,12 @@ struct InstructionData {
    */
   std::string d_tagFilename;
 
+  /*! @brief Specify format of the output file, e.g. msh, vtu, legacy_vtk
+   *
+   * Default is vtu format
+   */
+  std::string d_outFormat;
+
   /*! @brief Start output step */
   int d_start;
 
@@ -293,8 +294,8 @@ struct InstructionData {
   tools::pp::ComputeJIntegral *d_computeJInt_p;
 
   InstructionData()
-      : d_start(-1), d_end(-1), d_interval(1), d_outOnlyNodes(true),
-        d_removeElements(false), d_transformU_p(nullptr),
+      : d_outFormat("vtu"), d_start(-1), d_end(-1), d_interval(1),
+        d_outOnlyNodes(true), d_removeElements(false), d_transformU_p(nullptr),
         d_transformV_p(nullptr), d_compStrain_p(nullptr),
         d_findCrackTip_p(nullptr), d_damageAtNodes(false),
         d_computeJInt_p(nullptr){};

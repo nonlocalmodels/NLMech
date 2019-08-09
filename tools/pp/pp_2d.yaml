@@ -1,10 +1,17 @@
-# provide input files used in running simulation
+# provide directory where simulation input file is located
 Source_Path: ./
+# provide simulation input file name
 Simulation_Input_File: input.yaml
 # name of the vtu file which contains data like
 # displacement, velocity
 # default name is used in below if it is not provided
 Filename_To_Read: output
+# Specify start and end output step for processing
+# This overrides the compute set if compute set does not specify them
+Dt_Start: 5
+Dt_End: 20
+# Specify the number at which change in interval takes place
+Dt_Out_Change: 10
 # provide necessary material properties if not provided in the simulation
 # input file above
 Material:
@@ -32,6 +39,8 @@ Compute:
     # set true if output nodal data and not whole mesh
     # default is true
     Output_Only_Nodes: true
+    # specify file format for output
+    File_Format: vtu
     # Valid value is integer >= 1. Default is 1.
     Dt_Interval: 10
     # specify compression type (default is none) for .vtu files
@@ -89,9 +98,6 @@ Compute:
     Output_Only_Nodes: true
     # compute crack tip location and velocity
     Crack_Tip:
-      # specify if we compute crack tip velocity using same
-      # time step interval as the output interval
-      Same_Dt_Out: true
       # specify the max value of damage to be considered in searching for tip
       # default is 50
       Max_Z_Allowed: 50.0

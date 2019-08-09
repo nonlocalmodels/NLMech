@@ -11,8 +11,8 @@
 #include "inp/policy.h"
 #include "lineElem.h"
 #include "quadElem.h"
-#include "triElem.h"
 #include "rw/reader.h"
+#include "triElem.h"
 #include "util/feElementDefs.h"
 #include <cstdint>
 #include <fstream>

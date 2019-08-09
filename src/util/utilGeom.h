@@ -29,6 +29,16 @@ bool isPointInsideRectangle(util::Point3 x, double x_min, double x_max,
                             double y_min, double y_max);
 
 /*!
+ * @brief Checks if point is inside a rectangle
+ * @param x Point
+ * @param x_lb Coordinate of left-bottom corner point
+ * @param x_rt Coordinate of right-top corner point
+ * @return bool True if point inside rectangle, else false
+ */
+bool isPointInsideRectangle(util::Point3 x, util::Point3 x_lb,
+        util::Point3 x_rt);
+
+/*!
  * @brief Checks if point is inside an angled rectangle
  * @param x Point
  * @param x_min X coordinate of left-bottom corner point

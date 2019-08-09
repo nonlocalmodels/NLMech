@@ -42,17 +42,11 @@ public:
 
   /*!
    * @brief Writes the nodes to the file
-   * @param nodes Current positions of the nodes
-   */
-  void appendNodes(const std::vector<util::Point3> *nodes);
-
-  /*!
-   * @brief Writes the nodes to the file
    * @param nodes Reference positions of the nodes
    * @param u Nodal displacements
    */
   void appendNodes(const std::vector<util::Point3> *nodes,
-                   const std::vector<util::Point3> *u);
+                   const std::vector<util::Point3> *u = nullptr);
 
   /*!
    * @brief Writes the mesh data to file
@@ -65,7 +59,7 @@ public:
   void appendMesh(const std::vector<util::Point3> *nodes,
                   const size_t &element_type,
                   const std::vector<size_t> *en_con,
-                  const std::vector<util::Point3> *u);
+                  const std::vector<util::Point3> *u = nullptr);
 
   /** @}*/
 

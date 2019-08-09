@@ -21,6 +21,14 @@ bool util::geometry::isPointInsideRectangle(util::Point3 x, double x_min,
            util::compare::definitelyGreaterThan(x.d_y, y_max + 1.0E-12));
 }
 
+bool util::geometry::isPointInsideRectangle(util::Point3 x, util::Point3 x_lb,
+                                            util::Point3 x_rt) {
+  return !(util::compare::definitelyLessThan(x.d_x, x_lb.d_x - 1.0E-12) or
+           util::compare::definitelyLessThan(x.d_y, x_lb.d_y - 1.0E-12) or
+           util::compare::definitelyGreaterThan(x.d_x, x_rt.d_x + 1.0E-12) or
+           util::compare::definitelyGreaterThan(x.d_y, x_rt.d_y + 1.0E-12));
+}
+
 bool util::geometry::isPointInsideAngledRectangle(util::Point3 x, double x1,
                                                   double x2, double y1,
                                                   double y2, double theta) {

@@ -11,10 +11,11 @@
 // utils
 #include "rw/reader.h"
 #include "rw/writer.h"
+#include "util/compare.h"
 #include "util/fastMethods.h"
 #include "util/matrix.h"
 #include "util/point.h"
-#include "util/compare.h"
+#include "util/utilGeom.h"
 
 // include high level class declarations
 #include "fe/massMatrix.h"
@@ -39,7 +40,7 @@ model::FDModel::FDModel(inp::Input *deck)
     : d_massMatrix_p(nullptr), d_mesh_p(nullptr), d_fracture_p(nullptr),
       d_neighbor_p(nullptr), d_interiorFlags_p(nullptr), d_input_p(deck),
       d_policy_p(nullptr), d_initialCondition_p(nullptr), d_uLoading_p(nullptr),
-      d_fLoading_p(nullptr), d_material_p(nullptr) {
+      d_fLoading_p(nullptr), d_material_p(nullptr), d_stop(false) {
 
   d_modelDeck_p = deck->getModelDeck();
   d_outputDeck_p = deck->getOutputDeck();
@@ -82,8 +83,14 @@ void model::FDModel::restart(inp::Input *deck) {
   d_time = double(d_n) * d_modelDeck_p->d_dt;
 
   // read displacement and velocity from restart file
-  rw::reader::readVtuFileRestart(d_restartDeck_p->d_file, &d_u, &d_v,
-      d_mesh_p->getNodesP());
+
+
+  if (d_outputDeck_p->d_outFormat == "vtu")
+    rw::reader::readVtuFileRestart(d_restartDeck_p->d_file, &d_u, &d_v,
+                                   d_mesh_p->getNodesP());
+  else if (d_outputDeck_p->d_outFormat == "msh")
+    rw::reader::readMshFileRestart(d_restartDeck_p->d_file, &d_u, &d_v,
+                                   d_mesh_p->getNodesP());
 
   // integrate in time
   integrate();
@@ -95,6 +102,9 @@ void model::FDModel::initHObjects() {
   std::cout << "FDModel: Creating mesh.\n";
   d_mesh_p = new fe::Mesh(d_input_p->getMeshDeck());
   d_mesh_p->clearElementData();
+
+  std::cout << "number of nodes = " << d_mesh_p->getNumNodes()
+            << " number of elements = " << d_mesh_p->getNumElements() << "\n";
 
   // create neighbor list
   std::cout << "FDModel: Creating neighbor list.\n";
@@ -210,6 +220,42 @@ void model::FDModel::init() {
     else
       d_policy_p->addToTags(0, "Model_d_eFB");
   }
+
+  if (d_outputDeck_p->d_outCriteria == "max_Z" or
+      d_outputDeck_p->d_outCriteria == "max_Z_stop") {
+    size_t num_params = 1;
+    if (d_outputDeck_p->d_outCriteria == "max_Z_stop")
+      num_params = 6;
+
+    if (d_outputDeck_p->d_outCriteriaParams.size() < num_params) {
+      std::cerr << "Error: Output criteria " << d_outputDeck_p->d_outCriteria
+                << " requires " << num_params << " parameters. \n";
+      exit(1);
+    }
+
+    // issue warning when postprocessing is turned off as we need damage data
+    // to compute output criteria
+    if (!d_policy_p->enablePostProcessing()) {
+      std::cout << "Warning: Output criteria " <<
+                d_outputDeck_p->d_outCriteria
+                << " requires Damage data Z but either "
+                   "postprocessing is set to off. "
+                   "Therefore setting output criteria to "
+                   "null.\n";
+      d_outputDeck_p->d_outCriteria.clear();
+    } else {
+      // check if damage data is allocated
+      if (d_Z.size() != d_mesh_p->getNumNodes()) {
+        // allocate data
+        d_Z = std::vector<float>(nnodes, 0.0);
+
+        // check if damage data is allowed in policy class (if not, need to
+        // allow it by removing the tag related to damage function Z)
+        if (!d_policy_p->populateData("Model_d_Z"))
+          d_policy_p->removeTag("Model_d_Z");
+      }
+    }
+  } // handle output criteria exceptions
 }
 
 void model::FDModel::integrate() {
@@ -250,6 +296,13 @@ void model::FDModel::integrate() {
         computePostProcFields();
 
       output();
+
+      // exit early if output criteria has changed the d_stop flag to true
+      if (d_stop)
+        return;
+
+      // check if we need to modify the output frequency
+      checkOutputCriteria();
     }
   } // loop over time steps
 }
@@ -672,12 +725,14 @@ void model::FDModel::output() {
   }
 
   // filename
-  std::string filename = d_outputDeck_p->d_path + "output_" +
-                         std::to_string(d_n / d_outputDeck_p->d_dtOut);
+  // use smaller dt_out as the tag for files
+  size_t dt_out = d_outputDeck_p->d_dtOutCriteria;
+  std::string filename =
+      d_outputDeck_p->d_path + "output_" + std::to_string(d_n / dt_out);
 
   // open
-  auto writer =
-      rw::writer::VtkWriterInterface(filename, d_outputDeck_p->d_compressType);
+  auto writer = rw::writer::Writer(
+      filename, d_outputDeck_p->d_outFormat, d_outputDeck_p->d_compressType);
 
   // write mesh
   if (d_mesh_p->getNumElements() != 0 && d_outputDeck_p->d_performFEOut)
@@ -778,4 +833,131 @@ void model::FDModel::output() {
     writer.appendFieldData(tag, d_teF);
 
   writer.close();
+}
+
+void model::FDModel::checkOutputCriteria() {
+
+  // if output criteria is empty then we do nothing
+  // if we two output frequency specified by user is same then we do nothing
+  if (d_outputDeck_p->d_outCriteria.empty() ||
+      d_outputDeck_p->d_dtOutOld == d_outputDeck_p->d_dtOutCriteria)
+    return;
+
+  // perform checks every dt large intervals
+  if (d_n % d_outputDeck_p->d_dtOutOld != 0)
+    return;
+
+  if (d_outputDeck_p->d_outCriteria == "max_Z" || d_outputDeck_p->d_outCriteria == "max_Z_stop") {
+
+    // since damage function will not reduce once attaining desired maximum
+    // value, we do not check if the criteria was met in the past
+    if (d_outputDeck_p->d_outCriteria == "max_Z" && d_outputDeck_p->d_dtOut ==
+                                                    d_outputDeck_p->d_dtOutCriteria)
+      return;
+
+    // change from large interval to small interval should be done only once
+    // to do this, we check below flag which will be set to true in first
+    // change to small from small interval
+    static bool changed_to_small = false;
+    bool changed_to_small_at_current = false;
+    if (d_outputDeck_p->d_dtOut > d_outputDeck_p->d_dtOutCriteria && !changed_to_small) {
+      // get maximum from the damage data
+      auto max = util::methods::max(d_Z);
+
+      // check if it is desired range and change output frequency
+      if (util::compare::definitelyGreaterThan(max,
+                                               d_outputDeck_p->d_outCriteriaParams[0])) {
+        d_outputDeck_p->d_dtOut = d_outputDeck_p->d_dtOutCriteria;
+
+        std::cout << "Message: Changing output interval to smaller value.\n";
+
+        // dump this value
+        std::ofstream fdump(d_outputDeck_p->d_path + "dt_out_change.info");
+        fdump << "Large_Dt_To_Small_Dt:\n";
+        fdump << "  N: " << d_n << "\n";
+        fdump << "  dN: " << d_n / d_outputDeck_p->d_dtOutCriteria << "\n";
+        fdump.close();
+
+        changed_to_small = true;
+        changed_to_small_at_current = true;
+      }
+    } // if current dt out is larger
+
+    // we now check (only if max_Z_stop is flag is provided) if we need to
+    // revert to large time interval
+    // we do this if time interval is small at present
+    // Also do not change to large interval back if just now we changed it to
+    // small interval
+
+    // change from small to large interval should be done only once
+    // to do this, we check below flag which will be set to true in first
+    // change to large from small interval
+    static bool changed_back_to_large = false;
+    if (!changed_to_small_at_current &&
+        !changed_back_to_large &&
+        d_outputDeck_p->d_outCriteria == "max_Z_stop" &&
+        d_outputDeck_p->d_dtOut < d_outputDeck_p->d_dtOutOld) {
+      // check maximum of Z function in the rectangle
+      auto rect = std::make_pair(util::Point3(), util::Point3());
+      auto ps = d_outputDeck_p->d_outCriteriaParams;
+      auto refZ = ps[1];
+      if (ps.size() == 6) {
+        rect.first = util::Point3(ps[2], ps[3], 0.);
+        rect.second = util::Point3(ps[4], ps[5], 0.);
+      } else if (ps.size() == 8) {
+        rect.first = util::Point3(ps[2], ps[3], ps[4]);
+        rect.second = util::Point3(ps[5], ps[6], ps[7]);
+      }
+
+      // we divide the total number of nodes in parts and check in parallel
+      std::vector<std::vector<size_t>> rect_ids;
+      size_t N = 1000;
+      if (N > d_mesh_p->getNumNodes())
+        N = d_mesh_p->getNumNodes();
+      rect_ids.resize(N);
+
+      auto f = hpx::parallel::for_loop(
+          hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+          N, [this, N, rect, refZ, &rect_ids](boost::uint64_t I) {
+              size_t ibegin = I * N;
+              size_t iend = (I + 1) * N;
+              if (iend > d_mesh_p->getNumNodes())
+                iend = d_mesh_p->getNumNodes();
+              for (size_t i = ibegin; i < iend; i++) {
+                if (util::geometry::isPointInsideRectangle(d_mesh_p->getNode(i),
+                                                           rect.first,
+                                                           rect.second))
+                  if (util::compare::definitelyGreaterThan(d_Z[i], refZ))
+                    rect_ids[I].emplace_back(i);
+              } // loop over chunk of I
+          }// loop over chunks
+      );
+      f.get();
+
+      bool found_valid_node = false;
+      for (auto i : rect_ids) {
+        if (found_valid_node)
+          break;
+        if (!i.empty())
+          found_valid_node = true;
+      }
+      if (found_valid_node) {
+        d_outputDeck_p->d_dtOut = d_outputDeck_p->d_dtOutOld;
+
+        std::cout << "Message: Changing output interval to larger value.\n";
+
+        // dump this value
+        std::ofstream fdump(d_outputDeck_p->d_path + "dt_out_change.info",
+                            std::ios::app);
+        fdump << "Small_Dt_To_Large_Dt:\n";
+        fdump << "  N: " << d_n << "\n";
+        fdump << "  dN: " << d_n / d_outputDeck_p->d_dtOutCriteria << "\n";
+        fdump.close();
+
+        changed_back_to_large = true;
+
+        d_stop = true;
+      }
+    } // if max_Z_stop and current dt out is smaller
+  } //if either max_Z or max_Z_stop criteria
 }
