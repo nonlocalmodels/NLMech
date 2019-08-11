@@ -35,7 +35,6 @@ sim_midPtMy = sim_Ly - sim_slope * (0.5 * sim_WM);
 % choose consistent point for lower slanted line in letter M
 sim_ptMliney = (sim_Ly - sim_gapy) - sim_slope * (0.5 * sim_WM + 0.5 * sim_WMx);
 
-
 %
 % create .geo file for gmsh
 %
@@ -108,3 +107,19 @@ fprintf(geof,"Plane Surface(1) = {1};\n");
 
 % close file
 fclose(geof);
+
+% information for simulation
+% size of bounding box
+sim_FinalLx = sim_startMx + sim_Wx + sim_WM + sim_Wx;
+sim_FinalLy = sim_Ly;
+printf("\n");
+printf("Creating .info file for simulation\n");
+infof = fopen('logo.info','w');
+fprintf(infof,"Lx = %4.6e\n", sim_FinalLx);
+fprintf(infof,"Ly = %4.6e\n", sim_FinalLy);
+fprintf(infof,"Letter_width = %4.6e\n", sim_Wx);
+fprintf(infof,"h = %4.6e\n", sim_h);
+
+% close file
+fclose(infof);
+
