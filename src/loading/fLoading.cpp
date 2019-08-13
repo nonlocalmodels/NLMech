@@ -31,7 +31,9 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     }
 
     if (bc.d_spatialFnType != "constant" and bc.d_spatialFnType != "hat_x" and
-        bc.d_spatialFnType != "hat_y") {
+        bc.d_spatialFnType != "hat_y" and bc.d_spatialFnType != "sin_x" and
+        bc.d_spatialFnType != "sin_y" and bc.d_spatialFnType != "linear_x" and
+        bc.d_spatialFnType != "linear_y") {
       std::cerr << "Error: Force bc space function type = "
                 << bc.d_spatialFnType << " not recognised. "
                 << "Currently only constant, hat_x, hat_y function is "
@@ -41,7 +43,8 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
     if (bc.d_timeFnType != "constant" and bc.d_timeFnType != "linear" and
         bc.d_timeFnType != "linear_step" and
-        bc.d_timeFnType != "linear_slow_fast") {
+        bc.d_timeFnType != "linear_slow_fast" and
+        bc.d_timeFnType != "sin") {
 
       std::cerr << "Error: Force bc space function type = " << bc.d_timeFnType
                 << " not recognised. "
@@ -55,6 +58,8 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
       time_num_params = 3;
     else if (bc.d_timeFnType == "linear_slow_fast")
       time_num_params = 4;
+    else if (bc.d_timeFnType == "sin")
+      time_num_params = 2;
     if (bc.d_timeFnParams.size() != time_num_params) {
       std::cerr << "Error: Force bc insufficient parameters for time function. "
                    "Need "
@@ -64,7 +69,9 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     }
 
     size_t spatial_num_params = 0;
-    if (bc.d_spatialFnType == "hat_x" or bc.d_spatialFnType == "hat_y")
+    if (bc.d_spatialFnType == "hat_x" or bc.d_spatialFnType == "hat_y" or
+        bc.d_spatialFnType == "sin_x" or bc.d_spatialFnType == "sin_y" or
+        bc.d_spatialFnType == "linear_x" or bc.d_spatialFnType == "linear_y")
       spatial_num_params = 1;
     if (bc.d_spatialFnParams.size() < spatial_num_params) {
       std::cerr << "Error: Force bc insufficient parameters for spatial "
@@ -130,6 +137,18 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
       } else if (bc.d_spatialFnType == "hat_y") {
         fmax = bc.d_spatialFnParams[0] *
                util::function::hatFunction(x.d_y, bc.d_y1, bc.d_y2);
+      } else if (bc.d_spatialFnType == "sin_x") {
+        double a = M_PI * bc.d_spatialFnParams[0];
+        fmax = bc.d_spatialFnParams[0] * std::sin(a * x.d_x);
+      } else if (bc.d_spatialFnType == "sin_y") {
+        double a = M_PI * bc.d_spatialFnParams[0];
+        fmax = bc.d_spatialFnParams[0] * std::sin(a * x.d_y);
+      } else if (bc.d_spatialFnType == "linear_x") {
+        double a = bc.d_spatialFnParams[0];
+        fmax = bc.d_spatialFnParams[0] * a * x.d_x;
+      } else if (bc.d_spatialFnType == "linear_y") {
+        double a = bc.d_spatialFnParams[0];
+        fmax = bc.d_spatialFnParams[0] * a * x.d_y;
       }
 
       // apply time function
@@ -143,6 +162,9 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
           fmax *= bc.d_timeFnParams[3] * time;
         else
           fmax *= bc.d_timeFnParams[2] * time;
+      } else if (bc.d_timeFnType == "sin") {
+        double a = M_PI * bc.d_timeFnParams[1];
+        fmax *= std::sin(a * time);
       }
 
       // multiply by the slope

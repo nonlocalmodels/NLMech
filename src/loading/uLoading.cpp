@@ -28,7 +28,9 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
       exit(1);
     }
 
-    if (bc.d_spatialFnType != "constant") {
+    if (bc.d_spatialFnType != "constant" and bc.d_spatialFnType != "sin_x" and
+        bc.d_spatialFnType != "sin_y" and bc.d_spatialFnType != "linear_x" and
+        bc.d_spatialFnType != "linear_y") {
       std::cerr << "Error: Displacement bc space function type = "
                 << bc.d_spatialFnType << " not recognised. "
                 << "Currently only constant function is implemented. \n";
@@ -53,6 +55,18 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
                    "function. Need "
                 << time_num_params << " parameters but only "
                 << bc.d_timeFnParams.size() << " parameters provided.\n";
+      exit(1);
+    }
+
+    size_t spatial_num_params = 0;
+    if (bc.d_spatialFnType == "sin_x" or bc.d_spatialFnType == "sin_y" or
+        bc.d_spatialFnType == "linear_x" or bc.d_spatialFnType == "linear_y")
+      spatial_num_params = 1;
+    if (bc.d_spatialFnParams.size() < spatial_num_params) {
+      std::cerr << "Error: Force bc insufficient parameters for spatial "
+                   "function. Need "
+                << spatial_num_params << " parameters but only "
+                << bc.d_spatialFnParams.size() << " parameters provided.\n";
       exit(1);
     }
 
@@ -101,10 +115,27 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
     inp::BCData bc = d_bcData[s];
     for (auto i : d_bcNodes[s]) {
 
+      util::Point3 x = mesh->getNode(i);
       double umax = bc.d_timeFnParams[0];
       double du = 0.;
       double dv = 0.;
 
+      // apply spatial function
+      if (bc.d_spatialFnType == "sin_x") {
+        double a = M_PI * bc.d_spatialFnParams[0];
+        umax = umax * std::sin(a * x.d_x);
+      } else if (bc.d_spatialFnType == "sin_y") {
+        double a = M_PI * bc.d_spatialFnParams[0];
+        umax = umax * std::sin(a * x.d_y);
+      } else if (bc.d_spatialFnType == "linear_x") {
+        double a = bc.d_spatialFnParams[0];
+        umax = umax * a * x.d_x;
+      } else if (bc.d_spatialFnType == "linear_y") {
+        double a = bc.d_spatialFnParams[0];
+        umax = umax * a * x.d_y;
+      }
+
+      // apply time function
       if (bc.d_timeFnType == "constant")
         du = umax;
       else if (bc.d_timeFnType == "linear") {
