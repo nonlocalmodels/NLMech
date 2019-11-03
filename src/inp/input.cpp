@@ -667,15 +667,37 @@ void inp::Input::setAbsorbingCondDeck() {
     auto dg = DampingGeomData();
 
     // get relative location of region
-    if (!e["Is_Left"] or !e["Is_Bottom"] or !e["Is_Back"]) {
+    if (!e["Relative_Loc"]) {
       std::cerr << "Error: Must specify relative location of damping region "
                    "with respect to whole simulation domain" << std::endl;
       exit(1);
     } else {
 
-      dg.d_isLeft = e["Is_Left"].as<bool>();
-      dg.d_isBottom = e["Is_Bottom"].as<bool>();
-      dg.d_isBack = e["Is_Back"].as<bool>();
+      dg.d_relativeLoc = e["Relative_Loc"].as<std::string>();
+    }
+
+    // get check info
+    if (!e["Check_Flags"]) {
+      std::cerr << "Error: Must specify values in Check_Flags" << std::endl;
+      exit(1);
+    } else {
+
+      size_t lco = 0;
+      for (auto f : e["Check_Flags"]) {
+        if (lco == 0)
+          dg.d_checkX = f.as<bool>();
+        else if (lco == 1)
+          dg.d_checkY = f.as<bool>();
+        else if (lco == 2)
+          dg.d_checkZ = f.as<bool>();
+
+        lco++;
+      }
+
+      if (lco != 3) {
+        std::cerr << "Error: Not sufficient parameters in Check_Flags\n";
+        exit(1);
+      }
     }
 
     // For now we assume it has two corner points of rectangle region

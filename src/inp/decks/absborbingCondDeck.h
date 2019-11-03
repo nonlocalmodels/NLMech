@@ -14,15 +14,23 @@
 namespace inp {
 
 struct DampingGeomData {
-  bool d_isLeft;
-  bool d_isBottom;
-  bool d_isBack;
+  std::string d_relativeLoc;
+
+  bool d_checkX;
+  bool d_checkY;
+  bool d_checkZ;
+
+  double d_layerThicknessX;
+  double d_layerThicknessY;
+  double d_layerThicknessZ;
+
 
   util::Point3 d_p1;
   util::Point3 d_p2;
 
-  DampingGeomData() : d_isLeft(false), d_isBottom(false), d_isBack
-      (false), d_p1(util::Point3()), d_p2(util::Point3()) {};
+  DampingGeomData() : d_checkX(false), d_checkY(false), d_checkZ(false),
+      d_layerThicknessX(0.), d_layerThicknessY(0.), d_layerThicknessZ(0.),
+      d_p1(util::Point3()), d_p2(util::Point3()) {};
 };
 
 /**

@@ -48,52 +48,91 @@ void geometry::DampingGeom::computeDampingCoefficient(
       continue;
 
     auto dg = d_absorbingDeck_p->d_dampingGeoms[loc_r];
-    double coeff = 0.;
+    double coeff = 1.;
     double exponent = d_absorbingDeck_p->d_dampingCoeffParams[0];
 
-    // check if x coordinate is within the region
-    if (util::compare::definitelyLessThan(x.d_x, dg.d_p2.d_x) &&
-    util::compare::definitelyGreaterThan(x.d_x, dg.d_p1.d_x)) {
-      if (dg.d_isLeft)
-        coeff = std::pow((dg.d_p2.d_x - x.d_x) / (dg.d_p2.d_x - dg.d_p1.d_x),
-                         exponent);
-      else
-        coeff = std::pow((x.d_x - dg.d_p1.d_x) / (dg.d_p2.d_x - dg.d_p1.d_x),
-                         exponent);
-    }
+    double check = 0.;
+    double lower = 0.;
+    double upper = 0.;
+    double thickness = 0.;
 
-    if (d_dim > 1) {
+    if (d_dim > 0 && dg.d_checkX) {
 
-      // check y
-      if (util::compare::definitelyLessThan(x.d_y, dg.d_p2.d_y) &&
-          util::compare::definitelyGreaterThan(x.d_y, dg.d_p1.d_y)) {
-        bool check = false;
-        if (d_dim == 2)
-          check = dg.d_isBottom;
-        else if (d_dim == 3)
-          check = dg.d_isBack;
+      thickness = dg.d_layerThicknessX;
 
-        if (check)
-          coeff *= std::pow((dg.d_p2.d_y - x.d_y) / (dg.d_p2.d_y - dg.d_p1.d_y),
-                           exponent);
-        else
-          coeff *= std::pow((x.d_y - dg.d_p1.d_y) / (dg.d_p2.d_y - dg.d_p1.d_y),
-                           exponent);
+      // check if x coordinate is within the region
+      if (dg.d_relativeLoc == "left") {
+
+        check = x.d_x;
+        lower = dg.d_p2.d_x - thickness;
+        upper = dg.d_p2.d_x;
+        if (util::compare::definitelyGreaterThan(check, lower) &&
+            util::compare::definitelyLessThan(check, upper))
+          coeff *= std::pow((upper - check) / thickness, exponent);
+      } else if (dg.d_relativeLoc == "right") {
+
+        check = x.d_x;
+        lower = dg.d_p1.d_x;
+        upper = dg.d_p1.d_x + thickness;
+        if (util::compare::definitelyGreaterThan(check, lower) &&
+            util::compare::definitelyLessThan(check, upper))
+          coeff *= std::pow((check - lower) / thickness,
+              exponent);
+      } else {
+
+        check = x.d_x;
+        lower = dg.d_p1.d_x;
+        upper = dg.d_p1.d_x + thickness;
+        if (util::compare::definitelyGreaterThan(check, lower) &&
+            util::compare::definitelyLessThan(check, upper))
+          coeff *= std::pow((upper - check) / thickness, exponent);
+
+        check = x.d_x;
+        lower = dg.d_p2.d_x - thickness;
+        upper = dg.d_p2.d_x;
+        if (util::compare::definitelyGreaterThan(check, lower) &&
+            util::compare::definitelyLessThan(check, upper))
+          coeff *= std::pow((check - lower) / thickness, exponent);
       }
     }
 
-    if (d_dim > 2) {
+    if (d_dim > 1 && dg.d_checkY) {
 
-      // check z
-      if (util::compare::definitelyLessThan(x.d_z, dg.d_p2.d_z) &&
-          util::compare::definitelyGreaterThan(x.d_z, dg.d_p1.d_z)) {
+      thickness = dg.d_layerThicknessY;
 
-        if (dg.d_isBottom)
-          coeff *= std::pow((dg.d_p2.d_z - x.d_z) / (dg.d_p2.d_z - dg.d_p1.d_z),
+      // check if x coordinate is within the region
+      if (dg.d_relativeLoc == "bottom") {
+
+        check = x.d_y;
+        lower = dg.d_p2.d_y - thickness;
+        upper = dg.d_p2.d_y;
+        if (util::compare::definitelyGreaterThan(check, lower) &&
+            util::compare::definitelyLessThan(check, upper))
+          coeff *= std::pow((upper - check) / thickness, exponent);
+      } else if (dg.d_relativeLoc == "top") {
+
+        check = x.d_y;
+        lower = dg.d_p1.d_y;
+        upper = dg.d_p1.d_y + thickness;
+        if (util::compare::definitelyGreaterThan(check, lower) &&
+            util::compare::definitelyLessThan(check, upper))
+          coeff *= std::pow((check - lower) / thickness,
                             exponent);
-        else
-          coeff *= std::pow((x.d_z - dg.d_p1.d_z) / (dg.d_p2.d_z - dg.d_p1.d_z),
-                            exponent);
+      } else {
+
+        check = x.d_y;
+        lower = dg.d_p1.d_y;
+        upper = dg.d_p1.d_y + thickness;
+        if (util::compare::definitelyGreaterThan(check, lower) &&
+            util::compare::definitelyLessThan(check, upper))
+          coeff *= std::pow((upper - check) / thickness, exponent);
+
+        check = x.d_y;
+        lower = dg.d_p2.d_y - thickness;
+        upper = dg.d_p2.d_y;
+        if (util::compare::definitelyGreaterThan(check, lower) &&
+            util::compare::definitelyLessThan(check, upper))
+          coeff *= std::pow((check - lower) / thickness, exponent);
       }
     }
 
