@@ -112,3 +112,16 @@ double util::function::doubleGaussian2d(const util::Point3 &x,
              params[8]) *
              params[6 + dof];
 }
+
+util::Point3 util::function::signVector(const util::Point3 &v) {
+
+  auto r = util::Point3(1., 1., 1.);
+  if (util::compare::definitelyLessThan(v.d_x, 0.))
+    r.d_x = -1.;
+  if (util::compare::definitelyLessThan(v.d_y, 0.))
+    r.d_y = -1.;
+  if (util::compare::definitelyLessThan(v.d_z, 0.))
+    r.d_z = -1.;
+
+  return r;
+}

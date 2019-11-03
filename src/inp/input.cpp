@@ -21,6 +21,7 @@
 #include "decks/restartDeck.h"
 #include "decks/solverDeck.h"
 #include "inp/decks/meshDeck.h"
+#include "inp/decks/absborbingCondDeck.h"
 #include <cmath>
 #include <iostream>
 #include <yaml-cpp/yaml.h>
@@ -35,7 +36,8 @@ inp::Input::Input(const std::string &filename)
       d_initialConditionDeck_p(nullptr), d_interiorFlagsDeck_p(nullptr),
       d_loadingDeck_p(nullptr), d_materialDeck_p(nullptr),
       d_neighborDeck_p(nullptr), d_outputDeck_p(nullptr),
-      d_policyDeck_p(nullptr), d_modelDeck_p(nullptr), d_solverDeck_p(nullptr) {
+      d_policyDeck_p(nullptr), d_modelDeck_p(nullptr),
+      d_solverDeck_p(nullptr), d_absorbingCondDeck_p(nullptr) {
 
   d_inputFilename = filename;
 
@@ -54,6 +56,7 @@ inp::Input::Input(const std::string &filename)
   setOutputDeck();
   setPolicyDeck();
   setSolverDeck();
+  setAbsorbingCondDeck();
 }
 
 //
@@ -94,6 +97,10 @@ inp::QuadratureDeck *inp::Input::getQuadratureDeck() {
 inp::RestartDeck *inp::Input::getRestartDeck() { return d_restartDeck_p; }
 
 inp::SolverDeck *inp::Input::getSolverDeck() { return d_solverDeck_p; }
+
+inp::AbsorbingCondDeck *inp::Input::getAbsorbingCondDeck() {
+  return d_absorbingCondDeck_p;
+}
 
 const std::string inp::Input::getSpatialDiscretization() {
   return d_modelDeck_p->d_spatialDiscretization;
@@ -612,3 +619,95 @@ void inp::Input::setSolverDeck() {
       d_solverDeck_p->d_tol = e["Tolerance"].as<double>();
   }
 } // setSolverDeck
+
+void inp::Input::setAbsorbingCondDeck() {
+  d_absorbingCondDeck_p = new inp::AbsorbingCondDeck();
+  YAML::Node config = YAML::LoadFile(d_inputFilename);
+
+  auto ci = config["Absorbing_Condition"];
+  if (!ci)
+    return;
+
+  // set damping active to true
+  d_absorbingCondDeck_p->d_dampingActive = true;
+
+  // get absorbing condition type
+  if (ci["Is_Viscous"])
+    d_absorbingCondDeck_p->d_isViscousDamping = ci["Is_Viscous"].as<bool>();
+
+  // get damping coefficient type
+  if (!ci["Damping_Coefficient"]) {
+    std::cerr << "Error: Expecting data in block "
+                 "Absorbing_Condition->Damping_Coefficient" << std::endl;
+    exit(1);
+  } else {
+
+    d_absorbingCondDeck_p->d_dampingCoeffType = ci["Damping_Coefficient"]["Type"].as<std::string>();
+
+    for (auto f : ci["Damping_Coefficient"]["Parameters"])
+      d_absorbingCondDeck_p->d_dampingCoeffParams.push_back(f.as<double>());
+  }
+
+  // get damping regions
+  if (!ci["Damping_Num_Regions"]) {
+    std::cerr << "Error: Expecting number of damping regions data in "
+                 "Absorbing_Condition->Damping_Num_Regions" << std::endl;
+    exit(1);
+  }
+  int n = ci["Damping_Num_Regions"].as<int>();
+
+  for (int i = 1; i<=n; i++) {
+
+    // create tag for i^th region
+    // prepare string Set_s to read file
+    std::string read_set = "Region_";
+    read_set.append(std::to_string(i));
+    auto e = ci[read_set];
+
+    auto dg = DampingGeomData();
+
+    // get relative location of region
+    if (!e["Is_Left"] or !e["Is_Bottom"] or !e["Is_Back"]) {
+      std::cerr << "Error: Must specify relative location of damping region "
+                   "with respect to whole simulation domain" << std::endl;
+      exit(1);
+    } else {
+
+      dg.d_isLeft = e["Is_Left"].as<bool>();
+      dg.d_isBottom = e["Is_Bottom"].as<bool>();
+      dg.d_isBack = e["Is_Back"].as<bool>();
+    }
+
+    // For now we assume it has two corner points of rectangle region
+    std::vector<double> locs;
+    if (!e["Domain"]) {
+      std::cerr << "Error: Domain of damping region is not provided.\n";
+      exit(1);
+    }
+
+    for (auto f : e["Domain"])
+      locs.push_back(f.as<double>());
+
+    if (locs.size() != 4 or locs.size() != 6) {
+      std::cerr << "Error: We expect data Absorbing_Condition->" << read_set
+      << " has four/six entries giving corner points of a rectangle" <<
+      std::endl;
+      exit(1);
+    }
+
+    if (locs.size() == 4) {
+      dg.d_p1 = util::Point3(locs[0], locs[1], 0.);
+      dg.d_p2 = util::Point3(locs[2], locs[3], 0.);
+    } else if (locs.size() == 6) {
+      dg.d_p1 = util::Point3(locs[0], locs[1], locs[2]);
+      dg.d_p2 = util::Point3(locs[3], locs[4], locs[5]);
+    }
+
+    d_absorbingCondDeck_p->d_dampingGeoms.push_back(dg);
+  }
+
+  if (d_absorbingCondDeck_p->d_dampingGeoms.size() != n) {
+    std::cerr << "Error: Check damping region data" << std::endl;
+    exit(1);
+  }
+} // setAbsorbingCondDeck

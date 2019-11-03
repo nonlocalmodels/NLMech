@@ -73,10 +73,22 @@ public:
   size_t getDimension();
 
   /*!
+   * @brief Get the dimension of the domain
+   * @return N Dimension
+   */
+  size_t getDimension() const;
+
+  /*!
    * @brief Get the number of nodes
    * @return N number of nodes
    */
   size_t getNumNodes();
+
+  /*!
+   * @brief Get the number of nodes
+   * @return N number of nodes
+   */
+  size_t getNumNodes() const;
 
   /*!
    * @brief Get the number of elements
@@ -85,10 +97,22 @@ public:
   size_t getNumElements();
 
   /*!
+   * @brief Get the number of elements
+   * @return N Number of elements
+   */
+  size_t getNumElements() const;
+
+  /*!
    * @brief Get the number of dofs
    * @return N Number of dofs
    */
   size_t getNumDofs();
+
+  /*!
+   * @brief Get the number of dofs
+   * @return N Number of dofs
+   */
+  size_t getNumDofs() const;
 
   /*!
    * @brief Get the type of element in mesh
@@ -97,10 +121,22 @@ public:
   size_t getElementType();
 
   /*!
+   * @brief Get the type of element in mesh
+   * @return type Element type (using VTK convention)
+   */
+  size_t getElementType() const;
+
+  /*!
    * @brief Get the mesh size
    * @return h Mesh size
    */
   double getMeshSize();
+
+  /*!
+   * @brief Get the mesh size
+   * @return h Mesh size
+   */
+  double getMeshSize() const;
 
   /*!
    * @brief Get coordinates of node i
@@ -110,11 +146,25 @@ public:
   util::Point3 getNode(const size_t &i);
 
   /*!
+   * @brief Get coordinates of node i
+   * @param i Id of the node
+   * @return coords Coordinates
+   */
+  util::Point3 getNode(const size_t &i) const;
+
+  /*!
    * @brief Get nodal volume of node i
    * @param i Id of the node
    * @return vol Volume
    */
   double getNodalVolume(const size_t &i);
+
+  /*!
+   * @brief Get nodal volume of node i
+   * @param i Id of the node
+   * @return vol Volume
+   */
+  double getNodalVolume(const size_t &i) const;
 
   /*!
    * @brief Get the pointer to nodes data
@@ -123,10 +173,22 @@ public:
   const std::vector<util::Point3> *getNodesP();
 
   /*!
+   * @brief Get the pointer to nodes data
+   * @return pointer Pointer to nodes data
+   */
+  const std::vector<util::Point3> *getNodesP() const;
+
+  /*!
    * @brief Get the pointer to fixity data
    * @return pointer Pointer to fixity data
    */
   const std::vector<uint8_t> *getFixityP();
+
+  /*!
+   * @brief Get the pointer to fixity data
+   * @return pointer Pointer to fixity data
+   */
+  const std::vector<uint8_t> *getFixityP() const;
 
   /*!
    * @brief Get the pointer to nodal volume data
@@ -135,12 +197,26 @@ public:
   const std::vector<double> *getNodalVolumeP();
 
   /*!
+   * @brief Get the pointer to nodal volume data
+   * @return pointer Pointer to nodal volume data
+   */
+  const std::vector<double> *getNodalVolumeP() const;
+
+  /*!
    * @brief Return true if node is free
    * @param i Id of node
    * @param dof Dof to check for
    * @return bool True if dof is free else false
    */
   bool isNodeFree(const size_t &i, const unsigned int &dof);
+
+  /*!
+   * @brief Return true if node is free
+   * @param i Id of node
+   * @param dof Dof to check for
+   * @return bool True if dof is free else false
+   */
+  bool isNodeFree(const size_t &i, const unsigned int &dof) const;
 
   /*!
    * @brief Get the connectivity of element
@@ -159,6 +235,22 @@ public:
   const std::vector<size_t> getElementConnectivity(const size_t &i);
 
   /*!
+   * @brief Get the connectivity of element
+   *
+   * Since we store connectivity in a single vector, we use
+   * fe::Mesh::d_eNumVertex to get the connectivity of element. Given element
+   * e, the connectivity of e begins from location \f$ i_0 = e*d\_eNumVertex + 0
+   * \f$ upto \f$i_{n-1} = e*d\_eNumVertex + d\_eNumVertex - 1\f$.
+   *
+   * So the connectivity of e is
+   * d_enc[\f$i_0\f$], d_enc[\f$ i_1 \f$], ..., d_end[\f$i_{n-1}\f$]
+   *
+   * @param i Id of an element
+   * @return vector Vector of nodal ids
+   */
+  const std::vector<size_t> getElementConnectivity(const size_t &i) const;
+
+  /*!
    * @brief Get the vertices of element
    *
    * @param i Id of an element
@@ -167,16 +259,37 @@ public:
   const std::vector<util::Point3> getElementConnectivityNodes(const size_t &i);
 
   /*!
+   * @brief Get the vertices of element
+   *
+   * @param i Id of an element
+   * @return vector Vector of vertices
+   */
+  const std::vector<util::Point3> getElementConnectivityNodes(const size_t
+                                                              &i) const;
+
+  /*!
    * @brief Get the pointer to nodes data
    * @return pointer Pointer to nodes data
    */
   const std::vector<size_t> *getElementConnectivitiesP();
 
   /*!
+   * @brief Get the pointer to nodes data
+   * @return pointer Pointer to nodes data
+   */
+  const std::vector<size_t> *getElementConnectivitiesP() const;
+
+  /*!
    * @brief Get the bounding box of the mesh
    * @return box Bounding box
    */
   std::pair<std::vector<double>, std::vector<double>> getBoundingBox();
+
+  /*!
+   * @brief Get the bounding box of the mesh
+   * @return box Bounding box
+   */
+  std::pair<std::vector<double>, std::vector<double>> getBoundingBox() const;
 
   /** @}*/
 

@@ -10,6 +10,34 @@
 #include "compare.h"
 #include "transfomation.h"
 #include <cmath>                      // definition of sin, cosine etc
+#include <iostream>
+
+std::vector<util::Point3> util::geometry::getCornerPoints(
+    size_t dim, const std::pair<util::Point3, util::Point3> &box) {
+
+  if (dim == 1)
+    return {box.first, box.second};
+  else if (dim == 2)
+    return {box.first, util::Point3(box.second.d_x, box.first.d_y, 0.),
+            box.second, util::Point3(box.first.d_x, box.second.d_y, 0.)};
+  else if (dim == 3) {
+    double a = box.second.d_x - box.first.d_x;
+    double b = box.second.d_y - box.first.d_y;
+    double c = box.second.d_z - box.first.d_z;
+    return {box.first,
+            box.first + util::Point3(a, 0., 0.),
+            box.first + util::Point3(a, b, 0.),
+            box.first + util::Point3(0., b, 0.),
+            box.first + util::Point3(0., 0., c),
+            box.first + util::Point3(a, 0., c),
+            box.second,
+            box.first + util::Point3(0., b, c)};
+  }
+  else {
+    std::cerr << "Error: Check dimension = " << dim << ".\n";
+    exit(1);
+  }
+}
 
 bool util::geometry::isPointInsideRectangle(util::Point3 x, double x_min,
                                             double x_max, double y_min,
@@ -64,4 +92,23 @@ bool util::geometry::isPointInsideAngledRectangle(util::Point3 x, double x1,
            util::compare::definitelyLessThan(xmap[1], -1.0E-12) or
            util::compare::definitelyGreaterThan(xmap[0], lam[0] + 1.0E-12) or
            util::compare::definitelyGreaterThan(xmap[1], lam[1] + 1.0E-12));
+}
+
+bool util::geometry::isPointInsideCuboid(size_t dim, util::Point3 x, util::Point3 x_lbb,
+                                         util::Point3 x_rtf) {
+  if (dim == 1)
+    return !(util::compare::definitelyLessThan(x.d_x, x_lbb.d_x - 1.0E-12) or
+             util::compare::definitelyGreaterThan(x.d_x, x_rtf.d_x + 1.0E-12));
+  else if (dim == 2)
+    return !(util::compare::definitelyLessThan(x.d_x, x_lbb.d_x - 1.0E-12) or
+             util::compare::definitelyLessThan(x.d_y, x_lbb.d_y - 1.0E-12) or
+             util::compare::definitelyGreaterThan(x.d_x, x_rtf.d_x + 1.0E-12) or
+             util::compare::definitelyGreaterThan(x.d_y, x_rtf.d_y + 1.0E-12));
+  else
+    return !(util::compare::definitelyLessThan(x.d_x, x_lbb.d_x - 1.0E-12) or
+           util::compare::definitelyLessThan(x.d_y, x_lbb.d_y - 1.0E-12) or
+           util::compare::definitelyLessThan(x.d_z, x_lbb.d_z - 1.0E-12) or
+           util::compare::definitelyGreaterThan(x.d_x, x_rtf.d_x + 1.0E-12) or
+           util::compare::definitelyGreaterThan(x.d_y, x_rtf.d_y + 1.0E-12) or
+           util::compare::definitelyGreaterThan(x.d_z, x_rtf.d_z + 1.0E-12));
 }

@@ -9,8 +9,9 @@
 #ifndef MODEL_FDMODEL_H
 #define MODEL_FDMODEL_H
 
-#include <hpx/config.hpp>
 #include "../model.h"
+#include <geometry/dampingGeom.h>
+#include <hpx/config.hpp>
 #include <vector>
 
 // forward declaration of class
@@ -24,6 +25,7 @@ namespace geometry {
 class Fracture;
 class InteriorFlags;
 class Neighbor;
+class DampingGeom;
 } // namespace geometry
 
 namespace inp {
@@ -116,6 +118,11 @@ private:
    * @brief Computes peridynamic forces
    */
   void computeForces();
+
+  /*!
+   * @brief Computes damping force in absorbing layers
+   */
+  void computeDampingForces();
 
   /*!
    * @brief Computes hydrostatic strains for force calculation
@@ -277,6 +284,9 @@ private:
   /*! @brief Output deck */
   inp::OutputDeck *d_outputDeck_p;
 
+  /*! @brief Absorbing condition deck */
+  inp::AbsorbingCondDeck *d_absorbingCondDeck_p;
+
   /*! @brief flag to stop the simulation midway */
   bool d_stop;
 
@@ -317,6 +327,9 @@ private:
 
   /*! @brief Pointer to Material object */
   material::pd::Material *d_material_p;
+
+  /*! @brief Pointer to Material object */
+  geometry::DampingGeom *d_dampingGeom_p;
 
   /** @}*/
 };

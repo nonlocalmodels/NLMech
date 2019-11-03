@@ -147,6 +147,15 @@ double gaussian2d(const util::Point3 &x, const size_t &dof,
 double doubleGaussian2d(const util::Point3 &x, const size_t &dof,
                         const std::vector<double> &params);
 
+/*!
+ * @brief Get vector with plus or minus 1 depending on the sign of component
+ * of another vectory
+ *
+ * @param v Vector from which a new vector is created
+ * @return vec Vector
+ */
+util::Point3 signVector(const util::Point3 &v);
+
 } // namespace function
 
 } // namespace util

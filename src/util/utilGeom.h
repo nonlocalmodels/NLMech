@@ -10,11 +10,21 @@
 #define UTIL_GEOMETRY_H
 
 #include "point.h"              // definition of Point3
+#include <vector>
 
 namespace util {
 
 /*! @brief Provides geometrical methods such as point inside rectangle */
 namespace geometry {
+
+/*!
+ * @brief Returns all corner points in the box
+ * @param dim Dimension of the box
+ * @param box Pair of points representing cuboid (rectangle in 2d)
+ * @return Vector Vector of corner points
+ */
+std::vector<util::Point3> getCornerPoints(size_t dim, const
+std::pair<util::Point3, util::Point3> &box);
 
 /*!
  * @brief Checks if point is inside a rectangle
@@ -50,6 +60,16 @@ bool isPointInsideRectangle(util::Point3 x, util::Point3 x_lb,
  */
 bool isPointInsideAngledRectangle(util::Point3 x, double x_min, double x_max,
                                   double y_min, double y_max, double theta);
+
+/*!
+ * @brief Checks if point is inside a cuboid (rectangle in 2-d, line in 1-d)
+ * @param x Point
+ * @param x_lbb Coordinate of left-bottom-back corner point
+ * @param x_rtf Coordinate of right-top-front corner point
+ * @return bool True if point inside cuboid, else false
+ */
+bool isPointInsideCuboid(size_t dim, util::Point3 x, util::Point3 x_lbb,
+                         util::Point3 x_rtf);
 
 } // namespace geometry
 

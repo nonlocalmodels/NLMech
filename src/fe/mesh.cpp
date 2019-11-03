@@ -30,6 +30,7 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
   // perform check on input data
   if (d_spatialDiscretization != "finite_difference" and
       d_spatialDiscretization != "weak_finite_element" and
+      d_spatialDiscretization != "weak_finite_element" and
       d_spatialDiscretization != "nodal_finite_element" and
       d_spatialDiscretization != "truss_finite_element") {
     std::cerr << "Error: Spatial discretization type not known. Check input "
@@ -230,28 +231,46 @@ void fe::Mesh::computeMeshSize() {
 // Accessor functions
 //
 size_t fe::Mesh::getDimension() { return d_dim; }
+size_t fe::Mesh::getDimension() const { return d_dim; }
 
 size_t fe::Mesh::getNumNodes() { return d_numNodes; }
+size_t fe::Mesh::getNumNodes() const { return d_numNodes; }
 
 size_t fe::Mesh::getNumElements() { return d_enc.size()/d_eNumVertex; }
+size_t fe::Mesh::getNumElements() const { return d_enc.size()/d_eNumVertex; }
 
 size_t fe::Mesh::getNumDofs() { return d_numDofs; }
+size_t fe::Mesh::getNumDofs() const { return d_numDofs; }
 
 size_t fe::Mesh::getElementType() { return d_eType; }
+size_t fe::Mesh::getElementType() const { return d_eType; }
 
 double fe::Mesh::getMeshSize() { return d_h; }
+double fe::Mesh::getMeshSize() const { return d_h; }
 
 util::Point3 fe::Mesh::getNode(const size_t &i) { return d_nodes[i]; }
+util::Point3 fe::Mesh::getNode(const size_t &i) const { return d_nodes[i]; }
 
 double fe::Mesh::getNodalVolume(const size_t &i) { return d_vol[i]; }
+double fe::Mesh::getNodalVolume(const size_t &i) const { return d_vol[i]; }
 
 const std::vector<util::Point3> *fe::Mesh::getNodesP() { return &d_nodes; }
+const std::vector<util::Point3> *fe::Mesh::getNodesP() const { return
+&d_nodes; }
 
 const std::vector<uint8_t> *fe::Mesh::getFixityP() { return &d_fix; }
+const std::vector<uint8_t> *fe::Mesh::getFixityP() const { return &d_fix; }
 
 const std::vector<double> *fe::Mesh::getNodalVolumeP() { return &d_vol; }
+const std::vector<double> *fe::Mesh::getNodalVolumeP() const { return &d_vol; }
 
 const std::vector<size_t> fe::Mesh::getElementConnectivity(const size_t &i) {
+  return std::vector<size_t>(d_enc.begin() + d_eNumVertex * i,
+                             d_enc.begin() + d_eNumVertex * i + d_eNumVertex);
+}
+
+const std::vector<size_t> fe::Mesh::getElementConnectivity(const size_t &i)
+const {
   return std::vector<size_t>(d_enc.begin() + d_eNumVertex * i,
                              d_enc.begin() + d_eNumVertex * i + d_eNumVertex);
 }
@@ -264,7 +283,18 @@ fe::Mesh::getElementConnectivityNodes(const size_t &i) {
   return nds;
 }
 
+const std::vector<util::Point3>
+fe::Mesh::getElementConnectivityNodes(const size_t &i) const {
+  std::vector<util::Point3> nds;
+  for (size_t k = 0; k < d_eNumVertex; k++)
+    nds.emplace_back(d_nodes[d_enc[d_eNumVertex * i + k]]);
+  return nds;
+}
+
 const std::vector<size_t> *fe::Mesh::getElementConnectivitiesP() {
+  return &d_enc;
+}
+const std::vector<size_t> *fe::Mesh::getElementConnectivitiesP() const {
   return &d_enc;
 }
 
@@ -272,8 +302,19 @@ const std::vector<size_t> *fe::Mesh::getElementConnectivitiesP() {
 std::pair<std::vector<double>, std::vector<double>> fe::Mesh::getBoundingBox() {
   return d_bbox;
 }
+std::pair<std::vector<double>, std::vector<double>>
+fe::Mesh::getBoundingBox() const {
+  return d_bbox;
+}
 
 bool fe::Mesh::isNodeFree(const size_t &i, const unsigned int &dof) {
+
+  // below checks if d_fix has 1st bit (if dof=0), 2nd bit (if dof=1), 3rd
+  // bit (if dof=2) is set to 1 or 0. If set to 1, then it means it is fixed,
+  // and therefore it returns false
+  return !(d_fix[i] >> dof & 1UL);
+}
+bool fe::Mesh::isNodeFree(const size_t &i, const unsigned int &dof) const {
 
   // below checks if d_fix has 1st bit (if dof=0), 2nd bit (if dof=1), 3rd
   // bit (if dof=2) is set to 1 or 0. If set to 1, then it means it is fixed,

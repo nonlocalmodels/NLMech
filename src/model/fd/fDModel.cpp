@@ -16,6 +16,7 @@
 #include "util/matrix.h"
 #include "util/point.h"
 #include "util/utilGeom.h"
+#include "util/utilFunction.h"
 
 // include high level class declarations
 #include "fe/massMatrix.h"
@@ -26,12 +27,14 @@
 #include "inp/decks/modelDeck.h"
 #include "inp/decks/outputDeck.h"
 #include "inp/decks/restartDeck.h"
+#include "inp/decks/absborbingCondDeck.h"
 #include "inp/input.h"
 #include "inp/policy.h"
 #include "loading/fLoading.h"
 #include "loading/initialCondition.h"
 #include "loading/uLoading.h"
 #include "material/pdMaterial.h"
+#include "geometry/dampingGeom.h"
 
 // standard lib
 #include <fstream>
@@ -40,11 +43,13 @@ model::FDModel::FDModel(inp::Input *deck)
     : d_massMatrix_p(nullptr), d_mesh_p(nullptr), d_fracture_p(nullptr),
       d_neighbor_p(nullptr), d_interiorFlags_p(nullptr), d_input_p(deck),
       d_policy_p(nullptr), d_initialCondition_p(nullptr), d_uLoading_p(nullptr),
-      d_fLoading_p(nullptr), d_material_p(nullptr), d_stop(false) {
+      d_fLoading_p(nullptr), d_material_p(nullptr), d_dampingGeom_p(nullptr),
+      d_stop(false) {
 
   d_modelDeck_p = deck->getModelDeck();
   d_outputDeck_p = deck->getOutputDeck();
   d_policy_p = inp::Policy::getInstance(d_input_p->getPolicyDeck());
+  d_absorbingCondDeck_p = deck->getAbsorbingCondDeck();
 
   if (d_modelDeck_p->d_isRestartActive)
     restart(deck);
@@ -141,6 +146,10 @@ void model::FDModel::initHObjects() {
   d_material_p = new material::pd::Material(d_input_p->getMaterialDeck(),
                                             d_modelDeck_p->d_dim,
                                             d_modelDeck_p->d_horizon);
+
+  // initialize damping geometry class
+  std::cout << "FDModel: Initializing damping object.\n";
+  d_dampingGeom_p = new geometry::DampingGeom(d_absorbingCondDeck_p, d_mesh_p);
 }
 
 void model::FDModel::init() {
@@ -520,6 +529,55 @@ void model::FDModel::computeForces() {
 
         // update force and energy
         this->d_f[i] += force_i;
+      } // loop over nodes
+
+  ); // end of parallel for loop
+
+  f.get();
+}
+
+void model::FDModel::computeDampingForces() {
+
+  if (!d_dampingGeom_p->isDampingActive())
+    return;
+
+  double delta_t = d_modelDeck_p->d_dt;
+  auto dim = d_modelDeck_p->d_dim;
+  bool is_viscous_damping = d_dampingGeom_p->isViscousDamping();
+
+  auto f = hpx::parallel::for_loop(
+      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      d_mesh_p->getNumNodes(),
+      [this, delta_t, is_viscous_damping, dim](boost::uint64_t i) {
+
+        // local variable to hold force
+        util::Point3 force_i = util::Point3();
+        auto v_i = this->d_v[i];
+
+        // compute damping force
+        // -alpha* |F| sign(vel)
+        double coeff = this->d_dampingGeom_p->getCoefficient(i);
+        if (is_viscous_damping) {
+
+          coeff *= delta_t;
+          force_i =
+              util::Point3(coeff * v_i.d_x, coeff * v_i.d_y, coeff * v_i.d_z);
+        } else {
+
+          coeff *= delta_t * delta_t * this->d_f[i].length();
+          auto sv = util::function::signVector(v_i);
+
+          force_i.d_x = -coeff * sv.d_x;
+
+          if (dim > 1)
+            force_i.d_y = -coeff * sv.d_y;
+
+          if (dim > 2)
+            force_i.d_z = -coeff * sv.d_z;
+        }
+
+        // add to the force
+        d_f[i] += force_i;
       } // loop over nodes
 
   ); // end of parallel for loop
