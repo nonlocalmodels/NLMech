@@ -52,6 +52,9 @@ public:
   double getCoefficient(const size_t &i);
   double getCoefficient(const size_t &i) const ;
 
+  const std::vector<double> *getCoefficientDataP() const ;
+  const std::vector<double> *getCoefficientDataP();
+
 
 protected:
   /*!

@@ -13,6 +13,8 @@
 #include "util/utilGeom.h"
 #include <iostream>
 
+static double damping_geom_tol = 1.0e-8;
+
 //
 // DampingGeom
 //
@@ -30,7 +32,7 @@ const fe::Mesh *mesh)
 void geometry::DampingGeom::computeDampingCoefficient(
     const fe::Mesh *mesh) {
 
-  d_coefficients = std::vector<double>(mesh->getNumNodes());
+  d_coefficients = std::vector<double>(mesh->getNumNodes(), 0.);
 
   for (size_t i=0; i<mesh->getNumNodes(); i++) {
 
@@ -59,80 +61,92 @@ void geometry::DampingGeom::computeDampingCoefficient(
     if (d_dim > 0 && dg.d_checkX) {
 
       thickness = dg.d_layerThicknessX;
+      check = x.d_x;
 
       // check if x coordinate is within the region
       if (dg.d_relativeLoc == "left") {
 
-        check = x.d_x;
+        // special care when point is exactly on the upper line
         lower = dg.d_p2.d_x - thickness;
         upper = dg.d_p2.d_x;
-        if (util::compare::definitelyGreaterThan(check, lower) &&
-            util::compare::definitelyLessThan(check, upper))
+        if (util::compare::definitelyLessThan(check, upper - damping_geom_tol))
           coeff *= std::pow((upper - check) / thickness, exponent);
+        else
+          coeff *= 0.;
+
+        // std::cout << "Left layer, coeff = " << coeff << ", y = " << check << ", lower = " << lower << ", upper = " << upper << std::endl;
       } else if (dg.d_relativeLoc == "right") {
 
-        check = x.d_x;
         lower = dg.d_p1.d_x;
         upper = dg.d_p1.d_x + thickness;
-        if (util::compare::definitelyGreaterThan(check, lower) &&
-            util::compare::definitelyLessThan(check, upper))
+        if (util::compare::definitelyGreaterThan(check, lower + damping_geom_tol))
           coeff *= std::pow((check - lower) / thickness,
-              exponent);
+                            exponent);
+        else
+          coeff *= 0.;
+
+        // std::cout << "Right layer, coeff = " << coeff << ", y = " << check << ", lower = " << lower << ", upper = " << upper << std::endl;
       } else {
 
-        check = x.d_x;
         lower = dg.d_p1.d_x;
         upper = dg.d_p1.d_x + thickness;
-        if (util::compare::definitelyGreaterThan(check, lower) &&
-            util::compare::definitelyLessThan(check, upper))
+        if (util::compare::definitelyLessThan(check, upper - damping_geom_tol))
           coeff *= std::pow((upper - check) / thickness, exponent);
+        else
+          coeff *= 0.;
 
-        check = x.d_x;
         lower = dg.d_p2.d_x - thickness;
         upper = dg.d_p2.d_x;
-        if (util::compare::definitelyGreaterThan(check, lower) &&
-            util::compare::definitelyLessThan(check, upper))
+        if (util::compare::definitelyGreaterThan(check, lower + damping_geom_tol))
           coeff *= std::pow((check - lower) / thickness, exponent);
+        else
+          coeff *= 0.;
       }
     }
 
     if (d_dim > 1 && dg.d_checkY) {
 
       thickness = dg.d_layerThicknessY;
+      check = x.d_y;
 
       // check if x coordinate is within the region
       if (dg.d_relativeLoc == "bottom") {
 
-        check = x.d_y;
+        // special care when point is exactly on the upper line
         lower = dg.d_p2.d_y - thickness;
         upper = dg.d_p2.d_y;
-        if (util::compare::definitelyGreaterThan(check, lower) &&
-            util::compare::definitelyLessThan(check, upper))
+        if (util::compare::definitelyLessThan(check, upper - damping_geom_tol))
           coeff *= std::pow((upper - check) / thickness, exponent);
+        else
+          coeff *= 0.;
+
+        // std::cout << "Bottom layer, coeff = " << coeff << ", y = " << check << ", lower = " << lower << ", upper = " << upper << std::endl;
       } else if (dg.d_relativeLoc == "top") {
 
-        check = x.d_y;
         lower = dg.d_p1.d_y;
         upper = dg.d_p1.d_y + thickness;
-        if (util::compare::definitelyGreaterThan(check, lower) &&
-            util::compare::definitelyLessThan(check, upper))
+        if (util::compare::definitelyGreaterThan(check, lower + damping_geom_tol))
           coeff *= std::pow((check - lower) / thickness,
                             exponent);
+        else
+          coeff *= 0.;
+
+        // std::cout << "Top layer, coeff = " << coeff << ", y = " << check << ", lower = " << lower << ", upper = " << upper << std::endl;
       } else {
 
-        check = x.d_y;
         lower = dg.d_p1.d_y;
         upper = dg.d_p1.d_y + thickness;
-        if (util::compare::definitelyGreaterThan(check, lower) &&
-            util::compare::definitelyLessThan(check, upper))
+        if (util::compare::definitelyLessThan(check, upper - damping_geom_tol))
           coeff *= std::pow((upper - check) / thickness, exponent);
+        else
+          coeff *= 0.;
 
-        check = x.d_y;
         lower = dg.d_p2.d_y - thickness;
         upper = dg.d_p2.d_y;
-        if (util::compare::definitelyGreaterThan(check, lower) &&
-            util::compare::definitelyLessThan(check, upper))
+        if (util::compare::definitelyGreaterThan(check, lower + damping_geom_tol))
           coeff *= std::pow((check - lower) / thickness, exponent);
+        else
+          coeff *= 0.;
       }
     }
 
@@ -144,6 +158,9 @@ double geometry::DampingGeom::getCoefficient(const size_t &i) { return
 d_coefficients[i]; }
 double geometry::DampingGeom::getCoefficient(const size_t &i) const { return
       d_coefficients[i]; }
+
+const std::vector<double> *geometry::DampingGeom::getCoefficientDataP() { return &d_coefficients; }
+const std::vector<double> *geometry::DampingGeom::getCoefficientDataP() const { return &d_coefficients; }
 
 bool geometry::DampingGeom::isDampingActive() { return d_absorbingDeck_p->d_dampingActive; }
 bool geometry::DampingGeom::isDampingActive() const { return

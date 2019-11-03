@@ -821,6 +821,14 @@ void model::FDModel::output() {
     writer.appendPointData(tag, &force);
   }
 
+  //
+  // debug
+  //
+  if (d_dampingGeom_p->isDampingActive()) {
+    tag = "Damping_Coefficients";
+    writer.appendPointData(tag, d_dampingGeom_p->getCoefficientDataP());
+  }
+
   tag = "time";
   writer.addTimeStep(d_time);
 

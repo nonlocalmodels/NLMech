@@ -700,6 +700,30 @@ void inp::Input::setAbsorbingCondDeck() {
       }
     }
 
+    // get layer thickness
+    if (!e["Layer_Thickness"]) {
+      std::cerr << "Error: Must specify values in Layer_Thickness" << std::endl;
+      exit(1);
+    } else {
+
+      size_t lco = 0;
+      for (auto f : e["Layer_Thickness"]) {
+        if (lco == 0)
+          dg.d_layerThicknessX = f.as<double>();
+        else if (lco == 1)
+          dg.d_layerThicknessY = f.as<double>();
+        else if (lco == 2)
+          dg.d_layerThicknessZ = f.as<double>();
+
+        lco++;
+      }
+
+      if (lco != 3) {
+        std::cerr << "Error: Not sufficient parameters in Layer_Thickness\n";
+        exit(1);
+      }
+    }
+
     // For now we assume it has two corner points of rectangle region
     std::vector<double> locs;
     if (!e["Domain"]) {
