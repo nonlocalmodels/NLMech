@@ -688,7 +688,7 @@ void inp::Input::setAbsorbingCondDeck() {
     for (auto f : e["Domain"])
       locs.push_back(f.as<double>());
 
-    if (locs.size() != 4 or locs.size() != 6) {
+    if (locs.size() != 4 and locs.size() != 6) {
       std::cerr << "Error: We expect data Absorbing_Condition->" << read_set
       << " has four/six entries giving corner points of a rectangle" <<
       std::endl;
