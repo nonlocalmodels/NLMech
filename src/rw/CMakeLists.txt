@@ -7,4 +7,4 @@
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(RW ${SOURCES})
-target_link_libraries(RW ${VTK_LIBRARIES})
+target_link_libraries(RW PUBLIC Inp FE Data Geometry ${VTK_LIBRARIES})

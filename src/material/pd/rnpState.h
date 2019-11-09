@@ -113,9 +113,10 @@ public:
    * @param fs Bond fracture state
    * @return Value Pair of energy and force
    */
+  /*
   std::pair<double, double> getBondEF(const double &r, const double &s,
                                       const double &J, bool &fs) override;
-
+*/
   /*!
    * @brief Returns energy and force between bond for \a no-fail region
    *

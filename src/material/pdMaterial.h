@@ -80,8 +80,14 @@ public:
    * modified (needed to implement \a no-fail region
    * @return pair Pair of energy and force
    */
-  std::pair<double, double> getBondEF(const double &r, const double &s,
-                                      bool &fs, const bool &break_bonds);
+  //std::pair<double, double> getBondEF(const double &r, const double &s,
+   //                                   bool &fs, const bool &break_bonds);
+
+  std::pair<util::Point3, double> getBondEF(size_t i , size_t j);
+
+  util::Matrix33 getStrain(size_t i);
+
+  util::Matrix33 getStress(size_t i);
 
   /*!
    * @brief Returns hydrostatic energy density

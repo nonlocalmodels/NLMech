@@ -1,0 +1,64 @@
+Model: 
+  Dimension: 1 
+  Discretization_Type:
+    Spatial: quasi_static 
+    Time: central_difference 
+  Final_Time: 1 
+  Time_Steps: 1
+  Horizon: 1
+  Horizon_h_Ratio: 3
+Mesh: 
+  File: mesh.vtu 
+Material: 
+  Type: ElasticState 
+  Density: 1
+  Compute_From_Classical: true 
+  E: 4000 
+  Influence_Function: 
+    Type: 1 
+Displacement_BC: 
+  Sets: 1 
+  Set_1:  
+    Location:   
+      Line: [-0.1, 0.3]
+    Direction: [1] 
+    Time_Function: 
+      Type: constant 
+      Parameters: 
+        - 0.0 
+    Spatial_Function: 
+      Type: constant 
+Force_BC:
+  Sets: 1
+  Set_1:
+    Location:
+      Line: [15.4, 16.5]
+    Direction: [1]
+    Time_Function:
+      Type: linear
+      Parameters:
+        - 1
+    Spatial_Function:
+      Type: constant
+      Parameters:
+        - 40
+Solver:
+  Type: ConjugateGradient
+  Max_Iteration: 1000
+  Tolerance: 1e-9
+  Perturbation: 1e-7
+Output: 
+  Path: ./ 
+  Tags: 
+    - Displacement
+    - Velocity
+    - Force 
+    - Neighbors
+    - Strain_Energy
+    - Stress_Tensor
+    - Strain_Tensor
+    - Fixity
+  Output_Interval: 1 
+  Compress_Type: zlib 
+HPX: 
+    Partitions: 1 

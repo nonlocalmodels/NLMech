@@ -56,7 +56,7 @@ namespace fe {
  * v^1_y \f]
  * and \f$ det(J) = \frac{area(T)}{area(T^0)} = 2\times area(T) \f$.
  *
- * 5. Inverse map \f$ \Phi^{-1} : T \to T^9 \f$ for linear triangle element can
+ * 5. Inverse map \f$ \Phi^{-1} : T \to T^0 \f$ for linear triangle element can
  * be easily derived. The derivation of the map is provided below:
  *
  * From map \f$ (\xi, \eta )\in T^0 \to (x,y) \in T \f$ we have

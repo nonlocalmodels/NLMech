@@ -7,6 +7,6 @@
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(FE ${SOURCES})
-target_link_libraries(FE Inp Util RW)
+target_link_libraries(FE PUBLIC Inp Util RW)
 
 

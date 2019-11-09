@@ -50,6 +50,9 @@ void rw::writer::LegacyVtkWriter::appendPointData(
 void rw::writer::LegacyVtkWriter::appendPointData(
     const std::string &name, const std::vector<util::SymMatrix3> *data) {}
 
+void rw::writer::LegacyVtkWriter::appendPointData(const std::string &name,
+                       const std::vector<util::Matrix33> *data){}
+
 void rw::writer::LegacyVtkWriter::appendCellData(const std::string &name,
                                            const std::vector<float> *data) {}
 

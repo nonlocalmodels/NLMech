@@ -5,6 +5,8 @@
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 cmake_minimum_required(VERSION 3.0)
 
+cmake_policy(SET CMP0074 NEW)
+
 project(NLMech CXX)
 set (VERSION_MAJOR 0)
 set (VERSION_MINOR 1)
@@ -50,8 +52,9 @@ if (VTK_VERSION VERSION_LESS "6")
     message(FATAL_ERROR "ERROR: Only VTK library 6+ supported")
 endif ()
 
-# BLAZE
+# BLAZE and BlazeIterative
 find_package(blaze REQUIRED)
+find_package(BlazeIterative REQUIRED)
 
 # BLAS and LAPACK
 find_package(BLAS REQUIRED)
@@ -95,6 +98,7 @@ add_subdirectory(src/loading)
 add_subdirectory(src/geometry)
 add_subdirectory(src/fe)
 add_subdirectory(src/model)
+add_subdirectory(src/data)
 
 # add test directory
 add_subdirectory(src/test)
@@ -104,7 +108,8 @@ add_subdirectory(tools/mesh)
 add_subdirectory(tools/pp)
 
 # Build executable
-add_hpx_executable(NLMech SOURCES src/main.cpp DEPENDENCIES Inp Model)
+add_hpx_executable(NLMech SOURCES src/main.cpp 
+				   DEPENDENCIES Inp Model ${LAPACK_LIBRARIES})
 
 # Build documentation
 set(Enable_Documentation FALSE CACHE BOOL "Generates target for generating the documentation")

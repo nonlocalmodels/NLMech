@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<VTKFile type="UnstructuredGrid" version="0.1" byte_order="LittleEndian" header_type="UInt32" compressor="vtkZLibDataCompressor">
+  <UnstructuredGrid>
+    <FieldData>
+      <DataArray type="Float64" Name="TIME" NumberOfTuples="1" format="appended" RangeMin="1"                    RangeMax="1"                    offset="0"                   />
+    </FieldData>
+    <Piece NumberOfPoints="33"                   NumberOfCells="32"                  >
+      <PointData>
+        <DataArray type="Float64" Name="Displacement" NumberOfComponents="3" ComponentName0="x" ComponentName1="y" ComponentName2="z" format="appended" RangeMin="0"                    RangeMax="0.11742857143"        offset="44"                  />
+        <DataArray type="Float64" Name="Velocity" NumberOfComponents="3" ComponentName0="x" ComponentName1="y" ComponentName2="z" format="appended" RangeMin="0"                    RangeMax="0"                    offset="484"                 />
+        <DataArray type="Float64" Name="Force" NumberOfComponents="3" ComponentName0="x" ComponentName1="y" ComponentName2="z" format="appended" RangeMin="0"                    RangeMax="30"                   offset="532"                 />
+        <DataArray type="Float64" Name="Strain_Energy" format="appended" RangeMin="0.017999999225"       RangeMax="0.16200000048"        offset="736"                 />
+        <DataArray type="Float64" Name="Fixity" format="appended" RangeMin="0"                    RangeMax="1"                    offset="824"                 />
+        <DataArray type="Float64" Name="Neighbors" format="appended" RangeMin="1"                    RangeMax="2"                    offset="872"                 />
+        <DataArray type="Float64" Name="Strain_Tensor" NumberOfComponents="6" ComponentName0="xx" ComponentName1="yy" ComponentName2="zz" ComponentName3="xy" ComponentName4="xz" ComponentName5="yz" format="appended" RangeMin="0.003"                RangeMax="0.0089999999999"      offset="924"                 />
+        <DataArray type="Float64" Name="Stress_Tensor" NumberOfComponents="6" ComponentName0="xx" ComponentName1="yy" ComponentName2="zz" ComponentName3="xy" ComponentName4="xz" ComponentName5="yz" format="appended" RangeMin="12"                   RangeMax="36"                   offset="1156"                />
+      </PointData>
+      <CellData>
+      </CellData>
+      <Points>
+        <DataArray type="Float32" Name="Points" NumberOfComponents="3" format="appended" RangeMin="0"                    RangeMax="16.117427826"         offset="1436"                />
+      </Points>
+      <Cells>
+        <DataArray type="Int64" Name="connectivity" format="appended" RangeMin=""                     RangeMax=""                     offset="1688"                />
+        <DataArray type="Int64" Name="offsets" format="appended" RangeMin=""                     RangeMax=""                     offset="1812"                />
+        <DataArray type="UInt8" Name="types" format="appended" RangeMin=""                     RangeMax=""                     offset="1936"                />
+      </Cells>
+    </Piece>
+  </UnstructuredGrid>
+  <AppendedData encoding="base64">
+   _AQAAAACAAAAIAAAADQAAAA==eF5jYACBD/YAAicBMA==AQAAAACAAAAYAwAAOAEAAA==eF5jYMAO9v33652eV2SPLq76ZfVZ5pn1GOI3329LnFbVjiGu/nr6nVUa/RjiByv3rI7PnowhbsKg+zLTaTqGeGbzXLUSydkY4u6cfCl1H+ZhiFe47Q84krwQQ7y3qzzf038xhvj0S/p956yWYogXS75YE6y2HEO8PmHB6RuCKzHE/62IeBX7dxWG+Pd3ApyPX6zBEJ9hcVI948o6DHHHQw6Lv8VvwBBPfTHHaGfoRgzxV7w/D1Z7b8IQZzUKDbRz3IwhLh2+8QGD+RYM8f31vAWHdbZiiq/I/N+qtA1DvPni0T4Pie0Y4pt/KMpx8+3AEC+Uq1t7lnknhniK2y2bCT8xxRNzzM4Evd+FIW45cVK06NPdGOISO969un5rD4Z4U/+XdXVr92KId1g8azzDvw9DHADrPX3IAQAAAACAAAAYAwAAEAAAAA==eF5jYBgFo2AUoAMAAxgAAQ==AQAAAACAAAAYAwAAhwAAAA==eF67Nfnf////bR0YsIGUnXuxCTfMu2iLTZyhYzN28YjT2MULluMyB6u9DA7rcZmDQ/1+7OodzuMQX4/dHFygYDsO9x/G4R5c9uJwJy6Ay50Fx0kLh4jbuMKBRPecx2UvieGAwxxc/uq4jN2cZXsw1G/dBEzm/40PoIufegYSV8YQBwCbET3gAQAAAACAAAAIAQAAMAAAAA==eF5jYGBoyNpzxJ4BSMu82w2mj/3aAaIPnDmzZzjSMP85HPFYD+ZPz5tkDwCi1WntAQAAAACAAAAIAQAAEQAAAA==eF5jYACBD/YMIxwAADI2ATA=AQAAAACAAAAIAQAAFQAAAA==eF5jYACBD/YMEOAwMukP9gAcUQofAQAAAACAAAAwBgAAmgAAAA==eF5r+O/XOz2vyZ6BWOAazbngei3x6h/ImU1tqyFe/aPm14E76ohXz9FCmnotEtWrkahehUT1pJpvQKL6BBLVV5CovoBE9TUkqi8hUX0Dieo3kKj+AInqd5CofgaJ6ieQqP4GieolWklTr0CiegYS1V8g0f0PaKx+BYnqSU0PL+RJKz83PJavXFZKvPqErD0lkzOIVg8A9hR3KA==AQAAAACAAAAwBgAAvwAAAA==eF5rVv0PBI4ODESCJEVlz0kqtg6E1MHAAbVb23JvWzsQUgcDW079A7qHePMvvCdNPYvgf5LUy/CSpl6DmzT1pJr/QIw09QdcSVNvEEua+oRQ0tRLJJKm3iOSNPUMqaSpfzCZNPUNi0lTv2E2aeoLakhTv6CENPUfdpGmvuAnaeodGEGknQMBZQjwiDTzFTaTpv7AIdqqF+ghTT2p6WGCxm2Sys8HkSrA8tnUgZA6GDjwEOQedQdC6mAAANtmpZA=AQAAAACAAACMAQAAqwAAAA==eF5jYECAl2qM9jD2iT8NcPbK8oNwtutPBgcYe5uZIpytXuIIZ0/fmAhnt3xvgLNtxCbC2V9NFsLZa4M3wtmpRQfhbLmJF+Hsa+sfwtl95z7C2Yu/MTjC2P9ZOeHsGFFBOHuHiiScLWKiCGcXOGvC2WeCDOFsjSRLOLu10BHOftjgCWfbTgiEs2fOj4Szv65LhLMD92XC2WvPFsLZN25Vwtl1HxrgbADHGDa8AQAAAACAAAAAAgAASQAAAA==eF5dxUkCQgAAAECEypole/j/KztwmrlMEFxCjvjBMSec8pNf/OaMcy645Ipr/nDDLXfc85cHHnnimRdeeeMf73zwef8HvJ4EAQ==AQAAAACAAAAAAQAASgAAAA==eF4txdEGgwAAAMAkSZIkySSZSZKZJJOk//+qHrp7uTB4RI6dOHXm3IVLV67d+OXWnXu//fHg0ZNnf/3z4tWb/959+PTlG3cPBCE=AQAAAACAAAAgAAAACwAAAA==eF5jZsYPAAZQAGE=
+  </AppendedData>
+</VTKFile>
