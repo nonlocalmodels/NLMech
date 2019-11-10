@@ -45,6 +45,17 @@ typedef blaze::StaticVector<float, 3UL> VectorF3;
 /*! @brief Blaze: Identity matrix */
 typedef blaze::IdentityMatrix<float> IdentityMatrixF;
 
+/*!
+ * Computes the l2 norm of a vector
+ * @param vec Vector
+ * @return The l2 norm of the vector
+ */
+inline double l2Norm(util::VectorXi vec) {
+
+	return sqrt(blaze::dot(vec, vec));
+}
+
+
 } // namespace util
 
 #endif // UTIL_MATRIXBLAZE_H

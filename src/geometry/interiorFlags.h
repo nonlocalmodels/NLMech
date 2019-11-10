@@ -29,10 +29,11 @@ public:
   /*!
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
+   * @param dim Dimension of the domain
    * @param bbox Bounding box to determine the location of nodes relative to
    * the boundary
    */
-  BaseInterior(inp::InteriorFlagsDeck *deck,
+  BaseInterior(inp::InteriorFlagsDeck *deck, const size_t dim,
                std::pair<std::vector<double>, std::vector<double>> bbox);
 
   /*!
@@ -58,6 +59,9 @@ protected:
 
   /*! @brief Tolerance to check if the point is in interior/exterior */
   double d_noFailTol;
+
+  /*! @brief Dimension of the domain */
+  double d_dim;
 };
 
 /*!
@@ -71,10 +75,11 @@ public:
   /*!
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
+   * @param dim Dimension of the domain
    * @param bbox Bounding box to determine the location of nodes relative to
    * the boundary
    */
-  ComputeInterior(inp::InteriorFlagsDeck *deck,
+  ComputeInterior(inp::InteriorFlagsDeck *deck, const size_t dim,
       std::pair<std::vector<double>, std::vector<double>> bbox);
 
   /*!
@@ -100,11 +105,12 @@ public:
   /*!
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
+   * @param dim Dimension of the domain
    * @param nodes Pointer to the list of nodal coordinates
    * @param bbox Bounding box to determine the location of nodes relative to
    * the boundary
    */
-  DataInterior(inp::InteriorFlagsDeck *deck,
+  DataInterior(inp::InteriorFlagsDeck *deck, const size_t dim,
                const std::vector<util::Point3> *nodes,
                std::pair<std::vector<double>, std::vector<double>> bbox);
 
@@ -132,12 +138,13 @@ public:
   /*!
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
+   * @param dim Dimension of the domain
    * @param nodes Pointer to the list of nodal coordinates
    * @param bbox Bounding box to determine the location of nodes relative to
    * the boundary
    */
   InteriorFlags(
-      inp::InteriorFlagsDeck *deck, const std::vector<util::Point3> *nodes,
+      inp::InteriorFlagsDeck *deck, const size_t dim, const std::vector<util::Point3> *nodes,
       const std::pair<std::vector<double>, std::vector<double>> &bbox);
 
   /*!

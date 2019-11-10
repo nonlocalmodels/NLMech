@@ -12,6 +12,8 @@
 #include <cstring>
 #include <vector>
 
+#include "util/point.h"
+
 namespace material {
 
 namespace pd {
@@ -32,7 +34,7 @@ public:
   BaseMaterial(const size_t &dim, const double &horizon)
       : d_horizon(horizon), d_dimension(dim){};
 
-  /*!
+  /*! Todo Delete old function
    * @brief Returns energy and force between bond
    *
    * @param r Reference (initial) bond length
@@ -41,13 +43,27 @@ public:
    * @param fs Bond fracture state
    * @return pair Pair of energy and force
    */
+/*
   virtual std::pair<double, double> getBondEF(const double &r, const double &s,
                                               const double &J,
                                               bool &fs) {
     return std::make_pair(0., 0.);
   };
-
+*/
   /*!
+   * @brief Returns energy and force between bond
+   *
+   * @return pair Pair of energy and force
+   */
+
+  virtual std::pair<util::Point3,double> getBondEF(size_t i , size_t j){
+
+	  return std::make_pair(util::Point3(), 0.);
+
+  };
+
+
+  /*! Todo Delete old version
    * @brief Returns energy and force between bond for \a no-fail region bonds
    *
    * @param r Reference (initial) bond length
@@ -61,6 +77,16 @@ public:
   };
 
   /*!
+   * @brief Returns energy and force between bond for \a no-fail region bonds
+
+   * @return pair Pair of energy and force
+   */
+  virtual std::pair<double, double>
+    getBondEFNoFail() {
+      return std::make_pair(0., 0.);
+    };
+
+  /*! Todo delete old version
    * @brief Returns hydrostatic energy density
    *
    * @param theta Hydrostatic strain
@@ -71,6 +97,16 @@ public:
   };
 
   /*!
+   * @brief Returns hydrostatic energy density
+   *
+   * @return energy Energy density
+   */
+  virtual double getStateEnergy() {
+    return 0.;
+  };
+
+
+  /*! Todo delete old version
    * @brief Returns hydrostatic force density
    *
    * @param theta Hydrostatic strain
@@ -81,7 +117,18 @@ public:
     return 0.;
   };
 
+
   /*!
+   * @brief Returns hydrostatic force density
+   *
+   * @return force Force density
+   */
+  virtual double getStateForce() {
+    return 0.;
+  };
+
+
+  /*! Todo delete old version
    * @brief Returns true if bond contributes to hydrostatic force
    * @param S Bond strain
    * @param r Reference bond length
@@ -92,6 +139,17 @@ public:
   };
 
   /*!
+   * @brief Returns true if bond contributes to hydrostatic force
+
+   * @return bool True/false
+   */
+  virtual bool doesBondContribToState() {
+    return false;
+  };
+
+
+
+  /*! Todo delete old version
    * @brief Returns contribution of bond to hydrostatic strain
    *
    * @param S Bond strain
@@ -105,12 +163,48 @@ public:
   };
 
   /*!
+   * @brief Returns contribution of bond to hydrostatic strain
+   *
+   * @return strain Contribution to hydrostatic strain
+   */
+  virtual double getBondContribToHydroStrain() {
+    return 0.;
+  };
+
+  /*! Todo Delete old version
    * @brief Returns critical bond strain
    *
    * @param r Reference length of bond
    * @return strain Critical strain
    */
   virtual double getSc(const double &r) { return 0.; };
+
+  /*!
+   * @brief Returns critical bond strain
+   *
+   * @return strain Critical strain
+   */
+  virtual double getSc(size_t i , size_t j) { return 0.; };
+
+  /*!
+   * @brief Returns strain tensor
+   *
+   * @return strain tensor
+   */
+  virtual util::Matrix33 getStrain(size_t i) {
+
+    return util::Matrix33();
+  }
+
+  /*!
+   * @brief Returns stress tensor
+   *
+   * @return stress tensor
+   */
+  virtual util::Matrix33 getStress(size_t i) {
+
+    return util::Matrix33();
+  }
 
 protected:
   /*! @brief Horizon */

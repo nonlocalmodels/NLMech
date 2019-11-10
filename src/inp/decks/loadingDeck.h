@@ -22,8 +22,10 @@ struct BCData {
    *
    * List of allowed values are:
    *
-   * - \a rectangle
-   * - \a angled_rectangle
+   * - \a line (1d)
+   * - \a rectangle (2d)
+   * - \a angled_rectangle (2d)
+   * - \a cuboid (3d)
    */
   std::string d_regionType;
 
@@ -57,11 +59,17 @@ struct BCData {
   /*! @brief Y coordinate of left-bottom point of rectangle/angled rectangle */
   double d_y1;
 
+  /*! @brief Z coordinate of left-bottom-back point of cuboid */
+  double d_z1;
+
   /*! @brief X coordinate of right-top point of rectangle/angled rectangle */
   double d_x2;
 
   /*! @brief Y coordinate of right-top point of rectangle/angled rectangle */
   double d_y2;
+
+  /*! @brief Z coordinate of right-top-front point of cuboid */
+  double d_z2;
 
   /*! @brief Angle of the rectangle (for angled rectangle) */
   double d_theta;
@@ -84,7 +92,8 @@ struct BCData {
   /*!
    * @brief Constructor
    */
-  BCData() : d_x1(0.), d_y1(0.), d_x2(0.), d_y2(0.), d_theta(0.){};
+  BCData() : d_x1(0.), d_y1(0.), d_z1(0.), d_x2(0.), d_y2(0.), d_z2(0.),
+  d_theta(0.){};
 };
 
 /**

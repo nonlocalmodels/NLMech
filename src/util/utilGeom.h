@@ -51,6 +51,31 @@ bool isPointInsideRectangle(util::Point3 x, util::Point3 x_lb,
 bool isPointInsideAngledRectangle(util::Point3 x, double x_min, double x_max,
                                   double y_min, double y_max, double theta);
 
+/*!
+ * @brief Checks if point is inside a Cuboid
+ * @param x Point
+ * @param x_min X coordinate of left-bottom-back corner point
+ * @param x_max X coordinate of right-top-front corner point
+ * @param y_min Y coordinate of left-bottom-back corner point
+ * @param y_max Y coordinate of right-top-front corner point
+ * @param z_min Z coordinate of left-bottom-back corner point
+ * @param z_max Z coordinate of right-top-front corner point
+ * @return bool True if point inside
+ */
+bool isPointInsideCuboid(util::Point3 x, double x_min, double x_max,
+                            double y_min, double y_max, double z_min, double
+                            z_max);
+
+/*!
+ * @brief Checks if point is inside a Cuboid
+ * @param x Point
+ * @param x_lbb Coordinate of left-bottom-back corner point
+ * @param x_rtf Coordinate of right-top-front corner point
+ * @return bool True if point inside
+ */
+bool isPointInsideCuboid(util::Point3 x, util::Point3 x_lbb,
+                            util::Point3 x_rtf);
+
 } // namespace geometry
 
 } // namespace util

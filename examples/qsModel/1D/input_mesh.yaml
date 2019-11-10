@@ -1,0 +1,10 @@
+Output:
+  Path: ./
+  Mesh: mesh
+  File_Format: vtu
+Domain:
+  - 0.
+  - 16
+Horizon: 2
+Horizon_h_Ratio: 4 
+Compress_Type: zlib
