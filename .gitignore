@@ -41,10 +41,11 @@ core.*
 build
 build_2
 
-# ide directory
+# ide configurattion files
 .idea
 .idea/workspace.xml
-
+.vscode
+.project
 
 # docs directory
 docs/doxy
@@ -53,3 +54,9 @@ docs/conf.doxy
 
 # src directory
 src/Config.h 
+
+# configuration files
+./clang-format
+
+# swap files
+*.*~
