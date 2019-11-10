@@ -53,3 +53,11 @@ docs/conf.doxy
 
 # src directory
 src/Config.h 
+
+# configuration file
+.clang-format
+.project
+.vscode
+
+# swap files
+*.*~
