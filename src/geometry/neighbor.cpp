@@ -7,14 +7,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "neighbor.h"
+
+#include <hpx/include/parallel_algorithm.hpp>
+
 #include "inp/decks/neighborDeck.h"
 #include "util/compare.h"
-#include <hpx/include/parallel_algorithm.hpp>
 
 geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
                              const std::vector<util::Point3> *nodes)
     : d_neighborDeck_p(deck) {
-
   d_neighbors.resize(nodes->size());
 
   auto f = hpx::parallel::for_loop(
@@ -26,17 +27,15 @@ geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
         // within the horizon ball of i_node
         std::vector<size_t> neighs;
         for (size_t j = 0; j < nodes->size(); j++) {
-
-          if (j == i)
-            continue;
+          if (j == i) continue;
 
           if (util::compare::definitelyLessThan(xi.dist((*nodes)[j]),
                                                 horizon + 1.0E-10))
             neighs.push_back(j);
-        } // loop over nodes j
+        }  // loop over nodes j
 
         this->d_neighbors[i] = neighs;
-      }); // end of parallel for loop
+      });  // end of parallel for loop
 
   f.get();
 }

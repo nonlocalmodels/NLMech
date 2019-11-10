@@ -7,24 +7,21 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "uLoading.h"
+
 #include "../inp/decks/loadingDeck.h"
 #include "fe/mesh.h"
-#include "util/utilGeom.h"
 #include "util/compare.h"
+#include "util/utilGeom.h"
 
 loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
-
   d_bcData = deck->d_uBCData;
 
   // fill the list of nodes where bc is applied and also set fixity of these
   // nodes
   for (const auto &bc : d_bcData) {
-
     // check bc first
-    if (bc.d_regionType != "line" and
-        bc.d_regionType != "rectangle" and
-        bc.d_regionType != "angled_rectangle" and
-        bc.d_regionType != "cuboid") {
+    if (bc.d_regionType != "line" and bc.d_regionType != "rectangle" and
+        bc.d_regionType != "angled_rectangle" and bc.d_regionType != "cuboid") {
       std::cerr
           << "Error: Displacement bc region type = " << bc.d_regionType
           << " not recognized. Should be rectangle or angled_rectangle. \n";
@@ -43,7 +40,6 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
     if (bc.d_timeFnType != "constant" and bc.d_timeFnType != "linear" and
         bc.d_timeFnType != "quadratic" and bc.d_timeFnType != "sin") {
-
       std::cerr << "Error: Displacement bc space function type = "
                 << bc.d_timeFnType << " not recognised. "
                 << "Currently constant, linear, quadratic, sin functions are "
@@ -80,25 +76,23 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
     // now loop over nodes
     for (size_t i = 0; i < mesh->getNumNodes(); i++) {
-
       bool fix = false;
       auto xi = mesh->getNode(i);
 
       if (bc.d_regionType == "line")
         fix = util::compare::definitelyGreaterThan(xi.d_x, bc.d_x1) &&
-                util::compare::definitelyLessThan(mesh->getNode(i).d_x, bc.d_x2);
+              util::compare::definitelyLessThan(mesh->getNode(i).d_x, bc.d_x2);
       else if (bc.d_regionType == "rectangle")
         fix = util::geometry::isPointInsideRectangle(xi, bc.d_x1, bc.d_x2,
-                                                       bc.d_y1, bc.d_y2);
+                                                     bc.d_y1, bc.d_y2);
       else if (bc.d_regionType == "angled_rectangle")
         fix = util::geometry::isPointInsideAngledRectangle(
-              xi, bc.d_x1, bc.d_x2, bc.d_y1, bc.d_y2, bc.d_theta);
+            xi, bc.d_x1, bc.d_x2, bc.d_y1, bc.d_y2, bc.d_theta);
       else if (bc.d_regionType == "cuboid")
-        fix = util::geometry::isPointInsideCuboid(
-            xi, bc.d_x1, bc.d_x2, bc.d_y1, bc.d_y2, bc.d_z1, bc.d_z2);
+        fix = util::geometry::isPointInsideCuboid(xi, bc.d_x1, bc.d_x2, bc.d_y1,
+                                                  bc.d_y2, bc.d_z1, bc.d_z2);
 
-      if (!fix)
-        continue;
+      if (!fix) continue;
 
       // loop over direction and set fixity
       for (auto dof : bc.d_direction) {
@@ -108,21 +102,18 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
       // store the id of this node
       fix_nodes.push_back(i);
-    } // loop over nodes
+    }  // loop over nodes
 
     // add computed list of nodes to the data
     d_bcNodes.push_back(fix_nodes);
-  } // loop over bc sets
+  }  // loop over bc sets
 }
 
 void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
                               std::vector<util::Point3> *v, fe::Mesh *mesh) {
-
   for (size_t s = 0; s < d_bcData.size(); s++) {
-
     inp::BCData bc = d_bcData[s];
     for (auto i : d_bcNodes[s]) {
-
       util::Point3 x = mesh->getNode(i);
       double umax = bc.d_timeFnParams[0];
       double du = 0.;
@@ -176,6 +167,6 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
           (*v)[i].d_z = dv;
         }
       }
-    } // loop over nodes
-  }   // loop over bc sets
+    }  // loop over nodes
+  }    // loop over bc sets
 }

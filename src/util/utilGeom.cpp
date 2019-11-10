@@ -7,14 +7,15 @@
 // ////////////////////////////////////////////////////////////////////////////////
 
 #include "utilGeom.h"
+
+#include <cmath>  // definition of sin, cosine etc
+
 #include "compare.h"
 #include "transfomation.h"
-#include <cmath>                      // definition of sin, cosine etc
 
 bool util::geometry::isPointInsideRectangle(util::Point3 x, double x_min,
                                             double x_max, double y_min,
                                             double y_max) {
-
   return !(util::compare::definitelyLessThan(x.d_x, x_min - 1.0E-12) or
            util::compare::definitelyLessThan(x.d_y, y_min - 1.0E-12) or
            util::compare::definitelyGreaterThan(x.d_x, x_max + 1.0E-12) or
@@ -66,10 +67,10 @@ bool util::geometry::isPointInsideAngledRectangle(util::Point3 x, double x1,
            util::compare::definitelyGreaterThan(xmap[1], lam[1] + 1.0E-12));
 }
 
-bool util::geometry::isPointInsideCuboid(util::Point3 x, double x_min, double x_max,
-                                         double y_min, double y_max, double z_min, double
-                                         z_max) {
-
+bool util::geometry::isPointInsideCuboid(util::Point3 x, double x_min,
+                                         double x_max, double y_min,
+                                         double y_max, double z_min,
+                                         double z_max) {
   return !(util::compare::definitelyLessThan(x.d_x, x_min - 1.0E-12) or
            util::compare::definitelyLessThan(x.d_y, y_min - 1.0E-12) or
            util::compare::definitelyLessThan(x.d_z, z_min - 1.0E-12) or
@@ -80,7 +81,6 @@ bool util::geometry::isPointInsideCuboid(util::Point3 x, double x_min, double x_
 
 bool util::geometry::isPointInsideCuboid(util::Point3 x, util::Point3 x_lbb,
                                          util::Point3 x_rtf) {
-
   return util::geometry::isPointInsideCuboid(x, x_lbb.d_x, x_rtf.d_x, x_lbb.d_y,
                                              x_rtf.d_y, x_lbb.d_z, x_rtf.d_z);
 }

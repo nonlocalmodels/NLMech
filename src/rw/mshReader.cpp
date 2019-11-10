@@ -7,9 +7,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "mshReader.h"
-#include "util/feElementDefs.h"
+
 #include <fstream>
 #include <iostream>
+
+#include "util/feElementDefs.h"
 
 rw::reader::MshReader::MshReader(const std::string &filename)
     : d_filename(filename){};
@@ -20,17 +22,16 @@ void rw::reader::MshReader::readMesh(size_t dim,
                                      std::vector<size_t> *enc,
                                      std::vector<std::vector<size_t>> *nec,
                                      std::vector<double> *volumes, bool is_fd) {
-
   std::ifstream filein(d_filename);
 
   // open file
-  if (!d_file)
-    d_file.open(d_filename);
+  if (!d_file) d_file.open(d_filename);
 
   if (!d_file) {
-      std::cerr << "Error: Can not open file = " << d_filename + ".msh" <<".\n";
-      exit(1);
-    }
+    std::cerr << "Error: Can not open file = " << d_filename + ".msh"
+              << ".\n";
+    exit(1);
+  }
 
   std::string line;
   int format = 0;
@@ -78,7 +79,6 @@ void rw::reader::MshReader::readMesh(size_t dim,
       if (line.find("$NOD") == static_cast<std::string::size_type>(0) ||
           line.find("$NOE") == static_cast<std::string::size_type>(0) ||
           line.find("$Nodes") == static_cast<std::string::size_type>(0)) {
-
         read_nodes = true;
         unsigned int num_nodes = 0;
         filein >> num_nodes;
@@ -98,8 +98,8 @@ void rw::reader::MshReader::readMesh(size_t dim,
         }
         // read the $ENDNOD delimiter
         std::getline(filein, line);
-      } // end of reading nodes
-        // Read the element block
+      }  // end of reading nodes
+         // Read the element block
       else if (line.find("$ELM") == static_cast<std::string::size_type>(0) ||
                line.find("$Elements") ==
                    static_cast<std::string::size_type>(0)) {
@@ -122,14 +122,12 @@ void rw::reader::MshReader::readMesh(size_t dim,
         bool found_quad = false;
         bool found_tet = false;
         for (unsigned int iel = 0; iel < num_elem; ++iel) {
-
           unsigned int id;
           unsigned int type;
           unsigned int ntags;
           int tag;
           filein >> id >> type >> ntags;
-          for (unsigned int j = 0; j < ntags; j++)
-            filein >> tag;
+          for (unsigned int j = 0; j < ntags; j++) filein >> tag;
 
           // we will read only those elements which we support
           bool read_this_element = false;
@@ -169,15 +167,13 @@ void rw::reader::MshReader::readMesh(size_t dim,
             }
             // increment the element counter
             elem_counter++;
-          }
-          else {
+          } else {
             // these are the type of elements we need to ignore.
             size_t n = util::msh_map_element_to_num_nodes[type];
             // dummy read
-            for (unsigned int i = 0; i < n; i++)
-              filein >> node_id;
+            for (unsigned int i = 0; i < n; i++) filein >> node_id;
           }
-        } // element loop
+        }  // element loop
 
         // check if mesh contains both triangle and quadrangle elements
         if (found_quad and found_tri) {
@@ -192,32 +188,27 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
         // read the $ENDELM delimiter
         std::getline(filein, line);
-      } // end of reading elements
-    } // if filein
+      }  // end of reading elements
+    }    // if filein
 
     // If !filein, check to see if EOF was set.  If so, break out
     // of while loop.
-    if (filein.eof())
-      break;
+    if (filein.eof()) break;
 
-    if (read_nodes and read_elements)
-      break;
+    if (read_nodes and read_elements) break;
 
     // If !filein and !filein.eof(), stream is in a bad state!
     // std::cerr<<"Error: Stream is bad! Perhaps the file does not exist?\n";
     // exit(1);
-  } // while true
+  }  // while true
 
   // close file
   filein.close();
 }
 
-
-void rw::reader::MshReader::readNodes(std::vector<util::Point3>* nodes){
-
+void rw::reader::MshReader::readNodes(std::vector<util::Point3> *nodes) {
   // open file
-  if (!d_file)
-    d_file = std::ifstream(d_filename);
+  if (!d_file) d_file = std::ifstream(d_filename);
 
   if (!d_file) {
     std::cerr << "Error: Can not open file = " << d_filename + ".msh.\n";
@@ -254,9 +245,8 @@ void rw::reader::MshReader::readNodes(std::vector<util::Point3>* nodes){
       }
       // read $Nodes block
       if (line.find("$NOD") == static_cast<std::string::size_type>(0) ||
-        line.find("$NOE") == static_cast<std::string::size_type>(0) ||
-        line.find("$Nodes") == static_cast<std::string::size_type>(0)) {
-
+          line.find("$NOE") == static_cast<std::string::size_type>(0) ||
+          line.find("$Nodes") == static_cast<std::string::size_type>(0)) {
         read_nodes = true;
         unsigned int num_nodes = 0;
         d_file >> num_nodes;
@@ -275,21 +265,19 @@ void rw::reader::MshReader::readNodes(std::vector<util::Point3>* nodes){
         }
         // read the $ENDNOD delimiter
         std::getline(d_file, line);
-      } // end of reading nodes
-    } // if d_file
+      }  // end of reading nodes
+    }    // if d_file
 
     // If !d_file, check to see if EOF was set.  If so, break out
     // of while loop.
-    if (d_file.eof())
-      break;
+    if (d_file.eof()) break;
 
-    if (read_nodes)
-      break;
+    if (read_nodes) break;
 
     // If !d_file and !d_file.eof(), stream is in a bad state!
     // std::cerr<<"Error: Stream is bad! Perhaps the file does not exist?\n";
     // exit(1);
-  } // while true
+  }  // while true
 
   // close file
   d_file.close();
@@ -297,13 +285,13 @@ void rw::reader::MshReader::readNodes(std::vector<util::Point3>* nodes){
 
 bool rw::reader::MshReader::readPointData(const std::string &name,
                                           std::vector<util::Point3> *data) {
-
   // open file
-  if (!d_file)
-    d_file = std::ifstream(d_filename);
+  if (!d_file) d_file = std::ifstream(d_filename);
 
-  if (!d_file)if (!d_file) {
-      std::cerr << "Error: Can not open file = " << d_filename + ".msh" <<".\n";
+  if (!d_file)
+    if (!d_file) {
+      std::cerr << "Error: Can not open file = " << d_filename + ".msh"
+                << ".\n";
       exit(1);
     }
 
@@ -318,8 +306,7 @@ bool rw::reader::MshReader::readPointData(const std::string &name,
         int num_tags = 0;
         d_file >> num_tags;
         std::string tag[num_tags];
-        for (size_t i=0; i<num_tags; i++)
-          d_file >> tag[i];
+        for (size_t i = 0; i < num_tags; i++) d_file >> tag[i];
 
         // read dummy data
         d_file >> num_tags;
@@ -335,8 +322,9 @@ bool rw::reader::MshReader::readPointData(const std::string &name,
         if (tag[0] == name) {
           // check if data is of desired field type
           if (field_type != 3) {
-            std::cerr << "Error: Data " << tag[0] << " is of type " <<
-            field_type << " but we expect it to be of type " << 3 << ".\n";
+            std::cerr << "Error: Data " << tag[0] << " is of type "
+                      << field_type << " but we expect it to be of type " << 3
+                      << ".\n";
             exit(1);
           }
 
@@ -345,27 +333,23 @@ bool rw::reader::MshReader::readPointData(const std::string &name,
         }
 
         // we read through the data irrespective of we found it or not
-        for (size_t i=0; i<num_data; i++) {
+        for (size_t i = 0; i < num_data; i++) {
           double d[field_type];
-          for (size_t j=0; j<field_type; j++)
-            d_file >> d[j];
+          for (size_t j = 0; j < field_type; j++) d_file >> d[j];
 
-          if (found_data)
-            (*data)[i] = util::Point3(d[0], d[1], d[2]);
+          if (found_data) (*data)[i] = util::Point3(d[0], d[1], d[2]);
         }
         // read the end of data block
         std::getline(d_file, line);
-      } // end of reading nodes
-    } // if d_file
+      }  // end of reading nodes
+    }    // if d_file
 
-    if (found_data)
-      break;
+    if (found_data) break;
 
     // If !d_file, check to see if EOF was set.  If so, break out
     // of while loop.
-    if (d_file.eof())
-      break;
-  } // while true
+    if (d_file.eof()) break;
+  }  // while true
 
   d_file.close();
   return found_data;
@@ -373,13 +357,13 @@ bool rw::reader::MshReader::readPointData(const std::string &name,
 
 bool rw::reader::MshReader::readPointData(const std::string &name,
                                           std::vector<double> *data) {
-
   // open file
-  if (!d_file)
-    d_file = std::ifstream(d_filename);
+  if (!d_file) d_file = std::ifstream(d_filename);
 
-  if (!d_file)if (!d_file) {
-      std::cerr << "Error: Can not open file = " << d_filename + ".msh" <<".\n";
+  if (!d_file)
+    if (!d_file) {
+      std::cerr << "Error: Can not open file = " << d_filename + ".msh"
+                << ".\n";
       exit(1);
     }
 
@@ -394,8 +378,7 @@ bool rw::reader::MshReader::readPointData(const std::string &name,
         int num_tags = 0;
         d_file >> num_tags;
         std::string tag[num_tags];
-        for (size_t i=0; i<num_tags; i++)
-          d_file >> tag[i];
+        for (size_t i = 0; i < num_tags; i++) d_file >> tag[i];
 
         // read dummy data
         d_file >> num_tags;
@@ -411,8 +394,8 @@ bool rw::reader::MshReader::readPointData(const std::string &name,
         if (tag[0] == name) {
           // check if data is of desired field type
           if (field_type != 1) {
-            std::cerr << "Error: Data " << tag[0] << " is of type " <<
-                      field_type << " but we expect it to be of type " << 1
+            std::cerr << "Error: Data " << tag[0] << " is of type "
+                      << field_type << " but we expect it to be of type " << 1
                       << ".\n";
             exit(1);
           }
@@ -422,27 +405,23 @@ bool rw::reader::MshReader::readPointData(const std::string &name,
         }
 
         // we read through the data irrespective of we found it or not
-        for (size_t i=0; i<num_data; i++) {
+        for (size_t i = 0; i < num_data; i++) {
           double d[field_type];
-          for (size_t j=0; j<field_type; j++)
-            d_file >> d[j];
+          for (size_t j = 0; j < field_type; j++) d_file >> d[j];
 
-          if (found_data)
-            (*data)[i] = d[0];
+          if (found_data) (*data)[i] = d[0];
         }
         // read the end of data block
         std::getline(d_file, line);
-      } // end of reading nodes
-    } // if d_file
+      }  // end of reading nodes
+    }    // if d_file
 
-    if (found_data)
-      break;
+    if (found_data) break;
 
     // If !d_file, check to see if EOF was set.  If so, break out
     // of while loop.
-    if (d_file.eof())
-      break;
-  } // while true
+    if (d_file.eof()) break;
+  }  // while true
 
   d_file.close();
   return found_data;

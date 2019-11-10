@@ -7,28 +7,27 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "testGeomLib.h"
-#include "../../external/csv.h"
-#include "geometry/fracture.h"
-#include "inp/decks/fractureDeck.h"
-#include "util/point.h"
+
 #include <bitset>
 #include <fstream>
 #include <iostream>
 
+#include "../../external/csv.h"
+#include "geometry/fracture.h"
+#include "inp/decks/fractureDeck.h"
+#include "util/point.h"
+
 static void readNodes(const std::string &filename,
                       std::vector<util::Point3> &nodes) {
-
   // csv reader
   io::CSVReader<3> in(filename);
   double x, y, z;
-  while (in.read_row(x, y, z))
-    nodes.emplace_back(x, y, z);
+  while (in.read_row(x, y, z)) nodes.emplace_back(x, y, z);
 }
 
 static void printBits(const std::string &filename,
                       const std::vector<util::Point3> &nodes,
                       geometry::Fracture *fracture) {
-
   std::ofstream myfile(filename.c_str());
   myfile.precision(8);
   for (size_t i = 0; i < nodes.size(); i++) {
@@ -43,7 +42,6 @@ static void printBits(const std::string &filename,
 }
 
 void test::testFracture() {
-
   auto *deck = new inp::FractureDeck();
 
   // create dummy list of nodes and neighborlist
@@ -54,8 +52,7 @@ void test::testFracture() {
   std::vector<std::vector<size_t>> neighbor_list;
   neighbor_list.resize(nodes.size());
   for (size_t i = 0; i < nodes.size(); i++)
-    for (size_t j = 0; j < nodes.size(); j++)
-      neighbor_list[i].emplace_back(j);
+    for (size_t j = 0; j < nodes.size(); j++) neighbor_list[i].emplace_back(j);
 
   auto *fracture = new geometry::Fracture(deck, &nodes, &neighbor_list);
 
@@ -66,14 +63,11 @@ void test::testFracture() {
   // now set the bit of neighbors of even node as fixed
   for (size_t i = 0; i < nodes.size(); i++) {
     for (size_t k = 0; k < neighbor_list[i].size(); k++) {
-      if (fracture->getBondState(i, k))
-        error_check++;
+      if (fracture->getBondState(i, k)) error_check++;
 
-      if (i % 2 == 0)
-        fracture->setBondState(i, k, true);
+      if (i % 2 == 0) fracture->setBondState(i, k, true);
 
-      if (i % 2 == 0 and !fracture->getBondState(i, k))
-        error_check++;
+      if (i % 2 == 0 and !fracture->getBondState(i, k)) error_check++;
     }
   }
 
@@ -82,10 +76,8 @@ void test::testFracture() {
     for (size_t k = 0; k < neighbor_list[i].size(); k++) {
       fracture->setBondState(i, k, i % 2 != 0);
 
-      if (i % 2 == 0 and fracture->getBondState(i, k))
-        error_check++;
-      if (i % 2 == 1 and !fracture->getBondState(i, k))
-        error_check++;
+      if (i % 2 == 0 and fracture->getBondState(i, k)) error_check++;
+      if (i % 2 == 1 and !fracture->getBondState(i, k)) error_check++;
     }
   }
 

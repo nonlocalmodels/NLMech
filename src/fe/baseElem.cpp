@@ -7,16 +7,18 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "baseElem.h"
-#include "util/feElementDefs.h"    // global definition of elements
-#include <iostream>                // for std::cerr
+
+#include <iostream>  // for std::cerr
+
+#include "util/feElementDefs.h"  // global definition of elements
 
 fe::BaseElem::BaseElem(size_t order, size_t element_type)
-    : d_quadOrder(order), d_elemType(element_type),
+    : d_quadOrder(order),
+      d_elemType(element_type),
       d_numQuadPts(util::vtk_map_element_to_num_nodes[element_type]){};
 
-std::vector<double>
-fe::BaseElem::getShapes(const util::Point3 &p,
-                        const std::vector<util::Point3> &nodes) {
+std::vector<double> fe::BaseElem::getShapes(
+    const util::Point3 &p, const std::vector<util::Point3> &nodes) {
   std::cerr << "Error: For element type = " << d_elemType << " the map from "
             << "element to reference element is not available.\n"
             << "Therefore, shape function evaluation at any arbitrary point "
@@ -24,9 +26,8 @@ fe::BaseElem::getShapes(const util::Point3 &p,
   exit(1);
 }
 
-std::vector<std::vector<double>>
-fe::BaseElem::getDerShapes(const util::Point3 &p,
-                           const std::vector<util::Point3> &nodes) {
+std::vector<std::vector<double>> fe::BaseElem::getDerShapes(
+    const util::Point3 &p, const std::vector<util::Point3> &nodes) {
   std::cerr << "Error: For element type = " << d_elemType << " the map from "
             << "element to reference element is not available.\n"
             << "Therefore, derivatives of shape function at any "
@@ -34,16 +35,14 @@ fe::BaseElem::getDerShapes(const util::Point3 &p,
   exit(1);
 }
 
-util::Point3
-fe::BaseElem::mapPointToRefElem(const util::Point3 &p,
-                                const std::vector<util::Point3> &nodes) {
+util::Point3 fe::BaseElem::mapPointToRefElem(
+    const util::Point3 &p, const std::vector<util::Point3> &nodes) {
   std::cerr << "Error: For element type = " << d_elemType << " the map from "
             << "element to reference element is not available.\n";
   exit(1);
 }
 
 void fe::BaseElem::init() {
-
   std::cerr << "Error: init() of BaseElem must be implemented in inheriting "
                "class.\n";
   exit(1);

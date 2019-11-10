@@ -7,33 +7,40 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "mesh.h"
-#include "inp/decks/meshDeck.h"
-#include "inp/policy.h"
-#include "lineElem.h"
-#include "triElem.h"
-#include "quadElem.h"
-#include "tetElem.h"
-#include "rw/reader.h"
-#include "util/feElementDefs.h"
+
+#include <stdint.h>
+#include <util/compare.h>
+
 #include <cstdint>
 #include <fstream>
 #include <hpx/include/parallel_algorithm.hpp>
 #include <iostream>
-#include <stdint.h>
-#include <util/compare.h>
+
+#include "inp/decks/meshDeck.h"
+#include "inp/policy.h"
+#include "lineElem.h"
+#include "quadElem.h"
+#include "rw/reader.h"
+#include "tetElem.h"
+#include "triElem.h"
+#include "util/feElementDefs.h"
 
 fe::Mesh::Mesh(inp::MeshDeck *deck)
-    : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
-      d_h(deck->d_h), d_dim(deck->d_dim),
+    : d_numNodes(0),
+      d_numElems(0),
+      d_eType(1),
+      d_eNumVertex(0),
+      d_numDofs(0),
+      d_h(deck->d_h),
+      d_dim(deck->d_dim),
       d_spatialDiscretization(deck->d_spatialDiscretization),
       d_filename(deck->d_filename) {
-
   // perform check on input data
   if (d_spatialDiscretization != "finite_difference" and
       d_spatialDiscretization != "weak_finite_element" and
       d_spatialDiscretization != "nodal_finite_element" and
       d_spatialDiscretization != "truss_finite_element" and
-	  d_spatialDiscretization != "quasi_static" ) {
+      d_spatialDiscretization != "quasi_static") {
     std::cerr << "Error: Spatial discretization type not known. Check input "
                  "data.\n";
     exit(1);
@@ -58,27 +65,21 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
   createData(d_filename);
 
   // check if we need to compute mesh size
-  if (deck->d_computeMeshSize)
-    computeMeshSize();
+  if (deck->d_computeMeshSize) computeMeshSize();
 }
 
 //
 // Utility functions
 //
 void fe::Mesh::createData(const std::string &filename) {
-
   int file_type = -1;
 
   // find the extension of file and call correct reader
-  if (filename.substr(filename.find_last_of(".") + 1) == "csv")
-    file_type = 0;
-  if (filename.substr(filename.find_last_of(".") + 1) == "vtu")
-    file_type = 1;
-  if (filename.substr(filename.find_last_of(".") + 1) == "msh")
-    file_type = 2;
+  if (filename.substr(filename.find_last_of(".") + 1) == "csv") file_type = 0;
+  if (filename.substr(filename.find_last_of(".") + 1) == "vtu") file_type = 1;
+  if (filename.substr(filename.find_last_of(".") + 1) == "msh") file_type = 2;
 
   if (d_spatialDiscretization != "finite_difference" and file_type == 0) {
-
     std::cerr << "Error: For discretization = " << d_spatialDiscretization
               << " .vtu or .msh mesh file is required.\n";
     exit(1);
@@ -86,8 +87,7 @@ void fe::Mesh::createData(const std::string &filename) {
 
   //
   bool is_fd = false;
-  if (d_spatialDiscretization == "finite_difference")
-    is_fd = true;
+  if (d_spatialDiscretization == "finite_difference") is_fd = true;
 
   //
   // read node and elements
@@ -116,8 +116,7 @@ void fe::Mesh::createData(const std::string &filename) {
   // compute nodal volume if required
   //
   bool compute_vol = false;
-  if (is_fd and d_vol.empty())
-    compute_vol = true;
+  if (is_fd and d_vol.empty()) compute_vol = true;
 
   // if this is weak finite element simulation then check from policy if
   // volume is to be computed
@@ -137,7 +136,6 @@ void fe::Mesh::createData(const std::string &filename) {
 }
 
 void fe::Mesh::computeVol() {
-
   // initialize quadrature data
   fe::BaseElem *quads;
   if (d_eType == util::vtk_type_triangle)
@@ -159,14 +157,12 @@ void fe::Mesh::computeVol() {
         double v = 0.0;
 
         for (auto e : this->d_nec[i]) {
-
           std::vector<size_t> e_ns = this->getElementConnectivity(e);
 
           // locate global node i in local list of element el
           int loc_i = -1;
           for (size_t l = 0; l < e_ns.size(); l++)
-            if (e_ns[l] == i)
-              loc_i = l;
+            if (e_ns[l] == i) loc_i = l;
 
           if (loc_i == -1) {
             std::cerr << "Error: Check node element connectivity.\n";
@@ -175,39 +171,31 @@ void fe::Mesh::computeVol() {
 
           // get quad data
           std::vector<util::Point3> e_nodes;
-          for (auto k : e_ns)
-            e_nodes.emplace_back(this->d_nodes[k]);
+          for (auto k : e_ns) e_nodes.emplace_back(this->d_nodes[k]);
 
           std::vector<fe::QuadData> qds = quads->getQuadDatas(e_nodes);
 
           // compute V_e and add it to volume
-          for (auto qd : qds)
-            v += qd.d_shapes[loc_i] * qd.d_w;
-        } // loop over elements
+          for (auto qd : qds) v += qd.d_shapes[loc_i] * qd.d_w;
+        }  // loop over elements
 
         // update
         this->d_vol[i] = v;
-      }); // end of parallel for loop
+      });  // end of parallel for loop
 
   f.get();
 }
 
 void fe::Mesh::computeBBox() {
-  std::vector<double> p1(3,0.);
-  std::vector<double> p2(3,0.);
+  std::vector<double> p1(3, 0.);
+  std::vector<double> p2(3, 0.);
   for (auto x : d_nodes) {
-    if (util::compare::definitelyLessThan(x.d_x, p1[0]))
-      p1[0] = x.d_x;
-    if (util::compare::definitelyLessThan(x.d_y, p1[1]))
-      p1[1] = x.d_y;
-    if (util::compare::definitelyLessThan(x.d_z, p1[2]))
-      p1[2] = x.d_z;
-    if (util::compare::definitelyLessThan(p2[0], x.d_x))
-      p2[0] = x.d_x;
-    if (util::compare::definitelyLessThan(p2[1], x.d_y))
-      p2[1] = x.d_y;
-    if (util::compare::definitelyLessThan(p2[2], x.d_z))
-      p2[2] = x.d_z;
+    if (util::compare::definitelyLessThan(x.d_x, p1[0])) p1[0] = x.d_x;
+    if (util::compare::definitelyLessThan(x.d_y, p1[1])) p1[1] = x.d_y;
+    if (util::compare::definitelyLessThan(x.d_z, p1[2])) p1[2] = x.d_z;
+    if (util::compare::definitelyLessThan(p2[0], x.d_x)) p2[0] = x.d_x;
+    if (util::compare::definitelyLessThan(p2[1], x.d_y)) p2[1] = x.d_y;
+    if (util::compare::definitelyLessThan(p2[2], x.d_z)) p2[2] = x.d_z;
   }
 
   d_bbox = std::make_pair(p1, p2);
@@ -225,8 +213,7 @@ void fe::Mesh::computeMeshSize() {
     for (size_t j = 0; j < d_nodes.size(); j++)
       if (i != j) {
         double val = d_nodes[i].dist(d_nodes[j]);
-        if (val < guess)
-          guess = val;
+        if (val < guess) guess = val;
       }
 
   d_h = guess;
@@ -239,7 +226,7 @@ size_t fe::Mesh::getDimension() { return d_dim; }
 
 size_t fe::Mesh::getNumNodes() { return d_numNodes; }
 
-size_t fe::Mesh::getNumElements() { return d_enc.size()/d_eNumVertex; }
+size_t fe::Mesh::getNumElements() { return d_enc.size() / d_eNumVertex; }
 
 size_t fe::Mesh::getNumDofs() { return d_numDofs; }
 
@@ -262,8 +249,8 @@ const std::vector<size_t> fe::Mesh::getElementConnectivity(const size_t &i) {
                              d_enc.begin() + d_eNumVertex * i + d_eNumVertex);
 }
 
-const std::vector<util::Point3>
-fe::Mesh::getElementConnectivityNodes(const size_t &i) {
+const std::vector<util::Point3> fe::Mesh::getElementConnectivityNodes(
+    const size_t &i) {
   std::vector<util::Point3> nds;
   for (size_t k = 0; k < d_eNumVertex; k++)
     nds.emplace_back(d_nodes[d_enc[d_eNumVertex * i + k]]);
@@ -274,13 +261,11 @@ const std::vector<size_t> *fe::Mesh::getElementConnectivitiesP() {
   return &d_enc;
 }
 
-
 std::pair<std::vector<double>, std::vector<double>> fe::Mesh::getBoundingBox() {
   return d_bbox;
 }
 
 bool fe::Mesh::isNodeFree(const size_t &i, const unsigned int &dof) {
-
   // below checks if d_fix has 1st bit (if dof=0), 2nd bit (if dof=1), 3rd
   // bit (if dof=2) is set to 1 or 0. If set to 1, then it means it is fixed,
   // and therefore it returns false
@@ -292,7 +277,6 @@ bool fe::Mesh::isNodeFree(const size_t &i, const unsigned int &dof) {
 //
 void fe::Mesh::setFixity(const size_t &i, const unsigned int &dof,
                          const bool &flag) {
-
   // to set i^th bit as true of integer a,
   // a |= 1UL << (i % 8)
 
@@ -302,9 +286,7 @@ void fe::Mesh::setFixity(const size_t &i, const unsigned int &dof,
   flag ? (d_fix[i] |= 1UL << dof) : (d_fix[i] &= ~(1UL << dof));
 }
 void fe::Mesh::clearElementData() {
-  if (!d_enc.empty())
-    d_enc.shrink_to_fit();
+  if (!d_enc.empty()) d_enc.shrink_to_fit();
   d_numElems = 0;
-  if (!d_nec.empty())
-    d_nec.shrink_to_fit();
+  if (!d_nec.empty()) d_nec.shrink_to_fit();
 }

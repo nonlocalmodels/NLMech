@@ -7,11 +7,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "quadElem.h"
-#include "util/feElementDefs.h"     // global definition of elements
+
+#include "util/feElementDefs.h"  // global definition of elements
 
 fe::QuadElem::QuadElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_quad) {
-
   // compute quad data
   this->init();
 }
@@ -24,17 +24,13 @@ double fe::QuadElem::elemSize(const std::vector<util::Point3> &nodes) {
               (-nodes[0].d_y + nodes[1].d_y + nodes[2].d_y - nodes[3].d_y));
 }
 
-
-
-std::vector<fe::QuadData>
-fe::QuadElem::getQuadDatas(const std::vector<util::Point3> &nodes) {
-
+std::vector<fe::QuadData> fe::QuadElem::getQuadDatas(
+    const std::vector<util::Point3> &nodes) {
   // copy quad data associated to reference element
   auto qds = d_quads;
 
   // modify data
   for (auto &qd : qds) {
-
     // get Jacobian and determinant
     qd.d_detJ = getJacobian(qd.d_p, nodes, &(qd.d_J));
 
@@ -43,20 +39,22 @@ fe::QuadElem::getQuadDatas(const std::vector<util::Point3> &nodes) {
 
     // map point to triangle
     qd.d_p.d_x = qd.d_shapes[0] * nodes[0].d_x + qd.d_shapes[1] * nodes[1].d_x +
-        qd.d_shapes[2] * nodes[2].d_x + qd.d_shapes[3] * nodes[3].d_x;
+                 qd.d_shapes[2] * nodes[2].d_x + qd.d_shapes[3] * nodes[3].d_x;
     qd.d_p.d_y = qd.d_shapes[0] * nodes[0].d_y + qd.d_shapes[1] * nodes[1].d_y +
-        qd.d_shapes[2] * nodes[2].d_y + qd.d_shapes[3] * nodes[3].d_y;
+                 qd.d_shapes[2] * nodes[2].d_y + qd.d_shapes[3] * nodes[3].d_y;
 
     // derivatives of shape function
     std::vector<std::vector<double>> ders;
 
-    for (size_t i=3; i<4; i++) {
+    for (size_t i = 3; i < 4; i++) {
       // partial N_i/ partial x
-      auto d1 = (qd.d_derShapes[i][0] * qd.d_J[1][1] - qd.d_derShapes[i][1] *
-          qd.d_J[0][1]) / qd.d_detJ;
+      auto d1 = (qd.d_derShapes[i][0] * qd.d_J[1][1] -
+                 qd.d_derShapes[i][1] * qd.d_J[0][1]) /
+                qd.d_detJ;
       // partial N_i/ partial y
-      auto d2 = (-qd.d_derShapes[i][0] * qd.d_J[1][0] + qd.d_derShapes[i][1] *
-          qd.d_J[0][0]) / qd.d_detJ;
+      auto d2 = (-qd.d_derShapes[i][0] * qd.d_J[1][0] +
+                 qd.d_derShapes[i][1] * qd.d_J[0][0]) /
+                qd.d_detJ;
 
       ders.push_back(std::vector<double>{d1, d2});
     }
@@ -66,30 +64,27 @@ fe::QuadElem::getQuadDatas(const std::vector<util::Point3> &nodes) {
   return qds;
 }
 
-std::vector<fe::QuadData>
-fe::QuadElem::getQuadPoints(const std::vector<util::Point3> &nodes) {
-
+std::vector<fe::QuadData> fe::QuadElem::getQuadPoints(
+    const std::vector<util::Point3> &nodes) {
   // copy quad data associated to reference element
   auto qds = d_quads;
 
   // modify data
   for (auto &qd : qds) {
-
     // transform quad weight
     qd.d_w *= getJacobian(qd.d_p, nodes, nullptr);
 
     // map point to triangle
     qd.d_p.d_x = qd.d_shapes[0] * nodes[0].d_x + qd.d_shapes[1] * nodes[1].d_x +
-        qd.d_shapes[2] * nodes[2].d_x + qd.d_shapes[3] * nodes[3].d_x;
+                 qd.d_shapes[2] * nodes[2].d_x + qd.d_shapes[3] * nodes[3].d_x;
     qd.d_p.d_y = qd.d_shapes[0] * nodes[0].d_y + qd.d_shapes[1] * nodes[1].d_y +
-        qd.d_shapes[2] * nodes[2].d_y + qd.d_shapes[3] * nodes[3].d_y;
+                 qd.d_shapes[2] * nodes[2].d_y + qd.d_shapes[3] * nodes[3].d_y;
   }
 
   return qds;
 }
 
 std::vector<double> fe::QuadElem::getShapes(const util::Point3 &p) {
-
   // N1 = (1 - xi)(1 - eta)/4
   // N2 = (1 + xi)(1 - eta)/4
   // N3 = (1 + xi)(1 + eta)/4
@@ -99,9 +94,8 @@ std::vector<double> fe::QuadElem::getShapes(const util::Point3 &p) {
       0.25 * (1. + p.d_x) * (1. + p.d_y), 0.25 * (1. - p.d_x) * (1. + p.d_y)};
 }
 
-std::vector<std::vector<double>>
-fe::QuadElem::getDerShapes(const util::Point3 &p) {
-
+std::vector<std::vector<double>> fe::QuadElem::getDerShapes(
+    const util::Point3 &p) {
   // N1 = (1 - xi)(1 - eta)/4
   // --> d N1/d xi = -(1 - eta)/4, d N1/d eta = -(1 - xi)/4
   //
@@ -123,9 +117,8 @@ fe::QuadElem::getDerShapes(const util::Point3 &p) {
 }
 
 double fe::QuadElem::getJacobian(const util::Point3 &p,
-                                const std::vector<util::Point3> &nodes,
-                                std::vector<std::vector<double>> *J) {
-
+                                 const std::vector<util::Point3> &nodes,
+                                 std::vector<std::vector<double>> *J) {
   auto der_shapes = getDerShapes(p);
   if (J != nullptr) {
     J->resize(2);
@@ -158,7 +151,6 @@ double fe::QuadElem::getJacobian(const util::Point3 &p,
 }
 
 void fe::QuadElem::init() {
-
   //
   // compute quad data for reference quadrangle with vertex at
   // p1 = (-1,-1), p2 = (1,-1), p3 = (1,1), p4 = (-1,1)
@@ -178,12 +170,10 @@ void fe::QuadElem::init() {
   //  (i,j) point is (xi, xj) and weight is wi \times wj
   //
 
-  if (!d_quads.empty())
-    return;
+  if (!d_quads.empty()) return;
 
   // no point in zeroth order
-  if (d_quadOrder == 0)
-    d_quads.resize(0);
+  if (d_quadOrder == 0) d_quads.resize(0);
 
   // 2x2 identity matrix
   std::vector<std::vector<double>> ident_mat;
@@ -201,7 +191,6 @@ void fe::QuadElem::init() {
     std::vector<double> w = std::vector<double>(1, 2.);
     for (size_t i = 0; i < npts; i++)
       for (size_t j = 0; j < npts; j++) {
-
         fe::QuadData qd;
         qd.d_w = w[i] * w[j];
         qd.d_p = util::Point3(x[i], x[j], 0.);
@@ -225,7 +214,6 @@ void fe::QuadElem::init() {
     std::vector<double> w = std::vector<double>{1., 1.};
     for (size_t i = 0; i < npts; i++)
       for (size_t j = 0; j < npts; j++) {
-
         fe::QuadData qd;
         qd.d_w = w[i] * w[j];
         qd.d_p = util::Point3(x[i], x[j], 0.);
@@ -250,7 +238,6 @@ void fe::QuadElem::init() {
     std::vector<double> w = std::vector<double>{5. / 9., 8. / 9., 5. / 9.};
     for (size_t i = 0; i < npts; i++)
       for (size_t j = 0; j < npts; j++) {
-
         fe::QuadData qd;
         qd.d_w = w[i] * w[j];
         qd.d_p = util::Point3(x[i], x[j], 0.);
@@ -276,7 +263,6 @@ void fe::QuadElem::init() {
                             0.3478548451374538, 0.3478548451374538};
     for (size_t i = 0; i < npts; i++)
       for (size_t j = 0; j < npts; j++) {
-
         fe::QuadData qd;
         qd.d_w = w[i] * w[j];
         qd.d_p = util::Point3(x[i], x[j], 0.);
@@ -302,7 +288,6 @@ void fe::QuadElem::init() {
         0.2369268850561891, 0.2369268850561891};
     for (size_t i = 0; i < npts; i++)
       for (size_t j = 0; j < npts; j++) {
-
         fe::QuadData qd;
         qd.d_w = w[i] * w[j];
         qd.d_p = util::Point3(x[i], x[j], 0.);

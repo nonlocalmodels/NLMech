@@ -7,15 +7,21 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "rnpBond.h"
+
+#include <iostream>
+
 #include "inp/decks/materialDeck.h"
 #include "util/compare.h"
-#include <iostream>
 
 material::pd::RNPBond::RNPBond(inp::MaterialDeck *deck, const size_t &dim,
                                const double &horizon, const double &M)
-    : BaseMaterial(dim, horizon), d_C(0.), d_beta(0.), d_rbar(0.),
-      d_invFactor(0.), d_factorSc(1.), d_irrevBondBreak(true) {
-
+    : BaseMaterial(dim, horizon),
+      d_C(0.),
+      d_beta(0.),
+      d_rbar(0.),
+      d_invFactor(0.),
+      d_factorSc(1.),
+      d_irrevBondBreak(true) {
   d_irrevBondBreak = deck->d_irreversibleBondBreak;
   d_factorSc = deck->d_checkScFactor;
   if (dim == 1)
@@ -96,18 +102,17 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
         deck->d_matData.d_KIc, deck->d_matData.d_nu, deck->d_matData.d_E);
 
   // compute lame parameter
-  deck->d_matData.d_lambda = deck->d_matData.toLambdaE(deck->d_matData.d_E,
-      deck->d_matData.d_nu);
-  deck->d_matData.d_G = deck->d_matData.toGE(deck->d_matData.d_E,
-                                                  deck->d_matData.d_nu);
+  deck->d_matData.d_lambda =
+      deck->d_matData.toLambdaE(deck->d_matData.d_E, deck->d_matData.d_nu);
+  deck->d_matData.d_G =
+      deck->d_matData.toGE(deck->d_matData.d_E, deck->d_matData.d_nu);
   deck->d_matData.d_mu = deck->d_matData.d_G;
 
   // compute peridynamic parameters
   if (d_dimension == 2) {
     d_C = M_PI * deck->d_matData.d_Gc / (4. * M);
     d_beta = 4. * deck->d_matData.d_lambda / (d_C * M);
-  }
-  else if (d_dimension == 3) {
+  } else if (d_dimension == 3) {
     d_C = 2. * deck->d_matData.d_Gc / (3. * M);
     d_beta = 5. * deck->d_matData.d_lambda / (d_C * M);
   }
@@ -116,7 +121,7 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
 }
 
 void material::pd::RNPBond::computeMaterialProperties(inp::MaterialDeck *deck,
-                                              const double &M) {
+                                                      const double &M) {
   // set Poisson's ratio to 1/4
   deck->d_matData.d_nu = 0.25;
 
@@ -130,12 +135,12 @@ void material::pd::RNPBond::computeMaterialProperties(inp::MaterialDeck *deck,
   }
   deck->d_matData.d_mu = deck->d_matData.d_lambda;
   deck->d_matData.d_G = deck->d_matData.d_lambda;
-  deck->d_matData.d_E = deck->d_matData.toELambda(deck->d_matData.d_lambda,
-      deck->d_matData.d_nu);
-  deck->d_matData.d_K = deck->d_matData.toK(deck->d_matData.d_E,
-      deck->d_matData.d_nu);
+  deck->d_matData.d_E =
+      deck->d_matData.toELambda(deck->d_matData.d_lambda, deck->d_matData.d_nu);
+  deck->d_matData.d_K =
+      deck->d_matData.toK(deck->d_matData.d_E, deck->d_matData.d_nu);
   deck->d_matData.d_KIc = deck->d_matData.toKIc(
-        deck->d_matData.d_Gc, deck->d_matData.d_nu, deck->d_matData.d_E);
+      deck->d_matData.d_Gc, deck->d_matData.d_nu, deck->d_matData.d_E);
 }
 
 /*
@@ -160,10 +165,8 @@ material::pd::RNPBond::getBondEF(const double &r, const double &s,
 }
 */
 
-std::pair<double, double>
-material::pd::RNPBond::getBondEFNoFail(const double &r, const double &s,
-                                       const double &influence) {
-
+std::pair<double, double> material::pd::RNPBond::getBondEFNoFail(
+    const double &r, const double &s, const double &influence) {
   // Return force and energy for no-fail region bonds
   return std::make_pair(influence * d_C * d_beta * r * s * s / d_invFactor,
                         influence * 4. * s * d_C * d_beta / d_invFactor);

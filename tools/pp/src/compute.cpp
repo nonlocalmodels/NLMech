@@ -7,42 +7,58 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "compute.h"
-#include "inp/input.h"              // definition of Input
-#include "inp/decks/materialDeck.h" // definition of MaterialDeck
-#include "inp/decks/modelDeck.h"    // definition of ModelDeck
-#include "inp/decks/outputDeck.h"   // definition of OutputDeck
-#include "inp/policy.h"         // definition of Policy
-#include "fe/mesh.h"                // definition of Mesh
-#include "fe/lineElem.h"        // definition of LineElem
-#include "fe/quadElem.h"        // definition of QuadElem
-#include "fe/triElem.h"         // definition of TriElem
-#include "geometry/fracture.h"      // definition of Fracture
-#include "geometry/neighbor.h"      // definition of Neighbor
-#include "material/pdMaterial.h"    // definition of Material
-#include "rw/writer.h"              // definition of WriterInterface
-#include "rw/reader.h"          // definition of readVtuFileRestart
-#include "external/csv.h"       // csv reader
-#include "util/feElementDefs.h" // definition of fe element type
-#include "util/utilGeom.h"      // definition of isPointInsideRectangle
-#include "util/fastMethods.h"   // max and min operation
+
+#include <yaml-cpp/yaml.h>  // YAML reader
+
 #include <cmath>
 #include <hpx/include/parallel_algorithm.hpp>
 #include <iostream>
-#include <yaml-cpp/yaml.h> // YAML reader
+
+#include "external/csv.h"            // csv reader
+#include "fe/lineElem.h"             // definition of LineElem
+#include "fe/mesh.h"                 // definition of Mesh
+#include "fe/quadElem.h"             // definition of QuadElem
+#include "fe/triElem.h"              // definition of TriElem
+#include "geometry/fracture.h"       // definition of Fracture
+#include "geometry/neighbor.h"       // definition of Neighbor
+#include "inp/decks/materialDeck.h"  // definition of MaterialDeck
+#include "inp/decks/modelDeck.h"     // definition of ModelDeck
+#include "inp/decks/outputDeck.h"    // definition of OutputDeck
+#include "inp/input.h"               // definition of Input
+#include "inp/policy.h"              // definition of Policy
+#include "material/pdMaterial.h"     // definition of Material
+#include "rw/reader.h"               // definition of readVtuFileRestart
+#include "rw/writer.h"               // definition of WriterInterface
+#include "util/fastMethods.h"        // max and min operation
+#include "util/feElementDefs.h"      // definition of fe element type
+#include "util/utilGeom.h"           // definition of isPointInsideRectangle
 
 bool minSortZ(tools::pp::SortZ a, tools::pp::SortZ b) {
   return util::compare::definitelyLessThan(a.d_Z, b.d_Z);
 }
 
 tools::pp::Compute::Compute(const std::string &filename)
-    : d_inpFilename(filename), d_tagZ("Damage_Z"), d_nOut(0), d_nC(0),
-      d_time(0.), d_currentData(nullptr), d_dtOutChange(0),
-      d_writerReady(false), d_uPlus(false), d_dtN(0), d_dtStart(0), d_dtEnd(0),
-      d_modelDeck_p(nullptr), d_outputDeck_p(nullptr),
-      d_fractureDeck_p(nullptr), d_matDeck_p(nullptr), d_mesh_p(nullptr),
-      d_fracture_p(nullptr), d_neighbor_p(nullptr), d_input_p(nullptr),
+    : d_inpFilename(filename),
+      d_tagZ("Damage_Z"),
+      d_nOut(0),
+      d_nC(0),
+      d_time(0.),
+      d_currentData(nullptr),
+      d_dtOutChange(0),
+      d_writerReady(false),
+      d_uPlus(false),
+      d_dtN(0),
+      d_dtStart(0),
+      d_dtEnd(0),
+      d_modelDeck_p(nullptr),
+      d_outputDeck_p(nullptr),
+      d_fractureDeck_p(nullptr),
+      d_matDeck_p(nullptr),
+      d_mesh_p(nullptr),
+      d_fracture_p(nullptr),
+      d_neighbor_p(nullptr),
+      d_input_p(nullptr),
       d_material_p(nullptr) {
-
   init();
 
   // take the smaller output interval as dt_out
@@ -56,20 +72,17 @@ tools::pp::Compute::Compute(const std::string &filename)
     // less than the time step when the change in output will happen
     bool process_iN = true;
     if (d_nOut < d_dtOutChange)
-      if (current_step % dt_out_old != 0)
-        process_iN = false;
+      if (current_step % dt_out_old != 0) process_iN = false;
 
-    if(!process_iN)
-      continue;
+    if (!process_iN) continue;
 
     // get correct factor for dt interval
-    if (d_nOut >=  d_dtOutChange)
-      dt_interval_factor = 1;
+    if (d_nOut >= d_dtOutChange) dt_interval_factor = 1;
 
     // current time
     d_time = current_step * d_modelDeck_p->d_dt;
 
-    std::cout << "PP_fe2D: Processing output file = " << d_nOut  << "\n";
+    std::cout << "PP_fe2D: Processing output file = " << d_nOut << "\n";
 
     // mesh filename to read displacement and velocity
     std::string sim_out_filename =
@@ -79,13 +92,12 @@ tools::pp::Compute::Compute(const std::string &filename)
     bool read_file = false;
     for (const auto &data : d_computeData)
       read_file = (d_nOut >= data.d_start && d_nOut <= data.d_end);
-    if (!read_file)
-      continue;
+    if (!read_file) continue;
 
     // get displacement and velocity
     if (d_outputDeck_p->d_outFormat == "vtu")
       rw::reader::readVtuFileRestart(sim_out_filename, &d_u, &d_v,
-                                   d_mesh_p->getNodesP());
+                                     d_mesh_p->getNodesP());
     else if (d_outputDeck_p->d_outFormat == "msh")
       rw::reader::readMshFileRestart(sim_out_filename, &d_u, &d_v,
                                      d_mesh_p->getNodesP());
@@ -109,22 +121,20 @@ tools::pp::Compute::Compute(const std::string &filename)
         continue;
 
       // skip d_interval number of simulation file after processing 1 file
-      // For now, we have different method to check when compute set includes 
+      // For now, we have different method to check when compute set includes
       // crack tip calculation
       bool skip_nout = false;
       if (d_currentData->d_computeJInt_p) {
-        if ((d_nOut - d_currentData->d_start) % (dt_interval_factor * d_currentData->d_interval) != 0)
+        if ((d_nOut - d_currentData->d_start) %
+                (dt_interval_factor * d_currentData->d_interval) !=
+            0)
           skip_nout = true;
-      }
-      else {
+      } else {
         if (d_nOut % (dt_interval_factor * d_currentData->d_interval) != 0)
           skip_nout = true;
       }
 
-      if (skip_nout)
-        continue;
-
-
+      if (skip_nout) continue;
 
       std::cout << "  PP_fe2D: Processing compute set = " << d_nC + 1 << "\n";
 
@@ -144,18 +154,15 @@ tools::pp::Compute::Compute(const std::string &filename)
       // nodal damage
       std::vector<double> Z;
       findCrackTip(&Z, &writer);
-      if (d_currentData->d_damageAtNodes)
-        computeDamage(&writer, &Z, true);
-      if (!Z.empty())
-        Z.shrink_to_fit();
+      if (d_currentData->d_damageAtNodes) computeDamage(&writer, &Z, true);
+      if (!Z.empty()) Z.shrink_to_fit();
 
       computeJIntegral();
 
       // close file
-      if (d_writerReady)
-        writer.close();
-    } // loop compute set
-  }   // loop simulation output
+      if (d_writerReady) writer.close();
+    }  // loop compute set
+  }    // loop simulation output
 
   finalize();
 }
@@ -172,7 +179,7 @@ void tools::pp::Compute::init() {
 
   if (config["Simulation_Input_File"])
     d_simInpFilename =
-      source_path + "/" + config["Simulation_Input_File"].as<std::string>();
+        source_path + "/" + config["Simulation_Input_File"].as<std::string>();
   else {
     std::cerr << "Error: Simulation input file is not provided.\n";
     exit(1);
@@ -197,7 +204,7 @@ void tools::pp::Compute::init() {
   if (config["Output"]["Path"])
     d_outPath = config["Output"]["Path"].as<std::string>();
   else
-    d_outPath = "./"; // default
+    d_outPath = "./";  // default
 
   //  if (config["Output"]["Filename"])
   //    d_outPreTag =
@@ -210,11 +217,9 @@ void tools::pp::Compute::init() {
 
   // read global start and end output step if provided
   d_dtStart = 1;
-  if (config["Dt_Start"])
-    d_dtStart = config["Dt_Start"].as<int>();
+  if (config["Dt_Start"]) d_dtStart = config["Dt_Start"].as<int>();
   d_dtEnd = d_dtN;
-  if (config["Dt_End"])
-    d_dtEnd = config["Dt_End"].as<int>();
+  if (config["Dt_End"]) d_dtEnd = config["Dt_End"].as<int>();
 
   // handle change in output interval
   d_dtOutChange = d_modelDeck_p->d_Nt;
@@ -271,10 +276,8 @@ void tools::pp::Compute::init() {
     std::string set = "Set_" + std::to_string(c + 1);
     auto data = tools::pp::InstructionData();
     readComputeInstruction(set, &data);
-    if (data.d_start == -1)
-      data.d_start = d_dtStart;
-    if (data.d_end == -1)
-      data.d_end = d_dtEnd;
+    if (data.d_start == -1) data.d_start = d_dtStart;
+    if (data.d_end == -1) data.d_end = d_dtEnd;
 
     d_computeData.emplace_back(data);
   }
@@ -287,7 +290,6 @@ void tools::pp::Compute::init() {
       // check which point, top/bottom, we need to track
       auto bbox = d_mesh_p->getBoundingBox();
       for (auto &ck : d.d_findCrackTip_p->d_cracks) {
-
         // point should be in smaller box inside bounding box
         ck.d_trackt = util::geometry::isPointInsideRectangle(
             ck.d_pt, bbox.first[0] + d_modelDeck_p->d_horizon,
@@ -300,7 +302,7 @@ void tools::pp::Compute::init() {
             bbox.second[0] - d_modelDeck_p->d_horizon,
             bbox.first[1] + d_modelDeck_p->d_horizon,
             bbox.second[1] - d_modelDeck_p->d_horizon);
-      } // modify crack track status
+      }  // modify crack track status
     }
   }
 
@@ -322,26 +324,21 @@ void tools::pp::Compute::init() {
 }
 
 void tools::pp::Compute::finalize() {
-
   // close open file
   for (const auto &c : d_computeData) {
     if (c.d_computeJInt_p) {
-      if (c.d_computeJInt_p->d_file)
-        fclose(c.d_computeJInt_p->d_file);
+      if (c.d_computeJInt_p->d_file) fclose(c.d_computeJInt_p->d_file);
     }
 
     if (c.d_findCrackTip_p) {
-      if (c.d_findCrackTip_p->d_filet)
-        fclose(c.d_findCrackTip_p->d_filet);
-      if (c.d_findCrackTip_p->d_fileb)
-        fclose(c.d_findCrackTip_p->d_fileb);
+      if (c.d_findCrackTip_p->d_filet) fclose(c.d_findCrackTip_p->d_filet);
+      if (c.d_findCrackTip_p->d_fileb) fclose(c.d_findCrackTip_p->d_fileb);
     }
   }
 }
 
 void tools::pp::Compute::readComputeInstruction(
     const std::string &set, tools::pp::InstructionData *data) {
-
   auto config = YAML::LoadFile(d_inpFilename);
 
   // read tag for output file
@@ -354,9 +351,8 @@ void tools::pp::Compute::readComputeInstruction(
   }
 
   if (config["Compute"][set]["File_Format"])
-    data->d_outFormat =
-        config["Compute"][set]["File_Format"].as<std::string>();
-  
+    data->d_outFormat = config["Compute"][set]["File_Format"].as<std::string>();
+
   // read format of output file
 
   // Output only nodes
@@ -411,7 +407,6 @@ void tools::pp::Compute::readComputeInstruction(
 
     // read rectangle information
     if (config["Compute"][set]["Mark_V_0"]["Rectangle"]) {
-
       data->d_transformV_p->d_markVInRectGiven = true;
       std::vector<double> locs;
       for (auto j : config["Compute"][set]["Mark_V_0"]["Rectangle"])
@@ -432,11 +427,9 @@ void tools::pp::Compute::readComputeInstruction(
     if (config["Compute"][set]["Mark_V_0"]["Points"])
       for (auto &&pt : config["Compute"][set]["Mark_V_0"]["Points"]) {
         std::vector<double> locs;
-        for (auto j : pt)
-          locs.push_back(j.as<double>());
+        for (auto j : pt) locs.push_back(j.as<double>());
 
-        if (locs.size() == 2)
-          locs.push_back(0.0);
+        if (locs.size() == 2) locs.push_back(0.0);
 
         data->d_transformV_p->d_markVPts.emplace_back(locs[0], locs[1],
                                                       locs[2]);
@@ -593,7 +586,6 @@ void tools::pp::Compute::readComputeInstruction(
 void tools::pp::Compute::readCrackTipData(
     const std::string &filename, int crack_id,
     std::vector<tools::pp::CrackTipData> *data) {
-
   data->clear();
   // expected format of file:
   // <crack id>, <output step>, <tip x>, <tip y>, <tip vx>, <tip vy>
@@ -612,8 +604,7 @@ void tools::pp::Compute::readCrackTipData(
 
 void tools::pp::Compute::initWriter(rw::writer::Writer *writer,
                                     std::vector<util::Point3> *u) {
-  if (d_writerReady)
-    return;
+  if (d_writerReady) return;
 
   writer->open(d_outFilename, d_currentData->d_outFormat,
                d_currentData->d_compressType);
@@ -635,9 +626,7 @@ void tools::pp::Compute::initWriter(rw::writer::Writer *writer,
 // compute methods
 //
 void tools::pp::Compute::transformU(rw::writer::Writer *writer) {
-
-  if (!d_currentData->d_transformU_p)
-    return;
+  if (!d_currentData->d_transformU_p) return;
 
   std::vector<util::Point3> u_temp(d_mesh_p->getNumNodes(), util::Point3());
   auto scale = d_currentData->d_transformU_p->d_scale;
@@ -664,9 +653,7 @@ void tools::pp::Compute::transformU(rw::writer::Writer *writer) {
 }
 
 void tools::pp::Compute::transformV(rw::writer::Writer *writer) {
-
-  if (!d_currentData->d_transformV_p)
-    return;
+  if (!d_currentData->d_transformV_p) return;
 
   std::vector<util::Point3> v_mark;
 
@@ -702,25 +689,21 @@ void tools::pp::Compute::transformV(rw::writer::Writer *writer) {
       }
 
     if (!data->d_markVNodes.empty())
-      for (auto i : data->d_markVNodes)
-        v_mark[i] = util::Point3();
+      for (auto i : data->d_markVNodes) v_mark[i] = util::Point3();
 
-    if (!d_writerReady)
-      initWriter(writer, &d_u);
+    if (!d_writerReady) initWriter(writer, &d_u);
 
     // append velocity
     writer->appendPointData("Mark_Velocity", &v_mark);
-  } // mark v operation
+  }  // mark v operation
 
   // symmetrize v operation
   if (data->d_symmetrizeV) {
-
     // use v_mark for modification
     // Reset it to current velocity if we are not combining this
     // with mark_v operation
 
-    if (!data->d_combineMarkV)
-      v_mark = d_v;
+    if (!data->d_combineMarkV) v_mark = d_v;
 
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
@@ -751,16 +734,13 @@ void tools::pp::Compute::transformV(rw::writer::Writer *writer) {
 
             // write velocity
             v_mark[i] = v_mark[i_found];
-            if (data->d_symmAxis == "y")
-              v_mark[i].d_x *= -1.;
-            if (data->d_symmAxis == "x")
-              v_mark[i].d_y *= -1.;
+            if (data->d_symmAxis == "y") v_mark[i].d_x *= -1.;
+            if (data->d_symmAxis == "x") v_mark[i].d_y *= -1.;
           }
-        }); // parallel for loop
+        });  // parallel for loop
     f.get();
 
-    if (!d_writerReady)
-      initWriter(writer, &d_u);
+    if (!d_writerReady) initWriter(writer, &d_u);
 
     // append velocity
     writer->appendPointData("Symm_Velocity", &v_mark);
@@ -768,13 +748,10 @@ void tools::pp::Compute::transformV(rw::writer::Writer *writer) {
 }
 
 void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
-
-  if (!d_currentData->d_compStrain_p)
-    return;
+  if (!d_currentData->d_compStrain_p) return;
 
   auto data = d_currentData->d_compStrain_p;
-  if (!data->d_computeStrain)
-    return;
+  if (!data->d_computeStrain) return;
 
   std::vector<util::SymMatrix3> strain(d_mesh_p->getNumElements(),
                                        util::SymMatrix3());
@@ -839,7 +816,7 @@ void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
 
         strain[e] = ssn;
         stress[e] = sss;
-      }); // parallel loop over elements
+      });  // parallel loop over elements
   f.get();
 
   // compute magnitude of strain
@@ -866,15 +843,12 @@ void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
 
   // output strain/stress data
   if (!d_currentData->d_outOnlyNodes) {
-
     // append mesh
-    if (!d_writerReady)
-      initWriter(writer, &d_u);
+    if (!d_writerReady) initWriter(writer, &d_u);
 
     writer->appendCellData("Strain_Tensor", &strain);
     writer->appendCellData("Stress_Tensor", &stress);
-    if (data->d_magStrainTensor)
-      writer->appendCellData("Mag_Strain", &magS);
+    if (data->d_magStrainTensor) writer->appendCellData("Mag_Strain", &magS);
 
     // mark magnitude of strain if asked
     if (!data->d_markMagStrainCells.empty() && data->d_magStrainTensor) {
@@ -884,7 +858,6 @@ void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
       writer->appendCellData("Mark_Mag_Strain", &magS);
     }
   } else {
-
     // compute 1st order quad points and store them (quad points in
     // current configuration)
     std::vector<util::Point3> elem_quads =
@@ -908,13 +881,12 @@ void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
     // create unstructured vtk output
     std::string fname = d_outPreTag + d_currentData->d_tagFilename + "_quads_" +
                         std::to_string(d_nOut);
-    auto writer1 = rw::writer::Writer(
-        fname, d_currentData->d_outFormat, d_currentData->d_compressType);
+    auto writer1 = rw::writer::Writer(fname, d_currentData->d_outFormat,
+                                      d_currentData->d_compressType);
     writer1.appendNodes(&elem_quads);
     writer1.appendPointData("Strain_Tensor", &strain);
     writer1.appendPointData("Stress_Tensor", &stress);
-    if (data->d_magStrainTensor)
-      writer1.appendPointData("Mag_Strain", &magS);
+    if (data->d_magStrainTensor) writer1.appendPointData("Mag_Strain", &magS);
 
     // mark magnitude of strain if asked
     if (!data->d_markMagStrainCells.empty() && data->d_magStrainTensor) {
@@ -934,8 +906,7 @@ void tools::pp::Compute::computeDamage(rw::writer::Writer *writer,
   //  if (!d_currentData->d_damageAtNodes)
   //    return;
 
-  if (Z->size() != d_mesh_p->getNumNodes())
-    Z->resize(d_mesh_p->getNumNodes());
+  if (Z->size() != d_mesh_p->getNumNodes()) Z->resize(d_mesh_p->getNumNodes());
 
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
@@ -954,41 +925,35 @@ void tools::pp::Compute::computeDamage(rw::writer::Writer *writer,
             auto Sr = std::abs(d_material_p->getS(xj - xi, d_u[j] - d_u[i])) /
                       d_material_p->getSc(xj.dist(xi));
 
-            if (util::compare::definitelyLessThan(locz, Sr))
-              locz = Sr;
+            if (util::compare::definitelyLessThan(locz, Sr)) locz = Sr;
           }
-        } // loop over neighbors
+        }  // loop over neighbors
 
         (*Z)[i] = locz;
-      }); // parallel loop over nodes
+      });  // parallel loop over nodes
   f.get();
 
-  if (!perf_out)
-    return;
+  if (!perf_out) return;
 
-  if (!d_writerReady)
-    initWriter(writer, &d_u);
+  if (!d_writerReady) initWriter(writer, &d_u);
 
   writer->appendPointData("Damage_Z", Z);
 }
 
 void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
                                       rw::writer::Writer *writer) {
-
   auto data = d_currentData->d_findCrackTip_p;
-  if (!data)
-    return;
+  if (!data) return;
 
   // compute damage at current displacement
-  if (Z->size() != d_mesh_p->getNumNodes())
-    Z->resize(d_mesh_p->getNumNodes());
+  if (Z->size() != d_mesh_p->getNumNodes()) Z->resize(d_mesh_p->getNumNodes());
   if (d_fileZ.empty())
     computeDamage(writer, Z, false);
   else {
     std::string fn = d_fileZ + "_" + std::to_string(d_nOut) + ".vtu";
     if (!rw::reader::readVtuFilePointData(fn, d_tagZ, Z)) {
-      std::cerr << "Error: Can not read file = " << fn << " or data = "
-                << d_tagZ  << " not available in vtu file.\n";
+      std::cerr << "Error: Can not read file = " << fn
+                << " or data = " << d_tagZ << " not available in vtu file.\n";
       exit(1);
     }
   }
@@ -1001,10 +966,8 @@ void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
 }
 
 void tools::pp::Compute::computeJIntegral() {
-
   auto data = d_currentData->d_computeJInt_p;
-  if (!data)
-    return;
+  if (!data) return;
 
   // to hold energy into crack
   double energy = 0.;
@@ -1193,7 +1156,6 @@ void tools::pp::Compute::computeJIntegral() {
 
         // loop over nodes in domain A
         for (auto j : search_nodes) {
-
           auto xj = d_mesh_p->getNode(j);
           auto rji = xj.dist(xi);
           if (util::compare::definitelyGreaterThan(rji,
@@ -1225,7 +1187,7 @@ void tools::pp::Compute::computeJIntegral() {
                          xji.d_z * v_sum.d_z) /
                         rji;
             */
-        } // loop over neighboring nodes
+        }  // loop over neighboring nodes
 
         energies[i] -= energy_loc * voli;
       });
@@ -1257,10 +1219,8 @@ void tools::pp::Compute::computeJIntegral() {
 // utility methods
 //
 void tools::pp::Compute::addUniqueToList(size_t i, std::vector<size_t> *list) {
-
   for (auto a : *list) {
-    if (a == i)
-      return;
+    if (a == i) return;
   }
   list->emplace_back(i);
 }
@@ -1296,11 +1256,9 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
     const std::pair<util::Point3, util::Point3> &cd, const double &tol,
     const double &tol_elem, std::vector<size_t> *nodes,
     std::vector<size_t> *elements) {
-
   // nodes list
   nodes->clear();
   for (size_t i = 0; i < d_mesh_p->getNumNodes(); i++) {
-
     auto x = d_mesh_p->getNode(i);
 
     // check if node is in the bigger domain and not in smaller domain
@@ -1324,8 +1282,7 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
     // Zone is given by difference of two rectangles enveloping contour
 
     for (auto i : ids) {
-      if (add_e)
-        break;
+      if (add_e) break;
 
       auto x = d_mesh_p->getNode(i);
 
@@ -1340,15 +1297,13 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
     }
 
     // add e to list
-    if (add_e)
-      addUniqueToList(e, elements);
+    if (add_e) addUniqueToList(e, elements);
   }
 }
 
 void tools::pp::Compute::decomposeSearchNodes(
     const std::pair<util::Point3, util::Point3> &cd, std::vector<size_t> *nodes,
     std::vector<size_t> *nodes_new) {
-
   std::vector<size_t> nodes_temp = *nodes;
   nodes_new->clear();
   nodes->clear();
@@ -1366,7 +1321,6 @@ void tools::pp::Compute::decomposeSearchNodes(
 bool tools::pp::Compute::triCheckAndInterpolateUV(
     const util::Point3 &p, util::Point3 &up, util::Point3 &vp,
     const std::vector<size_t> &ids, bool check_only) {
-
   // get triangle element object
   auto tri_quad = fe::TriElem(0);
   auto nodes = std::vector<util::Point3>{d_mesh_p->getNode(ids[0]),
@@ -1378,11 +1332,9 @@ bool tools::pp::Compute::triCheckAndInterpolateUV(
     sum_area += std::abs(tri_quad.elemSize(std::vector<util::Point3>{
         p, nodes[a], nodes[(a == nodes.size() - 1 ? 0 : a + 1)]}));
 
-  if (util::compare::definitelyGreaterThan(sum_area, area))
-    return false;
+  if (util::compare::definitelyGreaterThan(sum_area, area)) return false;
 
-  if (check_only)
-    return true;
+  if (check_only) return true;
 
   // point p is inside triangle and so we compute shape functions at this
   // point and perform interpolation
@@ -1434,8 +1386,7 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
 
       // cases
       if (d_mesh_p->getElementType() == util::vtk_type_triangle) {
-        if (triCheckAndInterpolateUV(p, up, vp, ids))
-          return;
+        if (triCheckAndInterpolateUV(p, up, vp, ids)) return;
       } else if (d_mesh_p->getElementType() == util::vtk_type_quad) {
         // check in triangle {v1, v2, v3}
         if (triCheckAndInterpolateUV(
@@ -1462,9 +1413,10 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     enodes.emplace_back(p);
     std::vector<size_t> etags(enodes.size(), 1);
     etags[etags.size() - 1] = 100;
-    auto writer1 = rw::writer::Writer(
-        d_outPreTag + d_currentData->d_tagFilename + "_debug_nodes_" +
-        std::to_string(d_nOut),"vtu","");
+    auto writer1 =
+        rw::writer::Writer(d_outPreTag + d_currentData->d_tagFilename +
+                               "_debug_nodes_" + std::to_string(d_nOut),
+                           "vtu", "");
     writer1.appendNodes(&enodes);
     writer1.appendPointData("Tag", &etags);
     writer1.close();
@@ -1472,11 +1424,9 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
   }
 }
 
-double
-tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
-                                          const std::vector<size_t> *nodes,
-                                          const std::vector<size_t> *elements) {
-
+double tools::pp::Compute::getContourContribJInt(
+    const util::Point3 &p, const std::vector<size_t> *nodes,
+    const std::vector<size_t> *elements) {
   // get displacement and velocity at point
   auto uq = util::Point3();
   auto vq = util::Point3();
@@ -1515,7 +1465,7 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
     energy += ef.first * volj;
 
     */
-  } // loop over nodes for pd energy density
+  }  // loop over nodes for pd energy density
 
   return energy;
 }
@@ -1526,9 +1476,7 @@ void tools::pp::Compute::updateCrack(const double &time,
 
   // loop over crack lines
   for (auto &crack : compute_data->d_cracks) {
-
-    if (crack.d_o == 0)
-      continue;
+    if (crack.d_o == 0) continue;
 
     auto pb = crack.d_pb;
     auto pt = crack.d_pt;
@@ -1566,11 +1514,10 @@ void tools::pp::Compute::updateCrack(const double &time,
       auto pnew = findTipInRects(crack, max_Z, rects_b, nodes_b, Z_b, Z, false);
       addNewCrackTip(crack, pnew, time, false);
     }
-  } // loop over cracks
+  }  // loop over cracks
 }
 
 void tools::pp::Compute::crackOutput() {
-
   auto compute_data = d_currentData->d_findCrackTip_p;
 
   // stop when update exceeds upper bound
@@ -1578,10 +1525,8 @@ void tools::pp::Compute::crackOutput() {
   if (compute_data->d_updateCount >= up_bound) {
     std::cout << "Warning: Number of times crack data output requested "
                  "exceeds the upper limit 10000.\n";
-    if (compute_data->d_filet)
-      fclose(compute_data->d_filet);
-    if (compute_data->d_fileb)
-      fclose(compute_data->d_fileb);
+    if (compute_data->d_filet) fclose(compute_data->d_filet);
+    if (compute_data->d_fileb) fclose(compute_data->d_fileb);
     return;
   }
 
@@ -1595,10 +1540,12 @@ void tools::pp::Compute::crackOutput() {
     compute_data->d_fileb = fopen(filename.c_str(), "w");
 
     // write header
-    fprintf(compute_data->d_filet, "'crack_id', 'dt_out', 'x', 'y', 'vx', "
-                                   "'vy'\n");
-    fprintf(compute_data->d_fileb, "'crack_id', 'dt_out', 'x', 'y', 'vx', "
-                                   "'vy'\n");
+    fprintf(compute_data->d_filet,
+            "'crack_id', 'dt_out', 'x', 'y', 'vx', "
+            "'vy'\n");
+    fprintf(compute_data->d_fileb,
+            "'crack_id', 'dt_out', 'x', 'y', 'vx', "
+            "'vy'\n");
   }
 
   // write to file
@@ -1655,7 +1602,6 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
   int Nt = 0;
   int Nb = 0;
   if (crack.d_o == 1) {
-
     if (crack.d_trackt) {
       Nt = (bbox.second[0] - pt.d_x) / seq_size;
       if (util::compare::definitelyLessThan(pt.d_x + Nt * seq_size,
@@ -1770,7 +1716,7 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
           }
         }
       }
-    } // top point
+    }  // top point
     for (size_t r = 0; r < rects_b.size(); r++) {
       if (util::geometry::isPointInsideRectangle(
               xi, rects_b[r].first.d_x, rects_b[r].second.d_x,
@@ -1793,8 +1739,8 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
           }
         }
       }
-    } // bottom point
-  }   // loop over nodes
+    }  // bottom point
+  }    // loop over nodes
 
   std::cout << "Max Z allowed = " << compute_data->d_maxZAllowed
             << ", min Z allowed = " << compute_data->d_minZAllowed << "\n";
@@ -1834,7 +1780,6 @@ util::Point3 tools::pp::Compute::findTipInRects(
     const std::vector<std::vector<size_t>> &nodes,
     const std::vector<std::vector<double>> &Zs, const std::vector<double> *Z,
     bool is_top) {
-
   if (is_top)
     std::cout << "    Tip information: Top     \n";
   else
@@ -1844,19 +1789,16 @@ util::Point3 tools::pp::Compute::findTipInRects(
   // find size of rectangle with atleast one node
   size_t rect_size_with_node = 0;
   for (size_t r = 0; r < rects.size(); r++) {
-    if (nodes[r].size() > 0)
-      rect_size_with_node++;
+    if (nodes[r].size() > 0) rect_size_with_node++;
   }
   std::cout << "    size valid rects = " << rect_size_with_node << "\n";
 
   // get old tip
   auto pold = crack.d_pt;
-  if (!is_top)
-    pold = crack.d_pb;
+  if (!is_top) pold = crack.d_pb;
 
   // if there are no rectangles with desired nodes, return old tip
-  if (rect_size_with_node == 0)
-    return pold;
+  if (rect_size_with_node == 0) return pold;
 
   //
   // Step 2
@@ -1886,8 +1828,7 @@ util::Point3 tools::pp::Compute::findTipInRects(
   // more closer to the crack line
   //
   for (size_t r = 0; r < sortZ.size(); r++) {
-    if (r > 2)
-      continue;
+    if (r > 2) continue;
 
     auto mz = sortZ[r];
     auto y0 = d_mesh_p->getNode(mz.d_i) + d_u[mz.d_i];
@@ -1907,8 +1848,7 @@ util::Point3 tools::pp::Compute::findTipInRects(
 
     long i_new = -1;
     for (auto x : nodes[mz.d_r]) {
-      if (x == mz.d_i)
-        continue;
+      if (x == mz.d_i) continue;
 
       auto y = d_mesh_p->getNode(x) + d_u[x];
       double dist = 0.;
@@ -1920,7 +1860,6 @@ util::Point3 tools::pp::Compute::findTipInRects(
       if (util::compare::definitelyLessThan(dist, dist_crack_line) &&
           util::compare::definitelyLessThan(std::abs(Z0 - (*Z)[x]),
                                             diff_Z_for_alternate_point)) {
-
         i_new = x;
         dist_crack_line = dist;
       }
@@ -1955,10 +1894,8 @@ util::Point3 tools::pp::Compute::findTipInRects(
     p_choices =
         std::vector<util::Point3>{crack.d_initPb, crack.d_oldPb, crack.d_pb};
   for (size_t r = 0; r < sortZ.size(); r++) {
-
     // only consider first and second rectangle in sorted rectangle list
-    if (r > 2)
-      break;
+    if (r > 2) break;
 
     // get data for this rectangle
     auto mz = sortZ[r];
@@ -1972,17 +1909,14 @@ util::Point3 tools::pp::Compute::findTipInRects(
     for (auto p_search : p_choices) {
       // check if we already found symmetrically opposite node for crack line
       // before this crack line
-      if (sym_rect[r] >= 0)
-        break;
+      if (sym_rect[r] >= 0) break;
 
       for (auto x : nodes[mz.d_r]) {
-
         auto y = d_mesh_p->getNode(x) + d_u[x];
         auto y0 = d_mesh_p->getNode(mz.d_i) + d_u[mz.d_i];
         if (util::compare::definitelyLessThan(std::abs((*Z)[x] - mz.d_Z),
                                               diff_z) &&
             x != mz.d_i) {
-
           // find if it is symmetrically opposite to the node i
           if (crack.d_o == -1) {
             // compare x coordinate
@@ -2006,17 +1940,16 @@ util::Point3 tools::pp::Compute::findTipInRects(
             }
           }
         }
-      } // loop over nodes within rectangle
+      }  // loop over nodes within rectangle
     }
-  } // loop over rectangle
+  }  // loop over rectangle
 
   // output data for debugging
   std::cout << "    sortZ (r, i, Z) = {";
   for (size_t i = 0; i < sortZ.size(); i++) {
     std::cout << "(" << sortZ[i].d_r << "," << sortZ[i].d_i << ","
               << sortZ[i].d_Z << ")";
-    if (i < sortZ.size() - 1)
-      std::cout << ", ";
+    if (i < sortZ.size() - 1) std::cout << ", ";
   }
   std::cout << "}\n";
   std::cout << "    sym_rect = {" << sym_rect[0] << ", " << sym_rect[1]
@@ -2050,7 +1983,7 @@ util::Point3 tools::pp::Compute::findTipInRects(
     std::cout << "    Candidate 2 info: id = " << sym_rect[0]
               << ", Z = " << (*Z)[sym_rect[0]] << ", r = " << sortZ[0].d_r
               << ", p = (" << y2.d_x << ", " << y2.d_y << ")\n";
-  } // rect 0 is symmetric
+  }  // rect 0 is symmetric
   else {
     if (sym_rect[1] >= 0) {
       size_t i1 = sortZ[1].d_i;
@@ -2070,7 +2003,7 @@ util::Point3 tools::pp::Compute::findTipInRects(
       std::cout << "    Candidate 2 info: id = " << sym_rect[1]
                 << ", Z = " << (*Z)[sym_rect[1]] << ", r = " << sortZ[1].d_r
                 << ", p = (" << y2.d_x << ", " << y2.d_y << ")\n";
-    } // rect 1 is symmetric
+    }  // rect 1 is symmetric
     else {
       // use average between best node in rectangle and old tip
       size_t i1 = sortZ[0].d_i;
@@ -2087,8 +2020,8 @@ util::Point3 tools::pp::Compute::findTipInRects(
       std::cout << "    Candidate 1 info: id = " << sortZ[0].d_i
                 << ", Z = " << sortZ[0].d_Z << ", r = " << sortZ[0].d_r
                 << ", p = (" << y1.d_x << ", " << y1.d_y << ")\n";
-    } // rect 1 is not symmetric
-  }   // rect 0 is not symmetric
+    }  // rect 1 is not symmetric
+  }    // rect 0 is not symmetric
 
   // output data for debugging
   std::cout << "    Old tip = (" << pold.d_x << ", " << pold.d_y << "), "
