@@ -7,9 +7,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "fracture.h"
+
+#include <hpx/include/parallel_algorithm.hpp>
+
 #include "inp/decks/fractureDeck.h"
 #include "util/utilGeom.h"
-#include <hpx/include/parallel_algorithm.hpp>
 
 geometry::Fracture::Fracture(inp::FractureDeck *deck)
     : d_fractureDeck_p(deck) {}
@@ -18,7 +20,6 @@ geometry::Fracture::Fracture(
     inp::FractureDeck *deck, const std::vector<util::Point3> *nodes,
     const std::vector<std::vector<size_t>> *neighbor_list)
     : d_fractureDeck_p(deck) {
-
   d_fracture.resize(neighbor_list->size());
 
   auto f = hpx::parallel::for_loop(
@@ -27,13 +28,12 @@ geometry::Fracture::Fracture(
         auto ns = (*neighbor_list)[i];
 
         size_t s = ns.size() / 8;
-        if (s * 8 < ns.size())
-          s++;
+        if (s * 8 < ns.size()) s++;
         d_fracture[i] = std::vector<uint8_t>(s, uint8_t(0));
 
         for (auto crack : d_fractureDeck_p->d_cracks)
           this->computeFracturedBondFd(i, &crack, nodes, &ns);
-      }); // end of parallel for loop
+      });  // end of parallel for loop
 
   f.get();
 }
@@ -42,7 +42,6 @@ void geometry::Fracture::computeFracturedBondFd(
     const size_t &i, inp::EdgeCrack *crack,
     const std::vector<util::Point3> *nodes,
     const std::vector<size_t> *neighbors) {
-
   //
   //
   // Here [ ] represents a mesh node and o------o represents a crack.
@@ -78,18 +77,15 @@ void geometry::Fracture::computeFracturedBondFd(
   util::Point3 pt = crack->d_pt;
 
   // check if point is outside crack line
-  if (crack->ptOutside(i_node, crack->d_o, pb, pt))
-    return;
+  if (crack->ptOutside(i_node, crack->d_o, pb, pt)) return;
 
   // find if this node is on right side or left side of the crack line
   bool left_side = crack->ptLeftside(i_node, pb, pt);
 
   //
   if (left_side) {
-
     // loop over neighboring nodes
     for (size_t j = 0; j < neighbors->size(); j++) {
-
       size_t id_j = (*neighbors)[j];
       util::Point3 j_node = (*nodes)[id_j];
 
@@ -97,8 +93,7 @@ void geometry::Fracture::computeFracturedBondFd(
       bool modify = true;
 
       // check if point lies outside crack line
-      if (crack->ptOutside(j_node, crack->d_o, pb, pt))
-        modify = false;
+      if (crack->ptOutside(j_node, crack->d_o, pb, pt)) modify = false;
 
       // modify only those nodes which lie on opposite side (in this
       // case on right side)
@@ -106,12 +101,10 @@ void geometry::Fracture::computeFracturedBondFd(
         this->setBondState(i, j, modify);
     }
 
-  } // left side
+  }  // left side
   else {
-
     // loop over neighboring nodes
     for (size_t j = 0; j < neighbors->size(); j++) {
-
       size_t id_j = (*neighbors)[j];
       util::Point3 j_node = (*nodes)[id_j];
 
@@ -123,20 +116,18 @@ void geometry::Fracture::computeFracturedBondFd(
 
       auto modify = true;
 
-      if (crack->ptOutside(j_node, crack->d_o, pb, pt))
-        modify = false;
+      if (crack->ptOutside(j_node, crack->d_o, pb, pt)) modify = false;
 
       // modify only those nodes which lie on opposite side (in this
       // case on left side)
       if (crack->ptLeftside(j_node, pb, pt) and modify)
         this->setBondState(i, j, modify);
     }
-  } // right side
-} // computeFracturedBondFd
+  }  // right side
+}  // computeFracturedBondFd
 
 void geometry::Fracture::setBondState(const size_t &i, const size_t &j,
                                       const bool &state) {
-
   // to set i^th bit as true of integer a,
   // a |= 1UL << (i % 8)
 
@@ -148,7 +139,6 @@ void geometry::Fracture::setBondState(const size_t &i, const size_t &j,
 }
 
 bool geometry::Fracture::getBondState(const size_t &i, const size_t &j) {
-
   auto bond = d_fracture[i][j / 8];
   return bond >> (j % 8) & 1UL;
 }

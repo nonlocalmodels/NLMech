@@ -7,9 +7,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "interiorFlags.h"
+
+#include <iostream>
+
 #include "inp/decks/interiorFlagsDeck.h"
 #include "util/compare.h"
-#include <iostream>
 
 //
 // BaseInterior
@@ -34,7 +36,6 @@ geometry::ComputeInterior::ComputeInterior(
 
 bool geometry::ComputeInterior::getInteriorFlag(const size_t &i,
                                                 const util::Point3 &x) {
-
   // check if x coordinate is on left side of the left interior boundary
   if (util::compare::definitelyLessThan(x.d_x, d_bbox.first[0] + d_noFailTol))
     return false;
@@ -46,26 +47,24 @@ bool geometry::ComputeInterior::getInteriorFlag(const size_t &i,
     return false;
 
   if (d_dim > 1) {
-
     // check if y coordinate is below the bottom interior boundary
     if (util::compare::definitelyLessThan(x.d_y, d_bbox.first[1] + d_noFailTol))
       return false;
 
     // check if y coordinate is on top of the top interior boundary
-    if(util::compare::definitelyGreaterThan(x.d_y, d_bbox.second[1] -
-                                                            d_noFailTol))
+    if (util::compare::definitelyGreaterThan(x.d_y,
+                                             d_bbox.second[1] - d_noFailTol))
       return false;
   }
 
   if (d_dim > 2) {
-
     // check if z coordinate is below the bottom interior boundary
     if (util::compare::definitelyLessThan(x.d_z, d_bbox.first[2] + d_noFailTol))
       return false;
 
     // check if z coordinate is on top of the top interior boundary
-    if(util::compare::definitelyGreaterThan(x.d_z, d_bbox.second[2] -
-                                                   d_noFailTol))
+    if (util::compare::definitelyGreaterThan(x.d_z,
+                                             d_bbox.second[2] - d_noFailTol))
       return false;
   }
 
@@ -80,14 +79,11 @@ geometry::DataInterior::DataInterior(
     const std::vector<util::Point3> *nodes,
     std::pair<std::vector<double>, std::vector<double>> bbox)
     : geometry::BaseInterior(deck, dim, std::move(bbox)) {
-
   size_t s = nodes->size() / 8;
-  if (s * 8 < nodes->size())
-    s++;
+  if (s * 8 < nodes->size()) s++;
   d_intFlags = std::vector<uint8_t>(s, uint8_t(0));
 
   for (size_t i = 0; i < nodes->size(); i++) {
-
     bool flag = true;
     auto x = (*nodes)[i];
 
@@ -97,29 +93,27 @@ geometry::DataInterior::DataInterior(
 
     // check if x coordinate is on right side of the right interior
     // boundary
-    flag = !util::compare::definitelyGreaterThan(x.d_x, d_bbox.second[0] -
-                                                            d_noFailTol);
+    flag = !util::compare::definitelyGreaterThan(
+        x.d_x, d_bbox.second[0] - d_noFailTol);
 
     if (d_dim > 1) {
-
       // check if y coordinate is below the bottom interior boundary
       flag = !util::compare::definitelyLessThan(x.d_y,
                                                 d_bbox.first[1] + d_noFailTol);
 
       // check if y coordinate is on top of the top interior boundary
-      flag = !util::compare::definitelyGreaterThan(x.d_y, d_bbox.second[1] -
-                                                              d_noFailTol);
+      flag = !util::compare::definitelyGreaterThan(
+          x.d_y, d_bbox.second[1] - d_noFailTol);
     }
 
     if (d_dim > 2) {
-
       // check if z coordinate is below the bottom interior boundary
       flag = !util::compare::definitelyLessThan(x.d_z,
                                                 d_bbox.first[2] + d_noFailTol);
 
       // check if z coordinate is on top of the top interior boundary
-      flag = !util::compare::definitelyGreaterThan(x.d_z, d_bbox.second[2] -
-                                                              d_noFailTol);
+      flag = !util::compare::definitelyGreaterThan(
+          x.d_z, d_bbox.second[2] - d_noFailTol);
     }
 
     // set loc_bit = i%8 of loc_i = i/8 to flag
@@ -141,9 +135,9 @@ bool geometry::DataInterior::getInteriorFlag(const size_t &i,
 }
 
 geometry::InteriorFlags::InteriorFlags(
-    inp::InteriorFlagsDeck *deck, const size_t dim, const std::vector<util::Point3> *nodes,
+    inp::InteriorFlagsDeck *deck, const size_t dim,
+    const std::vector<util::Point3> *nodes,
     const std::pair<std::vector<double>, std::vector<double>> &bbox) {
-
   if (deck->d_noFailActive) {
     if (deck->d_computeAndNotStoreFlag)
       d_interior_p = new geometry::ComputeInterior(deck, dim, bbox);

@@ -6,20 +6,19 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ////////////////////////////////////////////////////////////////////////////////
 
-#include "src/compute.h"
 #include <algorithm>
 #include <hpx/hpx_main.hpp>
-#include <boost/program_options.hpp>
 #include <iostream>
+#include <boost/program_options.hpp>
+
+#include "src/compute.h"
 
 int main(int argc, char *argv[]) {
-
   boost::program_options::options_description desc("Allowed options");
   desc.add_options()("help", "produce help message")(
       "input-file,i", boost::program_options::value<std::string>(),
       "Configuration file")(
-      "kind,k", boost::program_options::value<std::string>(),
-      "Dimension");
+      "kind,k", boost::program_options::value<std::string>(), "Dimension");
 
   boost::program_options::variables_map vm;
   boost::program_options::store(
@@ -36,13 +35,11 @@ int main(int argc, char *argv[]) {
   size_t found = 0;
 
   if (vm.count("input-file")) {
-
     filename = vm["input-file"].as<std::string>();
     found++;
   }
 
   if (vm.count("kind")) {
-
     kind = vm["kind"].as<std::string>();
     found++;
   }

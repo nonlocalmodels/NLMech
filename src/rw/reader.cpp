@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "reader.h"
+
 #include "csv.h"
 #include "mshReader.h"
 #include "vtkReader.h"
@@ -14,11 +15,9 @@
 void rw::reader::readCsvFile(const std::string &filename, size_t dim,
                              std::vector<util::Point3> *nodes,
                              std::vector<double> *volumes) {
-
   nodes->clear();
   volumes->clear();
   if (dim == 1) {
-
     io::CSVReader<3> in(filename);
     in.read_header(io::ignore_extra_column, "id", "x", "volume");
 
@@ -32,7 +31,6 @@ void rw::reader::readCsvFile(const std::string &filename, size_t dim,
   }
 
   if (dim == 2) {
-
     io::CSVReader<4> in(filename);
     in.read_header(io::ignore_extra_column, "id", "x", "y", "volume");
 
@@ -45,7 +43,6 @@ void rw::reader::readCsvFile(const std::string &filename, size_t dim,
   }
 
   if (dim == 3) {
-
     io::CSVReader<5> in(filename);
     in.read_header(io::ignore_extra_column, "id", "x", "y", "z", "volume");
 
@@ -64,7 +61,6 @@ void rw::reader::readVtuFile(const std::string &filename, size_t dim,
                              std::vector<size_t> *enc,
                              std::vector<std::vector<size_t>> *nec,
                              std::vector<double> *volumes, bool is_fd) {
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   rdr.readMesh(dim, nodes, element_type, num_elem, enc, nec, volumes, is_fd);
@@ -89,8 +85,7 @@ void rw::reader::readVtuFileRestart(const std::string &filename,
     }
 
     u->resize(y.size());
-    for (size_t i=0; i<y.size(); i++)
-      (*u)[i] = y[i] - (*X)[i];
+    for (size_t i = 0; i < y.size(); i++) (*u)[i] = y[i] - (*X)[i];
   }
 
   // get velocity
@@ -115,7 +110,6 @@ void rw::reader::readMshFile(const std::string &filename, size_t dim,
                              std::vector<size_t> *enc,
                              std::vector<std::vector<size_t>> *nec,
                              std::vector<double> *volumes, bool is_fd) {
-
   // call vtk reader
   auto rdr = rw::reader::MshReader(filename);
   rdr.readMesh(dim, nodes, element_type, num_elem, enc, nec, volumes, is_fd);
@@ -140,8 +134,7 @@ void rw::reader::readMshFileRestart(const std::string &filename,
     }
 
     u->resize(y.size());
-    for (size_t i=0; i<y.size(); i++)
-      (*u)[i] = y[i] - (*X)[i];
+    for (size_t i = 0; i < y.size(); i++) (*u)[i] = y[i] - (*X)[i];
   }
 
   // get velocity
@@ -159,4 +152,3 @@ bool rw::reader::readMshFilePointData(const std::string &filename,
   rdr.close();
   return st;
 }
-

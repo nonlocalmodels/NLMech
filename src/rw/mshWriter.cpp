@@ -4,21 +4,23 @@
 // (See accompanying file LICENSE.txt)
 
 #include "mshWriter.h"
-#include <iostream>
+
 #include <util/feElementDefs.h>
+
+#include <iostream>
 
 static int ntag = 0;
 static int etag = 0;
 
-//extern std::ofstream msh_out;
+// extern std::ofstream msh_out;
 
 rw::writer::MshWriter::MshWriter(const std::string &filename,
                                  const std::string &compress_type)
     : d_filename(filename), d_compressType(compress_type), d_file(nullptr) {}
 
-void rw::writer::MshWriter::writeMshDataHeader(const std::string &name, int field_type, size_t
-num_data, bool is_node_data) {
-
+void rw::writer::MshWriter::writeMshDataHeader(const std::string &name,
+                                               int field_type, size_t num_data,
+                                               bool is_node_data) {
   // Write metadata
   if (is_node_data)
     fprintf(d_file, "$NodeData\n");
@@ -50,14 +52,14 @@ num_data, bool is_node_data) {
 
 void rw::writer::MshWriter::appendNodes(const std::vector<util::Point3> *nodes,
                                         const std::vector<util::Point3> *u) {
-
   // open file stream
   if (!d_file) {
     std::string fname = d_filename + ".msh";
     d_file = fopen(fname.c_str(), "w");
   }
   if (!d_file) {
-    std::cerr << "Error: Can not open file = " << d_filename + ".msh" <<".\n";
+    std::cerr << "Error: Can not open file = " << d_filename + ".msh"
+              << ".\n";
     exit(1);
   }
 
@@ -73,20 +75,18 @@ void rw::writer::MshWriter::appendNodes(const std::vector<util::Point3> *nodes,
   fprintf(d_file, "$Nodes\n");
   fprintf(d_file, "%zu\n", num_nodes);
 
-  for (size_t i=0; i < num_nodes; i++) {
+  for (size_t i = 0; i < num_nodes; i++) {
     auto p = (*nodes)[i];
-    if (u)
-      p = p + (*u)[i];
+    if (u) p = p + (*u)[i];
     fprintf(d_file, "%zu %lf %lf %lf\n", i + 1, p.d_x, p.d_y, p.d_z);
   }
   fprintf(d_file, "$EndNodes\n");
 }
 
-void rw::writer::MshWriter::appendMesh(
-    const std::vector<util::Point3> *nodes, const size_t &element_type,
-    const std::vector<size_t> *en_con,
-    const std::vector<util::Point3> *u) {
-
+void rw::writer::MshWriter::appendMesh(const std::vector<util::Point3> *nodes,
+                                       const size_t &element_type,
+                                       const std::vector<size_t> *en_con,
+                                       const std::vector<util::Point3> *u) {
   appendNodes(nodes, u);
 
   // get mesh information
@@ -99,26 +99,24 @@ void rw::writer::MshWriter::appendMesh(
   fprintf(d_file, "%zu\n", num_elems);
 
   // loop over the elements
-  for (size_t e=0; e < num_elems; e++) {
-
+  for (size_t e = 0; e < num_elems; e++) {
     // elements ids are 1 based in Gmsh
-    fprintf(d_file, "%zu %zu 2 0 6 ", e+1, msh_element_type);
+    fprintf(d_file, "%zu %zu 2 0 6 ", e + 1, msh_element_type);
 
     // write ids of node (numbering starts with 1)
-    for (size_t v=0; v<num_vertex; v++)
+    for (size_t v = 0; v < num_vertex; v++)
       fprintf(d_file, "%zu ", (*en_con)[e * num_vertex + v] + 1);
 
     fprintf(d_file, "\n");
-  } // element loop
+  }  // element loop
   fprintf(d_file, "$EndElements\n");
 }
 
 void rw::writer::MshWriter::appendPointData(const std::string &name,
                                             const std::vector<uint8_t> *data) {
-
   // Write metadata
   writeMshDataHeader(name, 1, data->size(), true);
-  for (size_t i=0; i < data->size(); i++) {
+  for (size_t i = 0; i < data->size(); i++) {
     double d = (*data)[i];
     fprintf(d_file, "%zu %lf\n", i + 1, d);
   }
@@ -127,10 +125,9 @@ void rw::writer::MshWriter::appendPointData(const std::string &name,
 
 void rw::writer::MshWriter::appendPointData(const std::string &name,
                                             const std::vector<size_t> *data) {
-
   // Write metadata
   writeMshDataHeader(name, 1, data->size(), true);
-  for (size_t i=0; i < data->size(); i++) {
+  for (size_t i = 0; i < data->size(); i++) {
     double d = (*data)[i];
     fprintf(d_file, "%zu %lf\n", i + 1, d);
   }
@@ -141,7 +138,7 @@ void rw::writer::MshWriter::appendPointData(const std::string &name,
                                             const std::vector<int> *data) {
   // Write metadata
   writeMshDataHeader(name, 1, data->size(), true);
-  for (size_t i=0; i < data->size(); i++) {
+  for (size_t i = 0; i < data->size(); i++) {
     double d = (*data)[i];
     fprintf(d_file, "%zu %lf\n", i + 1, d);
   }
@@ -152,7 +149,7 @@ void rw::writer::MshWriter::appendPointData(const std::string &name,
                                             const std::vector<float> *data) {
   // Write metadata
   writeMshDataHeader(name, 1, data->size(), true);
-  for (size_t i=0; i < data->size(); i++) {
+  for (size_t i = 0; i < data->size(); i++) {
     double d = (*data)[i];
     fprintf(d_file, "%zu %lf\n", i + 1, d);
   }
@@ -163,7 +160,7 @@ void rw::writer::MshWriter::appendPointData(const std::string &name,
                                             const std::vector<double> *data) {
   // Write metadata
   writeMshDataHeader(name, 1, data->size(), true);
-  for (size_t i=0; i < data->size(); i++) {
+  for (size_t i = 0; i < data->size(); i++) {
     double d = (*data)[i];
     fprintf(d_file, "%zu %lf\n", i + 1, d);
   }
@@ -174,7 +171,7 @@ void rw::writer::MshWriter::appendPointData(
     const std::string &name, const std::vector<util::Point3> *data) {
   // Write metadata
   writeMshDataHeader(name, 3, data->size(), true);
-  for (size_t i=0; i < data->size(); i++) {
+  for (size_t i = 0; i < data->size(); i++) {
     auto d = (*data)[i];
     fprintf(d_file, "%zu %lf %lf %lf\n", i + 1, d.d_x, d.d_y, d.d_z);
   }
@@ -185,7 +182,7 @@ void rw::writer::MshWriter::appendPointData(
     const std::string &name, const std::vector<util::SymMatrix3> *data) {
   // Write metadata
   writeMshDataHeader(name, 6, data->size(), true);
-  for (size_t i=0; i < data->size(); i++) {
+  for (size_t i = 0; i < data->size(); i++) {
     auto d = (*data)[i];
     fprintf(d_file, "%zu %lf %lf %lf %lf %lf %lf\n", i + 1, d.d_xx, d.d_yy,
             d.d_zz, d.d_xy, d.d_yz, d.d_xz);
@@ -193,25 +190,23 @@ void rw::writer::MshWriter::appendPointData(
   fprintf(d_file, "$EndNodeData\n");
 }
 
-void rw::writer::MshWriter::appendPointData(const std::string &name,
-                       const std::vector<util::Matrix33> *data){
- // Write metadata
+void rw::writer::MshWriter::appendPointData(
+    const std::string &name, const std::vector<util::Matrix33> *data) {
+  // Write metadata
   writeMshDataHeader(name, 6, data->size(), true);
-  for (size_t i=0; i < data->size(); i++) {
+  for (size_t i = 0; i < data->size(); i++) {
     auto d = (*data)[i];
     fprintf(d_file, "%zu %lf %lf %lf %lf %lf %lf\n", i + 1, d(0, 0), d(1, 1),
             d(2, 2), d(0, 1), (1, 2), (0, 2));
   }
   fprintf(d_file, "$EndNodeData\n");
-
 }
-
 
 void rw::writer::MshWriter::appendCellData(const std::string &name,
                                            const std::vector<float> *data) {
   // Write metadata
   writeMshDataHeader(name, 1, data->size(), false);
-  for (size_t i=0; i < data->size(); i++) {
+  for (size_t i = 0; i < data->size(); i++) {
     double d = (*data)[i];
     fprintf(d_file, "%zu %lf\n", i + 1, d);
   }
@@ -222,7 +217,7 @@ void rw::writer::MshWriter::appendCellData(
     const std::string &name, const std::vector<util::SymMatrix3> *data) {
   // Write metadata
   writeMshDataHeader(name, 6, data->size(), false);
-  for (size_t i=0; i < data->size(); i++) {
+  for (size_t i = 0; i < data->size(); i++) {
     auto d = (*data)[i];
     fprintf(d_file, "%zu %lf %lf %lf %lf %lf %lf\n", i + 1, d.d_xx, d.d_yy,
             d.d_zz, d.d_xy, d.d_yz, d.d_xz);

@@ -7,22 +7,21 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "utilFunction.h"
-#include "compare.h"              // compare functions
-#include <cmath>                  // definition of sin, cosine etc
-#include <iostream>               // cerr
+
+#include <cmath>     // definition of sin, cosine etc
+#include <iostream>  // cerr
+
+#include "compare.h"  // compare functions
 
 double util::function::hatFunction(const double &x, const double &x_min,
                                    const double &x_max) {
-
   if (util::compare::definitelyGreaterThan(x, x_min - 1.0E-12) and
       util::compare::definitelyLessThan(x, x_max + 1.0E-12)) {
-
     double x_mid = 0.5 * (x_min + x_max);
     double l = x_mid - x_min;
 
     // check if this is essentially a point load (dirac)
-    if (l < 1.0E-12)
-      return 1.0;
+    if (l < 1.0E-12) return 1.0;
 
     if (util::compare::definitelyLessThan(x, x_mid))
       return (x - x_min) / l;
@@ -34,13 +33,11 @@ double util::function::hatFunction(const double &x, const double &x_min,
 
 double util::function::hatFunctionQuick(const double &x, const double &x_min,
                                         const double &x_max) {
-
   double x_mid = 0.5 * (x_min + x_max);
   double l = x_mid - x_min;
 
   // check if this is essentially a point load (dirac)
-  if (l < 1.0E-12)
-    return 1.0;
+  if (l < 1.0E-12) return 1.0;
 
   if (util::compare::definitelyLessThan(x, x_mid))
     return (x - x_min) / l;
@@ -50,7 +47,6 @@ double util::function::hatFunctionQuick(const double &x, const double &x_min,
 
 double util::function::linearStepFunc(const double &x, const double &x1,
                                       const double &x2) {
-
   //
   // a = floor(x/(x1+x2))
   // xl = a * (x1 + x2), xm = xl + x1, xr = xm + x2
@@ -80,7 +76,6 @@ double util::function::gaussian(const double &r, const double &a,
 
 double util::function::gaussian2d(const util::Point3 &x, const size_t &dof,
                                   const std::vector<double> &params) {
-
   if (params.size() < 6) {
     std::cerr << "Error: Not enough parameters to compute guassian 2-d "
                  "function.\n";
@@ -96,7 +91,6 @@ double util::function::gaussian2d(const util::Point3 &x, const size_t &dof,
 double util::function::doubleGaussian2d(const util::Point3 &x,
                                         const size_t &dof,
                                         const std::vector<double> &params) {
-
   if (params.size() < 10) {
     std::cerr << "Error: Not enough parameters to compute guassian 2-d "
                  "function.\n";

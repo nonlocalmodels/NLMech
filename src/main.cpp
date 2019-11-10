@@ -7,81 +7,77 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Config.h>
-#include <hpx/hpx_main.hpp>                     // Need main source file
-#include <hpx/util/high_resolution_clock.hpp>
-#include "inp/input.h"                          // Input class
-#include "model/models.h"                 // Model class
-#include "material/materials.h"
-#include "inp/decks/materialDeck.h"
 
+#include <hpx/hpx_main.hpp>           // Need main source file
+#include <boost/program_options.hpp>  // program options
+#include <hpx/util/high_resolution_clock.hpp>
 #include <iostream>
-#include <boost/program_options.hpp> // program options
+
+#include "inp/decks/materialDeck.h"
+#include "inp/input.h"  // Input class
+#include "material/materials.h"
+#include "model/models.h"  // Model class
 
 namespace inp {
 struct MaterialDeck;
-} // namespace inp
-
-
+}  // namespace inp
 
 int main(int argc, char *argv[]) {
+  boost::program_options::options_description desc("Allowed options");
+  desc.add_options()("help", "produce help message")(
+      "input-file,i", boost::program_options::value<std::string>(),
+      "Configuration file");
 
-	boost::program_options::options_description desc("Allowed options");
-	desc.add_options()("help", "produce help message")("input-file,i",
-			boost::program_options::value<std::string>(), "Configuration file");
+  boost::program_options::variables_map vm;
+  boost::program_options::store(
+      boost::program_options::parse_command_line(argc, argv, desc), vm);
+  boost::program_options::notify(vm);
 
-	boost::program_options::variables_map vm;
-	boost::program_options::store(
-			boost::program_options::parse_command_line(argc, argv, desc), vm);
-	boost::program_options::notify(vm);
+  if (vm.count("help")) {
+    std::cout << desc << "\n";
+    return 1;
+  }
 
-	if (vm.count("help")) {
-		std::cout << desc << "\n";
-		return 1;
-	}
+  // read input file
+  std::string filename;
+  if (vm.count("input-file")) filename = vm["input-file"].as<std::string>();
 
-	// read input file
-	std::string filename;
-	if (vm.count("input-file"))
-		filename = vm["input-file"].as<std::string>();
+  if (filename.empty()) {
+    std::cerr << argv[0] << " (Version " << MAJOR_VERSION << "."
+              << MINOR_VERSION << "." << UPDATE_VERSION
+              << ") -i input.yaml --hpx:threads=n" << std::endl;
+    exit(1);
+  }
+  // Print program version
+  std::cout << argv[0] << " (Version " << MAJOR_VERSION << "." << MINOR_VERSION
+            << "." << UPDATE_VERSION << ")" << std::endl;
+  // record current time
+  std::uint64_t begin = hpx::util::high_resolution_clock::now();
 
-	if (filename.empty()) {
-		std::cerr << argv[0] << " (Version " << MAJOR_VERSION << "."
-				<< MINOR_VERSION << "." << UPDATE_VERSION
-				<< ") -i input.yaml --hpx:threads=n" << std::endl;
-		exit(1);
-	}
-	// Print program version
-	std::cout << argv[0] << " (Version " << MAJOR_VERSION << "."
-			<< MINOR_VERSION << "." << UPDATE_VERSION << ")" << std::endl;
-	// record current time
-	std::uint64_t begin = hpx::util::high_resolution_clock::now();
+  // read input data
+  auto *deck = new inp::Input(filename);
 
-	// read input data
-	auto *deck = new inp::Input(filename);
+  // check which model to run
+  if (deck->getSpatialDiscretization() == "finite_difference")
+    model::FDModel fdModel(deck);
+  else if (deck->getSpatialDiscretization() == "quasi_static") {
+    if (deck->getMaterialDeck()->d_materialType == "ElasticState") {
+      model::QuasiStaticModel<material::pd::ElasticState> QuasiStaticModel(
+          deck);
+    } else {
+      std::cerr << "Error: No known material deck specified" << std::endl;
+      exit(1);
+    }
 
-	// check which model to run
-	if (deck->getSpatialDiscretization() == "finite_difference")
-		model::FDModel fdModel(deck);
-	else if (deck->getSpatialDiscretization() == "quasi_static") {
+  } else
+    std::cerr << "Warning no model for the spatial discretization specified!"
+              << std::endl;
 
-		if (deck->getMaterialDeck()->d_materialType == "ElasticState") {
-			model::QuasiStaticModel<material::pd::ElasticState> QuasiStaticModel(
-					deck);
-		} else {
-			std::cerr << "Error: No known material deck specified" << std::endl;
-			exit(1);
-		}
+  // get time elapsed
+  std::uint64_t end = hpx::util::high_resolution_clock::now();
+  double elapsed_secs = double(end - begin) / 1.0e9;
 
-	} else
-		std::cerr
-				<< "Warning no model for the spatial discretization specified!"
-				<< std::endl;
+  std::cout << " Time elapsed = " << elapsed_secs << " sec \n";
 
-	// get time elapsed
-	std::uint64_t end = hpx::util::high_resolution_clock::now();
-	double elapsed_secs = double(end - begin) / 1.0e9;
-
-	std::cout << " Time elapsed = " << elapsed_secs << " sec \n";
-
-	return EXIT_SUCCESS;
+  return EXIT_SUCCESS;
 }

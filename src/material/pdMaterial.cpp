@@ -7,19 +7,24 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "pdMaterial.h"
+
+#include <iostream>
+
 #include "inp/decks/materialDeck.h"
 #include "pd/influenceFn.h"
 #include "pd/rnpBond.h"
 #include "pd/rnpState.h"
 #include "util/compare.h"
-#include <iostream>
 
 material::pd::Material::Material(inp::MaterialDeck *deck, const size_t &dim,
                                  const double &horizon)
-    : d_deck_p(deck), d_stateActive(false), d_horizon(horizon),
-      d_dimension(dim), d_density(deck->d_density), d_baseMaterial_p(nullptr),
+    : d_deck_p(deck),
+      d_stateActive(false),
+      d_horizon(horizon),
+      d_dimension(dim),
+      d_density(deck->d_density),
+      d_baseMaterial_p(nullptr),
       d_baseInfluenceFn_p(nullptr) {
-
   // create influence function class
   if (d_deck_p->d_influenceFnType == 0)
     d_baseInfluenceFn_p = new material::pd::ConstInfluenceFn(
@@ -68,23 +73,18 @@ material::pd::Material::getBondEF(const double &r, const double &s, bool &fs,
 }
 */
 
-std::pair<util::Point3,double> material::pd::Material::getBondEF(size_t i , size_t j)
-{
-	return d_baseMaterial_p->getBondEF(i,j);
-	
+std::pair<util::Point3, double> material::pd::Material::getBondEF(size_t i,
+                                                                  size_t j) {
+  return d_baseMaterial_p->getBondEF(i, j);
 }
 
-util::Matrix33 material::pd::Material::getStrain(size_t i){
-
+util::Matrix33 material::pd::Material::getStrain(size_t i) {
   return d_baseMaterial_p->getStrain(i);
 }
 
-util::Matrix33 material::pd::Material::getStress(size_t i){
-
+util::Matrix33 material::pd::Material::getStress(size_t i) {
   return d_baseMaterial_p->getStress(i);
 }
-
-
 
 double material::pd::Material::getStateEnergy(const double &theta) {
   return d_baseMaterial_p->getStateEnergy(theta);
@@ -97,7 +97,7 @@ double material::pd::Material::getStateForce(const double &theta,
 }
 
 bool material::pd::Material::doesBondContribToState(const double &S,
-                                                   const double &r) {
+                                                    const double &r) {
   return d_baseMaterial_p->doesBondContribToState(S, r);
 }
 

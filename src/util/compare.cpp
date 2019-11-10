@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "compare.h"
+
 #include <cmath>
 
 bool util::compare::approximatelyEqual(const double &a, const double &b) {

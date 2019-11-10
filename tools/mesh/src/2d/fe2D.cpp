@@ -7,13 +7,16 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "fe2D.h"
-#include "rw/writer.h"    // definition of vtk and msh writer interface
-#include "util/point.h" // definition of Point3
-#include "util/feElementDefs.h"   // definition of fe element type
-#include "util/compare.h"         // compare real numbers
+
+#include <yaml-cpp/yaml.h>  // YAML reader
+
 #include <cmath>
 #include <iostream>
-#include <yaml-cpp/yaml.h> // YAML reader
+
+#include "rw/writer.h"           // definition of vtk and msh writer interface
+#include "util/compare.h"        // compare real numbers
+#include "util/feElementDefs.h"  // definition of fe element type
+#include "util/point.h"          // definition of Point3
 
 namespace {
 
@@ -32,11 +35,13 @@ struct InpData {
   InpData()
       : d_domain(std::make_pair(std::vector<double>(2, 0.),
                                 std::vector<double>(2, 0.))),
-        d_horizon(0.), d_r(1), d_h(0.), d_isFd(false){};
+        d_horizon(0.),
+        d_r(1),
+        d_h(0.),
+        d_isFd(false){};
 };
 
 void readInputFile(InpData *data, YAML::Node config) {
-
   // read output path, filenames
   if (config["Output"]) {
     if (config["Output"]["Path"])
@@ -58,8 +63,7 @@ void readInputFile(InpData *data, YAML::Node config) {
 
   if (config["Domain"]) {
     std::vector<double> d;
-    for (auto e : config["Domain"])
-      d.push_back(e.as<double>());
+    for (auto e : config["Domain"]) d.push_back(e.as<double>());
 
     data->d_domain.first.resize(2);
     data->d_domain.first[0] = d[0];
@@ -109,10 +113,9 @@ void readInputFile(InpData *data, YAML::Node config) {
     data->d_compressType = config["Compress_Type"].as<std::string>();
 }
 
-} // namespace
+}  // namespace
 
 void tools::mesh::uniformSquare(const std::string &filename) {
-
   // read input file
   YAML::Node config = YAML::LoadFile(filename);
   InpData data;
@@ -153,19 +156,16 @@ void tools::mesh::uniformSquare(const std::string &filename) {
           util::Point3(data.d_domain.first[0] + double(i) * data.d_h,
                        data.d_domain.first[1] + double(j) * data.d_h, 0.);
 
-      if (i == 0 || i == nx)
-        nodal_vols[n] *= 0.5;
-      if (j == 0 || j == ny)
-        nodal_vols[n] *= 0.5;
-    } // loop over j
+      if (i == 0 || i == nx) nodal_vols[n] *= 0.5;
+      if (j == 0 || j == ny) nodal_vols[n] *= 0.5;
+    }  // loop over j
 
   // if this mesh is being generated for finite difference simulation
   // we do not require element-node connectivity
   if (data.d_isFd) {
-
     // write data to file
-    auto writer = rw::writer::Writer(
-        data.d_meshFile, data.d_outFormat, data.d_compressType);
+    auto writer = rw::writer::Writer(data.d_meshFile, data.d_outFormat,
+                                     data.d_compressType);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
     writer.addTimeStep(0.);
@@ -229,7 +229,6 @@ void tools::mesh::uniformSquare(const std::string &filename) {
 // T1(n2, n3, n5) and T2(n3, n6, n5) are created.
 //
 void tools::mesh::uniformTri(const std::string &filename) {
-
   // read input file
   YAML::Node config = YAML::LoadFile(filename);
   InpData data;
@@ -269,19 +268,16 @@ void tools::mesh::uniformTri(const std::string &filename) {
           util::Point3(data.d_domain.first[0] + double(i) * data.d_h,
                        data.d_domain.first[1] + double(j) * data.d_h, 0.);
 
-      if (i == 0 || i == nx)
-        nodal_vols[n] *= 0.5;
-      if (j == 0 || j == ny)
-        nodal_vols[n] *= 0.5;
-    } // loop over j
+      if (i == 0 || i == nx) nodal_vols[n] *= 0.5;
+      if (j == 0 || j == ny) nodal_vols[n] *= 0.5;
+    }  // loop over j
 
   // if this mesh is being generated for finite difference simulation
   // we do not require element-node connectivity
   if (data.d_isFd) {
-
     // write data to file
-    auto writer = rw::writer::Writer(
-      data.d_meshFile, data.d_outFormat, data.d_compressType);
+    auto writer = rw::writer::Writer(data.d_meshFile, data.d_outFormat,
+                                     data.d_compressType);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
     writer.addTimeStep(0.);
@@ -298,7 +294,6 @@ void tools::mesh::uniformTri(const std::string &filename) {
   // create element-node connectivity
   for (size_t j = 0; j < ny; j++)
     for (size_t i = 0; i < nx; i++) {
-
       // get node numbers
       auto n1 = j * (nx + 1) + i;
       auto n2 = j * (nx + 1) + i + 1;
@@ -331,7 +326,7 @@ void tools::mesh::uniformTri(const std::string &filename) {
         en_con[3 * T2 + 1] = n4;
         en_con[3 * T2 + 2] = n3;
       }
-    } // loop over i
+    }  // loop over i
 
   // write data to file
   auto writer = rw::writer::Writer(data.d_meshFile, data.d_outFormat,
@@ -406,7 +401,6 @@ void tools::mesh::uniformTri(const std::string &filename) {
 // applied.
 //
 void tools::mesh::uniformTriSym(const std::string &filename) {
-
   // read input file
   YAML::Node config = YAML::LoadFile(filename);
   InpData data;
@@ -442,7 +436,6 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
   int node_counter = 0;
   for (size_t j = 0; j <= ny_cell; j++)
     for (size_t i = 0; i <= nx_cell; i++) {
-
       // first node (lattice cite / corner of unit cell)
 
       // numbering above is as follows
@@ -460,18 +453,15 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
       // Special case: When j == ny_cell. In this case we do not have any
       // nodes at the lattice center as we have reached the upper boundary.
       size_t n = j * (nx_cell + 1 + nx_cell) + 2 * i;
-      if (j == ny_cell)
-        n = j * (nx_cell + 1 + nx_cell) + i;
+      if (j == ny_cell) n = j * (nx_cell + 1 + nx_cell) + i;
 
       // create node
       nodes[n] = util::Point3(data.d_domain.first[0] + double(i) * h_cell,
                               data.d_domain.first[1] + double(j) * h_cell, 0.);
 
       // modify the volume
-      if (i == 0 || i == nx_cell)
-        nodal_vols[n] *= 0.5;
-      if (j == 0 || j == ny_cell)
-        nodal_vols[n] *= 0.5;
+      if (i == 0 || i == nx_cell) nodal_vols[n] *= 0.5;
+      if (j == 0 || j == ny_cell) nodal_vols[n] *= 0.5;
 
       // second node (center of lattice)
       // create only if i is not at the boundary and j is not at the boundary
@@ -481,15 +471,14 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
             data.d_domain.first[0] + double(i) * h_cell + data.d_h,
             data.d_domain.first[1] + double(j) * h_cell + data.d_h, 0.);
       }
-    } // loop over i
+    }  // loop over i
 
   // if this mesh is being generated for finite difference simulation
   // we do not require element-node connectivity
   if (data.d_isFd) {
-
     // write data to file
-    auto writer = rw::writer::Writer(
-        data.d_meshFile, data.d_outFormat, data.d_compressType);
+    auto writer = rw::writer::Writer(data.d_meshFile, data.d_outFormat,
+                                     data.d_compressType);
     writer.appendNodes(&nodes);
     writer.appendPointData("Node_Volume", &nodal_vols);
     writer.addTimeStep(0.);
@@ -506,7 +495,6 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
   // create element-node connectivity
   for (int j = 0; j < ny_cell; j++)
     for (int i = 0; i < nx_cell; i++) {
-
       //
       // Each cell consists of 4 triangles and 5 nodes
       //       n4          n3
@@ -561,7 +549,7 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
       en_con[3 * T + 0] = ns[1];
       en_con[3 * T + 1] = ns[3];
       en_con[3 * T + 2] = ns[4];
-    } // loop over i
+    }  // loop over i
 
   // write data to file
   auto writer = rw::writer::Writer(data.d_meshFile, data.d_outFormat,
@@ -573,7 +561,6 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
 }
 
 void tools::mesh::fe2D(const std::string &filename) {
-
   // read input file
   YAML::Node config = YAML::LoadFile(filename);
   InpData data;

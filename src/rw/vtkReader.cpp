@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "vtkReader.h"
+
 #include <vtkAbstractArray.h>
 #include <vtkCellArray.h>
 #include <vtkCellData.h>
@@ -24,7 +25,6 @@
 size_t rw::reader::VtkReader::d_count = 0;
 
 rw::reader::VtkReader::VtkReader(const std::string &filename) {
-
   d_count++;
 
   // Append the extension vtu to file_name
@@ -39,7 +39,6 @@ void rw::reader::VtkReader::readMesh(size_t dim,
                                      std::vector<size_t> *enc,
                                      std::vector<std::vector<size_t>> *nec,
                                      std::vector<double> *volumes, bool is_fd) {
-
   //
   // For nodes, we read following data
   // 1. nodes initial configuration
@@ -72,26 +71,25 @@ void rw::reader::VtkReader::readMesh(size_t dim,
 
   // resize data
   nodes->resize(num_nodes);
-  if (has_volume)
-    volumes->resize(num_nodes);
+  if (has_volume) volumes->resize(num_nodes);
 
   // Below is not efficient and need improvement
   // declare another array data to hold the ux,uy,uz
   auto u_a = vtkSmartPointer<vtkDoubleArray>::New();
   u_a->SetNumberOfComponents(3);
-  u_a->Allocate(3, 1); // allocate memory
+  u_a->Allocate(3, 1);  // allocate memory
 
   auto fix_a = vtkSmartPointer<vtkUnsignedIntArray>::New();
   fix_a->SetNumberOfComponents(1);
-  fix_a->Allocate(1, 1); // allocate memory
+  fix_a->Allocate(1, 1);  // allocate memory
 
   auto vol_a = vtkSmartPointer<vtkDoubleArray>::New();
   vol_a->SetNumberOfComponents(1);
-  vol_a->Allocate(1, 1); // allocate memory
+  vol_a->Allocate(1, 1);  // allocate memory
 
   auto con_a = vtkSmartPointer<vtkIntArray>::New();
   con_a->SetNumberOfComponents(11);
-  con_a->Allocate(11, 1); // allocate memory
+  con_a->Allocate(11, 1);  // allocate memory
 
   for (size_t i = 0; i < num_nodes; i++) {
     vtkIdType id = i;
@@ -111,8 +109,7 @@ void rw::reader::VtkReader::readMesh(size_t dim,
 
   // if mesh is for finite difference simulation and if we have read the
   // volume data then we do not need to go further
-  if (is_fd and has_volume)
-    return;
+  if (is_fd and has_volume) return;
 
   // read elements
   // to resize element-node connectivity, we need to know the number of
@@ -138,7 +135,6 @@ void rw::reader::VtkReader::readMesh(size_t dim,
 
     // resize element-node connectivity data in the beginning of the loop
     if (i == 0) {
-
       elem_types->GetTuples(i, i, fix_a);
       element_type = fix_a->GetValue(0);
 
@@ -152,7 +148,6 @@ void rw::reader::VtkReader::readMesh(size_t dim,
     }
 
     for (size_t j = 0; j < num_ids; j++) {
-
       // read element-node connectivity data
       (*enc)[nds_per_el * i + j] = nodes_ids[j];
 
@@ -162,8 +157,7 @@ void rw::reader::VtkReader::readMesh(size_t dim,
   }
 }
 
-void rw::reader::VtkReader::readNodes(std::vector<util::Point3> *nodes){
-
+void rw::reader::VtkReader::readNodes(std::vector<util::Point3> *nodes) {
   d_grid_p = d_reader_p->GetOutput();
   vtkIdType num_nodes = d_grid_p->GetNumberOfPoints();
 
@@ -182,14 +176,12 @@ void rw::reader::VtkReader::readNodes(std::vector<util::Point3> *nodes){
 
 bool rw::reader::VtkReader::readPointData(const std::string &name,
                                           std::vector<util::Point3> *data) {
-
   // read point field data
   d_grid_p = d_reader_p->GetOutput();
   vtkPointData *p_field = d_grid_p->GetPointData();
 
   // handle for displacement, fixity and node element connectivity
-  if (p_field->HasArray(name.c_str()) == 0)
-    return false;
+  if (p_field->HasArray(name.c_str()) == 0) return false;
 
   vtkDataArray *array = p_field->GetArray(name.c_str());
 
@@ -197,13 +189,13 @@ bool rw::reader::VtkReader::readPointData(const std::string &name,
   // declare another array data to hold the ux,uy,uz
   auto data_a = vtkSmartPointer<vtkDoubleArray>::New();
   data_a->SetNumberOfComponents(3);
-  data_a->Allocate(3, 1); // allocate memory
+  data_a->Allocate(3, 1);  // allocate memory
 
   (*data).resize(array->GetNumberOfTuples());
   for (size_t i = 0; i < array->GetNumberOfTuples(); i++) {
     array->GetTuples(i, i, data_a);
     (*data)[i] = util::Point3(data_a->GetValue(0), data_a->GetValue(1),
-      data_a->GetValue(2));
+                              data_a->GetValue(2));
   }
 
   return true;
@@ -211,14 +203,12 @@ bool rw::reader::VtkReader::readPointData(const std::string &name,
 
 bool rw::reader::VtkReader::readPointData(const std::string &name,
                                           std::vector<double> *data) {
-
   // read point field data
   d_grid_p = d_reader_p->GetOutput();
   vtkPointData *p_field = d_grid_p->GetPointData();
 
   // handle for displacement, fixity and node element connectivity
-  if (p_field->HasArray(name.c_str()) == 0)
-    return false;
+  if (p_field->HasArray(name.c_str()) == 0) return false;
 
   vtkDataArray *array = p_field->GetArray(name.c_str());
 
@@ -226,7 +216,7 @@ bool rw::reader::VtkReader::readPointData(const std::string &name,
   // declare another array data to hold the ux,uy,uz
   auto data_a = vtkSmartPointer<vtkDoubleArray>::New();
   data_a->SetNumberOfComponents(1);
-  data_a->Allocate(1, 1); // allocate memory
+  data_a->Allocate(1, 1);  // allocate memory
 
   (*data).resize(array->GetNumberOfTuples());
   for (size_t i = 0; i < array->GetNumberOfTuples(); i++) {

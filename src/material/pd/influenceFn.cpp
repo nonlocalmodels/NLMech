@@ -7,12 +7,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "influenceFn.h"
+
 #include <cmath>
 
 material::pd::ConstInfluenceFn::ConstInfluenceFn(
     const std::vector<double> &params, const size_t &dim)
     : BaseInfluenceFn(), d_a0(0.) {
-
   d_a0 = params.empty() ? double(dim + 1) : params[0];
 }
 
@@ -27,7 +27,6 @@ double material::pd::ConstInfluenceFn::getMoment(const size_t &i) {
 material::pd::LinearInfluenceFn::LinearInfluenceFn(
     const std::vector<double> &params, const size_t &dim)
     : BaseInfluenceFn(), d_a0(0.), d_a1(0.) {
-
   if (params.empty()) {
     // choose a0, a1 = -a0 such that \int_0^1 J(r) r^d dr = 1
     // and J(r) = a0 (1 - r)
@@ -61,7 +60,6 @@ double material::pd::LinearInfluenceFn::getMoment(const size_t &i) {
 material::pd::GaussianInfluenceFn::GaussianInfluenceFn(
     const std::vector<double> &params, const size_t &dim)
     : BaseInfluenceFn(), d_alpha(0.), d_beta(0.) {
-
   if (params.empty()) {
     // beta = 0.2 (default value)
     // choose alpha such that \int_0^1 J(r) r^d dr = 1
@@ -86,7 +84,6 @@ double material::pd::GaussianInfluenceFn::getInfFn(const double &r) {
 }
 
 double material::pd::GaussianInfluenceFn::getMoment(const size_t &i) {
-
   double sq1 = std::sqrt(d_beta);
   double sq2 = std::sqrt(M_PI);
   // M_i = \int_0^1 alpha exp(-r^2/beta) r^i dr
