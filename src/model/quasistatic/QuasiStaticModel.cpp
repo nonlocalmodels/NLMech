@@ -125,16 +125,21 @@ void model::QuasiStaticModel<T>::initHObjects() {
 
 template <class T>
 void model::QuasiStaticModel<T>::computeForces(bool full) {
-  for (size_t i = 0; i < (*d_dataManager_p->getForceP()).size(); i++) {
+  
+  hpx::parallel::for_loop(hpx::parallel::execution::par, 0, d_nnodes,
+  	[&](boost::uint64_t i) {
+  //for (size_t i = 0; i < (*d_dataManager_p->getForceP()).size(); i++) {
     (*d_dataManager_p->getForceP())[i].d_x = 0.;
     (*d_dataManager_p->getForceP())[i].d_y = 0.;
     (*d_dataManager_p->getForceP())[i].d_z = 0.;
-  }
+  });
 
-  // hpx::lcos::local::mutex m;
+
+
+  //hpx::lcos::local::mutex m;
 
   // hpx::parallel::for_loop(hpx::parallel::execution::par, 0, d_nnodes,
-  //	[&](boost::uint64_t i) {
+  	//[&](boost::uint64_t i) {
 
   for (size_t i = 0; i < d_nnodes; i++) {
     util::Point3 force_i = util::Point3();
@@ -150,10 +155,10 @@ void model::QuasiStaticModel<T>::computeForces(bool full) {
       force_i +=
           res.first * (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j_id];
 
-      // m.lock();
+     //  m.lock();
       (*d_dataManager_p->getForceP())[j_id] -=
           res.first * (*d_dataManager_p->getMeshP()->getNodalVolumeP())[i];
-      // m.unlock();
+    //   m.unlock();
 
       if (full) {
         if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Strain_Energy"))
@@ -182,10 +187,10 @@ void model::QuasiStaticModel<T>::computeForces(bool full) {
     }
 
     // update force and energy
-    // m.lock();
+   //  m.lock();
 
     (*d_dataManager_p->getForceP())[i] += force_i;
-    // m.unlock();
+   //  m.unlock();
 
   }  // loop over nodes
 
@@ -247,8 +252,11 @@ util::Matrixij model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
   util::parallel::copy<std::vector<util::Point3>>(*d_dataManager_p->getForceP(),
                                                   backupForce);
 
-  hpx::parallel::for_loop(
-      hpx::parallel::execution::par, 0, d_nnodes, [&](boost::uint64_t i) {
+  //hpx::parallel::for_loop(
+    //  hpx::parallel::execution::par, 0, d_nnodes, [&](boost::uint64_t i) 
+	  
+	for (size_t i = 0; i < d_nnodes ; i++)  
+	    {
         std::vector<size_t> *traversal_list = new std::vector<size_t>;
 
         traversal_list->push_back(i);
@@ -303,7 +311,8 @@ util::Matrixij model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
         }
 
         traversal_list->clear();
-      });
+      }
+	  //);
 
   util::parallel::copy<std::vector<util::Point3>>(
       backup, *d_dataManager_p->getDisplacementP());
