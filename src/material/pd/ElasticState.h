@@ -202,9 +202,6 @@ private:
 	/*! @brief Pointer to the nodes */
 	const std::vector<util::Point3> *d_nodes;
 
-	/*! @brief Pointer to the displacement of the nodes */
-	const std::vector<util::Point3> *d_displacement;
-
 	/*! @brief Pointer to the weighted volumes of the nodes */
 	const std::vector<double> *d_weightedVolume;
 
@@ -213,12 +210,6 @@ private:
 
 	/*! @brief Pointer to the volumes of the nodes */
 	const std::vector<double> * d_volumes;
-
-	/*! @brief Pointer to the dilatation of the nodes */
-	const std::vector<double> * d_dilatation;
-
-	/*! @brief Pointer to the extension of the nodes */
-	const std::vector<std::vector<double>> d_extension;
 
 	/*! @brief Pointer to the neighbors of the nodes */
 	geometry::Neighbor *d_neighbors;

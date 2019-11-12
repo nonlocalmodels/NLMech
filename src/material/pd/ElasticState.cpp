@@ -39,12 +39,12 @@ material::pd::ElasticState::ElasticState(inp::MaterialDeck *deck,
       new util::StateBasedHelperFunctions(d_dataManager_p, this->d_factor2D));
 
   d_nodes = dataManager->getMeshP()->getNodesP();
-  d_displacement = dataManager->getDisplacementP();
+  //d_displacement = dataManager->getDisplacementP();
   d_weightedVolume = dataManager->getVolumeCorrectionP()->d_weightedVolume_p;
   d_volumeCorrection =
       dataManager->getVolumeCorrectionP()->d_volumeCorrection_p;
   d_volumes = dataManager->getMeshP()->getNodalVolumeP();
-  d_dilatation = dataManager->getStateBasedHelperFunctionsP()->d_dilatation_p;
+  //d_dilatation = dataManager->getStateBasedHelperFunctionsP()->d_dilatation_p;
   // d_extension = dataManager->getStateBasedHelperFunctionsP()->d_extension_p;
   d_neighbors = dataManager->getNeighborP();
 
@@ -190,7 +190,7 @@ std::pair<util::Point3, double> material::pd::ElasticState::getBondEF(
       alpha_d = (8. / (*d_weightedVolume)[i]) * d_deck->d_matData.d_mu;
 
       // Scalar extension states
-      e_s = (*d_dilatation)[i] * X.length() / 3.;
+      e_s = (*d_dataManager_p->getDilatationP())[i] * X.length() / 3.;
       e_d = (*d_dataManager_p->getExtensionP())[i][k] - e_s;
 
       // Scalar force states
@@ -206,7 +206,7 @@ std::pair<util::Point3, double> material::pd::ElasticState::getBondEF(
       alpha_s = (9. / (*d_weightedVolume)[i]) * d_deck->d_matData.d_K;
       alpha_d = (15. / (*d_weightedVolume)[i]) * d_deck->d_matData.d_mu;
       // Scalar extension states
-      e_s = (*d_dilatation)[i] * X.length() / 3.;
+      e_s = (*d_dataManager_p->getDilatationP())[i] * X.length() / 3.;
       // Scalar force states
       t_s = alpha_s * w * e_s;
       t_d = alpha_d * w * e_d;

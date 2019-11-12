@@ -147,3 +147,15 @@ void data::DataManager::setStrainTensorP(std::vector<util::Matrix33>* pointer) {
 std::vector<util::Matrix33>* data::DataManager::getStrainTensorP() {
   return d_strain_p;
 }
+
+	void data::DataManager::setDilatationP(std::vector<double> * pointer){
+
+    d_dilatation_p = pointer;
+
+  }
+
+	std::vector<double>* data::DataManager::getDilatationP(){
+
+    return d_dilatation_p;
+
+  }
