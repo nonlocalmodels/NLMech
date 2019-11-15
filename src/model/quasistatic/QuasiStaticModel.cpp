@@ -126,9 +126,12 @@ void model::QuasiStaticModel<T>::initHObjects() {
 template <class T>
 void model::QuasiStaticModel<T>::computeForces(bool full) {
   
+  d_material_p->update();
+
+  // Clear the vector
+
   hpx::parallel::for_loop(hpx::parallel::execution::par, 0, d_nnodes,
   	[&](boost::uint64_t i) {
-  //for (size_t i = 0; i < (*d_dataManager_p->getForceP()).size(); i++) {
     (*d_dataManager_p->getForceP())[i].d_x = 0.;
     (*d_dataManager_p->getForceP())[i].d_y = 0.;
     (*d_dataManager_p->getForceP())[i].d_z = 0.;
@@ -136,29 +139,29 @@ void model::QuasiStaticModel<T>::computeForces(bool full) {
 
 
 
-  //hpx::lcos::local::mutex m;
+ hpx::lcos::local::mutex m;
 
-  // hpx::parallel::for_loop(hpx::parallel::execution::par, 0, d_nnodes,
-  	//[&](boost::uint64_t i) {
+ hpx::parallel::for_loop(hpx::parallel::execution::par, 0, d_nnodes,
+  	[&](boost::uint64_t i) {
 
-  for (size_t i = 0; i < d_nnodes; i++) {
+  
     util::Point3 force_i = util::Point3();
 
     // inner loop over neighbors
-    auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(i);
+    std::vector<std::size_t> i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(i);
 
     for (size_t j = 0; j < i_neighs.size(); j++) {
-      auto j_id = i_neighs[j];
+      size_t j_id = i_neighs[j];
 
       auto res = d_material_p->getBondEF(size_t(i), size_t(j_id));
 
       force_i +=
           res.first * (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j_id];
 
-     //  m.lock();
+       m.lock();
       (*d_dataManager_p->getForceP())[j_id] -=
           res.first * (*d_dataManager_p->getMeshP()->getNodalVolumeP())[i];
-    //   m.unlock();
+       m.unlock();
 
       if (full) {
         if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Strain_Energy"))
@@ -170,6 +173,7 @@ void model::QuasiStaticModel<T>::computeForces(bool full) {
       }
     }
 
+    
     if (full) {
       if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Strain_Tensor"))
 
@@ -185,16 +189,17 @@ void model::QuasiStaticModel<T>::computeForces(bool full) {
             d_material_p->getStress(size_t(i));
       }
     }
-
+    
     // update force and energy
-   //  m.lock();
+    m.lock();
 
     (*d_dataManager_p->getForceP())[i] += force_i;
-   //  m.unlock();
+     m.unlock();
 
   }  // loop over nodes
 
-  //);// end of parallel for loop
+  );// end of parallel for loop
+
 }
 
 template <class T>

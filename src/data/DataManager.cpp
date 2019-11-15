@@ -45,8 +45,7 @@ void data::DataManager::setOutputDeckP(inp::OutputDeck* pointer) {
 inp::OutputDeck* data::DataManager::getOutputDeckP() { return d_outputDeck_p; }
 
 void data::DataManager::setBodyForceP(std::vector<util::Point3>* pointer) {
-  assert(d_b_p != nullptr);
-
+ 
   d_b_p = pointer;
 }
 

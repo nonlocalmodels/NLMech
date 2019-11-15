@@ -25,7 +25,9 @@ util::StateBasedHelperFunctions::StateBasedHelperFunctions(
 void util::StateBasedHelperFunctions::dilatation(
     data::DataManager *dataManager, size_t dim, double factor) {
 
-    dataManager->setDilatationP(new std::vector<double>(dataManager->getMeshP()->getNodesP()->size(), 0.));
+   dataManager->setDilatationP(new std::vector<double>(dataManager->getMeshP()->getNodesP()->size(), 0.));
+
+  
 
    hpx::parallel::for_loop(hpx::parallel::execution::par, 0, dataManager->getMeshP()->getNodesP()->size(),
   	[&](boost::uint64_t i) {
@@ -37,7 +39,7 @@ void util::StateBasedHelperFunctions::dilatation(
                        ((*dataManager->getMeshP()->getNodesP())[i] + (*dataManager->getDisplacementP())[i]);
       util::Point3 X = (*dataManager->getMeshP()->getNodesP())[j] - (*dataManager->getMeshP()->getNodesP())[i];
 
-      (*dataManager->getExtensionP())[i].push_back(Y.length() - X.length());  //
+      (*dataManager->getExtensionP())[i].push_back(Y.length() - X.length());  
 
       switch (dim) {
         case 1:
@@ -61,5 +63,5 @@ void util::StateBasedHelperFunctions::dilatation(
       k++;
     }
 
-    });
+    });   
 }
