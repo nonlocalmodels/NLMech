@@ -17,7 +17,18 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/src/Config.h"
   )
 
-#Enable ctest
+# Set the common library directory
+get_property(LIB64 GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS)
+
+if ("${LIB64}" STREQUAL "TRUE")
+    set(LIBSUFFIX 64)
+else()
+    set(LIBSUFFIX "")
+endif()
+
+set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib${LIBSUFFIX}")
+
+# Enable ctest
 enable_testing()
 
 # Add own cmake scripts
