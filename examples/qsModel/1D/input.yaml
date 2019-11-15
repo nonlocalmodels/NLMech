@@ -32,7 +32,7 @@ Force_BC:
   Sets: 1
   Set_1:
     Location:
-      Line: [15.4, 16.5]
+      Line: [15.9, 16.5]
     Direction: [1]
     Time_Function:
       Type: linear
@@ -41,7 +41,7 @@ Force_BC:
     Spatial_Function:
       Type: constant
       Parameters:
-        - 40
+        - 160
 Solver:
   Type: ConjugateGradient
   Max_Iteration: 1000

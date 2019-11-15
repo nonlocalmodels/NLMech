@@ -491,7 +491,7 @@ util::VectorXi model::QuasiStaticModel<T>::computeResidual() {
 
     if (found == false) {
       size_t id = i * dim;
-
+     
       res[id] = (*d_dataManager_p->getForceP())[i][0] +
                 (*d_dataManager_p->getBodyForceP())[i][0];
       if (dim >= 2)
