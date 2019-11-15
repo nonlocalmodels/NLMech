@@ -17,6 +17,10 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/src/Config.h"
   )
 
+
+# Set director for all exectuables
+set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin")
+
 #Enable ctest
 enable_testing()
 
