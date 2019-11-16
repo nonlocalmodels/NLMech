@@ -28,7 +28,10 @@ endif()
 
 set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib${LIBSUFFIX}")
 
-# Enable ctest
+# Add a postfix if the libraries are build in the debug mode
+set(CMAKE_DEBUG_POSTFIX d)
+
+#Enable ctest
 enable_testing()
 
 # Add own cmake scripts
