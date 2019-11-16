@@ -3,9 +3,7 @@
 #
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-cmake_minimum_required(VERSION 3.0)
-
-cmake_policy(SET CMP0074 NEW)
+cmake_minimum_required(VERSION 3.10)
 
 project(NLMech CXX)
 set (VERSION_MAJOR 0)
@@ -39,8 +37,6 @@ enable_testing()
 
 # Add own cmake scripts
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
-
-cmake_policy(SET CMP0023 OLD)
 
 # Set build type to release if non is specified
 if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
