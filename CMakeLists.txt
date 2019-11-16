@@ -17,6 +17,9 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/src/Config.h"
   )
 
+# Add a postfix if the libraries are build in the debug mode
+set(CMAKE_DEBUG_POSTFIX d)
+
 #Enable ctest
 enable_testing()
 
