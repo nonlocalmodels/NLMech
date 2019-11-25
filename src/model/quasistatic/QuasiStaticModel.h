@@ -112,6 +112,9 @@ private:
 	 */
 	void computeForces(bool full=false);
 
+
+	void computePertubatedForces(size_t thread); 
+
 	/*! @brief Assembles the Jacobian matrix
 	 * @return Jacobian matrix
 	 */
@@ -169,6 +172,12 @@ private:
 
 	/*! @brief Name of the model */
 	std::string d_name;
+
+	/*! @brief Number of available os threads */
+	size_t d_osThreads;
+
+	/*! @brief Data manager objects for the assembly of the stiffness matrix */
+	std::vector<data::DataManager*> d_dataManagers;
 
 	/*! @brief Model deck */
 	inp::ModelDeck *d_modelDeck_p;

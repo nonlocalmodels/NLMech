@@ -45,7 +45,6 @@ void data::DataManager::setOutputDeckP(inp::OutputDeck* pointer) {
 inp::OutputDeck* data::DataManager::getOutputDeckP() { return d_outputDeck_p; }
 
 void data::DataManager::setBodyForceP(std::vector<util::Point3>* pointer) {
- 
   d_b_p = pointer;
 }
 
@@ -147,14 +146,10 @@ std::vector<util::Matrix33>* data::DataManager::getStrainTensorP() {
   return d_strain_p;
 }
 
-	void data::DataManager::setDilatationP(std::vector<double> * pointer){
+void data::DataManager::setDilatationP(std::vector<double>* pointer) {
+  d_dilatation_p = pointer;
+}
 
-    d_dilatation_p = pointer;
-
-  }
-
-	std::vector<double>* data::DataManager::getDilatationP(){
-
-    return d_dilatation_p;
-
-  }
+std::vector<double>* data::DataManager::getDilatationP() {
+  return d_dilatation_p;
+}
