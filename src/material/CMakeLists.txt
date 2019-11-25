@@ -7,4 +7,5 @@
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 AUX_SOURCE_DIRECTORY(./pd SOURCES)
 
-add_library(Material ${SOURCES})
+add_library(Material ${SOURCES} )
+target_link_libraries(Material ${LAPACK_LIBRARIES})

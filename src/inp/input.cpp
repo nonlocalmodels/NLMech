@@ -8,6 +8,8 @@
 
 #include "input.h"
 
+#include <hpx/config.hpp>
+
 #include <yaml-cpp/yaml.h>
 
 #include <cmath>

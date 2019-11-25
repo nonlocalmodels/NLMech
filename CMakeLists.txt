@@ -70,8 +70,8 @@ find_package(blaze REQUIRED)
 find_package(BlazeIterative REQUIRED)
 
 # BLAS and LAPACK
-find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
+find_package(BLAS REQUIRED)
 
 # Add flags to compiler
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
