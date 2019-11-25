@@ -8,6 +8,8 @@
 
 #include "fe2D.h"
 
+#include <hpx/config.hpp>
+
 #include <yaml-cpp/yaml.h>  // YAML reader
 
 #include <cmath>
