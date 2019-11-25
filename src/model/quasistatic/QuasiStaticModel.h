@@ -112,13 +112,23 @@ private:
 	 */
 	void computeForces(bool full=false);
 
-
+	/*!
+	 * @brief Computes the forces of all nodes using the pertubated displacement
+	 */
 	void computePertubatedForces(size_t thread); 
 
 	/*! @brief Assembles the Jacobian matrix
 	 * @return Jacobian matrix
 	 */
 	util::Matrixij assembly_jacobian_matrix();
+
+	/*! @brief Assembles the Jacobian matrix
+	 * @brief begin First node of the chunk
+	 * @brief end Last node of the chunk
+	 * @brief thread Id of the thread handling this chunk
+	 * @return Jacobian matrix
+	 */
+	void assembly_jacobian_matrix_part(size_t begin, size_t end, size_t thread);
 
 	/*! @brief Computes the new displacement of Newton step
 	 * @return The updated displacement
@@ -175,6 +185,9 @@ private:
 
 	/*! @brief Number of available os threads */
 	size_t d_osThreads;
+
+	/* Jacobian matrix */
+	util::Matrixij jacobian;
 
 	/*! @brief Data manager objects for the assembly of the stiffness matrix */
 	std::vector<data::DataManager*> d_dataManagers;

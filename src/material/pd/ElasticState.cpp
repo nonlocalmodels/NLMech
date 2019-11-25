@@ -64,12 +64,14 @@ void material::pd::ElasticState::computeParameters(inp::MaterialDeck *deck,
   // dim = dim;
 
   if (util::compare::definitelyLessThan(deck->d_matData.d_E, 0.) &&
-      util::compare::definitelyLessThan(deck->d_matData.d_K, 0.)) {
+     dim == 1) {
     std::cerr
-        << "Error: Require either Young's modulus E or Bulk modulus K"
+        << "Error: Require the Young's modulus E"
            " to compute the elastic state-based peridynamic parameters.\n";
     exit(1);
   }
+
+  /*
   if (util::compare::definitelyGreaterThan(deck->d_matData.d_E, 0.) &&
       util::compare::definitelyGreaterThan(deck->d_matData.d_K, 0.)) {
     std::cout << "Warning: Both Young's modulus E and Bulk modulus K are "
@@ -78,7 +80,7 @@ void material::pd::ElasticState::computeParameters(inp::MaterialDeck *deck,
                  "parameters, we only require one of those.\n";
     std::cout << "Warning: Selecting Young's modulus to compute parameters.\n";
   }
-
+*/
   /* Todo Add damage to elastic model
    if (util::compare::definitelyLessThan(deck->d_matData.d_Gc, 0.) &&
    util::compare::definitelyLessThan(deck->d_matData.d_KIc, 0.)) {
@@ -105,6 +107,7 @@ void material::pd::ElasticState::computeParameters(inp::MaterialDeck *deck,
    */
 
   // compute E if not provided or K if not provided
+  /*
   if (deck->d_matData.d_E > 0.)
     deck->d_matData.d_K =
         deck->d_matData.toK(deck->d_matData.d_E, deck->d_matData.d_nu);
@@ -112,7 +115,7 @@ void material::pd::ElasticState::computeParameters(inp::MaterialDeck *deck,
   if (deck->d_matData.d_K > 0. && deck->d_matData.d_E < 0.)
     deck->d_matData.d_E =
         deck->d_matData.toE(deck->d_matData.d_K, deck->d_matData.d_nu);
-
+*/
   /* Todo Add damage to elastic model
    if (deck->d_matData.d_Gc > 0.)
    deck->d_matData.d_KIc = deck->d_matData.toKIc(

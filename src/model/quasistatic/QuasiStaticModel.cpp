@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include <hpx/lcos/when_all.hpp>
+
 #include "BlazeIterative.hpp"
 #include "data/DataManager.h"
 #include "fe/mesh.h"
@@ -266,7 +268,7 @@ void model::QuasiStaticModel<T>::computePertubatedForces(size_t thread) {
                      (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j_id];
 
           m.lock();
-          (*d_dataManager_p->getForceP())[j_id] -=
+          (*d_dataManagers[thread]->getForceP())[j_id] -=
               res.first * (*d_dataManager_p->getMeshP()->getNodalVolumeP())[i];
           m.unlock();
         
@@ -274,7 +276,7 @@ void model::QuasiStaticModel<T>::computePertubatedForces(size_t thread) {
         // update force and energy
         m.lock();
 
-        (*d_dataManager_p->getForceP())[i] += force_i;
+        (*d_dataManagers[thread]->getForceP())[i] += force_i;
         m.unlock();
       }  // loop over nodes
 
@@ -325,26 +327,56 @@ util::Matrixij model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
   size_t dim = d_dataManager_p->getModelDeckP()->d_dim;
   size_t matrixSize = d_nnodes * dim;
 
-  util::Matrixij jacobian = util::Matrixij(matrixSize, matrixSize, 0.);
+  jacobian = util::Matrixij(matrixSize, matrixSize, 0.);
 
-  double eps = d_input_p->getSolverDeck()->d_perturbation *
+ 
+  size_t slice = int(d_nnodes/1);
+
+  std::vector<hpx::future<void>> futures;
+
+  assembly_jacobian_matrix_part(0,d_nnodes,0);
+
+/*
+  for(size_t i = 0 ; i < 1 ; i++)
+  {
+
+    size_t start = i * slice;
+    size_t end = 0;
+
+            if (i < d_osThreads - 1)
+                end = (i+1) * slice;
+            else
+                end = d_nnodes;
+
+    futures.push_back(hpx::async([&](){
+
+        assembly_jacobian_matrix_part(start,end,i);
+
+    }));
+
+  }
+
+  hpx::when_all(futures);
+  */
+  return jacobian;
+}
+
+
+template <class T>
+void model::QuasiStaticModel<T>::assembly_jacobian_matrix_part(size_t begin, size_t end, size_t thread)
+{
+
+double eps = d_input_p->getSolverDeck()->d_perturbation *
                d_dataManager_p->getMeshP()->getMeshSize();
 
-  std::vector<util::Point3> backup(d_nnodes, util::Point3());
-  std::vector<util::Point3> backupForce(d_nnodes, util::Point3());
+size_t dim = d_dataManager_p->getModelDeckP()->d_dim;
 
-  //util::parallel::copy<std::vector<util::Point3>>(
-    //  *d_dataManager_p->getDisplacementP(), backup);
-  //util::parallel::copy<std::vector<util::Point3>>(*d_dataManager_p->getForceP(),
-   //                                               backupForce);
+std::vector<util::Point3> backup(d_nnodes, util::Point3());
 
-  // hpx::parallel::for_loop(
-  //  hpx::parallel::execution::par, 0, d_nnodes, [&](boost::uint64_t i)
+util::parallel::copy<std::vector<util::Point3>>(
+      *d_dataManager_p->getDisplacementP(), backup);
 
-
-size_t thread = 0;
-
-  for (size_t i = 0; i < d_nnodes; i++) {
+for (size_t i = begin; i < end; i++) {
     std::vector<size_t> *traversal_list = new std::vector<size_t>;
 
     traversal_list->push_back(i);
@@ -400,14 +432,9 @@ size_t thread = 0;
 
     traversal_list->clear();
   }
-  //);
-
- // util::parallel::copy<std::vector<util::Point3>>(
-   //   backup, *d_dataManager_p->getDisplacementP());
-  //util::parallel::copy(backupForce, *d_dataManager_p->getForceP());
-
-  return jacobian;
 }
+
+
 
 template <class T>
 util::VectorXi model::QuasiStaticModel<T>::newton_step(util::VectorXi &res) {
