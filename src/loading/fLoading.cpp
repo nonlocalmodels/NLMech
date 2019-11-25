@@ -115,7 +115,6 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
     inp::BCData bc = d_bcData[s];
 
     for (auto i : d_bcNodes[s]) {
-    
       util::Point3 x = mesh->getNode(i);
       double fmax = 1.0;
 
@@ -185,7 +184,7 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
 
       // multiply by the slope
       fmax *= bc.d_timeFnParams[0];
-      
+
       for (auto d : bc.d_direction) {
         if (d == 1)
           (*f)[i].d_x += fmax;
