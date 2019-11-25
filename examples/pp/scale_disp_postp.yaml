@@ -1,0 +1,23 @@
+Source_Path: .
+Simulation_Input_File: input.yaml
+Filename_To_Read: output
+Output:
+  Path: ../pp
+Dt_Start: 0
+Dt_End: 36
+# Dt_Out_Change: 440
+Compute:
+  Sets: 2
+  Set_1:
+    Tag_Filename: uscale/scale_sim
+    Output_Only_Nodes: false
+    # Dt_Interval: 10
+    Scale_U_Ouptut: 100.0
+  Set_2:
+    Tag_Filename: uscale/strain
+    Output_Only_Nodes: false
+    Compress_Type: zlib
+    # compute strain and stress
+    Strain_Stress: true
+HPX:
+  Partitions: 1
