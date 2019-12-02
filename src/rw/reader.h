@@ -10,6 +10,7 @@
 #define RW_READER_H
 
 #include "util/point.h"           // definition of Point3
+#include "util/matrix.h"           // definition of matrices
 #include <vector>
 
 /*!
@@ -28,6 +29,11 @@ namespace rw {
  */
 namespace reader {
 
+/**
+   * @name CSV specific functions
+   */
+/**@{*/
+
 /*!
  * @brief Reads mesh data into node file and element file
  * @param filename Name of mesh file
@@ -38,6 +44,13 @@ namespace reader {
 void readCsvFile(const std::string &filename, size_t dim,
                  std::vector<util::Point3> *nodes,
                  std::vector<double> *volumes);
+
+/** @}*/
+
+/**
+ * @name VTU specific functions
+ */
+/**@{*/
 
 /*!
  * @brief Reads mesh data into node file and element file
@@ -57,6 +70,33 @@ void readVtuFile(const std::string &filename, size_t dim,
                  size_t &num_elem, std::vector<size_t> *enc,
                  std::vector<std::vector<size_t>> *nec,
                  std::vector<double> *volumes, bool is_fd = false);
+
+/*!
+ * @brief Reads nodal coordinates
+ * @param filename Name of mesh file
+ * @param dim Dimension
+ * @param nodes Vector of nodes data
+ * @param ref_config Flag which specifies if we need to subtract the
+ * displacement from nodes obtained from vtu file to get reference position
+ * of nodes
+ */
+void readVtuFileNodes(const std::string &filename, size_t dim,
+                 std::vector<util::Point3> *nodes, bool
+                     ref_config = false);
+
+/*!
+ * @brief Reads cell data, i.e. element-node connectivity and node-element
+ * connectivity
+ * @param filename Name of mesh file
+ * @param dim Dimension
+ * @param element_type Type of element
+ * @param enc Element-node connectivity
+ * @param nec Node-element connectivity
+ */
+void readVtuFileCells(const std::string &filename, size_t dim,
+                      size_t &element_type, size_t &num_elem,
+                      std::vector<size_t> *enc,
+                      std::vector<std::vector<size_t>> *nec);
 
 /*!
  * @brief Reads mesh data into node file and element file
@@ -79,7 +119,146 @@ void readVtuFileRestart(const std::string &filename,
  */
 bool readVtuFilePointData(const std::string &filename,
                           const std::string &tag,
-                        std::vector<double> *data);
+                          std::vector<uint8_t> *data);
+
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename Name of mesh file
+ * @param tag Name of point data to be read from .vtu file
+ * @param data Pointer to vector of point data
+ * @return bool True if found the data in file
+ */
+bool readVtuFilePointData(const std::string &filename,
+                          const std::string &tag,
+                          std::vector<size_t> *data);
+
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename Name of mesh file
+ * @param tag Name of point data to be read from .vtu file
+ * @param data Pointer to vector of point data
+ * @return bool True if found the data in file
+ */
+bool readVtuFilePointData(const std::string &filename,
+                          const std::string &tag,
+                          std::vector<int> *data);
+
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename Name of mesh file
+ * @param tag Name of point data to be read from .vtu file
+ * @param data Pointer to vector of point data
+ * @return bool True if found the data in file
+ */
+bool readVtuFilePointData(const std::string &filename,
+                          const std::string &tag,
+                          std::vector<float> *data);
+
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename Name of mesh file
+ * @param tag Name of point data to be read from .vtu file
+ * @param data Pointer to vector of point data
+ * @return bool True if found the data in file
+ */
+bool readVtuFilePointData(const std::string &filename,
+                          const std::string &tag,
+                          std::vector<double> *data);
+
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename Name of mesh file
+ * @param tag Name of point data to be read from .vtu file
+ * @param data Pointer to vector of point data
+ * @return bool True if found the data in file
+ */
+bool readVtuFilePointData(const std::string &filename,
+                          const std::string &tag,
+                        std::vector<util::Point3> *data);
+
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename Name of mesh file
+ * @param tag Name of point data to be read from .vtu file
+ * @param data Pointer to vector of point data
+ * @return bool True if found the data in file
+ */
+bool readVtuFilePointData(const std::string &filename,
+                          const std::string &tag,
+                          std::vector<util::SymMatrix3> *data);
+
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename Name of mesh file
+ * @param tag Name of point data to be read from .vtu file
+ * @param data Pointer to vector of point data
+ * @return bool True if found the data in file
+ */
+bool readVtuFilePointData(const std::string &filename,
+                          const std::string &tag,
+                          std::vector<util::Matrix33> *data);
+
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename Name of mesh file
+ * @param tag Name of point data to be read from .vtu file
+ * @param data Pointer to vector of point data
+ * @return bool True if found the data in file
+ */
+bool readVtuFileCellData(const std::string &filename,
+                          const std::string &tag,
+                          std::vector<float> *data);
+
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename Name of mesh file
+ * @param tag Name of point data to be read from .vtu file
+ * @param data Pointer to vector of point data
+ * @return bool True if found the data in file
+ */
+bool readVtuFileCellData(const std::string &filename,
+                         const std::string &tag,
+                         std::vector<double> *data);
+
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename Name of mesh file
+ * @param tag Name of point data to be read from .vtu file
+ * @param data Pointer to vector of point data
+ * @return bool True if found the data in file
+ */
+bool readVtuFileCellData(const std::string &filename,
+                         const std::string &tag,
+                         std::vector<util::Point3> *data);
+
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename Name of mesh file
+ * @param tag Name of point data to be read from .vtu file
+ * @param data Pointer to vector of point data
+ * @return bool True if found the data in file
+ */
+bool readVtuFileCellData(const std::string &filename,
+                         const std::string &tag,
+                         std::vector<util::SymMatrix3> *data);
+
+/*!
+ * @brief Reads data of specified tag from the vtu file
+ * @param filename Name of mesh file
+ * @param tag Name of point data to be read from .vtu file
+ * @param data Pointer to vector of point data
+ * @return bool True if found the data in file
+ */
+bool readVtuFileCellData(const std::string &filename,
+                         const std::string &tag,
+                         std::vector<util::Matrix33> *data);
+
+/** @}*/
+
+/**
+ * @name MSH specific functions
+ */
+/**@{*/
 
 /*!
  * @brief Reads mesh data into node file and element file
@@ -122,6 +301,8 @@ void readMshFileRestart(const std::string &filename,
 bool readMshFilePointData(const std::string &filename,
                           const std::string &tag,
                           std::vector<double> *data);
+
+/** @}*/
 
 } // namespace reader
 
