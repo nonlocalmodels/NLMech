@@ -88,6 +88,13 @@ struct SymMatrix3 {
    * @brief Constructor
    */
   SymMatrix3() : d_xx(0.), d_yy(0.), d_zz(0.), d_xy(0.), d_xz(0.), d_yz(0.){};
+
+  /*!
+   * @brief Constructor
+   */
+  SymMatrix3(const float &xx, const float &yy, const float &zz, const float &xy,
+             const float &xz, const float &yz)
+      : d_xx(xx), d_yy(yy), d_zz(zz), d_xy(xy), d_xz(xz), d_yz(yz){};
 };
 
 } // namespace util

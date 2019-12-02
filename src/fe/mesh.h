@@ -49,6 +49,12 @@ namespace fe {
 class Mesh {
 
 public:
+
+  /*!
+   * @brief Constructor
+   */
+  Mesh();
+
   /*!
    * @brief Constructor
    *
@@ -71,36 +77,42 @@ public:
    * @return N Dimension
    */
   size_t getDimension();
+  size_t getDimension() const;
 
   /*!
    * @brief Get the number of nodes
    * @return N number of nodes
    */
   size_t getNumNodes();
+  size_t getNumNodes() const;
 
   /*!
    * @brief Get the number of elements
    * @return N Number of elements
    */
   size_t getNumElements();
+  size_t getNumElements() const;
 
   /*!
    * @brief Get the number of dofs
    * @return N Number of dofs
    */
   size_t getNumDofs();
+  size_t getNumDofs() const;
 
   /*!
    * @brief Get the type of element in mesh
    * @return type Element type (using VTK convention)
    */
   size_t getElementType();
+  size_t getElementType() const;
 
   /*!
    * @brief Get the mesh size
    * @return h Mesh size
    */
   double getMeshSize();
+  double getMeshSize() const;
 
   /*!
    * @brief Get coordinates of node i
@@ -108,6 +120,7 @@ public:
    * @return coords Coordinates
    */
   util::Point3 getNode(const size_t &i);
+  util::Point3 getNode(const size_t &i) const;
 
   /*!
    * @brief Get nodal volume of node i
@@ -115,24 +128,28 @@ public:
    * @return vol Volume
    */
   double getNodalVolume(const size_t &i);
+  double getNodalVolume(const size_t &i) const;
 
   /*!
    * @brief Get the pointer to nodes data
    * @return pointer Pointer to nodes data
    */
   const std::vector<util::Point3> *getNodesP();
+  const std::vector<util::Point3> *getNodesP() const;
 
   /*!
    * @brief Get the pointer to fixity data
    * @return pointer Pointer to fixity data
    */
   const std::vector<uint8_t> *getFixityP();
+  const std::vector<uint8_t> *getFixityP() const;
 
   /*!
    * @brief Get the pointer to nodal volume data
    * @return pointer Pointer to nodal volume data
    */
   const std::vector<double> *getNodalVolumeP();
+  const std::vector<double> *getNodalVolumeP() const;
 
   /*!
    * @brief Return true if node is free
@@ -141,6 +158,7 @@ public:
    * @return bool True if dof is free else false
    */
   bool isNodeFree(const size_t &i, const unsigned int &dof);
+  bool isNodeFree(const size_t &i, const unsigned int &dof) const;
 
   /*!
    * @brief Get the connectivity of element
@@ -157,6 +175,7 @@ public:
    * @return vector Vector of nodal ids
    */
   const std::vector<size_t> getElementConnectivity(const size_t &i);
+  const std::vector<size_t> getElementConnectivity(const size_t &i) const;
 
   /*!
    * @brief Get the vertices of element
@@ -165,18 +184,31 @@ public:
    * @return vector Vector of vertices
    */
   const std::vector<util::Point3> getElementConnectivityNodes(const size_t &i);
+  const std::vector<util::Point3> getElementConnectivityNodes(const size_t
+                                                              &i) const;
 
   /*!
    * @brief Get the pointer to nodes data
    * @return pointer Pointer to nodes data
    */
   const std::vector<size_t> *getElementConnectivitiesP();
+  const std::vector<size_t> *getElementConnectivitiesP() const;
+
+  /*!
+   * @brief Get the list of element with given node i
+   *
+   * @param i Id of a node
+   * @return vector Vector of element ids
+   */
+  const std::vector<size_t> getNodeElementConnectivity(const size_t &i);
+  const std::vector<size_t> getNodeElementConnectivity(const size_t &i) const;
 
   /*!
    * @brief Get the bounding box of the mesh
    * @return box Bounding box
    */
   std::pair<std::vector<double>, std::vector<double>> getBoundingBox();
+  std::pair<std::vector<double>, std::vector<double>> getBoundingBox() const;
 
   /** @}*/
 
@@ -186,12 +218,54 @@ public:
   /**@{*/
 
   /*!
+   * @brief Set the mesh data for finite difference simulations
+   *
+   * @param dim Dimension
+   * @param nodes Reference to nodes reference configuration
+   * @param volumes Reference to nodal volumes
+   */
+  void setMeshData(const size_t &dim, std::vector<util::Point3> &nodes,
+                   std::vector<double> &volumes);
+
+  /*!
+   * @brief Set the nodal data of the mesh
+   * @param nodes Reference to nodes reference configuration
+   */
+  void setNodes(std::vector<util::Point3> &nodes);
+
+  /*!
+   * @brief Set the nodal volume data of the mesh
+   * @param volumes Reference to nodal volumes
+   */
+  void setNodalVolumes(std::vector<double> &volumes);
+
+  /*!
+   * @brief Set nodal fixity masks
+   * @param fixity Reference to fixity of all nodes
+   */
+  void setFixity(std::vector<uint8_t> &fixity);
+
+  /*!
    * @brief Set the fixity to free (0) or fixed (1)
    * @param i Id of node
    * @param dof Dof which is affected
    * @param flag Set fixity to fixed if true or free
    */
   void setFixity(const size_t &i, const unsigned int &dof, const bool &flag);
+
+  /*!
+   * @brief Set the mesh size
+   * @param h Mesh size
+   */
+  void setMeshSize(const double &h);
+
+  /*!
+   * @brief Reads mesh data from the file and populates other data
+   *
+   * @param deck Mesh deck
+   * @param filename Name of the mesh file
+   * */
+  void readFromFile(inp::MeshDeck *deck, const std::string &filename);
 
   /*!
    * @brief Clear element-node connectivity data
@@ -218,7 +292,8 @@ private:
    *
    * @param filename Name of the mesh file
    * */
-  void createData(const std::string &filename);
+  void createData(const std::string &filename, bool
+  ref_config = false);
 
   /*!
    * @brief Compute the nodal volume

@@ -1,0 +1,125 @@
+#########################################################################
+####### sample 1 
+#########################################################################
+# type fe_2d, fd_2d, fe_old_2d, fd_1d
+Type: fe
+Output:
+    Path: .
+    # only provide name (extension will be added by code)
+    File: l2_error_12
+# do we look for closest node in fine mesh
+# at each time step or reuse the first time computed
+# node ids of fine mesh (default is true)
+Diff_Find_Current: false   
+# number of quads to approximately compute L2 norm of error
+# 4 is default
+Num_Quads: 4
+# Use_Volume for fd (to use same file for fd comparison)
+Use_Volume: false
+Data_1:
+    # fine mesh should be first
+    Mesh_Size: 0.025
+    Final_Time: 2
+    Time_Steps: 200000
+    Output_Interval: 1000
+    Path: ./eps_0.1_m_4
+    Mesh_Filename: mesh_1.vtu
+Data_2:
+    Mesh_Size: 0.05
+    Final_Time: 2
+    Time_Steps: 200000
+    Output_Interval: 1000
+    Path: ./eps_0.1_m_2
+    Mesh_Filename: mesh_2.vtu
+
+#########################################################################
+####### sample 2 
+#########################################################################
+# type fe_2d, fd_2d, fe_old_2d, fd_1d
+Type: fe
+Output:
+    Path: .
+    # only provide name (extension will be added by code)
+    File: l2_error_12
+# do we look for closest node in fine mesh
+# at each time step or reuse the first time computed
+# node ids of fine mesh (default is true)
+Diff_Find_Current: false   
+# number of quads to approximately compute L2 norm of error
+# 4 is default
+Num_Quads: 4
+# Use_Volume for fd (to use same file for fd comparison)
+Use_Volume: false
+#
+# provide time details globally
+#
+Final_Time: 2
+Time_Steps: 100000
+Output_Interval: 5000
+#
+# provide horizon
+#
+Horizon: 0.1
+#
+# fine mesh
+#
+Data_1:
+    # provide ratio of horizon and mesh size
+    Horizon_Factor_m_value: 4
+    # path to vtu files
+    Path: ./eps_0.1_m_4
+Data_2:
+    # provide ratio of horizon and mesh size
+    Horizon_Factor_m_value: 2
+    # path to vtu files
+    Path: ./eps_0.1_m_2
+
+#########################################################################
+####### sample 3
+#########################################################################
+# type fe_2d, fd_2d, fe_old_2d, fd_1d
+Type: fe
+Triple_Data: true
+Output:
+    Path: .
+    # only provide name (extension will be added by code)
+    # if triple_data is set to true, code will also
+    # put tag 12 and 23 
+    # so output filename will be l2_error_12.out and l2_error_23.out
+    File: l2_error
+# do we look for closest node in fine mesh
+# at each time step or reuse the first time computed
+# node ids of fine mesh (default is true)
+Diff_Find_Current: false   
+# number of quads to approximately compute L2 norm of error
+# 4 is default
+Num_Quads: 4
+# Use_Volume for fd (to use same file for fd comparison)
+Use_Volume: false
+#
+# provide time details globally
+#
+Final_Time: 2
+Time_Steps: 100000
+Output_Interval: 5000
+#
+# provide horizon
+#
+Horizon: 0.1
+# finest mesh
+Data_1:
+    # fine mesh should be first
+    Horizon_Factor_m_value: 8
+    Path: ../r_8
+    Mesh_Filename: mesh_1.vtu
+# fine mesh
+Data_2:
+    # fine mesh should be first
+    Horizon_Factor_m_value: 4
+    Path: ../r_4
+    Mesh_Filename: mesh_2.vtu
+# coarse mesh
+Data_3:
+    Horizon_Factor_m_value: 2
+    Path: ../r_2
+    Mesh_Filename: mesh_3.vtu
