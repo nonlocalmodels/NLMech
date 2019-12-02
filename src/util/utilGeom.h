@@ -76,6 +76,16 @@ bool isPointInsideCuboid(util::Point3 x, double x_min, double x_max,
 bool isPointInsideCuboid(util::Point3 x, util::Point3 x_lbb,
                             util::Point3 x_rtf);
 
+/*!
+ * @brief Computes the area of triangle
+ * @param v1 First vertex
+ * @param v2 Second vertex
+ * @param v3 Third vertex
+ * @return area Triangle area
+ */
+double triangleArea(const util::Point3 &v1, const util::Point3 &v2,
+                    const util::Point3 &v3);
+
 } // namespace geometry
 
 } // namespace util

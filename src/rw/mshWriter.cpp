@@ -197,7 +197,7 @@ void rw::writer::MshWriter::appendPointData(
   for (size_t i = 0; i < data->size(); i++) {
     auto d = (*data)[i];
     fprintf(d_file, "%zu %lf %lf %lf %lf %lf %lf\n", i + 1, d(0, 0), d(1, 1),
-            d(2, 2), d(0, 1), (1, 2), (0, 2));
+            d(2, 2), d(0, 1), d(1, 2), d(0, 2));
   }
   fprintf(d_file, "$EndNodeData\n");
 }
