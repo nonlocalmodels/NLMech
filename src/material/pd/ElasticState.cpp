@@ -17,13 +17,14 @@
 material::pd::ElasticState::ElasticState(inp::MaterialDeck *deck,
                                          data::DataManager *dataManager)
     : BaseMaterial(dim, horizon) {
-  d_dataManager_p = dataManager;
+  
+  d_dataManager_p = dataManager ;
 
-  horizon = d_dataManager_p->getModelDeckP()->d_horizon;
+  horizon = dataManager->getModelDeckP()->d_horizon;
 
-  dim = d_dataManager_p->getModelDeckP()->d_dim;
+  dim = dataManager->getModelDeckP()->d_dim;
 
-  d_dataManager_p->setStateBasedHelperFunctionsP(
+  dataManager->setStateBasedHelperFunctionsP(
       new util::StateBasedHelperFunctions(d_dataManager_p, this->d_factor2D));
 
   // Compute the PD properties from CCM

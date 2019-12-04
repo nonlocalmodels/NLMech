@@ -233,7 +233,7 @@ void model::QuasiStaticModel<T>::computeForces(bool full) {
 
 
 template <class T>
-void model::QuasiStaticModel<T>::computePertubatedForces(size_t thread) {
+inline void model::QuasiStaticModel<T>::computePertubatedForces(size_t thread) {
   
   material::pd::BaseMaterial *material = new T(d_input_p->getMaterialDeck(), d_dataManagers[thread]);
 
@@ -330,40 +330,43 @@ util::Matrixij model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
   jacobian = util::Matrixij(matrixSize, matrixSize, 0.);
 
  
-  size_t slice = int(d_nnodes/1);
+  size_t slice = int(d_nnodes/d_osThreads);
 
-  std::vector<hpx::future<void>> futures;
+  //std::vector<hpx::future<void>> futures;
 
-  assembly_jacobian_matrix_part(0,d_nnodes,0);
-
-/*
-  for(size_t i = 0 ; i < 1 ; i++)
+  for(size_t thread = 0 ; thread < d_osThreads ; thread++)
   {
 
-    size_t start = i * slice;
+    size_t start = thread * slice;
     size_t end = 0;
 
-            if (i < d_osThreads - 1)
-                end = (i+1) * slice;
+            if (thread < d_osThreads - 1)
+                end = (thread+1) * slice;
             else
                 end = d_nnodes;
 
-    futures.push_back(hpx::async([&](){
+     
 
-        assembly_jacobian_matrix_part(start,end,i);
+  //futures.push_back(hpx::async([this,start,end,thread](){
 
-    }));
+    this->assembly_jacobian_matrix_part(start,end,thread);
+
+
+  //}));
+   
 
   }
 
-  hpx::when_all(futures);
-  */
+  //hpx::when_all(futures);
+  
   return jacobian;
 }
 
 
+
+
 template <class T>
-void model::QuasiStaticModel<T>::assembly_jacobian_matrix_part(size_t begin, size_t end, size_t thread)
+inline void model::QuasiStaticModel<T>::assembly_jacobian_matrix_part(size_t begin, size_t end, size_t thread)
 {
 
 double eps = d_input_p->getSolverDeck()->d_perturbation *
@@ -381,7 +384,7 @@ for (size_t i = begin; i < end; i++) {
 
     traversal_list->push_back(i);
 
-    auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(i);
+    std::vector<size_t> i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(i);
     for (auto j : i_neighs) traversal_list->push_back(j);
 
     for (auto j : *traversal_list) {
