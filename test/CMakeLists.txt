@@ -20,7 +20,7 @@ WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/qsModel/1D
 )
 
 add_test(NAME quasistatic.1D.elastic.compare
-COMMAND ${EXECUTABLE_OUTPUT_PATH}/dc -i input.yaml -k fd_simple
+COMMAND ${EXECUTABLE_OUTPUT_PATH}/dc -i input_compare.yaml -k fd_simple
 WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/qsModel/1D
 )
 
