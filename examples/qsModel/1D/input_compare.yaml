@@ -7,4 +7,6 @@ Out_Filename: compare.txt
 Print_Screen: true
 # provide list of tags for which comparison has to be made
 Compare_Tags:
-    - Velocity
+    - Displacement
+    - Force
+    - Strain_Energy
