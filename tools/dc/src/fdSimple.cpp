@@ -254,7 +254,7 @@ void compute(const YAML::Node &config) {
     } 
     else if(tag == "Strain_Energy") {
 
-        // read displacement from file 1
+      // read strain energy from file 1
       std::vector<double> nodes_e_1;
 
       if (!rw::reader::readVtuFilePointData(filename1, tag, &nodes_e_1)) {
@@ -265,7 +265,7 @@ void compute(const YAML::Node &config) {
         exit(1);
       }
 
-      // read displacement from file 2
+      // read strain energy from file 2
       std::vector<double> nodes_e_2;
 
       if (!rw::reader::readVtuFilePointData(filename2, tag, &nodes_e_2)) {
@@ -293,7 +293,47 @@ void compute(const YAML::Node &config) {
       oss << l2 << ", " << sup;
 
     }
-    
+    else if(tag == "Strain_Tensor") {
+
+      // read strain tensor from file 1
+      std::vector<util::Matrixij> nodes_strain_1;
+
+      if (!rw::reader::readVtuFilePointData(filename1, tag, &nodes_strain_1)) {
+
+        std::cerr << "Error: " << tag << " data can not be found in the file ="
+                                         " " << filename1
+                  << std::endl;
+        exit(1);
+      }
+
+      // read displacement from file 2
+      std::vector<util::Matrixij> nodes_strain_2;
+
+      if (!rw::reader::readVtuFilePointData(filename2, tag, &nodes_strain_2)) {
+
+        std::cerr << "Error: " << tag << " data can not be found in the file ="
+                                         " " << filename2
+                  << std::endl;
+        exit(1);
+      }
+
+      // compute L2 and sup norm
+      double l2 = 0.;
+      double sup = 0.;
+      for (size_t i=0; i<nodes_strain_1.size(); i++) {
+        auto df = blaze::sum(nodes_strain_1[i] - nodes_strain_2[i]);
+        l2 += df * df;
+
+        if (util::compare::definitelyGreaterThan(df, sup))
+          sup = df;
+      }
+
+      l2 = std::sqrt(l2);
+
+      // append data
+      oss << l2 << ", " << sup;
+
+    }
     else {
 
       std::cerr << "Error: Comparison for tag = " << tag
