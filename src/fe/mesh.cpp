@@ -36,13 +36,14 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
       d_spatialDiscretization != "weak_finite_element" and
       d_spatialDiscretization != "weak_finite_element" and
       d_spatialDiscretization != "nodal_finite_element" and
-      d_spatialDiscretization != "truss_finite_element") {
+      d_spatialDiscretization != "truss_finite_element" 
+      ) {
     std::cerr << "Error: Spatial discretization type not known. Check input "
                  "data.\n";
     exit(1);
   }
 
-  if (d_dim != 2) {
+  if (d_dim >= 2) {
     std::cerr << "Error: Check Dimension in input data. Currently we only "
                  "support dimension 2.\n";
     exit(1);
