@@ -11,6 +11,7 @@
 #include "dcInclude.h"
 
 int main(int argc, char *argv[]) {
+
   boost::program_options::options_description desc("Allowed options");
   desc.add_options()("help", "produce help message")(
       "input-file,i", boost::program_options::value<std::string>(),

@@ -6,9 +6,6 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <fe/triElem.h>
-#include <util/feElementDefs.h>
-
 #include "dcInclude.h"
 #include "fe/mesh.h"
 #include "inp/decks/meshDeck.h"
@@ -19,6 +16,8 @@
 #include "util/point.h"
 #include "util/transfomation.h"
 #include "util/utilGeom.h"
+#include <fe/triElem.h>
+#include <util/feElementDefs.h>
 
 static int init = -1;
 
@@ -31,11 +30,7 @@ struct SimData {
    * @brief Constructor
    */
   SimData()
-      : d_isFd(true),
-        d_mesh_p(nullptr),
-        d_h(0.),
-        d_Nt(1),
-        d_dt(0.),
+      : d_isFd(true), d_mesh_p(nullptr), d_h(0.), d_Nt(1), d_dt(0.),
         d_dtOut(1){};
 
   /*! @brief Is this finite difference simulation */
@@ -128,7 +123,8 @@ void readInputFile(SimData *sim_1, SimData *sim_2, DataCompare *dc,
   // below tag is counter intuitive but should not be changed
   // as the python scripts understand error files based on below tags
   bool triple_data = false;
-  if (config["Triple_Data"]) triple_data = config["Triple_Data"].as<bool>();
+  if (config["Triple_Data"])
+    triple_data = config["Triple_Data"].as<bool>();
 
   // append tags only if triple_data is true
   if (triple_data) {
@@ -260,9 +256,10 @@ void readInputFile(SimData *sim_1, SimData *sim_2, DataCompare *dc,
  * @param n2 Id of node in mesh 2 near to x1
  * @return u Displacement in mesh 2
  */
-util::Point3 getDisplacementOfNode(const util::Point3 &x1, const SimData *sim1,
-                                   const SimData *sim2, const DataCompare *dc,
-                                   const size_t &read_counter, size_t &n2) {
+util::Point3 getDisplacementOfNode(
+    const util::Point3 &x1, const SimData *sim1, const SimData *sim2, const DataCompare *dc,
+    const size_t &read_counter, size_t &n2) {
+
   // get the pointer to mesh 2
   const auto mesh2 = sim2->d_mesh_p;
 
@@ -282,7 +279,8 @@ util::Point3 getDisplacementOfNode(const util::Point3 &x1, const SimData *sim1,
     std::string filename = dc->d_pathOut + "/debug_find_elem.txt";
     static FILE *fout = nullptr;
 
-    if (debug_el_ids) fout = fopen(filename.c_str(), "w");
+    if (debug_el_ids)
+      fout = fopen(filename.c_str(), "w");
 
     //
     double h = sim2->d_h;
@@ -319,10 +317,9 @@ util::Point3 getDisplacementOfNode(const util::Point3 &x1, const SimData *sim1,
  * @param sim2 Simulation 2 data
  * @param dc Collection of user-specified input data
  */
-util::Point3 getDisplacementOfNodeCurrent(const util::Point3 &x1,
-                                          const SimData *sim1,
-                                          const SimData *sim2,
-                                          const DataCompare *dc) {
+util::Point3 getDisplacementOfNodeCurrent(
+    const util::Point3 &x1, const SimData *sim1, const SimData *sim2, const DataCompare *dc) {
+
   // get the pointer to mesh 2
   const auto mesh2 = sim2->d_mesh_p;
 
@@ -341,7 +338,8 @@ util::Point3 getDisplacementOfNodeCurrent(const util::Point3 &x1,
   std::string filename = dc->d_pathOut + "/debug_find_elem.txt";
   static FILE *fout = nullptr;
 
-  if (debug_el_ids) fout = fopen(filename.c_str(), "w");
+  if (debug_el_ids)
+    fout = fopen(filename.c_str(), "w");
 
   //
   double h = sim2->d_h;
@@ -372,7 +370,8 @@ util::Point3 getDisplacementOfNodeCurrent(const util::Point3 &x1,
 //
 // compute error
 //
-void compute(bool read_12, const YAML::Node &config) {
+void compute(bool read_12, const YAML::Node& config) {
+
   // create various data
   auto sim1 = SimData();
   auto sim2 = SimData();
@@ -399,10 +398,11 @@ void compute(bool read_12, const YAML::Node &config) {
   // loop over time (assuming dt is same for both files)
   size_t read_counter = 1;
   for (size_t k = 0; k <= sim1.d_Nt; k++) {
+
     double tk1 = double(k) * sim1.d_dt;
 
-    double l2 = 0.;   // to hold l2 norm of error
-    double sup = 0.;  // to hold sup norm of error
+    double l2 = 0.;  // to hold l2 norm of error
+    double sup = 0.; // to hold sup norm of error
 
     size_t dt_check = k % sim1.d_dtOut;
 
@@ -469,8 +469,9 @@ void compute(bool read_12, const YAML::Node &config) {
         // position of nodes with their reference position)
         if (!rw::reader::readVtuFilePointData(filename1, "Displacement",
                                               &sim1.d_u)) {
+
           sim1.d_u.resize(sim1.d_mesh_p->getNumNodes());
-          for (size_t i = 0; i < sim1.d_mesh_p->getNumNodes(); i++)
+          for (size_t i=0; i<sim1.d_mesh_p->getNumNodes(); i++)
             sim1.d_u[i] = sim1.d_y[i] - sim1.d_mesh_p->getNode(i);
         }
       }
@@ -489,8 +490,9 @@ void compute(bool read_12, const YAML::Node &config) {
         // position of nodes with their reference position)
         if (!rw::reader::readVtuFilePointData(filename2, "Displacement",
                                               &sim2.d_u)) {
+
           sim2.d_u.resize(sim2.d_mesh_p->getNumNodes());
-          for (size_t i = 0; i < sim2.d_mesh_p->getNumNodes(); i++)
+          for (size_t i=0; i<sim2.d_mesh_p->getNumNodes(); i++)
             sim2.d_u[i] = sim2.d_y[i] - sim2.d_mesh_p->getNode(i);
         }
       }
@@ -521,7 +523,8 @@ void compute(bool read_12, const YAML::Node &config) {
           auto n2 = nodes_mesh_2[i];
           uj = getDisplacementOfNode(xi, &sim1, &sim2, &dc, read_counter, n2);
 
-          if (read_counter == 1) nodes_mesh_2[i] = n2;
+          if (read_counter == 1)
+            nodes_mesh_2[i] = n2;
         }
 
         // compute difference of displacement
@@ -553,19 +556,22 @@ void compute(bool read_12, const YAML::Node &config) {
   fclose(file_out);
 }
 
-}  // namespace fd
+} // namespace fe
 
 //
 // main function
 //
 void dc::fd(YAML::Node config) {
+
   // check if three sets of data are provided
   bool triple_data = false;
-  if (config["Triple_Data"]) triple_data = config["Triple_Data"].as<bool>();
+  if (config["Triple_Data"])
+    triple_data = config["Triple_Data"].as<bool>();
 
   bool read_12 = true;
   fd::compute(read_12, config);
 
   read_12 = false;
-  if (triple_data) fd::compute(read_12, config);
+  if (triple_data)
+    fd::compute(read_12, config);
 }
