@@ -52,11 +52,15 @@ int main(int argc, char *argv[]) {
   //
   YAML::Node config = YAML::LoadFile(filename);
 
+  bool error = false;
+
   if (type == "fe") dc::fe(config);
 
   if (type == "fd") dc::fd(config);
 
-  if (type == "fd_simple") dc::fdSimple(config);
+  if (type == "fd_simple") error = dc::fdSimple(config);
+
+  if (error) return EXIT_FAILURE;
 
   return EXIT_SUCCESS;
 }

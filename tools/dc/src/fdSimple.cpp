@@ -47,6 +47,8 @@ void readInputFile(size_t &dim, std::string &filename1, std::string &filename2,
   filename1 = config["Filename_1"].as<std::string>();
   filename2 = config["Filename_2"].as<std::string>();
 
+  if(config["Tolerance"])
+
   tolerance = config["Tolerance"].as<double>();
 
 
@@ -172,6 +174,9 @@ void compute(const YAML::Node &config) {
 
       l2 = std::sqrt(l2);
 
+      if(!util::compare::definitelyLessThan(l2,tolerance))
+          error = true;
+
       // append data
       oss << l2 << ", " << sup;
 
@@ -210,6 +215,9 @@ void compute(const YAML::Node &config) {
       }
 
       l2 = std::sqrt(l2);
+
+            if(!util::compare::definitelyLessThan(l2,tolerance))
+          error = true;
 
       // append data
       oss << l2 << ", " << sup;
@@ -250,6 +258,9 @@ void compute(const YAML::Node &config) {
 
       l2 = std::sqrt(l2);
 
+                  if(!util::compare::definitelyLessThan(l2,tolerance))
+          error = true;
+
       // append data
       oss << l2 << ", " << sup;
     } else if (tag == "Strain_Energy") {
@@ -286,6 +297,9 @@ void compute(const YAML::Node &config) {
       }
 
       l2 = std::sqrt(l2);
+
+                  if(!util::compare::definitelyLessThan(l2,tolerance))
+          error = true;
 
       // append data
       oss << l2 << ", " << sup;
@@ -325,6 +339,9 @@ void compute(const YAML::Node &config) {
 
       l2 = std::sqrt(l2);
 
+                  if(!util::compare::definitelyLessThan(l2,tolerance))
+          error = true;
+
       // append data
       oss << l2 << ", " << sup;
 
@@ -363,6 +380,9 @@ void compute(const YAML::Node &config) {
 
       l2 = std::sqrt(l2);
 
+                  if(!util::compare::definitelyLessThan(l2,tolerance))
+          error = true;
+
       // append data
       oss << l2 << ", " << sup;
 
@@ -390,4 +410,10 @@ void compute(const YAML::Node &config) {
 //
 // main function
 //
-void dc::fdSimple(YAML::Node config) { fdSimple::compute(config); }
+bool dc::fdSimple(YAML::Node config) { 
+  
+  fdSimple::compute(config); 
+
+  return error;
+  
+  }

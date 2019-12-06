@@ -14,7 +14,7 @@
 
 namespace dc {
 
-void fdSimple(YAML::Node config);
+bool fdSimple(YAML::Node config);
 
 void fd(YAML::Node config);
 
