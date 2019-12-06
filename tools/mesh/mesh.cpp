@@ -6,9 +6,9 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <hpx/config.hpp>
 #include <Config.h>
 
+#include <hpx/config.hpp>
 #include <algorithm>
 #include <boost/program_options.hpp>
 #include <iostream>
@@ -48,9 +48,9 @@ int main(int argc, char *argv[]) {
   }
 
   if (found != 2) {
-    std::cerr << argv[0]  << " (Version " << MAJOR_VERSION << "."
-              << MINOR_VERSION << "." << UPDATE_VERSION
-              << ")" << " -i input.yaml -d 1" << std::endl;
+    std::cerr << argv[0] << " (Version " << MAJOR_VERSION << "."
+              << MINOR_VERSION << "." << UPDATE_VERSION << ")"
+              << " -i input.yaml -d 1" << std::endl;
     exit(1);
   }
 

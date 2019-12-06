@@ -6,6 +6,10 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <fe/triElem.h>
+#include <util/feElementDefs.h>
+#include <limits>
+
 #include "dcInclude.h"
 #include "fe/mesh.h"
 #include "inp/decks/meshDeck.h"
@@ -16,10 +20,10 @@
 #include "util/point.h"
 #include "util/transfomation.h"
 #include "util/utilGeom.h"
-#include <fe/triElem.h>
-#include <util/feElementDefs.h>
 
 static int init = -1;
+
+static bool error = false;
 
 /*! @brief Local namespace */
 namespace fdSimple {
@@ -32,16 +36,21 @@ namespace fdSimple {
  * @param out_filename Output filename
  * @param print_screen Data should or should not be printed to screen
  * @param compare_tags List of tags data which should be compared
+ * @param tolerance
  * @param config YAML input file
  */
 void readInputFile(size_t &dim, std::string &filename1, std::string &filename2,
                    std::string &out_filename, bool &print_screen,
-                   std::vector<std::string> &compare_tags, YAML::Node config) {
-
+                   std::vector<std::string> &compare_tags, double &tolerance, YAML::Node config) {
   dim = config["Dimension"].as<size_t>();
 
   filename1 = config["Filename_1"].as<std::string>();
   filename2 = config["Filename_2"].as<std::string>();
+
+  if(config["Tolerance"])
+
+  tolerance = config["Tolerance"].as<double>();
+
 
   out_filename = config["Out_Filename"].as<std::string>();
   if (config["Print_Screen"])
@@ -75,11 +84,13 @@ void compute(const YAML::Node &config) {
 
   bool print_screen;
 
+  double tolerance = std::numeric_limits<double>::max();
+
   std::vector<std::string> compare_tags;
 
   // read file
   fdSimple::readInputFile(dim, filename1, filename2, out_filename, print_screen,
-                    compare_tags, config);
+                          compare_tags, tolerance, config);
 
   // create output file stream
   FILE *file_out = fopen(out_filename.c_str(), "w");
@@ -169,11 +180,13 @@ void compute(const YAML::Node &config) {
 
       l2 = std::sqrt(l2);
 
+      if(!util::compare::definitelyLessThan(l2,tolerance))
+          error = true;
+
       // append data
       oss << l2 << ", " << sup;
 
     } else if (tag == "Velocity") {
-
       // read displacement from file 1
       std::vector<util::Point3> nodes_v_1;
 
@@ -209,11 +222,13 @@ void compute(const YAML::Node &config) {
 
       l2 = std::sqrt(l2);
 
+            if(!util::compare::definitelyLessThan(l2,tolerance))
+          error = true;
+
       // append data
       oss << l2 << ", " << sup;
 
     } else if (tag == "Force") {
-
       // read displacement from file 1
       std::vector<util::Point3> nodes_f_1;
 
@@ -249,10 +264,135 @@ void compute(const YAML::Node &config) {
 
       l2 = std::sqrt(l2);
 
+                  if(!util::compare::definitelyLessThan(l2,tolerance))
+          error = true;
+
       // append data
       oss << l2 << ", " << sup;
-    } else {
+    } else if (tag == "Strain_Energy") {
+      // read strain energy from file 1
+      std::vector<double> nodes_e_1;
 
+      if (!rw::reader::readVtuFilePointData(filename1, tag, &nodes_e_1)) {
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename1 << std::endl;
+        exit(1);
+      }
+
+      // read strain energy from file 2
+      std::vector<double> nodes_e_2;
+
+      if (!rw::reader::readVtuFilePointData(filename2, tag, &nodes_e_2)) {
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename2 << std::endl;
+        exit(1);
+      }
+
+      // compute L2 and sup norm
+      double l2 = 0.;
+      double sup = 0.;
+      for (size_t i = 0; i < nodes_e_1.size(); i++) {
+        auto df = nodes_e_1[i] - nodes_e_2[i];
+        l2 += df * df;
+
+        if (util::compare::definitelyGreaterThan(df, sup)) sup = df;
+      }
+
+      l2 = std::sqrt(l2);
+
+                  if(!util::compare::definitelyLessThan(l2,tolerance))
+          error = true;
+
+      // append data
+      oss << l2 << ", " << sup;
+
+    } else if (tag == "Strain_Tensor") {
+      // read strain tensor from file 1
+      std::vector<util::Matrix33> nodes_strain_1;
+
+      if (!rw::reader::readVtuFilePointData(filename1, tag, &nodes_strain_1)) {
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename1 << std::endl;
+        exit(1);
+      }
+
+      // read displacement from file 2
+      std::vector<util::Matrix33> nodes_strain_2;
+
+      if (!rw::reader::readVtuFilePointData(filename2, tag, &nodes_strain_2)) {
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename2 << std::endl;
+        exit(1);
+      }
+
+      // compute L2 and sup norm
+      double l2 = 0.;
+      double sup = 0.;
+      for (size_t i = 0; i < nodes_strain_1.size(); i++) {
+        auto df = blaze::sum(nodes_strain_1[i] - nodes_strain_2[i]);
+        l2 += df * df;
+
+        if (util::compare::definitelyGreaterThan(df, sup)) sup = df;
+      }
+
+      l2 = std::sqrt(l2);
+
+                  if(!util::compare::definitelyLessThan(l2,tolerance))
+          error = true;
+
+      // append data
+      oss << l2 << ", " << sup;
+
+    } else if (tag == "Stress_Tensor") {
+      // read strain tensor from file 1
+      std::vector<util::Matrix33> nodes_strain_1;
+
+      if (!rw::reader::readVtuFilePointData(filename1, tag, &nodes_strain_1)) {
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename1 << std::endl;
+        exit(1);
+      }
+
+      // read displacement from file 2
+      std::vector<util::Matrix33> nodes_strain_2;
+
+      if (!rw::reader::readVtuFilePointData(filename2, tag, &nodes_strain_2)) {
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename2 << std::endl;
+        exit(1);
+      }
+
+      // compute L2 and sup norm
+      double l2 = 0.;
+      double sup = 0.;
+      for (size_t i = 0; i < nodes_strain_1.size(); i++) {
+        auto df = blaze::sum(nodes_strain_1[i] - nodes_strain_2[i]);
+        l2 += df * df;
+
+        if (util::compare::definitelyGreaterThan(df, sup)) sup = df;
+      }
+
+      l2 = std::sqrt(l2);
+
+                  if(!util::compare::definitelyLessThan(l2,tolerance))
+          error = true;
+
+      // append data
+      oss << l2 << ", " << sup;
+
+    } else {
       std::cerr << "Error: Comparison for tag = " << tag
                 << " has not yet been implemented.\n";
       exit(1);
@@ -278,4 +418,10 @@ void compute(const YAML::Node &config) {
 //
 // main function
 //
-void dc::fdSimple(YAML::Node config) { fdSimple::compute(config); }
+bool dc::fdSimple(YAML::Node config) { 
+  
+  fdSimple::compute(config); 
+
+  return error;
+  
+  }

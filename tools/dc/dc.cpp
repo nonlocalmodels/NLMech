@@ -3,12 +3,12 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt
 
-#include "dcInclude.h"
-
 #include <algorithm>
-
+#include <hpx/config.hpp>
 #include <boost/program_options.hpp>
 #include <iostream>
+
+#include "dcInclude.h"
 
 int main(int argc, char *argv[]) {
 
@@ -34,13 +34,11 @@ int main(int argc, char *argv[]) {
   size_t found = 0;
 
   if (vm.count("input-file")) {
-
     filename = vm["input-file"].as<std::string>();
     found++;
   }
 
   if (vm.count("kind")) {
-
     type = vm["kind"].as<std::string>();
     found++;
   }
@@ -55,14 +53,15 @@ int main(int argc, char *argv[]) {
   //
   YAML::Node config = YAML::LoadFile(filename);
 
-  if (type == "fe")
-    dc::fe(config);
+  bool error = false;
 
-  if (type == "fd")
-    dc::fd(config);
+  if (type == "fe") dc::fe(config);
 
-  if (type == "fd_simple")
-    dc::fdSimple(config);
+  if (type == "fd") dc::fd(config);
+
+  if (type == "fd_simple") error = dc::fdSimple(config);
+
+  if (error) return EXIT_FAILURE;
 
   return EXIT_SUCCESS;
 }

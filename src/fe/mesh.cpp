@@ -42,7 +42,7 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
     exit(1);
   }
 
-  if (d_dim != 2) {
+  if (d_dim > 2) {
     std::cerr << "Error: Check Dimension in input data. Currently we only "
                  "support dimension 2.\n";
     exit(1);

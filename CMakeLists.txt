@@ -34,6 +34,7 @@ set(CMAKE_DEBUG_POSTFIX d)
 
 #Enable ctest
 enable_testing()
+add_subdirectory(test)
 
 # Add own cmake scripts
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
@@ -50,7 +51,7 @@ find_package(HPX REQUIRED)
 
 if (NOT (HPX_BUILD_TYPE STREQUAL CMAKE_BUILD_TYPE))
     message("HPX_BUILD_TYPE: " ${HPX_BUILD_TYPE} " CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
-    message(FATAL_ERROR "Build types used for HPX and this library have to match")
+    message(FATAL_ERROR "Build types used for HPX and this application have to match")
 endif ()
 
 list(APPEND CMAKE_MODULE_PATH "${HPX_PREFIX}/../cmake/")
@@ -86,7 +87,7 @@ if (CMAKE_VERSION VERSION_LESS "3.1")
         set(CMAKE_CXX_FLAGS "--std=gnu++14 ${CMAKE_CXX_FLAGS}")
     endif ()
 else ()
-    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX_STANDARD 17)
 endif ()
 
 # include important directories

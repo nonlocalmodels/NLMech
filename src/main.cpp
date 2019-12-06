@@ -58,12 +58,16 @@ int main(int argc, char *argv[]) {
   auto *deck = new inp::Input(filename);
 
   // check which model to run
-  if (deck->getSpatialDiscretization() == "finite_difference")
-    model::FDModel fdModel(deck);
-  else if (deck->getSpatialDiscretization() == "quasi_static") {
-    if (deck->getMaterialDeck()->d_materialType == "ElasticState") {
-      model::QuasiStaticModel<material::pd::ElasticState> QuasiStaticModel(
-          deck);
+  if (deck->getSpatialDiscretization() == "finite_difference") {
+    if (deck->getModelDeck()->d_timeDiscretization == "quasi_static") {
+      if (deck->getMaterialDeck()->d_materialType == "ElasticState") {
+        model::QuasiStaticModel<material::pd::ElasticState> QuasiStaticModel(
+            deck);
+      }
+    } else if (deck->getModelDeck()->d_timeDiscretization ==
+               "central difference") {
+      model::FDModel fdModel(deck);
+
     } else {
       std::cerr << "Error: No known material deck specified" << std::endl;
       exit(1);

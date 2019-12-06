@@ -6,6 +6,9 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <fe/triElem.h>
+#include <util/feElementDefs.h>
+
 #include "dcInclude.h"
 #include "fe/mesh.h"
 #include "inp/decks/meshDeck.h"
@@ -16,8 +19,7 @@
 #include "util/point.h"
 #include "util/transfomation.h"
 #include "util/utilGeom.h"
-#include <fe/triElem.h>
-#include <util/feElementDefs.h>
+
 
 static int init = -1;
 
@@ -26,7 +28,6 @@ namespace fe {
 
 /*! @brief Data structure to hold simulation data in one place */
 struct SimData {
-
   /*!
    * @brief Constructor
    */
@@ -103,7 +104,6 @@ struct DataCompare {
  */
 void readInputFile(SimData *sim_1, SimData *sim_2, DataCompare *dc,
                    YAML::Node config) {
-
   //
   // if read_12 =  true
   //
@@ -179,7 +179,6 @@ void readInputFile(SimData *sim_1, SimData *sim_2, DataCompare *dc,
   // check if time is provided globally
   bool time_global = false;
   if (config["Final_Time"]) {
-
     time_global = true;
 
     auto time = config["Final_Time"].as<double>();
@@ -197,7 +196,6 @@ void readInputFile(SimData *sim_1, SimData *sim_2, DataCompare *dc,
   bool horizon_global = false;
   double horizon = 0.0;
   if (config["Horizon"]) {
-
     horizon_global = true;
     horizon = config["Horizon"].as<double>();
 
@@ -286,7 +284,6 @@ getDisplacementAtQuadPoint(const util::Point3 &x1, const size_t &e1,
 
   size_t el_id = 0;
   if (compute_el_id) {
-
     static int debug_counter = 0;
     static bool debug_el_ids = false;
 
@@ -304,7 +301,6 @@ getDisplacementAtQuadPoint(const util::Point3 &x1, const size_t &e1,
     double check = std::sqrt(2.) * 0.5 * h + 0.01 * h;
     double dist = 10.0 * h;
     for (size_t i = 0; i < mesh2->getNumNodes(); i++) {
-
       auto diff = x1 - mesh2->getNode(i);
 
       if (util::compare::definitelyLessThan(diff.length(), dist)) {
@@ -348,7 +344,6 @@ getDisplacementAtQuadPoint(const util::Point3 &x1, const size_t &e1,
     auto i_elems = mesh2->getNodeElementConnectivity(i_found);
     int e_found = -1;
     for (unsigned long e_id : i_elems) {
-
       auto e_nodes = mesh2->getElementConnectivity(e_id);
 
       // find the local id of node i_found in element el
@@ -425,7 +420,6 @@ getDisplacementAtQuadPoint(const util::Point3 &x1, const size_t &e1,
 
       if (theta_01 <= 1.0E-4 or theta_02 <= 1.0E-4 or
           theta_01 >= M_PI - 1.0E-4 or theta_02 >= M_PI - 1.0E-4) {
-
         // Line 0 is either parallel to Line 1 or Line 2
 
         // we now eliminate the other possibility
@@ -433,7 +427,6 @@ getDisplacementAtQuadPoint(const util::Point3 &x1, const size_t &e1,
         double area_T1 = std::abs(util::geometry::triangleArea(xi, xip1, xim1));
 
         if (area_T0 <= area_T1) {
-
           // we have found the element
 
           // write the global id
@@ -444,14 +437,12 @@ getDisplacementAtQuadPoint(const util::Point3 &x1, const size_t &e1,
       // proceed ahead only if condition is met
       if (util::compare::definitelyLessThan(theta_01 - theta_12, 0.0) and
           util::compare::definitelyLessThan(theta_02 - theta_12, 0.0)) {
-
         // we now eliminate the other possibility
         double area_T0 = std::abs(util::geometry::triangleArea(x1, xip1, xim1));
         double area_T1 = std::abs(util::geometry::triangleArea(xi, xip1, xim1));
 
         if (util::compare::definitelyLessThan(area_T0 - area_T1, 0.0) or
             util::compare::essentiallyEqual(area_T0 - area_T1, 0.0)) {
-
           // we have found the element
 
           // write the global id
@@ -576,7 +567,6 @@ getDisplacementAtQuadPoint(const util::Point3 &x1, const size_t &e1,
 util::Point3 getDisplacementAtQuadPointCurrentSimple(
     const util::Point3 &x1, const size_t &e1, const size_t &q,
     const SimData *sim1, const SimData *sim2, const DataCompare *dc) {
-
   // get the pointer to mesh 2
   const auto mesh2 = sim2->d_mesh_p;
 
@@ -606,7 +596,6 @@ util::Point3 getDisplacementAtQuadPointCurrentSimple(
   double check = std::sqrt(2.) * 0.5 * h + 0.01 * h;
   double dist = 10.0 * h;
   for (size_t i = 0; i < mesh2->getNumNodes(); i++) {
-
     auto diff = x1 - (sim2->d_y[i] + mesh2->getNode(i));
 
     if (util::compare::definitelyLessThan(diff.length(), dist)) {
@@ -674,7 +663,6 @@ void compute(bool read_12, const YAML::Node& config) {
 
     // in first call, create mesh data for both simulation 1 and 2
     if (dt_check == 0 && read_counter == 1) {
-
       {
         // mesh for simulation 1
         // do we read mesh from mesh file provided in the input yaml or we read
@@ -722,7 +710,6 @@ void compute(bool read_12, const YAML::Node& config) {
 
     // we compare data in this step
     if (dt_check == 0) {
-
       {
         // read data 1
         std::string filename1 =
@@ -767,7 +754,6 @@ void compute(bool read_12, const YAML::Node& config) {
 
       // resize dummy element list
       if (read_counter == 1 && !dc.d_isFd) {
-
         // els_fm is of the size of fine mesh
         qd_data1.resize(sim1.d_mesh_p->getNumElements());
 
@@ -790,14 +776,12 @@ void compute(bool read_12, const YAML::Node& config) {
 
       // loop over nodes in elements1
       for (size_t e = 0; e < mesh1->getNumElements(); e++) {
-
         auto e_nodes = mesh1->getElementConnectivity(e);
 
         // compute quad points on copy of current element
         std::vector<fe::QuadData> e_quads;
 
         if (read_counter == 1) {
-
           // create node data for quad function
           std::vector<util::Point3> nodes_d;
           for (unsigned long n : e_nodes) {
@@ -827,7 +811,6 @@ void compute(bool read_12, const YAML::Node& config) {
 
         // loop over quad points
         for (size_t q = 0; q < e_quads.size(); q++) {
-
           auto xq = e_quads[q].d_p;
 
           // get displacement and current position of quad point

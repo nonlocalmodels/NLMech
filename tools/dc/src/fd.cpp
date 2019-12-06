@@ -26,7 +26,6 @@ namespace fd {
 
 /*! @brief Data structure to hold simulation data in one place */
 struct SimData {
-
   /*!
    * @brief Constructor
    */
@@ -103,7 +102,6 @@ struct DataCompare {
  */
 void readInputFile(SimData *sim_1, SimData *sim_2, DataCompare *dc,
                    YAML::Node config) {
-
   //
   // if read_12 =  true
   //
@@ -182,7 +180,6 @@ void readInputFile(SimData *sim_1, SimData *sim_2, DataCompare *dc,
   // check if time is provided globally
   bool time_global = false;
   if (config["Final_Time"]) {
-
     time_global = true;
 
     auto time = config["Final_Time"].as<double>();
@@ -200,7 +197,6 @@ void readInputFile(SimData *sim_1, SimData *sim_2, DataCompare *dc,
   bool horizon_global = false;
   double horizon = 0.0;
   if (config["Horizon"]) {
-
     horizon_global = true;
     horizon = config["Horizon"].as<double>();
 
@@ -277,7 +273,6 @@ util::Point3 getDisplacementOfNode(
   long int i_found = -1;
 
   if (read_counter < 1) {
-
     static int debug_counter = 0;
     static bool debug_el_ids = false;
 
@@ -295,7 +290,6 @@ util::Point3 getDisplacementOfNode(
     double check = std::sqrt(2.) * 0.5 * h + 0.01 * h;
     double dist = 10.0 * h;
     for (size_t i = 0; i < mesh2->getNumNodes(); i++) {
-
       auto diff = x1 - mesh2->getNode(i);
 
       if (util::compare::definitelyLessThan(diff.length(), dist)) {
@@ -355,7 +349,6 @@ util::Point3 getDisplacementOfNodeCurrent(
   double check = std::sqrt(2.) * 0.5 * h + 0.01 * h;
   double dist = 10.0 * h;
   for (size_t i = 0; i < mesh2->getNumNodes(); i++) {
-
     auto diff = x1 - (sim2->d_y[i] + mesh2->getNode(i));
 
     if (util::compare::definitelyLessThan(diff.length(), dist)) {
@@ -415,7 +408,6 @@ void compute(bool read_12, const YAML::Node& config) {
 
     // in first call, create mesh data for both simulation 1 and 2
     if (dt_check == 0 && read_counter == 1) {
-
       {
         // mesh for simulation 1
         // do we read mesh from mesh file provided in the input yaml or we read
@@ -463,7 +455,6 @@ void compute(bool read_12, const YAML::Node& config) {
 
     // we compare data in this step
     if (dt_check == 0) {
-
       {
         // read data 1
         std::string filename1 =
@@ -510,7 +501,6 @@ void compute(bool read_12, const YAML::Node& config) {
       if (read_counter == 1 && !dc.d_diffAtCurrent)
         nodes_mesh_2 = std::vector<size_t>(sim1.d_mesh_p->getNumNodes(), 0);
 
-
       // get alias for mesh 1 and mesh 2
       const auto mesh1 = sim1.d_mesh_p;
       const auto mesh2 = sim2.d_mesh_p;
@@ -521,7 +511,6 @@ void compute(bool read_12, const YAML::Node& config) {
 
       // loop over nodes in elements1
       for (size_t i = 0; i < mesh1->getNumNodes(); i++) {
-
         auto xi = mesh1->getNode(i);
         auto yi = sim1.d_y[i];
         auto ui = sim1.d_u[i];

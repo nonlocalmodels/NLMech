@@ -8,8 +8,8 @@
 
 #include <algorithm>
 #include <hpx/hpx_main.hpp>
-#include <iostream>
 #include <boost/program_options.hpp>
+#include <iostream>
 
 #include "src/compute.h"
 

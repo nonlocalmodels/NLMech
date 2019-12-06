@@ -1,5 +1,6 @@
 #include "QuasiStaticModel.h"
 
+#include <hpx/lcos/when_all.hpp>
 #include <vector>
 
 #include "BlazeIterative.hpp"
@@ -25,11 +26,22 @@
 template <class T>
 model::QuasiStaticModel<T>::QuasiStaticModel(inp::Input *deck)
     : d_modelDeck_p(nullptr), d_outputDeck_p(nullptr) {
-  // This is the only instance of the data manager object
+  d_osThreads = hpx::get_os_thread_count();
+
+  // Generate as many data manager as os threads are avaibale
+  for (size_t i = 0; i < d_osThreads; i++)
+    d_dataManagers.push_back(new data::DataManager());
+
   d_dataManager_p = new data::DataManager();
 
   d_dataManager_p->setModelDeckP(deck->getModelDeck());
   d_dataManager_p->setOutputDeckP(deck->getOutputDeck());
+
+  // Generate as many data manager as os threads are avaibale
+  for (size_t i = 0; i < d_osThreads; i++) {
+    d_dataManagers[i]->setModelDeckP(deck->getModelDeck());
+    d_dataManagers[i]->setOutputDeckP(deck->getOutputDeck());
+  }
 
   d_input_p = deck;
 
@@ -48,6 +60,9 @@ model::QuasiStaticModel<T>::QuasiStaticModel(inp::Input *deck)
 template <class T>
 model::QuasiStaticModel<T>::~QuasiStaticModel() {
   delete d_dataManager_p;
+
+  for (size_t i = 0; i < d_osThreads; i++) delete d_dataManagers[i];
+
   delete d_writer_p;
   delete d_material_p;
 }
@@ -102,6 +117,25 @@ void model::QuasiStaticModel<T>::initHObjects() {
   std::cout << d_name << ": Initializing material object." << std::endl;
   d_material_p = new T(d_input_p->getMaterialDeck(), d_dataManager_p);
 
+  for (size_t i = 0; i < d_osThreads; i++) {
+    d_dataManagers[i]->setMeshP(d_dataManager_p->getMeshP());
+    d_dataManagers[i]->setBodyForceP(
+        new std::vector<util::Point3>(d_nnodes, util::Point3()));
+    d_dataManagers[i]->setForceP(
+        new std::vector<util::Point3>(d_nnodes, util::Point3()));
+    d_dataManagers[i]->setDisplacementP(
+        new std::vector<util::Point3>(d_nnodes, util::Point3()));
+    d_dataManagers[i]->setVelocityP(
+        new std::vector<util::Point3>(d_nnodes, util::Point3()));
+
+    d_dataManagers[i]->setForceLoadingP(d_dataManager_p->getForceLoadingP());
+    d_dataManagers[i]->setDisplacementLoadingP(
+        d_dataManager_p->getDisplacementLoadingP());
+    d_dataManagers[i]->setVolumeCorrectionP(
+        d_dataManager_p->getVolumeCorrectionP());
+    d_dataManagers[i]->setNeighborP(d_dataManager_p->getNeighborP());
+  }
+
   // Initialize writer class
 
   d_writer_p =
@@ -125,71 +159,125 @@ void model::QuasiStaticModel<T>::initHObjects() {
 
 template <class T>
 void model::QuasiStaticModel<T>::computeForces(bool full) {
-  for (size_t i = 0; i < (*d_dataManager_p->getForceP()).size(); i++) {
-    (*d_dataManager_p->getForceP())[i].d_x = 0.;
-    (*d_dataManager_p->getForceP())[i].d_y = 0.;
-    (*d_dataManager_p->getForceP())[i].d_z = 0.;
-  }
+  d_material_p->update();
 
-  // hpx::lcos::local::mutex m;
+  // Clear the vector
 
-  // hpx::parallel::for_loop(hpx::parallel::execution::par, 0, d_nnodes,
-  //	[&](boost::uint64_t i) {
+  hpx::parallel::for_loop(hpx::parallel::execution::par, 0, d_nnodes,
+                          [&](boost::uint64_t i) {
+                            (*d_dataManager_p->getForceP())[i].d_x = 0.;
+                            (*d_dataManager_p->getForceP())[i].d_y = 0.;
+                            (*d_dataManager_p->getForceP())[i].d_z = 0.;
+                          });
 
-  for (size_t i = 0; i < d_nnodes; i++) {
-    util::Point3 force_i = util::Point3();
+  hpx::lcos::local::mutex m;
 
-    // inner loop over neighbors
-    auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(i);
+  hpx::parallel::for_loop(
+      hpx::parallel::execution::par, 0, d_nnodes,
+      [&](boost::uint64_t i) {
+        util::Point3 force_i = util::Point3();
 
-    for (size_t j = 0; j < i_neighs.size(); j++) {
-      auto j_id = i_neighs[j];
+        // inner loop over neighbors
+        std::vector<std::size_t> i_neighs =
+            d_dataManager_p->getNeighborP()->getNeighbors(i);
 
-      auto res = d_material_p->getBondEF(size_t(i), size_t(j_id));
+        for (size_t j = 0; j < i_neighs.size(); j++) {
+          size_t j_id = i_neighs[j];
 
-      force_i +=
-          res.first * (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j_id];
+          auto res = d_material_p->getBondEF(size_t(i), size_t(j_id));
 
-      // m.lock();
-      (*d_dataManager_p->getForceP())[j_id] -=
-          res.first * (*d_dataManager_p->getMeshP()->getNodalVolumeP())[i];
-      // m.unlock();
+          force_i += res.first *
+                     (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j_id];
 
-      if (full) {
-        if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Strain_Energy"))
+          m.lock();
+          (*d_dataManager_p->getForceP())[j_id] -=
+              res.first * (*d_dataManager_p->getMeshP()->getNodalVolumeP())[i];
+          m.unlock();
 
-        {
-          (*d_dataManager_p->getStrainEnergyP())[i] +=
-              (float)d_material_p->getBondEF(size_t(i), size_t(j_id)).second;
+          if (full) {
+            if (d_dataManager_p->getOutputDeckP()->isTagInOutput(
+                    "Strain_Energy"))
+
+            {
+              (*d_dataManager_p->getStrainEnergyP())[i] += (float)res.second;
+            }
+          }
         }
-      }
-    }
 
-    if (full) {
-      if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Strain_Tensor"))
+        if (full) {
+          if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Strain_Tensor"))
 
-      {
-        (*d_dataManager_p->getStrainTensorP())[i] =
-            d_material_p->getStrain(size_t(i));
-      }
+          {
+            (*d_dataManager_p->getStrainTensorP())[i] =
+                d_material_p->getStrain(size_t(i));
+          }
 
-      if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Stress_Tensor"))
+          if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Stress_Tensor"))
 
-      {
-        (*d_dataManager_p->getStressTensorP())[i] =
-            d_material_p->getStress(size_t(i));
-      }
-    }
+          {
+            (*d_dataManager_p->getStressTensorP())[i] =
+                d_material_p->getStress(size_t(i));
+          }
+        }
 
-    // update force and energy
-    // m.lock();
+        // update force and energy
+        m.lock();
 
-    (*d_dataManager_p->getForceP())[i] += force_i;
-    // m.unlock();
+        (*d_dataManager_p->getForceP())[i] += force_i;
+        m.unlock();
+      }  // loop over nodes
 
-  }  // loop over nodes
+  );  // end of parallel for loop
+}
 
-  //);// end of parallel for loop
+template <class T>
+inline void model::QuasiStaticModel<T>::computePertubatedForces(size_t thread) {
+  material::pd::BaseMaterial *material =
+      new T(d_input_p->getMaterialDeck(), d_dataManagers[thread]);
+
+  material->update();
+
+  // Clear the vector
+
+  hpx::parallel::for_loop(hpx::parallel::execution::par, 0, d_nnodes,
+                          [&](boost::uint64_t i) {
+                            (*d_dataManagers[thread]->getForceP())[i].d_x = 0.;
+                            (*d_dataManagers[thread]->getForceP())[i].d_y = 0.;
+                            (*d_dataManagers[thread]->getForceP())[i].d_z = 0.;
+                          });
+
+  hpx::lcos::local::mutex m;
+
+  hpx::parallel::for_loop(
+      hpx::parallel::execution::par, 0, d_nnodes,
+      [&](boost::uint64_t i) {
+        util::Point3 force_i = util::Point3();
+
+        // inner loop over neighbors
+        std::vector<std::size_t> i_neighs =
+            d_dataManager_p->getNeighborP()->getNeighbors(i);
+
+        for (size_t j = 0; j < i_neighs.size(); j++) {
+          size_t j_id = i_neighs[j];
+
+          auto res = material->getBondEF(size_t(i), size_t(j_id));
+
+          force_i += res.first *
+                     (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j_id];
+
+          m.lock();
+          (*d_dataManagers[thread]->getForceP())[j_id] -=
+              res.first * (*d_dataManager_p->getMeshP()->getNodalVolumeP())[i];
+          m.unlock();
+        }
+        // update force and energy
+        m.lock();
+
+        (*d_dataManagers[thread]->getForceP())[i] += force_i;
+        m.unlock();
+      }  // loop over nodes
+
+  );  // end of parallel for loop
 }
 
 template <class T>
@@ -234,82 +322,103 @@ util::Matrixij model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
   size_t dim = d_dataManager_p->getModelDeckP()->d_dim;
   size_t matrixSize = d_nnodes * dim;
 
-  util::Matrixij jacobian = util::Matrixij(matrixSize, matrixSize, 0.);
+  jacobian = util::Matrixij(matrixSize, matrixSize, 0.);
 
+  size_t slice = int(d_nnodes / d_osThreads);
+
+  // std::vector<hpx::future<void>> futures;
+
+  for (size_t thread = 0; thread < d_osThreads; thread++) {
+    size_t start = thread * slice;
+    size_t end = 0;
+
+    if (thread < d_osThreads - 1)
+      end = (thread + 1) * slice;
+    else
+      end = d_nnodes;
+
+    // futures.push_back(hpx::async([this,start,end,thread](){
+
+    this->assembly_jacobian_matrix_part(start, end, thread);
+
+    //}));
+  }
+
+  // hpx::when_all(futures);
+
+  return jacobian;
+}
+
+template <class T>
+inline void model::QuasiStaticModel<T>::assembly_jacobian_matrix_part(
+    size_t begin, size_t end, size_t thread) {
   double eps = d_input_p->getSolverDeck()->d_perturbation *
                d_dataManager_p->getMeshP()->getMeshSize();
 
+  size_t dim = d_dataManager_p->getModelDeckP()->d_dim;
+
   std::vector<util::Point3> backup(d_nnodes, util::Point3());
-  std::vector<util::Point3> backupForce(d_nnodes, util::Point3());
 
   util::parallel::copy<std::vector<util::Point3>>(
       *d_dataManager_p->getDisplacementP(), backup);
-  util::parallel::copy<std::vector<util::Point3>>(*d_dataManager_p->getForceP(),
-                                                  backupForce);
 
-  hpx::parallel::for_loop(
-      hpx::parallel::execution::par, 0, d_nnodes, [&](boost::uint64_t i) {
-        std::vector<size_t> *traversal_list = new std::vector<size_t>;
+  for (size_t i = begin; i < end; i++) {
+    std::vector<size_t> *traversal_list = new std::vector<size_t>;
 
-        traversal_list->push_back(i);
+    traversal_list->push_back(i);
 
-        auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(i);
-        for (auto j : i_neighs) traversal_list->push_back(j);
+    std::vector<size_t> i_neighs =
+        d_dataManager_p->getNeighborP()->getNeighbors(i);
+    for (auto j : i_neighs) traversal_list->push_back(j);
 
-        for (auto j : *traversal_list) {
-          for (size_t r = 0; r < dim; r++) {
-            std::vector<util::Point3> eps_vector =
-                std::vector<util::Point3>(d_nnodes, util::Point3());
+    for (auto j : *traversal_list) {
+      for (size_t r = 0; r < dim; r++) {
+        std::vector<util::Point3> eps_vector =
+            std::vector<util::Point3>(d_nnodes, util::Point3());
 
-            switch (r) {
-              case 0:
-                eps_vector[j].d_x = eps;
-                break;
-              case 1:
-                eps_vector[j].d_y = eps;
-                break;
-              case 2:
-                eps_vector[j].d_z = eps;
-                break;
-            }
-
-            std::vector<util::Point3> *tmp =
-                new std::vector<util::Point3>(d_nnodes, util::Point3());
-            util::parallel::copy(backup, *tmp);
-            util::parallel::addInplace(*tmp, eps_vector);
-
-            d_dataManager_p->setDisplacementP(tmp);
-
-            computeForces();
-
-            util::Point3 force_p = (*d_dataManager_p->getForceP())[i];
-
-            util::parallel::copy(backup, *tmp);
-            util::parallel::subInplace(*tmp, eps_vector);
-
-            d_dataManager_p->setDisplacementP(tmp);
-
-            computeForces();
-
-            util::Point3 force_m = (*d_dataManager_p->getForceP())[i];
-
-            util::Point3 f_diff = force_p - force_m;
-
-            for (size_t s = 0; s < dim; s++) {
-              if (r == s)
-                jacobian(i * dim + r, j * dim + s) = f_diff[r] / (2. * eps);
-            }
-          }
+        switch (r) {
+          case 0:
+            eps_vector[j].d_x = eps;
+            break;
+          case 1:
+            eps_vector[j].d_y = eps;
+            break;
+          case 2:
+            eps_vector[j].d_z = eps;
+            break;
         }
 
-        traversal_list->clear();
-      });
+        std::vector<util::Point3> *tmp =
+            new std::vector<util::Point3>(d_nnodes, util::Point3());
+        util::parallel::copy(backup, *tmp);
+        util::parallel::addInplace(*tmp, eps_vector);
 
-  util::parallel::copy<std::vector<util::Point3>>(
-      backup, *d_dataManager_p->getDisplacementP());
-  util::parallel::copy(backupForce, *d_dataManager_p->getForceP());
+        d_dataManagers[thread]->setDisplacementP(tmp);
 
-  return jacobian;
+        computePertubatedForces(thread);
+
+        util::Point3 force_p = (*d_dataManagers[thread]->getForceP())[i];
+
+        util::parallel::copy(backup, *tmp);
+        util::parallel::subInplace(*tmp, eps_vector);
+
+        d_dataManagers[thread]->setDisplacementP(tmp);
+
+        computePertubatedForces(thread);
+
+        util::Point3 force_m = (*d_dataManagers[thread]->getForceP())[i];
+
+        util::Point3 f_diff = force_p - force_m;
+
+        for (size_t s = 0; s < dim; s++) {
+          if (r == s)
+            jacobian(i * dim + r, j * dim + s) = f_diff[r] / (2. * eps);
+        }
+      }
+    }
+
+    traversal_list->clear();
+  }
 }
 
 template <class T>

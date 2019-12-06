@@ -8,11 +8,10 @@
 
 #include "input.h"
 
-#include <hpx/config.hpp>
-
 #include <yaml-cpp/yaml.h>
 
 #include <cmath>
+#include <hpx/config.hpp>
 #include <iostream>
 
 #include "decks/fractureDeck.h"

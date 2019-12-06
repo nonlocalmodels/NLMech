@@ -206,6 +206,12 @@ public:
     return util::Matrix33();
   }
 
+ /*!
+   * @brief Let the material class in the quasi-static case know that there is a new 
+   * loading step
+   */
+  virtual void update(){}
+
 protected:
   /*! @brief Horizon */
   double d_horizon;

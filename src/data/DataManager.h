@@ -145,6 +145,10 @@ public:
 
 	std::vector<util::Matrix33>* getStrainTensorP();
 
+	void setDilatationP(std::vector<double> * pointer);
+
+	std::vector<double> * getDilatationP();
+
 private:
 
 	/**
@@ -181,6 +185,9 @@ private:
 
 	/*! @brief Extension for the neighborhood of each node */
 	std::vector<std::vector<double>>* d_extension_p;
+
+	/*! @brief Dilatation of nodes */
+	std::vector<double> *d_dilatation_p = nullptr;
 
 	/*! @brief Pointer to the strain energy vector */
 	std::vector<float>* d_e_p = nullptr;

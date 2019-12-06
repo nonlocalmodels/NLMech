@@ -49,7 +49,6 @@ std::vector<size_t> util::transformation::cyclicOrderACW(const size_t &i,
 std::vector<size_t> util::transformation::cyclicOrderACW(const size_t &i,
                                                          const size_t &j,
                                                          const size_t &n) {
-
   // data to return
   std::vector<size_t> d;
 
@@ -84,7 +83,6 @@ std::vector<size_t> util::transformation::cyclicOrderACW(const size_t &i,
                                                          const size_t &j,
                                                          const size_t &k,
                                                          const size_t &n) {
-
   // TODO Check this implementation
 
   // data to return
@@ -92,7 +90,6 @@ std::vector<size_t> util::transformation::cyclicOrderACW(const size_t &i,
 
   // only case of n = 4 is implemented
   if (n != 4) {
-
     std::cerr << "Error: currently cyclicOrderACW with i,j,k are implemented "
                  "for n = 4 only.\n";
     exit(1);

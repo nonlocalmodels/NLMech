@@ -51,9 +51,6 @@ class StateBasedHelperFunctions {
 
 public:
 
-	/*! @brief Dilatation of nodes */
-	std::vector<double> *d_dilatation_p;
-
 	/*!
 	 * @brief Constructor
 	 * @param DataManager Pointer to the data manager object
@@ -64,21 +61,11 @@ private:
 	/*!
 	 * @brief Computes the extension \f$ e_i = \vert \eta + \xi \vert - \vert \xi \vert \f$ and
 	 * dilatation \f$ \sum\limits_{B_\delta(x_i)} \frac{3}{m_i} \vert \xi \vert e_i V_j \f$ for each node where $m_i$ is the weighted volume.
-	 * @param neighbors Class containing the neighborhoods
-	 * @param nodes Pointer to nodal positions
-	 * @param displacement Pointer to displacement
-	 * @param weightedVolume Weighted volume of the nodes
-	 * @param volumeCorrection Corrected volumes
-	 * @param volumes Volumes of the nodes
+	 * @param dataMamager Class holding all the global simulaiton data
 	 * @param dim Dimension of the problem
 	 * @param factor Dimensional depended material property
 	 */
-	void dilatation(data::DataManager *dataManager,geometry::Neighbor *neighbors,
-			const std::vector<util::Point3> *nodes,
-			const std::vector<util::Point3> *displacement,
-			const std::vector<double> *weightedVolume,
-			const std::vector<std::vector<double>> *volumeCorrection,
-			const std::vector<double> *volumes, size_t dim, double factor);
+	void dilatation(data::DataManager *dataManager, size_t dim, double factor);
 
 };
 

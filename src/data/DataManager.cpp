@@ -26,10 +26,10 @@
 #include "util/stateBasedHelperFunctions.h"
 
 data::DataManager::DataManager() {
-  if (instances != 0)
-    std::cerr << "Warning you should have exactly one data manager instance"
-              << std::endl;
-  instances++;
+  // if (instances != 0)
+  // std::cerr << "Warning you should have exactly one data manager instance"
+  //        << std::endl;
+  // instances++;
 }
 
 void data::DataManager::setModelDeckP(inp::ModelDeck* pointer) {
@@ -45,8 +45,6 @@ void data::DataManager::setOutputDeckP(inp::OutputDeck* pointer) {
 inp::OutputDeck* data::DataManager::getOutputDeckP() { return d_outputDeck_p; }
 
 void data::DataManager::setBodyForceP(std::vector<util::Point3>* pointer) {
-  assert(d_b_p != nullptr);
-
   d_b_p = pointer;
 }
 
@@ -146,4 +144,12 @@ void data::DataManager::setStrainTensorP(std::vector<util::Matrix33>* pointer) {
 
 std::vector<util::Matrix33>* data::DataManager::getStrainTensorP() {
   return d_strain_p;
+}
+
+void data::DataManager::setDilatationP(std::vector<double>* pointer) {
+  d_dilatation_p = pointer;
+}
+
+std::vector<double>* data::DataManager::getDilatationP() {
+  return d_dilatation_p;
 }
