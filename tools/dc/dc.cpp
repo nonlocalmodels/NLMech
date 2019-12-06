@@ -3,15 +3,13 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt
 
-#include "dcInclude.h"
-
 #include <algorithm>
-
 #include <boost/program_options.hpp>
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+#include "dcInclude.h"
 
+int main(int argc, char *argv[]) {
   boost::program_options::options_description desc("Allowed options");
   desc.add_options()("help", "produce help message")(
       "input-file,i", boost::program_options::value<std::string>(),
@@ -34,13 +32,11 @@ int main(int argc, char *argv[]) {
   size_t found = 0;
 
   if (vm.count("input-file")) {
-
     filename = vm["input-file"].as<std::string>();
     found++;
   }
 
   if (vm.count("kind")) {
-
     type = vm["kind"].as<std::string>();
     found++;
   }
@@ -55,14 +51,11 @@ int main(int argc, char *argv[]) {
   //
   YAML::Node config = YAML::LoadFile(filename);
 
-  if (type == "fe")
-    dc::fe(config);
+  if (type == "fe") dc::fe(config);
 
-  if (type == "fd")
-    dc::fd(config);
+  if (type == "fd") dc::fd(config);
 
-  if (type == "fd_simple")
-    dc::fdSimple(config);
+  if (type == "fd_simple") dc::fdSimple(config);
 
   return EXIT_SUCCESS;
 }

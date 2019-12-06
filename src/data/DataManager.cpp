@@ -26,10 +26,10 @@
 #include "util/stateBasedHelperFunctions.h"
 
 data::DataManager::DataManager() {
-  //if (instances != 0)
-    //std::cerr << "Warning you should have exactly one data manager instance"
-      //        << std::endl;
-  //instances++;
+  // if (instances != 0)
+  // std::cerr << "Warning you should have exactly one data manager instance"
+  //        << std::endl;
+  // instances++;
 }
 
 void data::DataManager::setModelDeckP(inp::ModelDeck* pointer) {

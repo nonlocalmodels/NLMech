@@ -68,9 +68,8 @@ void rw::reader::readVtuFile(const std::string &filename, size_t dim,
 }
 
 void rw::reader::readVtuFileNodes(const std::string &filename, size_t dim,
-                                 std::vector<util::Point3> *nodes, bool
-                                 ref_config) {
-
+                                  std::vector<util::Point3> *nodes,
+                                  bool ref_config) {
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
 
@@ -92,18 +91,16 @@ void rw::reader::readVtuFileNodes(const std::string &filename, size_t dim,
       exit(1);
     }
 
-    for (size_t i=0; i<u.size(); i++)
-      (*nodes)[i] -= u[i];
+    for (size_t i = 0; i < u.size(); i++) (*nodes)[i] -= u[i];
   }
 
   rdr.close();
 }
 
 void rw::reader::readVtuFileCells(const std::string &filename, size_t dim,
-                                  size_t &element_type,
-                     size_t &num_elem, std::vector<size_t> *enc,
-                     std::vector<std::vector<size_t>> *nec) {
-
+                                  size_t &element_type, size_t &num_elem,
+                                  std::vector<size_t> *enc,
+                                  std::vector<std::vector<size_t>> *nec) {
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
 
@@ -228,8 +225,8 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 }
 
 bool rw::reader::readVtuFileCellData(const std::string &filename,
-                                      const std::string &tag,
-                                      std::vector<float> *data) {
+                                     const std::string &tag,
+                                     std::vector<float> *data) {
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data

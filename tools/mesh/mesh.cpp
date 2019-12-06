@@ -6,11 +6,11 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <hpx/config.hpp>
 #include <Config.h>
 
 #include <algorithm>
 #include <boost/program_options.hpp>
+#include <hpx/config.hpp>
 #include <iostream>
 
 #include "src/1d/fe1D.h"

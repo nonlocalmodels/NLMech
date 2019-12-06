@@ -88,7 +88,6 @@ bool util::geometry::isPointInsideCuboid(util::Point3 x, util::Point3 x_lbb,
 double util::geometry::triangleArea(const util::Point3 &v1,
                                     const util::Point3 &v2,
                                     const util::Point3 &v3) {
-
   return 0.5 * ((v2.d_x - v1.d_x) * (v3.d_y - v1.d_y) -
-                        (v3.d_x - v1.d_x) * (v2.d_y - v1.d_y));
+                (v3.d_x - v1.d_x) * (v2.d_y - v1.d_y));
 }

@@ -6,6 +6,9 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <fe/triElem.h>
+#include <util/feElementDefs.h>
+
 #include "dcInclude.h"
 #include "fe/mesh.h"
 #include "inp/decks/meshDeck.h"
@@ -16,8 +19,6 @@
 #include "util/point.h"
 #include "util/transfomation.h"
 #include "util/utilGeom.h"
-#include <fe/triElem.h>
-#include <util/feElementDefs.h>
 
 static int init = -1;
 
@@ -37,7 +38,6 @@ namespace fdSimple {
 void readInputFile(size_t &dim, std::string &filename1, std::string &filename2,
                    std::string &out_filename, bool &print_screen,
                    std::vector<std::string> &compare_tags, YAML::Node config) {
-
   dim = config["Dimension"].as<size_t>();
 
   filename1 = config["Filename_1"].as<std::string>();
@@ -51,8 +51,7 @@ void readInputFile(size_t &dim, std::string &filename1, std::string &filename2,
 
   compare_tags.clear();
   auto ct = config["Compare_Tags"];
-  for (auto f : ct)
-    compare_tags.push_back(f.as<std::string>());
+  for (auto f : ct) compare_tags.push_back(f.as<std::string>());
 
   if (compare_tags.empty()) {
     std::cerr << "Error: Please specify at least one data which should be "
@@ -65,7 +64,6 @@ void readInputFile(size_t &dim, std::string &filename1, std::string &filename2,
 // compute error
 //
 void compute(const YAML::Node &config) {
-
   size_t dim;
 
   std::string filename1;
@@ -79,7 +77,7 @@ void compute(const YAML::Node &config) {
 
   // read file
   fdSimple::readInputFile(dim, filename1, filename2, out_filename, print_screen,
-                    compare_tags, config);
+                          compare_tags, config);
 
   // create output file stream
   FILE *file_out = fopen(out_filename.c_str(), "w");
@@ -89,12 +87,10 @@ void compute(const YAML::Node &config) {
 
   std::ostringstream oss;
   for (const auto &s : compare_tags) {
-
     oss << s.c_str() << "_L2_Error, " << s.c_str() << "_Sup_Error";
 
     // handle special cases
-    if (s_counter < compare_tags.size() - 1)
-      oss << ", ";
+    if (s_counter < compare_tags.size() - 1) oss << ", ";
 
     s_counter++;
   }
@@ -128,20 +124,18 @@ void compute(const YAML::Node &config) {
 
   // loop over tags and compute the error for each tag
   s_counter = 0;
-  for (const auto &tag: compare_tags) {
-
+  for (const auto &tag : compare_tags) {
     // implement specific cases
 
     if (tag == "Displacement") {
-
       // read displacement from file 1
       std::vector<util::Point3> nodes_u_1;
 
       if (!rw::reader::readVtuFilePointData(filename1, tag, &nodes_u_1)) {
-
-        std::cerr << "Error: " << tag << " data can not be found in the file ="
-                     " " << filename1
-                  << std::endl;
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename1 << std::endl;
         exit(1);
       }
 
@@ -149,17 +143,17 @@ void compute(const YAML::Node &config) {
       std::vector<util::Point3> nodes_u_2;
 
       if (!rw::reader::readVtuFilePointData(filename2, tag, &nodes_u_2)) {
-
-        std::cerr << "Error: " << tag << " data can not be found in the file ="
-                                         " " << filename2
-                  << std::endl;
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename2 << std::endl;
         exit(1);
       }
 
       // compute L2 and sup norm
       double l2 = 0.;
       double sup = 0.;
-      for (size_t i=0; i<nodes_u_1.size(); i++) {
+      for (size_t i = 0; i < nodes_u_1.size(); i++) {
         auto du = nodes_u_1[i] - nodes_u_2[i];
         l2 += du.length() * du.length();
 
@@ -173,15 +167,14 @@ void compute(const YAML::Node &config) {
       oss << l2 << ", " << sup;
 
     } else if (tag == "Velocity") {
-
       // read displacement from file 1
       std::vector<util::Point3> nodes_v_1;
 
       if (!rw::reader::readVtuFilePointData(filename1, tag, &nodes_v_1)) {
-
-        std::cerr << "Error: " << tag << " data can not be found in the file ="
-                                         " " << filename1
-                  << std::endl;
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename1 << std::endl;
         exit(1);
       }
 
@@ -189,17 +182,17 @@ void compute(const YAML::Node &config) {
       std::vector<util::Point3> nodes_v_2;
 
       if (!rw::reader::readVtuFilePointData(filename2, tag, &nodes_v_2)) {
-
-        std::cerr << "Error: " << tag << " data can not be found in the file ="
-                                         " " << filename2
-                  << std::endl;
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename2 << std::endl;
         exit(1);
       }
 
       // compute L2 and sup norm
       double l2 = 0.;
       double sup = 0.;
-      for (size_t i=0; i<nodes_v_1.size(); i++) {
+      for (size_t i = 0; i < nodes_v_1.size(); i++) {
         auto dv = nodes_v_1[i] - nodes_v_2[i];
         l2 += dv.length() * dv.length();
 
@@ -213,15 +206,14 @@ void compute(const YAML::Node &config) {
       oss << l2 << ", " << sup;
 
     } else if (tag == "Force") {
-
       // read displacement from file 1
       std::vector<util::Point3> nodes_f_1;
 
       if (!rw::reader::readVtuFilePointData(filename1, tag, &nodes_f_1)) {
-
-        std::cerr << "Error: " << tag << " data can not be found in the file ="
-                                         " " << filename1
-                  << std::endl;
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename1 << std::endl;
         exit(1);
       }
 
@@ -229,17 +221,17 @@ void compute(const YAML::Node &config) {
       std::vector<util::Point3> nodes_f_2;
 
       if (!rw::reader::readVtuFilePointData(filename2, tag, &nodes_f_2)) {
-
-        std::cerr << "Error: " << tag << " data can not be found in the file ="
-                                         " " << filename2
-                  << std::endl;
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename2 << std::endl;
         exit(1);
       }
 
       // compute L2 and sup norm
       double l2 = 0.;
       double sup = 0.;
-      for (size_t i=0; i<nodes_f_1.size(); i++) {
+      for (size_t i = 0; i < nodes_f_1.size(); i++) {
         auto df = nodes_f_1[i] - nodes_f_2[i];
         l2 += df.length() * df.length();
 
@@ -251,17 +243,15 @@ void compute(const YAML::Node &config) {
 
       // append data
       oss << l2 << ", " << sup;
-    } 
-    else if(tag == "Strain_Energy") {
-
+    } else if (tag == "Strain_Energy") {
       // read strain energy from file 1
       std::vector<double> nodes_e_1;
 
       if (!rw::reader::readVtuFilePointData(filename1, tag, &nodes_e_1)) {
-
-        std::cerr << "Error: " << tag << " data can not be found in the file ="
-                                         " " << filename1
-                  << std::endl;
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename1 << std::endl;
         exit(1);
       }
 
@@ -269,22 +259,21 @@ void compute(const YAML::Node &config) {
       std::vector<double> nodes_e_2;
 
       if (!rw::reader::readVtuFilePointData(filename2, tag, &nodes_e_2)) {
-
-        std::cerr << "Error: " << tag << " data can not be found in the file ="
-                                         " " << filename2
-                  << std::endl;
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename2 << std::endl;
         exit(1);
       }
 
       // compute L2 and sup norm
       double l2 = 0.;
       double sup = 0.;
-      for (size_t i=0; i<nodes_e_1.size(); i++) {
+      for (size_t i = 0; i < nodes_e_1.size(); i++) {
         auto df = nodes_e_1[i] - nodes_e_2[i];
         l2 += df * df;
 
-        if (util::compare::definitelyGreaterThan(df, sup))
-          sup = df;
+        if (util::compare::definitelyGreaterThan(df, sup)) sup = df;
       }
 
       l2 = std::sqrt(l2);
@@ -292,17 +281,15 @@ void compute(const YAML::Node &config) {
       // append data
       oss << l2 << ", " << sup;
 
-    }
-    else if(tag == "Strain_Tensor") {
-
+    } else if (tag == "Strain_Tensor") {
       // read strain tensor from file 1
       std::vector<util::Matrix33> nodes_strain_1;
 
       if (!rw::reader::readVtuFilePointData(filename1, tag, &nodes_strain_1)) {
-
-        std::cerr << "Error: " << tag << " data can not be found in the file ="
-                                         " " << filename1
-                  << std::endl;
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename1 << std::endl;
         exit(1);
       }
 
@@ -310,22 +297,21 @@ void compute(const YAML::Node &config) {
       std::vector<util::Matrix33> nodes_strain_2;
 
       if (!rw::reader::readVtuFilePointData(filename2, tag, &nodes_strain_2)) {
-
-        std::cerr << "Error: " << tag << " data can not be found in the file ="
-                                         " " << filename2
-                  << std::endl;
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename2 << std::endl;
         exit(1);
       }
 
       // compute L2 and sup norm
       double l2 = 0.;
       double sup = 0.;
-      for (size_t i=0; i<nodes_strain_1.size(); i++) {
+      for (size_t i = 0; i < nodes_strain_1.size(); i++) {
         auto df = blaze::sum(nodes_strain_1[i] - nodes_strain_2[i]);
         l2 += df * df;
 
-        if (util::compare::definitelyGreaterThan(df, sup))
-          sup = df;
+        if (util::compare::definitelyGreaterThan(df, sup)) sup = df;
       }
 
       l2 = std::sqrt(l2);
@@ -333,17 +319,15 @@ void compute(const YAML::Node &config) {
       // append data
       oss << l2 << ", " << sup;
 
-    }
-        else if(tag == "Stress_Tensor") {
-
+    } else if (tag == "Stress_Tensor") {
       // read strain tensor from file 1
       std::vector<util::Matrix33> nodes_strain_1;
 
       if (!rw::reader::readVtuFilePointData(filename1, tag, &nodes_strain_1)) {
-
-        std::cerr << "Error: " << tag << " data can not be found in the file ="
-                                         " " << filename1
-                  << std::endl;
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename1 << std::endl;
         exit(1);
       }
 
@@ -351,22 +335,21 @@ void compute(const YAML::Node &config) {
       std::vector<util::Matrix33> nodes_strain_2;
 
       if (!rw::reader::readVtuFilePointData(filename2, tag, &nodes_strain_2)) {
-
-        std::cerr << "Error: " << tag << " data can not be found in the file ="
-                                         " " << filename2
-                  << std::endl;
+        std::cerr << "Error: " << tag
+                  << " data can not be found in the file ="
+                     " "
+                  << filename2 << std::endl;
         exit(1);
       }
 
       // compute L2 and sup norm
       double l2 = 0.;
       double sup = 0.;
-      for (size_t i=0; i<nodes_strain_1.size(); i++) {
+      for (size_t i = 0; i < nodes_strain_1.size(); i++) {
         auto df = blaze::sum(nodes_strain_1[i] - nodes_strain_2[i]);
         l2 += df * df;
 
-        if (util::compare::definitelyGreaterThan(df, sup))
-          sup = df;
+        if (util::compare::definitelyGreaterThan(df, sup)) sup = df;
       }
 
       l2 = std::sqrt(l2);
@@ -374,30 +357,26 @@ void compute(const YAML::Node &config) {
       // append data
       oss << l2 << ", " << sup;
 
-    }
-    else {
-
+    } else {
       std::cerr << "Error: Comparison for tag = " << tag
                 << " has not yet been implemented.\n";
       exit(1);
     }
 
     // handle special cases
-    if (s_counter < compare_tags.size() - 1)
-      oss << ", ";
+    if (s_counter < compare_tags.size() - 1) oss << ", ";
 
     s_counter++;
   }
   oss << "\n";
 
   fprintf(file_out, "%s", oss.str().c_str());
-  if (print_screen)
-    std::cout << oss.str();
+  if (print_screen) std::cout << oss.str();
 
   fclose(file_out);
 }
 
-} // namespace fdSimple
+}  // namespace fdSimple
 
 //
 // main function

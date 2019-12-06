@@ -51,8 +51,9 @@ material::pd::Material::Material(inp::MaterialDeck *deck, const size_t &dim,
     d_baseMaterial_p =
         new material::pd::RNPState(d_deck_p, d_dimension, d_horizon,
                                    d_baseInfluenceFn_p->getMoment(d_dimension));
-  } else if (d_deck_p->d_materialType == "ElasticState"){} 
-  
+  } else if (d_deck_p->d_materialType == "ElasticState") {
+  }
+
   else {
     std::cerr << "Error: Material type = " << d_deck_p->d_materialType
               << ". Currently only PDBond and PDState is implemented.\n";

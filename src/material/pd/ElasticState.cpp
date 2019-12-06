@@ -17,8 +17,7 @@
 material::pd::ElasticState::ElasticState(inp::MaterialDeck *deck,
                                          data::DataManager *dataManager)
     : BaseMaterial(dim, horizon) {
-  
-  d_dataManager_p = dataManager ;
+  d_dataManager_p = dataManager;
 
   horizon = dataManager->getModelDeckP()->d_horizon;
 
@@ -64,8 +63,7 @@ void material::pd::ElasticState::computeParameters(inp::MaterialDeck *deck,
 
   // dim = dim;
 
-  if (util::compare::definitelyLessThan(deck->d_matData.d_E, 0.) &&
-     dim == 1) {
+  if (util::compare::definitelyLessThan(deck->d_matData.d_E, 0.) && dim == 1) {
     std::cerr
         << "Error: Require the Young's modulus E"
            " to compute the elastic state-based peridynamic parameters.\n";
