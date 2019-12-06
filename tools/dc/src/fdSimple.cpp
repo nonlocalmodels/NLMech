@@ -8,6 +8,7 @@
 
 #include <fe/triElem.h>
 #include <util/feElementDefs.h>
+#include <limits>
 
 #include "dcInclude.h"
 #include "fe/mesh.h"
@@ -22,6 +23,8 @@
 
 static int init = -1;
 
+static bool error = false;
+
 /*! @brief Local namespace */
 namespace fdSimple {
 
@@ -33,15 +36,19 @@ namespace fdSimple {
  * @param out_filename Output filename
  * @param print_screen Data should or should not be printed to screen
  * @param compare_tags List of tags data which should be compared
+ * @param tolerance
  * @param config YAML input file
  */
 void readInputFile(size_t &dim, std::string &filename1, std::string &filename2,
                    std::string &out_filename, bool &print_screen,
-                   std::vector<std::string> &compare_tags, YAML::Node config) {
+                   std::vector<std::string> &compare_tags, double &tolerance, YAML::Node config) {
   dim = config["Dimension"].as<size_t>();
 
   filename1 = config["Filename_1"].as<std::string>();
   filename2 = config["Filename_2"].as<std::string>();
+
+  tolerance = config["Tolerance"].as<double>();
+
 
   out_filename = config["Out_Filename"].as<std::string>();
   if (config["Print_Screen"])
@@ -73,11 +80,13 @@ void compute(const YAML::Node &config) {
 
   bool print_screen;
 
+  double tolerance = std::numeric_limits<double>::max();
+
   std::vector<std::string> compare_tags;
 
   // read file
   fdSimple::readInputFile(dim, filename1, filename2, out_filename, print_screen,
-                          compare_tags, config);
+                          compare_tags, tolerance, config);
 
   // create output file stream
   FILE *file_out = fopen(out_filename.c_str(), "w");

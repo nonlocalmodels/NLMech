@@ -8,9 +8,9 @@
 
 #include <Config.h>
 
+#include <hpx/config.hpp>
 #include <algorithm>
 #include <boost/program_options.hpp>
-#include <hpx/config.hpp>
 #include <iostream>
 
 #include "src/1d/fe1D.h"
