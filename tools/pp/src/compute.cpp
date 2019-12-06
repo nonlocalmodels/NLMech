@@ -340,6 +340,9 @@ void tools::pp::Compute::finalize() {
     if (c.d_computeJInt_p) {
       if (c.d_computeJInt_p->d_file)
         fclose(c.d_computeJInt_p->d_file);
+
+      if (c.d_computeJInt_p->d_fileNew)
+        fclose(c.d_computeJInt_p->d_fileNew);
     }
 
     if (c.d_findCrackTip_p) {
@@ -1413,13 +1416,13 @@ void tools::pp::Compute::computeJIntegral() {
   // new version of output file
   {
     // create file in first call
-    if (!data->d_file) {
+    if (!data->d_fileNew) {
       std::string filename =
           d_outPreTag + d_currentData->d_tagFilename + "_new" + ".csv";
-      data->d_file = fopen(filename.c_str(), "w");
+      data->d_fileNew = fopen(filename.c_str(), "w");
 
       // write header
-      fprintf(data->d_file,
+      fprintf(data->d_fileNew,
               "dt_out, V_mag, "
               "contour_strain_energy, "
               "contour_strain_energy_rate, "
@@ -1431,7 +1434,7 @@ void tools::pp::Compute::computeJIntegral() {
     }
 
     // write data
-    fprintf(data->d_file,
+    fprintf(data->d_fileNew,
             "%u, %4.6e, "
             "%4.6e, "
             "%4.6e, "

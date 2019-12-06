@@ -261,6 +261,9 @@ struct ComputeJIntegral {
   /*! @brief File to write J integral data */
   FILE *d_file;
 
+  /*! @brief File to write J integral data */
+  FILE *d_fileNew;
+
   /*! @brief Set lateral component of velocity of crack tip as zero */
   bool d_setLateralCompVZero;
 
@@ -277,7 +280,7 @@ struct ComputeJIntegral {
    * @brief Constructor
    */
   ComputeJIntegral()
-      : d_crackOrient(0), d_crackId(1), d_file(nullptr),
+      : d_crackOrient(0), d_crackId(1), d_file(nullptr), d_fileNew(nullptr),
         d_setLateralCompVZero(false), d_setLateralCompUZero(false),
         d_setLateralCompX(0.){};
 };
