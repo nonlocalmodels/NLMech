@@ -7,32 +7,45 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "compute.h"
-#include "inp/input.h"              // definition of Input
+#include "external/csv.h"           // csv reader
+#include "fe/lineElem.h"            // definition of LineElem
+#include "fe/mesh.h"                // definition of Mesh
+#include "fe/quadElem.h"            // definition of QuadElem
+#include "fe/triElem.h"             // definition of TriElem
+#include "geometry/fracture.h"      // definition of Fracture
+#include "geometry/neighbor.h"      // definition of Neighbor
 #include "inp/decks/materialDeck.h" // definition of MaterialDeck
 #include "inp/decks/modelDeck.h"    // definition of ModelDeck
 #include "inp/decks/outputDeck.h"   // definition of OutputDeck
-#include "inp/policy.h"         // definition of Policy
-#include "fe/mesh.h"                // definition of Mesh
-#include "fe/lineElem.h"        // definition of LineElem
-#include "fe/quadElem.h"        // definition of QuadElem
-#include "fe/triElem.h"         // definition of TriElem
-#include "geometry/fracture.h"      // definition of Fracture
-#include "geometry/neighbor.h"      // definition of Neighbor
+#include "inp/input.h"              // definition of Input
+#include "inp/policy.h"             // definition of Policy
 #include "material/pdMaterial.h"    // definition of Material
+#include "rw/reader.h"              // definition of readVtuFileRestart
 #include "rw/writer.h"              // definition of WriterInterface
-#include "rw/reader.h"          // definition of readVtuFileRestart
-#include "external/csv.h"       // csv reader
-#include "util/feElementDefs.h" // definition of fe element type
-#include "util/utilGeom.h"      // definition of isPointInsideRectangle
-#include "util/fastMethods.h"   // max and min operation
+#include "util/fastMethods.h"       // max and min operation
+#include "util/feElementDefs.h"     // definition of fe element type
+#include "util/utilGeom.h"          // definition of isPointInsideRectangle
 #include <cmath>
 #include <hpx/include/parallel_algorithm.hpp>
 #include <iostream>
 #include <yaml-cpp/yaml.h> // YAML reader
 
+namespace {
+
+// struct to send to lambda function in hpx
+struct ContourDataLambdaFn {
+  std::vector<double> d_contourPdStrainEnergies;
+  std::vector<double> d_contourPdStrainEnergiesRate;
+  std::vector<double> d_contourKineticEnergiesRate;
+  std::vector<double> d_contourElasticInternalWorksRate;
+
+  ContourDataLambdaFn() {};
+};
+
 bool minSortZ(tools::pp::SortZ a, tools::pp::SortZ b) {
   return util::compare::definitelyLessThan(a.d_Z, b.d_Z);
 }
+} // namespace
 
 tools::pp::Compute::Compute(const std::string &filename)
     : d_inpFilename(filename), d_tagZ("Damage_Z"), d_nOut(0), d_nC(0),
@@ -59,17 +72,17 @@ tools::pp::Compute::Compute(const std::string &filename)
       if (current_step % dt_out_old != 0)
         process_iN = false;
 
-    if(!process_iN)
+    if (!process_iN)
       continue;
 
     // get correct factor for dt interval
-    if (d_nOut >=  d_dtOutChange)
+    if (d_nOut >= d_dtOutChange)
       dt_interval_factor = 1;
 
     // current time
     d_time = current_step * d_modelDeck_p->d_dt;
 
-    std::cout << "PP_fe2D: Processing output file = " << d_nOut  << "\n";
+    std::cout << "PP_fe2D: Processing output file = " << d_nOut << "\n";
 
     // mesh filename to read displacement and velocity
     std::string sim_out_filename =
@@ -85,7 +98,7 @@ tools::pp::Compute::Compute(const std::string &filename)
     // get displacement and velocity
     if (d_outputDeck_p->d_outFormat == "vtu")
       rw::reader::readVtuFileRestart(sim_out_filename, &d_u, &d_v,
-                                   d_mesh_p->getNodesP());
+                                     d_mesh_p->getNodesP());
     else if (d_outputDeck_p->d_outFormat == "msh")
       rw::reader::readMshFileRestart(sim_out_filename, &d_u, &d_v,
                                      d_mesh_p->getNodesP());
@@ -109,22 +122,21 @@ tools::pp::Compute::Compute(const std::string &filename)
         continue;
 
       // skip d_interval number of simulation file after processing 1 file
-      // For now, we have different method to check when compute set includes 
+      // For now, we have different method to check when compute set includes
       // crack tip calculation
       bool skip_nout = false;
       if (d_currentData->d_computeJInt_p) {
-        if ((d_nOut - d_currentData->d_start) % (dt_interval_factor * d_currentData->d_interval) != 0)
+        if ((d_nOut - d_currentData->d_start) %
+                (dt_interval_factor * d_currentData->d_interval) !=
+            0)
           skip_nout = true;
-      }
-      else {
+      } else {
         if (d_nOut % (dt_interval_factor * d_currentData->d_interval) != 0)
           skip_nout = true;
       }
 
       if (skip_nout)
         continue;
-
-
 
       std::cout << "  PP_fe2D: Processing compute set = " << d_nC + 1 << "\n";
 
@@ -172,7 +184,7 @@ void tools::pp::Compute::init() {
 
   if (config["Simulation_Input_File"])
     d_simInpFilename =
-      source_path + "/" + config["Simulation_Input_File"].as<std::string>();
+        source_path + "/" + config["Simulation_Input_File"].as<std::string>();
   else {
     std::cerr << "Error: Simulation input file is not provided.\n";
     exit(1);
@@ -354,9 +366,8 @@ void tools::pp::Compute::readComputeInstruction(
   }
 
   if (config["Compute"][set]["File_Format"])
-    data->d_outFormat =
-        config["Compute"][set]["File_Format"].as<std::string>();
-  
+    data->d_outFormat = config["Compute"][set]["File_Format"].as<std::string>();
+
   // read format of output file
 
   // Output only nodes
@@ -908,8 +919,8 @@ void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
     // create unstructured vtk output
     std::string fname = d_outPreTag + d_currentData->d_tagFilename + "_quads_" +
                         std::to_string(d_nOut);
-    auto writer1 = rw::writer::Writer(
-        fname, d_currentData->d_outFormat, d_currentData->d_compressType);
+    auto writer1 = rw::writer::Writer(fname, d_currentData->d_outFormat,
+                                      d_currentData->d_compressType);
     writer1.appendNodes(&elem_quads);
     writer1.appendPointData("Strain_Tensor", &strain);
     writer1.appendPointData("Stress_Tensor", &stress);
@@ -987,8 +998,8 @@ void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
   else {
     std::string fn = d_fileZ + "_" + std::to_string(d_nOut) + ".vtu";
     if (!rw::reader::readVtuFilePointData(fn, d_tagZ, Z)) {
-      std::cerr << "Error: Can not read file = " << fn << " or data = "
-                << d_tagZ  << " not available in vtu file.\n";
+      std::cerr << "Error: Can not read file = " << fn
+                << " or data = " << d_tagZ << " not available in vtu file.\n";
       exit(1);
     }
   }
@@ -1067,24 +1078,43 @@ void tools::pp::Compute::computeJIntegral() {
   auto line_quad = fe::LineElem(2);
   auto h = d_mesh_p->getMeshSize();
 
-  // in the expression of contour integrals, we have dot product of direction
-  // n in contour integral with the crack velocity direction. So depending on
-  // the velovity direction, we can avoid doing integration over either
-  // horizontal edge or vertical edges of contour
+  // in the expression of contour integrals, we have dot product of
+  // normal to the edges in contour with the crack velocity direction.
+  // Thus, if crack velocity is along horizontal direction, then we only need
+  // to evaluate contour integrals on vertical edges D-A and B-C.
+  // Similarly, if velocity is along the vertical direction then we only need
+  // to evaluate contour integrals on horizontal edge A-B and C-D.
   bool integrate_horizontal = true;
-  if (data->d_crackOrient == -1)
+
+  // skip horizontal edge for horizontal crack
+  if (data->d_crackOrient == 1)
     integrate_horizontal = false;
 
+
+  // Assumption:
+  //
+  // For vertical crack, we assume it has +ve velocity in +y direction
+  // therefore n dot n_c = -1 on bottom edge A-B and n dot n_c = +1 on top
+  // edge C-D
+  //
+  // For horizontal crack, we assume it has +ve velocity in +x direction
+  // therefore n dot n_c = -1 on left edge D-A and n dot n_c = +1 on right
+  // edge B-C
+
   // loop over horizontal and vertical edge of contour
+  // E = 0 : horizontal edge A-B and C-D
+  // E = 1 : vertical edge D-A and B-C
   for (size_t E = 0; E < 2; E++) {
 
-    if (!integrate_horizontal && E == 0)
+    // skip horizontal edge if required
+    if (E == 0 && !integrate_horizontal)
       continue;
 
-    if (integrate_horizontal && E == 1)
+    // skip vertical edge if required
+    if (E == 1 && integrate_horizontal)
       continue;
 
-    long N = 0;
+    long int N = 0;
     if (E == 0) {
       // number of elements for horizontal edge
       N = (cd.second.d_x - cd.first.d_x) / h;
@@ -1099,16 +1129,30 @@ void tools::pp::Compute::computeJIntegral() {
         N++;
     }
 
-    auto energies = std::vector<double>(N, 0.);
+    auto ced = ContourDataLambdaFn();
+    ced.d_contourPdStrainEnergies = std::vector<double>(N, 0.);
+    ced.d_contourPdStrainEnergiesRate = std::vector<double>(N, 0.);
+    ced.d_contourKineticEnergiesRate = std::vector<double>(N, 0.);
+    ced.d_contourElasticInternalWorksRate = std::vector<double>(N, 0.);
+
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
-        [&energies, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
-        E,
-         this](boost::uint64_t I) {
+        [&ced, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
+         E, this](boost::uint64_t I) {
 
-          double pd_w = 0.;
-          double pd_wv = 0.;
-          double tv = 0.;
+          double kinetic_energy_q = 0.;
+          double pd_energy_q = 0.;
+
+          double pd_strain_energy = 0.;
+          double pd_strain_energy_rate = 0.;
+          double kinetic_energy_rate = 0.;
+          double elastic_internal_work_rate = 0.;
+
+          // dot product of normal to edge and crack velocity direction
+          double n_dot_n_c = 0.;
+
+          // dot product of normal to edge and crack velocity
+          double n_dot_v_c = 0.;
 
           // line element
           auto x1 = 0.;
@@ -1134,82 +1178,164 @@ void tools::pp::Compute::computeJIntegral() {
           // loop over quad points
           for (auto qd : qds) {
             if (E == 0) {
-              // process edge A-B
-              qd.d_p.d_y = cd.first.d_y;
 
-              // get contribution
-              // n dot v for edge A-B = - (y component of v)
-              loc_energy +=
-                  getContourContribJInt(qd.d_p, &search_nodes,
-                  &search_elems) *
-                  (-ctip.d_v.d_y) * qd.d_w;
+              // process edge A-B
+              {
+                // translate quadrature point's y-coordinate to y-coordinate
+                // of edge A-B
+                qd.d_p.d_y = cd.first.d_y;
+
+                // n dot n-c for edge A-B = - 1
+                n_dot_n_c = -1.;
+
+                // n dot v_c for edge A-B = - (y component of v_c)
+                n_dot_v_c = -ctip.d_v.d_y;
+
+                // get energy density
+                getContourContribJInt(qd.d_p, &search_nodes, &search_elems,
+                                      pd_energy_q, kinetic_energy_q);
+
+                // pd energy
+                pd_strain_energy += pd_energy_q * n_dot_n_c * qd.d_w;
+
+                // pd energy rate
+                pd_strain_energy_rate += pd_energy_q * n_dot_v_c * qd.d_w;
+
+                // kinetic energy rate
+                kinetic_energy_rate += kinetic_energy_q * n_dot_v_c * qd.d_w;
+              }
 
               // process edge C-D
-              qd.d_p.d_y = cd.second.d_y;
+              {
+                // translate quadrature point's y-coordinate to y-coordinate
+                // of edge C-D
+                qd.d_p.d_y = cd.second.d_y;
 
-              // get contribution
-              // n dot v for edge C-D = y component of v
-              loc_energy +=
-                  getContourContribJInt(qd.d_p, &search_nodes,
-                  &search_elems) * ctip.d_v.d_y * qd.d_w;
-            } else {
+                // n dot n-c for edge C-D = 1
+                n_dot_n_c = 1.;
+
+                // n dot v_c for edge C-D = (y component of v_c)
+                n_dot_v_c = ctip.d_v.d_y;
+
+                // get energy density
+                getContourContribJInt(qd.d_p, &search_nodes, &search_elems,
+                                      pd_energy_q, kinetic_energy_q);
+
+                // pd energy
+                pd_strain_energy += pd_energy_q * n_dot_n_c * qd.d_w;
+
+                // pd energy rate
+                pd_strain_energy_rate += pd_energy_q * n_dot_v_c * qd.d_w;
+
+                // kinetic energy rate
+                kinetic_energy_rate += kinetic_energy_q * n_dot_v_c * qd.d_w;
+              }
+            } // process horizontal edges
+            else {
+
+              // store original quad point
+              auto p_temp = qd.d_p;
+
               // process edge B-C
-              // transform quad point along vertical line to correct
-              coordinate auto p_temp = qd.d_p; qd.d_p =
-              util::Point3(cd.second.d_x, p_temp.d_x, 0.);
+              {
+                // transform quad point along vertical line to correct
+                // coordinate
+                qd.d_p = util::Point3(cd.second.d_x, p_temp.d_x, 0.);
 
-              // get contribution
-              // n dot v for edge B-C = (x component of v)
-              loc_energy +=
-                  getContourContribJInt(qd.d_p, &search_nodes,
-                  &search_elems) * ctip.d_v.d_x * qd.d_w;
+                // n dot n-c for edge B-C = 1
+                n_dot_n_c = 1.;
+
+                // n dot v_c for edge B-C = (x component of v_c)
+                n_dot_v_c = ctip.d_v.d_x;
+
+                // get energy density
+                getContourContribJInt(qd.d_p, &search_nodes, &search_elems,
+                                      pd_energy_q, kinetic_energy_q);
+
+                // pd energy
+                pd_strain_energy += pd_energy_q * n_dot_n_c * qd.d_w;
+
+                // pd energy rate
+                pd_strain_energy_rate += pd_energy_q * n_dot_v_c * qd.d_w;
+
+                // kinetic energy rate
+                kinetic_energy_rate += kinetic_energy_q * n_dot_v_c * qd.d_w;
+              }
 
               // process edge D-A
               // transform quad point along vertical line to correct
-              coordinate qd.d_p = util::Point3(cd.first.d_x, p_temp.d_x,
-              0.);
+              // coordinate
+              {
+                qd.d_p = util::Point3(cd.first.d_x, p_temp.d_x, 0.);
 
-              // get contribution
-              // n dot v for edge D-A = - (x component of v)
-              loc_energy +=
-                  getContourContribJInt(qd.d_p, &search_nodes,
-                  &search_elems) *
-                  (-ctip.d_v.d_x) * qd.d_w;
-            }
+                // n dot n-c for edge D-A = -1
+                n_dot_n_c = -1.;
+
+                // n dot v_c for edge D-A = -(x component of v_c)
+                n_dot_v_c = -ctip.d_v.d_x;
+
+                // get energy density
+                getContourContribJInt(qd.d_p, &search_nodes, &search_elems,
+                                      pd_energy_q, kinetic_energy_q);
+
+                // pd energy
+                pd_strain_energy += pd_energy_q * n_dot_n_c * qd.d_w;
+
+                // pd energy rate
+                pd_strain_energy_rate += pd_energy_q * n_dot_v_c * qd.d_w;
+
+                // kinetic energy rate
+                kinetic_energy_rate += kinetic_energy_q * n_dot_v_c * qd.d_w;
+              }
+            } // process vertical edges
+
           } // loop over quad points
 
-          energies[I] = loc_energy;
+          // add energy
+          ced.d_contourPdStrainEnergies[I] = pd_strain_energy;
+          ced.d_contourPdStrainEnergiesRate[I] = pd_strain_energy_rate;
+          ced.d_contourKineticEnergiesRate[I] = kinetic_energy_rate;
+          ced.d_contourElasticInternalWorksRate[I] = elastic_internal_work_rate;
         });
     f.get();
 
-    // add energies
-    energy += util::methods::add(energies);
+    // sum energies
+    j_energy.d_contourPdStrainEnergy += util::methods::add(ced.d_contourPdStrainEnergies);
+    j_energy.d_contourPdStrainEnergyRate += util::methods::add(ced.d_contourPdStrainEnergiesRate);
+    j_energy.d_contourKineticEnergyRate += util::methods::add(ced.d_contourKineticEnergiesRate);
+    j_energy.d_contourElasticInternalWorkRate += util::methods::add(ced.d_contourElasticInternalWorksRate);
   }
 
   //
-  // Contribution from work done by peridynamic force
+  // Compute work done by internal forces
   //
   // decompose search_nodes list in two parts: one list for nodes outside
   // domain A formed by contour and other for nodes on contour and inside
   // domain A.
   std::vector<size_t> search_node_comp;
   decomposeSearchNodes(cd, &search_nodes, &search_node_comp);
-  auto energies = std::vector<double>(search_node_comp.size(), 0.);
+
+  auto pd_internal_works = std::vector<double>(search_node_comp.size(),
+      0.);
+  auto pd_internal_works_rate = std::vector<double>(search_node_comp.size(),
+                                               0.);
 
   // loop over nodes in compliment of domain A
-  auto h = d_mesh_p->getMeshSize();
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       search_node_comp.size(),
-      [&energies, h, cd, search_nodes, search_node_comp,
+      [&pd_internal_works, &pd_internal_works_rate, h, cd, search_nodes,
+       search_node_comp,
        this](boost::uint64_t i) {
+
         auto id = search_node_comp[i];
         auto xi = d_mesh_p->getNode(id);
         auto ui = d_u[id];
         auto vi = d_v[id];
         auto voli = d_mesh_p->getNodalVolume(id);
 
-        double energy_loc = 0.;
+        double pd_internal_work = 0.;
+        double pd_internal_work_rate = 0.;
 
         // loop over nodes in domain A
         for (auto j : search_nodes) {
@@ -1235,36 +1361,30 @@ void tools::pp::Compute::computeJIntegral() {
           bool fracture_state = false;
           auto ef = d_material_p->getBondEF(rji, Sji, fracture_state, true);
 
-          // compute the contribution
-          // need factor half (see the formula for J integral and formula for
-          // value returned by getBondEF()
-          energy_loc += 0.5 * ef.second * volj *
+          // pd internal work rate
+          // need factor half (see the formula for internal work rate and
+          // formula for value returned by getBondEF())
+          pd_internal_work_rate += 0.5 * ef.second * volj *
                         (xji.d_x * v_sum.d_x + xji.d_y * v_sum.d_y +
                          xji.d_z * v_sum.d_z) /
                         rji;
         } // loop over neighboring nodes
 
-        energies[i] += energy_loc * voli;
+        pd_internal_works[i] += pd_internal_work * voli;
+        pd_internal_works_rate[i] += pd_internal_work_rate * voli;
       });
   f.get();
 
   // add energies
-  j_energy.d_pdFUDot = util::methods::add(energies);
+  j_energy.d_pdInternalWork = util::methods::add(pd_internal_works);
+  j_energy.d_pdInternalWorkRate = util::methods::add(pd_internal_works_rate);
 
   // compute remaining energies
   {
     auto vmag = ctip.d_v.length();
 
     // compute lefm energy and j-integrals
-    j_energy.d_lefm = vmag * d_matDeck_p->d_matData.d_Gc;
-
-    // compute rate of change of energy into crack
-    j_energy.d_pdRateEnergyChange = j_energy.d_pdWV + j_energy.d_TV -
-        j_energy.d_pdFUDot;
-
-    // compute J-integral in quas-static case (See Silling-Bobaru paper)
-    if (util::compare::definitelyGreaterThan(vmag, 1.E-10))
-      j_energy.d_pdJStatic = j_energy.d_pdW - j_energy.d_pdFUGrad;
+    j_energy.d_lefmEnergyRate = vmag * d_matDeck_p->d_matData.d_Gc;
   }
 
   // old version of output file
@@ -1284,11 +1404,11 @@ void tools::pp::Compute::computeJIntegral() {
     double Gcompute = 0.;
     auto vmag = ctip.d_v.length();
     if (util::compare::definitelyGreaterThan(vmag, 1.E-10))
-      Gcompute = -j_energy.d_pdFUDot / vmag;
+      Gcompute = -j_energy.d_pdInternalWorkRate / vmag;
     fprintf(data->d_file, "%u, %4.6e, %4.6e, %4.6e, %4.6e, %4.6e\n", d_nOut,
-            vmag, -j_energy.d_pdFUDot, j_energy.d_lefm, Gcompute,
+            vmag, -j_energy.d_pdInternalWorkRate, j_energy.d_lefmEnergyRate, Gcompute,
             d_matDeck_p->d_matData.d_Gc);
-  }
+  } // old print format
 
   // new version of output file
   {
@@ -1300,18 +1420,34 @@ void tools::pp::Compute::computeJIntegral() {
 
       // write header
       fprintf(data->d_file,
-              "dt_out, V, pdW, pdWV, TV, pdFUDot, pdFUGrad, elasFUDot, "
-              "LEFM, pdWRate, pdJStatic\n");
+              "dt_out, V_mag, "
+              "contour_strain_energy, "
+              "contour_strain_energy_rate, "
+              "contour_kinetic_energy_rate, "
+              "contour_elastic_internal_work_rate, "
+              "pd_internal_work, "
+              "pd_internal_work_rate, "
+              "lefm_energy_rate\n");
     }
 
     // write data
     fprintf(data->d_file,
-            "%u, %4.6e, %4.6e, %4.6e, %4.6e, %4.6e, %4.6e, "
-            "%4.6e, %4.6e, %4.6e, %4.6e\n",
-            d_nOut, ctip.d_v.length(), j_energy.d_pdW, j_energy.d_pdWV,
-            j_energy.d_TV, j_energy.d_pdFUDot, j_energy.d_pdFUGrad,
-            j_energy.d_elasFUDot, j_energy.d_lefm,
-            j_energy.d_pdRateEnergyChange, j_energy.d_pdJStatic);
+            "%u, %4.6e, "
+            "%4.6e, "
+            "%4.6e, "
+            "%4.6e, "
+            "%4.6e, "
+            "%4.6e, "
+            "%4.6e, "
+            "%4.6e\n",
+            d_nOut, ctip.d_v.length(),
+            j_energy.d_contourPdStrainEnergy,
+            j_energy.d_contourPdStrainEnergyRate,
+            j_energy.d_contourKineticEnergyRate,
+            j_energy.d_contourElasticInternalWorkRate,
+            j_energy.d_pdInternalWork,
+            j_energy.d_pdInternalWorkRate,
+            j_energy.d_lefmEnergyRate);
   }
 }
 
@@ -1524,9 +1660,9 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     enodes.emplace_back(p);
     std::vector<size_t> etags(enodes.size(), 1);
     etags[etags.size() - 1] = 100;
-    auto writer1 = rw::writer::Writer(
-        d_outPreTag + d_currentData->d_tagFilename + "_debug_nodes_" +
-        std::to_string(d_nOut));
+    auto writer1 =
+        rw::writer::Writer(d_outPreTag + d_currentData->d_tagFilename +
+                           "_debug_nodes_" + std::to_string(d_nOut));
     writer1.appendNodes(&enodes);
     writer1.appendPointData("Tag", &etags);
     writer1.close();
@@ -1534,10 +1670,16 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
   }
 }
 
-double
+void
 tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
                                           const std::vector<size_t> *nodes,
-                                          const std::vector<size_t> *elements) {
+                                          const std::vector<size_t> *elements,
+                                          double &pd_energy,
+                                          double &kinetic_energy) {
+
+  // reset data
+  pd_energy = 0.;
+  kinetic_energy = 0.;
 
   // get displacement and velocity at point
   auto uq = util::Point3();
@@ -1545,7 +1687,7 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
   interpolateUV(p, uq, vq, nodes, elements);
 
   // add kinetic energy
-  double energy = 0.5 * d_material_p->getDensity() * vq.dist(vq);
+  kinetic_energy += 0.5 * d_material_p->getDensity() * vq.dist(vq);
 
   // add peridynamic energy
   for (auto j : *nodes) {
@@ -1571,10 +1713,8 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
     auto ef = d_material_p->getBondEF(rjq, Sjq, fracture_state, true);
 
     // add contribution to energy
-    energy += ef.first * volj;
+    pd_energy += ef.first * volj;
   } // loop over nodes for pd energy density
-
-  return energy;
 }
 
 void tools::pp::Compute::updateCrack(const double &time,

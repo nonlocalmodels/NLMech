@@ -242,17 +242,22 @@ public:
    *                         + + + + + + + + + + +
    *                        A                    B
    *
-   * Note: contour is formed by lines A-B, B-C, C-D, D-A
+   * Note: Contour is formed by lines A-B, B-C, C-D, D-A
    *
    * Let contour is denoted as \f$ \Gamma(t) \f$, where \f$ t \f$ indicates
    * contour moves with crack tip. Let domain inside contour is defined as
    * \f$ A(t) \f$. Let the outward normal to the domain \f$ A(t) \f$ is \f$ n
-   * \f$ and the crack velocity is \f$ v \f$. Then the energy associated to
-   * crack is given by
-   * \f[ E(t) = \frac{1}{|B_\epsilon(0)|}
-   * \int_{A^c(t)} \int_{A(t) \cap B_\epsilon(x)} \partial_S W(S(y,x;
-   * u(t))) \frac{y-x}{|y-x|} \cdot (\dot{u}(x,t) + \dot{u}(y,t)) dy dx. \f]
-   * Here \f$ \bar{W}(x;u(t)) \f$ is the energy density at point \f$ x\f$ given
+   * \f$, crack velocity direction is \f$ n_c\f$, and the crack velocity is \f$
+   * v_c \f$. Since \f$ n_c\f$ is the crack velocity direction, we have crack
+   * velocity \f$ v_c = V n_c\f$, where \f$V \f$ is the magnitude of crack
+   * velocity.
+   *
+   * We compute following seven kinds of energy associated to crack tip:
+   *
+   * 1. \b Strain \b energy \b on \b contour: \f[ E_{strain, \Gamma} :=
+   * \int_{\Gamma(t)} \bar{W}(x) n \cdot n_c dx,
+   * \f]
+   * where \f$ \bar{W}(x;u(t)) \f$ is the energy density at point \f$ x\f$ given
    * by \f[ \bar{W}(x;u(t)) = \frac{1}{|B_\epsilon(0)|} \int_{B_\epsilon(x)}
    * |y-x| W(S(y,x;u(t))) dy.\f] \f$ W(S(y,x;u)) \f$ is the pairwise energy
    * density. For regularized bond based model (see material::pd::RNPBond), it
@@ -263,6 +268,41 @@ public:
    * \f[\partial_S W(S(y,x;u)) = \frac{2J^\epsilon(|y-x|) S(y,x;u)}{\epsilon}
    * \psi'(|y-x| S(y,x;u)^2). \f]
    * See material::pd::RNPBond for complete details about the material model.
+   *
+   * 2. \b Strain \b energy \b rate \b on \b contour: \f[ E_{strain rate,
+   * \Gamma} := \int_{\Gamma(t)}\bar{W}(x) n \cdot v_c dx = V E_{strain,
+   * \Gamma}, \f]
+   * where \f$ V\f$ is the magnitude of crack velocity, \f$ v_c\f$ is the
+   * crack velocity.
+   *
+   * 3. \b Kinetic \b energy \b rate \b on \b contour: \f[ E_{kinetic rate,
+   * \Gamma} := \int_{\Gamma(t)} \frac{\rho}{2} |\dot{u}(x)|^2 n \cdot
+   * v_c dx, \f]
+   * where \f$ \dot{u}(x)\f$ is velocity of material point \f$ x \in \Gamma
+   * (t) \f$.
+   *
+   * 4. \b Elastic \b internal \b work \b rate \b on \b contour: \f[
+   * E_{elastic work rate, \Gamma} := \int_{\Gamma(t)} \frac{C}{2} [\nabla u
+   * (x) + \nabla u(x)^T]n \cdot \dot{u}(x) dx , \f]
+   * where \f$ C \f$ is the elasticity tensor.
+   *
+   * 5. \b Peridynamic \b internal \b work: \f[
+   * E_{pd work} = \frac{1}{|B_\epsilon(0)|}
+   * \int_{A^c(t)} \int_{A(t) \cap B_\epsilon(x)} \partial_S W(S(y,x;
+   * u(t))) \frac{y-x}{|y-x|} \cdot [(\nabla {u}(x,t) + \nabla {u}(y,t)) n_c] dy
+   * dx. \f]
+   * Here \f$ W(S(y,x; u(t))) \f$ is the internal pairwise strain energy
+   * density as described above. \f$ \nabla u(x) n_c\f$ is the derivative of
+   * displacement along the crack velocity direction.
+   *
+   * 6. \b Peridynamic \b internal \b work: \f[
+   * E_{pd work rate} = \frac{1}{|B_\epsilon(0)|}
+   * \int_{A^c(t)} \int_{A(t) \cap B_\epsilon(x)} \partial_S W(S(y,x;
+   * u(t))) \frac{y-x}{|y-x|} \cdot (\dot{u}(x,t) + \dot{u}(y,t)) dy dx. \f]
+   *
+   * 7. \b LEFM \b energy \b rate: \f[
+   * E_{lefm} = V G_c, \f]
+   * where \f$ G_c\f$ is the critical energy release rate.
    *
    * Method:
    *
@@ -288,6 +328,12 @@ public:
    * we loop over nodes which are in complement of domain \f$A(t) \f$, i.e.
    * \f$ A^c(t) \f$. We compute the contribution of each node in \f$ A^c(t)
    * \f$ using pdForceWork.
+   *
+   * @todo At present not computing \f$ E_{elastic work, \Gamma}\f$ as we
+   * require gradient of displacement along the normal to contour.
+   *
+   * @todo At present not computing \f$ E_{pd internal work}\f$ as we
+   * require gradient of displacement at nodes.
    *
    */
   void computeJIntegral();
@@ -426,11 +472,14 @@ private:
    * @param p Point
    * @param nodes Pointer to ids of nodes to perform search
    * @param elements Pointer to ids of elements to perform search
-   * @return energy Energy contribution
+   * @param pd_energy Peridynamic energy density
+   * @param kinetic_energy Kinetic energy density
    */
-  double getContourContribJInt(const util::Point3 &p,
+  void getContourContribJInt(const util::Point3 &p,
                      const std::vector<size_t> *nodes,
-                     const std::vector<size_t> *elements);
+                     const std::vector<size_t> *elements,
+                     double &pd_energy,
+                     double &kinetic_energy);
 
   /*!
    * @brief Updates crack tip location and crack velocity

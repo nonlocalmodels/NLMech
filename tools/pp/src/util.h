@@ -11,8 +11,8 @@
 
 #include "inp/decks/fractureDeck.h" // definition of EdgeCrack
 #include "util/point.h"             // definition of Point3
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace tools {
 
@@ -24,62 +24,51 @@ namespace pp {
 struct JEnergy {
 
   /*!
+   * @brief Contour integral of peridynamic strain energy along the direction
+   * of crack propagation
+   */
+  double d_contourPdStrainEnergy;
+
+  /*!
    * @brief Contour integral of peridynamic strain energy and crack velocity
    * product
    */
-  double d_pdWV;
+  double d_contourPdStrainEnergyRate;
 
   /*!
    * @brief Contour integral of kinetic energy and crack velocity
    * product
    */
-  double d_TV;
+  double d_contourKineticEnergyRate;
 
   /*!
-   * @brief Contour integral of peridynamic strain energy along the direction
-   * of crack propagation
+   * @brief Contour integral of product of elastic force and material
+   * velocity
    */
-  double d_pdW;
-
-  /*!
-   * @brief Integral of  product of work done by internal peridynamic force and
-   * material velocity over region inside and outside crack tip contour
-   */
-  double d_pdFUDot;
+  double d_contourElasticInternalWorkRate;
 
   /*!
    * @brief Integral of  product of work done by internal peridynamic force and
    * derivative of displacement along the crack tip over region inside and
    * outside crack tip contour
    */
-  double d_pdFUGrad;
+  double d_pdInternalWork;
+
+  /*!
+   * @brief Integral of  product of work done by internal peridynamic force and
+   * material velocity over region inside and outside crack tip contour
+   */
+  double d_pdInternalWorkRate;
 
   /*!
    * @brief LEFM fractur energy (Gc times crack velocity)
    */
-  double d_lefm;
-
-  /*!
-   * @brief Contour integral of product of elastic force and material
-   * velocity
-   */
-  double d_elasFUDot;
-
-  /*!
-   * @brief Peridynamic rate of change of energy into crack
-   */
-  double d_pdRateEnergyChange;
-
-  /*!
-   * @brief Peridynamic J-integral for quasi-static simulations (Bobaru and
-   * Silling formula)
-   */
-  double d_pdJStatic;
+  double d_lefmEnergyRate;
 
   JEnergy()
-      : d_pdWV(0.), d_TV(0.), d_pdW(0.), d_pdFUDot(0.), d_pdFUGrad(0.),
-        d_lefm(0.), d_elasFUDot(0.), d_pdRateEnergyChange(0.),
-        d_pdJStatic(0.){};
+      : d_contourPdStrainEnergy(0.), d_contourPdStrainEnergyRate(0.),
+        d_contourKineticEnergyRate(0.), d_contourElasticInternalWorkRate(0.),
+        d_pdInternalWork(0.), d_pdInternalWorkRate(0.), d_lefmEnergyRate(0.){};
 };
 
 /*!
@@ -139,7 +128,7 @@ struct TransformU {
   /*!
    * @brief Constructor
    */
-  TransformU() : d_scale(1.) {};
+  TransformU() : d_scale(1.){};
 };
 
 /*!
@@ -182,7 +171,7 @@ struct TransformVelocity {
   TransformVelocity()
       : d_markVAsZero(false), d_markVInRectGiven(false),
         d_markVPtsAreInCurrentConfig(false), d_symmetrizeV(false),
-        d_combineMarkV(false), d_symmLine(0.) {};
+        d_combineMarkV(false), d_symmLine(0.){};
 };
 
 /*!
@@ -210,7 +199,7 @@ struct ComputeStrain {
   /*!
    * @brief Constructor
    */
-  ComputeStrain() : d_computeStrain(false), d_magStrainTensor(false) {};
+  ComputeStrain() : d_computeStrain(false), d_magStrainTensor(false){};
 };
 
 /*!
@@ -246,9 +235,8 @@ struct FindCrackTip {
    * @brief Constructor
    */
   FindCrackTip()
-      : d_timet(0.), d_timeb(0.), d_updateCount(0),
-        d_minZAllowed(1.), d_maxZAllowed(50.), d_filet(nullptr),
-        d_fileb(nullptr){};
+      : d_timet(0.), d_timeb(0.), d_updateCount(0), d_minZAllowed(1.),
+        d_maxZAllowed(50.), d_filet(nullptr), d_fileb(nullptr){};
 };
 
 /*!
@@ -369,4 +357,4 @@ struct InstructionData {
 
 } // namespace tools
 
-#endif //TOOLS_PP_UTIL_H
+#endif // TOOLS_PP_UTIL_H
