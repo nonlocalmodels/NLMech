@@ -7,8 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <algorithm>
-#include <boost/program_options.hpp>
 #include <hpx/hpx_main.hpp>
+#include <boost/program_options.hpp>
 #include <iostream>
 
 #include "src/compute.h"

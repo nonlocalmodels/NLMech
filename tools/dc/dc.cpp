@@ -4,8 +4,8 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt
 
 #include <algorithm>
-#include <boost/program_options.hpp>
 #include <hpx/config.hpp>
+#include <boost/program_options.hpp>
 #include <iostream>
 
 #include "dcInclude.h"
