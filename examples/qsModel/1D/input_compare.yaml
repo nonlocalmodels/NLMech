@@ -10,3 +10,5 @@ Compare_Tags:
     - Displacement
     - Force
     - Strain_Energy
+    - Strain_Tensor
+    - Stress_Tensor
