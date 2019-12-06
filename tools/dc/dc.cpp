@@ -4,14 +4,13 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt
 
 #include <algorithm>
-#include <hpx/config.hpp>
 #include <boost/program_options.hpp>
+#include <hpx/config.hpp>
 #include <iostream>
 
 #include "dcInclude.h"
 
 int main(int argc, char *argv[]) {
-
   boost::program_options::options_description desc("Allowed options");
   desc.add_options()("help", "produce help message")(
       "input-file,i", boost::program_options::value<std::string>(),
