@@ -1104,6 +1104,12 @@ void tools::pp::Compute::computeJIntegral() {
   // therefore n dot n_c = -1 on left edge D-A and n dot n_c = +1 on right
   // edge B-C
 
+  // Debug
+  //  Check if kinetic energy and strain energy densities are zero at the
+  //  quadrature points in line
+  std::vector<double> debug_ke_rate;
+  std::vector<double> debug_se_rate;
+
   // loop over horizontal and vertical edge of contour
   // E = 0 : horizontal edge A-B and C-D
   // E = 1 : vertical edge D-A and B-C
@@ -1138,10 +1144,25 @@ void tools::pp::Compute::computeJIntegral() {
     ced.d_contourKineticEnergiesRate = std::vector<double>(N, 0.);
     ced.d_contourElasticInternalWorksRate = std::vector<double>(N, 0.);
 
+    // check
+    if (E == 0 && data->d_crackOrient == 1) {
+      std::cerr << "For horizontal crack, we should not reach this point\n";
+      exit(1);
+    }
+    if (E == 1 && data->d_crackOrient == -1) {
+      std::cerr << "For vertical crack, we should not reach this point\n";
+      exit(1);
+    }
+
+    if (debug_ke_rate.size() != N) {
+      debug_ke_rate = std::vector<double>(N, 0.);
+      debug_se_rate = std::vector<double>(N, 0.);
+    }
+
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
         [&ced, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
-         E, this](boost::uint64_t I) {
+         E, this, &debug_ke_rate, &debug_se_rate](boost::uint64_t I) {
 
           double kinetic_energy_q = 0.;
           double pd_energy_q = 0.;
@@ -1291,6 +1312,10 @@ void tools::pp::Compute::computeJIntegral() {
                 kinetic_energy_rate += kinetic_energy_q * n_dot_v_c * qd.d_w;
               }
             } // process vertical edges
+
+            // debug
+            debug_ke_rate[I] += kinetic_energy_q;
+            debug_se_rate[I] += pd_energy_q;
 
           } // loop over quad points
 
@@ -1451,6 +1476,23 @@ void tools::pp::Compute::computeJIntegral() {
             j_energy.d_pdInternalWork,
             j_energy.d_pdInternalWorkRate,
             j_energy.d_lefmEnergyRate);
+  }
+
+  {
+    // debug print
+    static FILE *debug_energy_line_integral = nullptr;
+
+    if (!debug_energy_line_integral) {
+      std::string filename =
+          d_outPreTag + d_currentData->d_tagFilename + "_new_debug" + ".csv";
+      debug_energy_line_integral = fopen(filename.c_str(), "w");
+    }
+
+    // write
+    auto debug_ke_total = util::methods::add(debug_ke_rate);
+    auto debug_se_total = util::methods::add(debug_se_rate);
+    fprintf(debug_energy_line_integral, "%4.6e, %4.6e\n", debug_ke_total,
+        debug_se_total);
   }
 }
 
