@@ -105,7 +105,8 @@ public:
    * @param data Pointer to data where crack tip data will be stored
    */
   void readCrackTipData(const std::string &filename, int crack_id,
-                        std::vector<tools::pp::CrackTipData> *data);
+                        std::vector<tools::pp::CrackTipData> *data, bool
+                        is_inclined = false);
 
   /*!
    * @brief Create new writer object if it is not already done so
@@ -337,6 +338,12 @@ public:
    *
    */
   void computeJIntegral();
+
+  /*!
+   * @brief Compute J integral where crack line is angled as opposed to
+   * either horizontal or verticle line
+   */
+  void computeJIntegralAngledCrack();
 
   /** @}*/
 

@@ -320,8 +320,12 @@ void tools::pp::Compute::init() {
   for (auto &d : d_computeData) {
     auto data = d.d_computeJInt_p;
     if (data) {
+
+      // read data from provided file
       readCrackTipData(data->d_crackTipFile, data->d_crackId,
-                       &(data->d_crackTipData));
+                       &(data->d_crackTipData), data->d_isCrackInclined);
+
+      // find the start, end, and interval of time in data
       if (!data->d_crackTipData.empty()) {
         d.d_start = data->d_crackTipData[0].d_n;
         d.d_end = data->d_crackTipData[data->d_crackTipData.size() - 1].d_n;
@@ -558,6 +562,12 @@ void tools::pp::Compute::readComputeInstruction(
       exit(1);
     }
 
+    // see if crack inclined flag is provided. This flag is important if
+    // crack propagation is not along horizontal/vertical direction but along
+    // arbitrary direction.
+    if (e["Is_Crack_Inclined"])
+      data->d_computeJInt_p->d_isCrackInclined = e["Is_Crack_Inclined"].as<bool>();
+
     if (e["Crack_Id"])
       data->d_computeJInt_p->d_crackId = e["Crack_Id"].as<int>();
 
@@ -606,21 +616,42 @@ void tools::pp::Compute::readComputeInstruction(
 
 void tools::pp::Compute::readCrackTipData(
     const std::string &filename, int crack_id,
-    std::vector<tools::pp::CrackTipData> *data) {
+    std::vector<tools::pp::CrackTipData> *data, bool is_inclined) {
 
   data->clear();
-  // expected format of file:
-  // <crack id>, <output step>, <tip x>, <tip y>, <tip vx>, <tip vy>
-  io::CSVReader<6> in(filename);
-  in.read_header(io::ignore_extra_column, "'crack_id'", "'dt_out'", "'x'",
-                 "'y'", "'vx'", "'vy'");
+  if (!is_inclined) {
 
-  double px, py, vx, vy;
-  int n, ci;
-  while (in.read_row(ci, n, px, py, vx, vy)) {
-    if (ci == crack_id)
-      data->emplace_back(tools::pp::CrackTipData(n, util::Point3(px, py, 0.),
-                                                 util::Point3(vx, vy, 0.)));
+    // expected format of file:
+    // <crack id>, <output step>, <tip x>, <tip y>, <tip vx>, <tip vy>
+    io::CSVReader<6> in(filename);
+    in.read_header(io::ignore_extra_column, "'crack_id'", "'dt_out'", "'x'",
+                   "'y'", "'vx'", "'vy'");
+
+    double px, py, vx, vy;
+    int n, ci;
+    while (in.read_row(ci, n, px, py, vx, vy)) {
+      if (ci == crack_id)
+        data->emplace_back(tools::pp::CrackTipData(n, util::Point3(px, py, 0.),
+                                                   util::Point3(vx, vy, 0.)));
+    }
+  }
+  else {
+
+    // expected format of file:
+    // <crack id>, <output step>, <tip x>, <tip y>, <tip vx>, <tip vy>, <tip
+    // dx>, <tip dy>
+    io::CSVReader<8> in(filename);
+    in.read_header(io::ignore_extra_column, "'crack_id'", "'dt_out'", "'x'",
+                   "'y'", "'vx'", "'vy'", "'dx'", "'dy'");
+
+    double px, py, vx, vy, dx, dy;
+    int n, ci;
+    while (in.read_row(ci, n, px, py, vx, vy, dx, dy)) {
+      if (ci == crack_id)
+        data->emplace_back(tools::pp::CrackTipData(n, util::Point3(px, py, 0.),
+                                                   util::Point3(vx, vy, 0.),
+                                                   util::Point3(dx, dy, 0.)));
+    }
   }
 }
 
@@ -1020,6 +1051,14 @@ void tools::pp::Compute::computeJIntegral() {
   if (!data)
     return;
 
+  // if we are dealing with arbitrarily inclined crack then call appropriate
+  // function and return
+  if (data->d_isCrackInclined) {
+
+    computeJIntegralAngledCrack();
+    return;
+  }
+
   // to hold energy into crack
   auto j_energy = JEnergy();
 
@@ -1381,6 +1420,437 @@ void tools::pp::Compute::computeJIntegral() {
                         (xji.d_x * v_sum.d_x + xji.d_y * v_sum.d_y +
                          xji.d_z * v_sum.d_z) /
                         rji;
+        } // loop over neighboring nodes
+
+        pd_internal_works[i] += pd_internal_work * voli;
+        pd_internal_works_rate[i] += pd_internal_work_rate * voli;
+      });
+  f.get();
+
+  // add energies
+  j_energy.d_pdInternalWork = util::methods::add(pd_internal_works);
+  j_energy.d_pdInternalWorkRate = util::methods::add(pd_internal_works_rate);
+
+  // compute remaining energies
+  {
+    auto vmag = ctip.d_v.length();
+
+    // compute lefm energy and j-integrals
+    j_energy.d_lefmEnergyRate = vmag * d_matDeck_p->d_matData.d_Gc;
+  }
+
+  // old version of output file
+  {
+    // create file in first call
+    if (!data->d_file) {
+      std::string filename =
+          d_outPreTag + d_currentData->d_tagFilename + ".csv";
+      data->d_file = fopen(filename.c_str(), "w");
+
+      // write header
+      fprintf(data->d_file,
+              "dt_out, vmag, E, v*Gc, Gc_experiment, Gc_theory\n");
+    }
+
+    // write data
+    double Gcompute = 0.;
+    auto vmag = ctip.d_v.length();
+    if (util::compare::definitelyGreaterThan(vmag, 1.E-10))
+      Gcompute = -j_energy.d_pdInternalWorkRate / vmag;
+    fprintf(data->d_file, "%u, %4.6e, %4.6e, %4.6e, %4.6e, %4.6e\n", d_nOut,
+            vmag, -j_energy.d_pdInternalWorkRate, j_energy.d_lefmEnergyRate, Gcompute,
+            d_matDeck_p->d_matData.d_Gc);
+  } // old print format
+
+  // new version of output file
+  {
+    // create file in first call
+    if (!data->d_fileNew) {
+      std::string filename =
+          d_outPreTag + d_currentData->d_tagFilename + "_new" + ".csv";
+      data->d_fileNew = fopen(filename.c_str(), "w");
+
+      // write header
+      fprintf(data->d_fileNew,
+              "dt_out, V_mag, "
+              "contour_strain_energy, "
+              "contour_strain_energy_rate, "
+              "contour_kinetic_energy_rate, "
+              "contour_elastic_internal_work_rate, "
+              "pd_internal_work, "
+              "pd_internal_work_rate, "
+              "lefm_energy_rate\n");
+    }
+
+    // write data
+    fprintf(data->d_fileNew,
+            "%u, %4.6e, "
+            "%4.6e, "
+            "%4.6e, "
+            "%4.6e, "
+            "%4.6e, "
+            "%4.6e, "
+            "%4.6e, "
+            "%4.6e\n",
+            d_nOut, ctip.d_v.length(),
+            j_energy.d_contourPdStrainEnergy,
+            j_energy.d_contourPdStrainEnergyRate,
+            j_energy.d_contourKineticEnergyRate,
+            j_energy.d_contourElasticInternalWorkRate,
+            j_energy.d_pdInternalWork,
+            j_energy.d_pdInternalWorkRate,
+            j_energy.d_lefmEnergyRate);
+  }
+}
+
+void tools::pp::Compute::computeJIntegralAngledCrack() {
+
+  auto data = d_currentData->d_computeJInt_p;
+  if (!data)
+    return;
+
+  // to hold energy into crack
+  auto j_energy = JEnergy();
+
+  // get crack tip data
+  auto ctip = data->d_crackTipData[(d_nOut - d_currentData->d_start) /
+                                   d_currentData->d_interval];
+  if (ctip.d_n != d_nOut) {
+    std::cerr << "Error: Output step (" << ctip.d_n << ") of crack tip data is"
+              << " not matching current output step (" << d_nOut << ").\n";
+    exit(1);
+  }
+
+  // set lateral component of crack velocity zero
+  if (data->d_setLateralCompVZero) {
+    if (data->d_crackOrient == -1)
+      ctip.d_v.d_x = 0.;
+    else if (data->d_crackOrient == 1)
+      ctip.d_v.d_y = 0.;
+  }
+
+  // set lateral component of displacement of crack tip zero
+  if (data->d_setLateralCompUZero) {
+    if (data->d_crackOrient == -1)
+      ctip.d_p.d_x = data->d_setLateralCompX;
+    else if (data->d_crackOrient == 1)
+      ctip.d_p.d_y = data->d_setLateralCompX;
+  }
+
+  // Schematic
+  // Here we rotate the domain such that direction of crack is from
+  // horizontal direction and is from left to right
+  //
+  //                         D                    C
+  //                         + + + + + + + + + + +
+  //                         +                   +
+  //                         +    o              +
+  //                         + /                 +
+  //                      /  +                   +
+  //                  /      +                   +
+  //              /          + + + + + + + + + + +
+  //                        A                    B
+  //
+  // o - crack tip
+  //
+  // Contour is formed by lines A-B, B-C, C-D, D-A
+  double tolx = 0.5 * data->d_contourFactor[0] * d_modelDeck_p->d_horizon;
+  double toly = 0.5 * data->d_contourFactor[1] * d_modelDeck_p->d_horizon;
+  auto cd = std::make_pair(
+      util::Point3(ctip.d_p.d_x - tolx, ctip.d_p.d_y - toly, 0.),
+      util::Point3(ctip.d_p.d_x + tolx, ctip.d_p.d_y + toly, 0.));
+
+  // compute nodes and elements list for search
+  std::vector<size_t> search_nodes;
+  std::vector<size_t> search_elems;
+  listElemsAndNodesInDomain(
+      cd, d_modelDeck_p->d_horizon + 2. * d_mesh_p->getMeshSize(),
+      d_mesh_p->getMeshSize(), &search_nodes, &search_elems);
+
+  //
+  // Compute contour integral
+  //
+  // create second order quadrature class for 1-d line element
+  auto line_quad = fe::LineElem(2);
+  auto h = d_mesh_p->getMeshSize();
+
+  // loop over horizontal and vertical edge of contour
+  // E = 0 : horizontal edge A-B and C-D
+  // E = 1 : vertical edge D-A and B-C
+  for (size_t E = 0; E < 2; E++) {
+
+    long int N = 0;
+    if (E == 0) {
+      // number of elements for horizontal edge
+      N = (cd.second.d_x - cd.first.d_x) / h;
+      if (util::compare::definitelyLessThan(cd.first.d_x + double(N) * h,
+                                            cd.second.d_x))
+        N++;
+    } else {
+      // number of elements for vertical edge
+      N = (cd.second.d_y - cd.first.d_y) / h;
+      if (util::compare::definitelyLessThan(cd.first.d_y + double(N) * h,
+                                            cd.second.d_y))
+        N++;
+    }
+
+    auto ced = ContourDataLambdaFn();
+    ced.d_contourPdStrainEnergies = std::vector<double>(N, 0.);
+    ced.d_contourPdStrainEnergiesRate = std::vector<double>(N, 0.);
+    ced.d_contourKineticEnergiesRate = std::vector<double>(N, 0.);
+    ced.d_contourElasticInternalWorksRate = std::vector<double>(N, 0.);
+
+    auto f = hpx::parallel::for_loop(
+        hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
+        [&ced, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
+            E, this](boost::uint64_t I) {
+
+          double kinetic_energy_q = 0.;
+          double pd_energy_q = 0.;
+
+          double pd_strain_energy = 0.;
+          double pd_strain_energy_rate = 0.;
+          double kinetic_energy_rate = 0.;
+          double elastic_internal_work_rate = 0.;
+
+          // get crack direction
+          const auto n_c = ctip.d_d;
+
+          // get crack velocity
+          const auto v_c = ctip.d_v;
+
+          // dot product of normal to edge and crack velocity direction
+          double n_dot_n_c = 0.;
+
+          // dot product of normal to edge and crack velocity
+          double n_dot_v_c = 0.;
+
+          // line element
+          auto x1 = 0.;
+          auto x2 = 0.;
+          if (E == 0) {
+            // discretization of horizontal line
+            x1 = cd.first.d_x + double(I) * h;
+            x2 = cd.first.d_x + double(I + 1) * h;
+            if (I == N - 1)
+              x2 = cd.second.d_x;
+          } else {
+            // discretization of vertical line
+            x1 = cd.first.d_y + double(I) * h;
+            x2 = cd.first.d_y + double(I + 1) * h;
+            if (I == N - 1)
+              x2 = cd.second.d_y;
+          }
+
+          // get quadrature points
+          auto qds = line_quad.getQuadPoints(std::vector<util::Point3>{
+              util::Point3(x1, 0., 0.), util::Point3(x2, 0., 0.)});
+
+          // loop over quad points
+          for (auto qd : qds) {
+            if (E == 0) {
+
+              // process edge A-B
+              {
+                // translate quadrature point's y-coordinate to y-coordinate
+                // of edge A-B
+                qd.d_p.d_y = cd.first.d_y;
+
+                // normal to edge A-B
+                auto n_edge = util::Point3(0., -1., 0.);
+
+                // n dot n_c
+                n_dot_n_c = n_c.dot(n_edge);
+
+                // n dot v_c
+                n_dot_v_c = v_c.dot(n_edge);
+
+                // get energy density
+                getContourContribJInt(qd.d_p, &search_nodes, &search_elems,
+                                      pd_energy_q, kinetic_energy_q);
+
+                // pd energy
+                pd_strain_energy += pd_energy_q * n_dot_n_c * qd.d_w;
+
+                // pd energy rate
+                pd_strain_energy_rate += pd_energy_q * n_dot_v_c * qd.d_w;
+
+                // kinetic energy rate
+                kinetic_energy_rate += kinetic_energy_q * n_dot_v_c * qd.d_w;
+              }
+
+              // process edge C-D
+              {
+                // translate quadrature point's y-coordinate to y-coordinate
+                // of edge C-D
+                qd.d_p.d_y = cd.second.d_y;
+
+                // normal to edge C-D
+                auto n_edge = util::Point3(0., 1., 0.);
+
+                // n dot n_c
+                n_dot_n_c = n_c.dot(n_edge);
+
+                // n dot v_c
+                n_dot_v_c = v_c.dot(n_edge);
+
+                // get energy density
+                getContourContribJInt(qd.d_p, &search_nodes, &search_elems,
+                                      pd_energy_q, kinetic_energy_q);
+
+                // pd energy
+                pd_strain_energy += pd_energy_q * n_dot_n_c * qd.d_w;
+
+                // pd energy rate
+                pd_strain_energy_rate += pd_energy_q * n_dot_v_c * qd.d_w;
+
+                // kinetic energy rate
+                kinetic_energy_rate += kinetic_energy_q * n_dot_v_c * qd.d_w;
+              }
+            } // process horizontal edges
+            else {
+
+              // store original quad point
+              auto p_temp = qd.d_p;
+
+              // process edge B-C
+              {
+                // transform quad point along vertical line to correct
+                // coordinate
+                qd.d_p = util::Point3(cd.second.d_x, p_temp.d_x, 0.);
+
+                // normal to edge B-C
+                auto n_edge = util::Point3(1., 0., 0.);
+
+                // n dot n_c
+                n_dot_n_c = n_c.dot(n_edge);
+
+                // n dot v_c
+                n_dot_v_c = v_c.dot(n_edge);
+
+                // get energy density
+                getContourContribJInt(qd.d_p, &search_nodes, &search_elems,
+                                      pd_energy_q, kinetic_energy_q);
+
+                // pd energy
+                pd_strain_energy += pd_energy_q * n_dot_n_c * qd.d_w;
+
+                // pd energy rate
+                pd_strain_energy_rate += pd_energy_q * n_dot_v_c * qd.d_w;
+
+                // kinetic energy rate
+                kinetic_energy_rate += kinetic_energy_q * n_dot_v_c * qd.d_w;
+              }
+
+              // process edge D-A
+              // transform quad point along vertical line to correct
+              // coordinate
+              {
+                qd.d_p = util::Point3(cd.first.d_x, p_temp.d_x, 0.);
+
+                // normal to edge D-A
+                auto n_edge = util::Point3(-1., 0., 0.);
+
+                // n dot n_c
+                n_dot_n_c = n_c.dot(n_edge);
+
+                // n dot v_c
+                n_dot_v_c = v_c.dot(n_edge);
+
+                // get energy density
+                getContourContribJInt(qd.d_p, &search_nodes, &search_elems,
+                                      pd_energy_q, kinetic_energy_q);
+
+                // pd energy
+                pd_strain_energy += pd_energy_q * n_dot_n_c * qd.d_w;
+
+                // pd energy rate
+                pd_strain_energy_rate += pd_energy_q * n_dot_v_c * qd.d_w;
+
+                // kinetic energy rate
+                kinetic_energy_rate += kinetic_energy_q * n_dot_v_c * qd.d_w;
+              }
+            } // process vertical edges
+
+          } // loop over quad points
+
+          // add energy
+          ced.d_contourPdStrainEnergies[I] = pd_strain_energy;
+          ced.d_contourPdStrainEnergiesRate[I] = pd_strain_energy_rate;
+          ced.d_contourKineticEnergiesRate[I] = kinetic_energy_rate;
+          ced.d_contourElasticInternalWorksRate[I] = elastic_internal_work_rate;
+        });
+    f.get();
+
+    // sum energies
+    j_energy.d_contourPdStrainEnergy += util::methods::add(ced.d_contourPdStrainEnergies);
+    j_energy.d_contourPdStrainEnergyRate += util::methods::add(ced.d_contourPdStrainEnergiesRate);
+    j_energy.d_contourKineticEnergyRate += util::methods::add(ced.d_contourKineticEnergiesRate);
+    j_energy.d_contourElasticInternalWorkRate += util::methods::add(ced.d_contourElasticInternalWorksRate);
+  }
+
+  //
+  // Compute work done by internal forces
+  //
+  // decompose search_nodes list in two parts: one list for nodes outside
+  // domain A formed by contour and other for nodes on contour and inside
+  // domain A.
+  std::vector<size_t> search_node_comp;
+  decomposeSearchNodes(cd, &search_nodes, &search_node_comp);
+
+  auto pd_internal_works = std::vector<double>(search_node_comp.size(),
+                                               0.);
+  auto pd_internal_works_rate = std::vector<double>(search_node_comp.size(),
+                                                    0.);
+
+  // loop over nodes in compliment of domain A
+  auto f = hpx::parallel::for_loop(
+      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      search_node_comp.size(),
+      [&pd_internal_works, &pd_internal_works_rate, h, cd, search_nodes,
+          search_node_comp,
+          this](boost::uint64_t i) {
+
+        auto id = search_node_comp[i];
+        auto xi = d_mesh_p->getNode(id);
+        auto ui = d_u[id];
+        auto vi = d_v[id];
+        auto voli = d_mesh_p->getNodalVolume(id);
+
+        double pd_internal_work = 0.;
+        double pd_internal_work_rate = 0.;
+
+        // loop over nodes in domain A
+        for (auto j : search_nodes) {
+
+          auto xj = d_mesh_p->getNode(j);
+          auto rji = xj.dist(xi);
+          if (util::compare::definitelyGreaterThan(rji,
+                                                   d_modelDeck_p->d_horizon) ||
+              j == id)
+            continue;
+
+          auto v_sum = d_v[j] + vi;
+          auto xji = xj - xi;
+          auto Sji = d_material_p->getS(xji, d_u[j] - ui);
+
+          // get corrected volume of node j
+          auto volj = d_mesh_p->getNodalVolume(j);
+          if (util::compare::definitelyGreaterThan(
+              rji, d_modelDeck_p->d_horizon - 0.5 * h))
+            volj *= (d_modelDeck_p->d_horizon + 0.5 * h - rji) / h;
+
+          // get bond force
+          bool fracture_state = false;
+          auto ef = d_material_p->getBondEF(rji, Sji, fracture_state, true);
+
+          // pd internal work rate
+          // need factor half (see the formula for internal work rate and
+          // formula for value returned by getBondEF())
+          pd_internal_work_rate += 0.5 * ef.second * volj *
+                                   (xji.d_x * v_sum.d_x + xji.d_y * v_sum.d_y +
+                                    xji.d_z * v_sum.d_z) /
+                                   rji;
         } // loop over neighboring nodes
 
         pd_internal_works[i] += pd_internal_work * voli;

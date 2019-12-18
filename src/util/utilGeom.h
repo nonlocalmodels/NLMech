@@ -71,6 +71,16 @@ bool isPointInsideAngledRectangle(util::Point3 x, double x_min, double x_max,
 bool isPointInsideCuboid(size_t dim, util::Point3 x, util::Point3 x_lbb,
                          util::Point3 x_rtf);
 
+/*!
+ * @brief Computes angle between two vectors
+ * @param vec_1 Vector 1
+ * @param vec_2 Vector 2
+ * @param anticlock Angle convention
+ * @return angle Angle between vector 1 and 2
+ */
+double angle(util::Point3 vec_1, util::Point3 vec_2,
+size_t dim, bool anticlock = false);
+
 } // namespace geometry
 
 } // namespace util

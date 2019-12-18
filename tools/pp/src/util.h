@@ -102,10 +102,14 @@ struct CrackTipData {
   /*! @brief Crack tip velocity */
   util::Point3 d_v;
 
+  /*! @brief Crack direction */
+  util::Point3 d_d;
+
   /*!
    * @brief Constructor
    */
-  CrackTipData() : d_n(0), d_p(util::Point3()), d_v(util::Point3()){};
+  CrackTipData() : d_n(0), d_p(util::Point3()), d_v(util::Point3()), d_d
+  (util::Point3()){};
 
   /*!
    * @brief Constructor
@@ -113,9 +117,11 @@ struct CrackTipData {
    * @param n Output time step
    * @param p Crack tip location
    * @param v Crack tip velocity
+   * @param d Crack direction
    */
-  CrackTipData(size_t n, util::Point3 p, util::Point3 v)
-      : d_n(n), d_p(p), d_v(v){};
+  CrackTipData(size_t n, util::Point3 p, util::Point3 v, util::Point3 d =
+      util::Point3())
+      : d_n(n), d_p(p), d_v(v), d_d(d){};
 };
 
 /*!
@@ -276,13 +282,16 @@ struct ComputeJIntegral {
    */
   double d_setLateralCompX;
 
+  /*! @brief Specify if we inclined crack */
+  bool d_isCrackInclined;
+
   /*!
    * @brief Constructor
    */
   ComputeJIntegral()
       : d_crackOrient(0), d_crackId(1), d_file(nullptr), d_fileNew(nullptr),
         d_setLateralCompVZero(false), d_setLateralCompUZero(false),
-        d_setLateralCompX(0.){};
+        d_setLateralCompX(0.), d_isCrackInclined(false) {};
 };
 
 /*!

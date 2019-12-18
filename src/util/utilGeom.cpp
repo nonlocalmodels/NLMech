@@ -112,3 +112,28 @@ bool util::geometry::isPointInsideCuboid(size_t dim, util::Point3 x, util::Point
            util::compare::definitelyGreaterThan(x.d_y, x_rtf.d_y + 1.0E-12) or
            util::compare::definitelyGreaterThan(x.d_z, x_rtf.d_z + 1.0E-12));
 }
+
+double util::geometry::angle(util::Point3 vec_1, util::Point3 vec_2, size_t dim, bool anticlock) {
+
+  if (dim == 2) {
+
+    double dot = vec_1.dot(vec_2);
+    double cross = vec_1.d_x * vec_2.d_y - vec_1.d_y * vec_2.d_x;
+
+    double angle =  std::atan2(cross, dot);
+
+    if (!anticlock)
+      return angle;
+
+    if (angle < 0.)
+      return angle + 2. * M_PI;
+    else
+      return angle;
+
+  } else if (dim == 3) {
+
+    // TODO
+    //  Implement angle between vectors in 3-d
+    return 0.;
+  }
+}
