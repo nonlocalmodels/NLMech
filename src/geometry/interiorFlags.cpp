@@ -9,15 +9,19 @@
 #include "interiorFlags.h"
 #include "inp/decks/interiorFlagsDeck.h"
 #include "util/compare.h"
+#include "util/utilGeom.h"
 #include <iostream>
+
 
 //
 // BaseInterior
 //
 geometry::BaseInterior::BaseInterior(
     inp::InteriorFlagsDeck *deck,
-    std::pair<std::vector<double>, std::vector<double>> bbox)
-    : d_noFailTol(deck->d_noFailTol), d_bbox(std::move(bbox)) {}
+    std::pair<std::vector<double>, std::vector<double>> bbox,
+    std::vector<std::pair<std::string, std::vector<double>>> no_fail_regions)
+    : d_noFailTol(deck->d_noFailTol), d_bbox(std::move(bbox)),
+    d_noFailRegions(no_fail_regions) {}
 
 bool geometry::BaseInterior::getInteriorFlag(const size_t &i,
                                              const util::Point3 &x) {
@@ -29,29 +33,56 @@ bool geometry::BaseInterior::getInteriorFlag(const size_t &i,
 //
 geometry::ComputeInterior::ComputeInterior(
     inp::InteriorFlagsDeck *deck,
-    std::pair<std::vector<double>, std::vector<double>> bbox)
-    : geometry::BaseInterior(deck, std::move(bbox)) {}
+    std::pair<std::vector<double>, std::vector<double>> bbox,
+    std::vector<std::pair<std::string, std::vector<double>>> no_fail_regions)
+    : geometry::BaseInterior(deck, std::move(bbox), no_fail_regions) {}
 
 bool geometry::ComputeInterior::getInteriorFlag(const size_t &i,
                                                 const util::Point3 &x) {
 
-  // check if x coordinate is on left side of the left interior boundary
-  if (util::compare::definitelyLessThan(x.d_x, d_bbox.first[0] + d_noFailTol))
-    return false;
+  // check for boundary of domain
+  {
+    // check if x coordinate is on left side of the left interior boundary
+    if (util::compare::definitelyLessThan(x.d_x, d_bbox.first[0] + d_noFailTol))
+      return false;
 
-  // check if y coordinate is below the bottom interior boundary
-  if (util::compare::definitelyLessThan(x.d_y, d_bbox.first[1] + d_noFailTol))
-    return false;
+    // check if y coordinate is below the bottom interior boundary
+    if (util::compare::definitelyLessThan(x.d_y, d_bbox.first[1] + d_noFailTol))
+      return false;
 
-  // check if x coordinate is on right side of the right interior
-  // boundary
-  if (util::compare::definitelyGreaterThan(x.d_x,
-                                           d_bbox.second[0] - d_noFailTol))
-    return false;
+    // check if x coordinate is on right side of the right interior
+    // boundary
+    if (util::compare::definitelyGreaterThan(x.d_x,
+                                             d_bbox.second[0] - d_noFailTol))
+      return false;
 
-  // check if y coordinate is on top of the top interior boundary
-  return !util::compare::definitelyGreaterThan(x.d_y,
-                                               d_bbox.second[1] - d_noFailTol);
+    // check if y coordinate is on top of the top interior boundary
+    if (util::compare::definitelyGreaterThan(x.d_y,
+                                             d_bbox.second[1] - d_noFailTol))
+      return false;
+  }
+
+  // check for regions provided
+  for (const auto &data : d_noFailRegions) {
+
+    if (data.first == "Circle") {
+      auto center =
+          util::Point3(data.second[0], data.second[1], data.second[2]);
+      auto r = data.second[3];
+
+      if (util::compare::definitelyLessThan(center.dist(x), r))
+        return false; // want to not fail point x
+
+    } else if (data.first == "Rectangle") {
+
+      if (util::geometry::isPointInsideRectangle(x, data.second[0],
+                                                 data.second[2], data.second[1],
+                                                 data.second[3]))
+        return false; // want to not fail point x
+    }
+  }
+
+  return true;
 }
 
 //
@@ -59,8 +90,9 @@ bool geometry::ComputeInterior::getInteriorFlag(const size_t &i,
 //
 geometry::DataInterior::DataInterior(
     inp::InteriorFlagsDeck *deck, const std::vector<util::Point3> *nodes,
-    std::pair<std::vector<double>, std::vector<double>> bbox)
-    : geometry::BaseInterior(deck, std::move(bbox)) {
+    std::pair<std::vector<double>, std::vector<double>> bbox,
+    std::vector<std::pair<std::string, std::vector<double>>> no_fail_regions)
+    : geometry::BaseInterior(deck, std::move(bbox), no_fail_regions) {
 
   size_t s = nodes->size() / 8;
   if (s * 8 < nodes->size())
@@ -70,23 +102,49 @@ geometry::DataInterior::DataInterior(
     bool flag = true;
     auto x = (*nodes)[i];
 
-    // check if x coordinate is on left side of the left interior boundary
-    if (util::compare::definitelyLessThan(x.d_x, d_bbox.first[0] + d_noFailTol))
-      flag = false;
+    // check for boundary of domain
+    {
+      // check if x coordinate is on left side of the left interior boundary
+      if (util::compare::definitelyLessThan(x.d_x,
+                                            d_bbox.first[0] + d_noFailTol))
+        flag = false;
 
-    // check if y coordinate is below the bottom interior boundary
-    if (util::compare::definitelyLessThan(x.d_y, d_bbox.first[1] + d_noFailTol))
-      flag = false;
+      // check if y coordinate is below the bottom interior boundary
+      if (util::compare::definitelyLessThan(x.d_y,
+                                            d_bbox.first[1] + d_noFailTol))
+        flag = false;
 
-    // check if x coordinate is on right side of the right interior
-    // boundary
-    if (util::compare::definitelyGreaterThan(x.d_x,
-                                             d_bbox.second[0] - d_noFailTol))
-      flag = false;
+      // check if x coordinate is on right side of the right interior
+      // boundary
+      if (util::compare::definitelyGreaterThan(x.d_x,
+                                               d_bbox.second[0] - d_noFailTol))
+        flag = false;
 
-    // check if y coordinate is on top of the top interior boundary
-    flag = !util::compare::definitelyGreaterThan(x.d_y, d_bbox.second[1] -
-                                                            d_noFailTol);
+      // check if y coordinate is on top of the top interior boundary
+      if(util::compare::definitelyGreaterThan(x.d_y, d_bbox.second[1] -
+                                                              d_noFailTol))
+        flag = false;
+    }
+
+    // check for regions provided
+    for (const auto &data : d_noFailRegions) {
+
+      if (data.first == "Circle") {
+        auto center =
+            util::Point3(data.second[0], data.second[1], data.second[2]);
+        auto r = data.second[3];
+
+        if (util::compare::definitelyLessThan(center.dist(x), r))
+          flag = false; // want to not fail point x
+
+      } else if (data.first == "Rectangle") {
+
+        if (util::geometry::isPointInsideRectangle(x, data.second[0],
+                                                   data.second[2], data.second[1],
+                                                   data.second[3]))
+          flag = false; // want to not fail point x
+      }
+    }
 
     // set loc_bit = i%8 of loc_i = i/8 to flag
 
@@ -112,11 +170,11 @@ geometry::InteriorFlags::InteriorFlags(
 
   if (deck->d_noFailActive) {
     if (deck->d_computeAndNotStoreFlag)
-      d_interior_p = new geometry::ComputeInterior(deck, bbox);
+      d_interior_p = new geometry::ComputeInterior(deck, bbox, deck->d_noFailRegions);
     else
-      d_interior_p = new geometry::DataInterior(deck, nodes, bbox);
+      d_interior_p = new geometry::DataInterior(deck, nodes, bbox, deck->d_noFailRegions);
   } else
-    d_interior_p = new geometry::BaseInterior(deck, bbox);
+    d_interior_p = new geometry::BaseInterior(deck, bbox, deck->d_noFailRegions);
 }
 
 bool geometry::InteriorFlags::getInteriorFlag(const size_t &i,

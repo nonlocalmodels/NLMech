@@ -32,6 +32,9 @@ struct InteriorFlagsDeck {
   /*! @brief Tolerance to decide if the point is in interior/exterior */
   double d_noFailTol;
 
+  /*! @brief Specify multiple regions in which we set no-fail flag to true */
+  std::vector<std::pair<std::string, std::vector<double>>> d_noFailRegions;
+
   /*!
    * @brief Constructor
    */

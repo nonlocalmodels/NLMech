@@ -26,14 +26,17 @@ namespace geometry {
  */
 class BaseInterior {
 public:
+
   /*!
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
    * @param bbox Bounding box to determine the location of nodes relative to
    * the boundary
+   * @param no_fail_regions No fail regions other than the boundary of domain
    */
   BaseInterior(inp::InteriorFlagsDeck *deck,
-               std::pair<std::vector<double>, std::vector<double>> bbox);
+               std::pair<std::vector<double>, std::vector<double>> bbox,
+               std::vector<std::pair<std::string, std::vector<double>>> no_fail_regions);
 
   /*!
    * @brief Get interior flag of node
@@ -56,6 +59,9 @@ protected:
   /*! @brief Bounding box */
   std::pair<std::vector<double>, std::vector<double>> d_bbox;
 
+  /*! @brief Specify multiple regions in which we set no-fail flag to true */
+  std::vector<std::pair<std::string, std::vector<double>>> d_noFailRegions;
+
   /*! @brief Tolerance to check if the point is in interior/exterior */
   double d_noFailTol;
 };
@@ -75,7 +81,8 @@ public:
    * the boundary
    */
   ComputeInterior(inp::InteriorFlagsDeck *deck,
-      std::pair<std::vector<double>, std::vector<double>> bbox);
+      std::pair<std::vector<double>, std::vector<double>> bbox,
+                  std::vector<std::pair<std::string, std::vector<double>>> no_fail_regions);
 
   /*!
    * @brief Returns true if node is in interior, false otherwise
@@ -106,7 +113,8 @@ public:
    */
   DataInterior(inp::InteriorFlagsDeck *deck,
                const std::vector<util::Point3> *nodes,
-               std::pair<std::vector<double>, std::vector<double>> bbox);
+               std::pair<std::vector<double>, std::vector<double>> bbox,
+               std::vector<std::pair<std::string, std::vector<double>>> no_fail_regions);
 
   /*!
    * @brief Returns true if node is in interior, false otherwise

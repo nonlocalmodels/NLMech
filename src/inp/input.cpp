@@ -335,6 +335,8 @@ void inp::Input::setInteriorFlagsDeck() {
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   if (config["No_Fail_Region"]) {
+    auto e = config["No_Fail_Region"];
+
     d_interiorFlagsDeck_p->d_noFailActive = true;
     d_interiorFlagsDeck_p->d_noFailTol =
         d_modelDeck_p->d_horizon *
@@ -343,6 +345,36 @@ void inp::Input::setInteriorFlagsDeck() {
     if (config["No_Fail_Region"]["Compute_And_Not_Store"])
       d_interiorFlagsDeck_p->d_computeAndNotStoreFlag =
         config["No_Fail_Region"]["Compute_And_Not_Store"].as<bool>();
+
+    size_t num_regions = 0;
+    if (e["Num_Regions"])
+      num_regions = e["Num_Regions"].as<size_t>();
+
+    d_interiorFlagsDeck_p->d_noFailRegions.resize(num_regions);
+    for (size_t i = 1; i<=num_regions; i++) {
+
+      // prepare string Set_s to read file
+      std::string read_set = "Region_";
+      read_set.append(std::to_string(i));
+      auto ee = e[read_set];
+
+      std::pair<std::string, std::vector<double>> data;
+
+      // get region type
+      if (ee["Type"])
+        data.first = ee["Type"].as<std::string>();
+      else {
+        std::cerr << "Error: Region type must be provided for no-fail region\n";
+        exit(1);
+      }
+
+      // get parameters
+      for (auto f : ee["Parameters"])
+        data.second.push_back(f.as<double>());
+
+      // add data
+      d_interiorFlagsDeck_p->d_noFailRegions[i-1] = data;
+    }
   }
 } // setInteriorFlagsDeck
 
