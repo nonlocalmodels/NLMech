@@ -330,8 +330,15 @@ private:
    * **.msh** file with element-node connectivity data.
    *
    * @param filename Name of the mesh file
-   * */
-  void createData(const std::string &filename);
+   * @param is_centroid_based Specify if we create node at the center of element
+   */
+  void createData(const std::string &filename, bool is_centroid_based);
+
+  /*!
+   * @brief Converts standard fem mesh to particle mesh with nodes at the
+   * center of element
+   */
+  void nodesAtCentroid();
 
   /*!
    * @brief Compute the nodal volume

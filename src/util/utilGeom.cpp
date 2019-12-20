@@ -8,8 +8,11 @@
 
 #include "utilGeom.h"
 #include "compare.h"
+#include "fe/quadElem.h"
+#include "feElementDefs.h"
 #include "transfomation.h"
-#include <cmath>                      // definition of sin, cosine etc
+#include "utilFunction.h"
+#include <cmath> // definition of sin, cosine etc
 #include <iostream>
 
 std::vector<util::Point3> util::geometry::getCornerPoints(
@@ -135,5 +138,159 @@ double util::geometry::angle(util::Point3 vec_1, util::Point3 vec_2, size_t dim,
     // TODO
     //  Implement angle between vectors in 3-d
     return 0.;
+  }
+}
+
+double util::geometry::getTriangleArea(const std::vector<util::Point3> &nodes) {
+
+  return 0.5 * (
+      ( nodes[1].d_x - nodes[0].d_x ) * ( nodes[2].d_y - nodes[0].d_y )
+      - ( nodes[2].d_x - nodes[0].d_x ) * ( nodes[1].d_y - nodes[0].d_y ) );
+}
+
+double util::geometry::getTetVolume(const std::vector<util::Point3> &nodes) {
+
+  auto a = nodes[1] - nodes[0];
+  auto b = nodes[2] - nodes[0];
+  auto c = nodes[3] - nodes[0];
+
+  return (1. / 6.) * util::function::getDeterminant({a,b,c});
+}
+
+util::Point3 util::geometry::getCenter(const std::vector<util::Point3> &nodes, const size_t
+&elem_type) {
+
+  // process different element types
+
+  if (elem_type == util::vtk_type_line) {
+
+    if (nodes.size() != 2) {
+      std::cerr << "Error: Number of nodes and the element type does not "
+                   "match.\n";
+      exit(1);
+    }
+
+    return {0.5 * nodes[0].d_x + 0.5 * nodes[1].d_x,
+            0.5 * nodes[0].d_y + 0.5 * nodes[1].d_y,
+            0.5 * nodes[0].d_z + 0.5 * nodes[1].d_z};
+
+  } else if (elem_type == util::vtk_type_triangle) {
+
+    if (nodes.size() != 3) {
+      std::cerr << "Error: Number of nodes and the element type does not "
+                   "match.\n";
+      exit(1);
+    }
+
+    auto center = util::Point3();
+    for (const auto &node: nodes)
+      center += util::Point3(1. * node.d_x / 3., 1. * node.d_y / 3.,
+                             1. * node.d_z / 3.);
+
+    return center;
+
+  } else if (elem_type == util::vtk_type_quad) {
+
+    if (nodes.size() != 4) {
+      std::cerr << "Error: Number of nodes and the element type does not "
+                   "match.\n";
+      exit(1);
+    }
+
+    auto quad_elem = fe::QuadElem(1);
+    auto quads = quad_elem.getQuadPoints(nodes);
+
+    return quads[0].d_p;
+
+  } else if (elem_type == util::vtk_type_tetra) {
+
+    if (nodes.size() != 4) {
+      std::cerr << "Error: Number of nodes and the element type does not "
+                   "match.\n";
+      exit(1);
+    }
+
+    auto center = util::Point3();
+    for (const auto &node: nodes)
+      center += util::Point3(1. * node.d_x / 4., 1. * node.d_y / 4.,
+                             1. * node.d_z / 4.);
+
+    return center;
+
+  } else {
+
+    std::cerr << "Error: Element type " << elem_type
+              << " currently not supported in getCenter() method.\n";
+    exit(1);
+  }
+}
+
+std::pair<util::Point3, double> util::geometry::getCenterAndVol(const std::vector<util::Point3>
+                                                &nodes, const size_t
+                                                &elem_type) {
+
+  // process different element types
+
+  if (elem_type == util::vtk_type_line) {
+
+    if (nodes.size() != 2) {
+      std::cerr << "Error: Number of nodes and the element type does not "
+                   "match.\n";
+      exit(1);
+    }
+
+    return std::make_pair(util::Point3(0.5 * nodes[0].d_x + 0.5 * nodes[1].d_x,
+                                       0.5 * nodes[0].d_y + 0.5 * nodes[1].d_y,
+                                       0.5 * nodes[0].d_z + 0.5 * nodes[1].d_z),
+                          nodes[0].dist(nodes[1]));
+
+  } else if (elem_type == util::vtk_type_triangle) {
+
+    if (nodes.size() != 3) {
+      std::cerr << "Error: Number of nodes and the element type does not "
+                   "match.\n";
+      exit(1);
+    }
+
+    auto center = util::Point3();
+    for (const auto &node: nodes)
+      center += util::Point3(1. * node.d_x / 3., 1. * node.d_y / 3.,
+                             1. * node.d_z / 3.);
+
+    return std::make_pair(center, std::abs(getTriangleArea(nodes)));
+
+  } else if (elem_type == util::vtk_type_quad) {
+
+    if (nodes.size() != 4) {
+      std::cerr << "Error: Number of nodes and the element type does not "
+                   "match.\n";
+      exit(1);
+    }
+
+    auto quad_elem = fe::QuadElem(1);
+    auto quads = quad_elem.getQuadPoints(nodes);
+
+    return std::make_pair(quads[0].d_p, quads[0].d_w);
+
+  } else if (elem_type == util::vtk_type_tetra) {
+
+    if (nodes.size() != 4) {
+      std::cerr << "Error: Number of nodes and the element type does not "
+                   "match.\n";
+      exit(1);
+    }
+
+    auto center = util::Point3();
+    for (const auto &node: nodes)
+      center += util::Point3(1. * node.d_x / 4., 1. * node.d_y / 4.,
+                             1. * node.d_z / 4.);
+
+    return std::make_pair(center, std::abs(getTetVolume(nodes)));
+
+  } else {
+
+    std::cerr << "Error: Element type " << elem_type
+              << " currently not supported in getCenterAndVol() method.\n";
+    exit(1);
   }
 }

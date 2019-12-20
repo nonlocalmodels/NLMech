@@ -156,6 +156,14 @@ double doubleGaussian2d(const util::Point3 &x, const size_t &dof,
  */
 util::Point3 signVector(const util::Point3 &v);
 
+/*!
+ * @brief Get determinant of 3-d matrix
+ *
+ * @param rows Three rows of matrix
+ * @return det Determinant
+ */
+double getDeterminant(const std::vector<util::Point3> &rows);
+
 } // namespace function
 
 } // namespace util

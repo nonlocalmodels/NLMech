@@ -81,6 +81,38 @@ bool isPointInsideCuboid(size_t dim, util::Point3 x, util::Point3 x_lbb,
 double angle(util::Point3 vec_1, util::Point3 vec_2,
 size_t dim, bool anticlock = false);
 
+/*!
+ * @brief Computes the area of triangle
+ * @param nodes Vertices of the triangle
+ * @return area Area of triangle
+ */
+double getTriangleArea(const std::vector<util::Point3> &nodes);
+
+/*!
+ * @brief Computes the volume of tetrahedron
+ * @param nodes Vertices of the tetrahedron
+ * @return area Area of tetrahedron
+ */
+double getTetVolume(const std::vector<util::Point3> &nodes);
+
+/*!
+ * @brief Computes the centroid of element
+ * @param nodes Vertices of the element
+ * @param elem_type Element type
+ * @return Point Centroid
+ */
+util::Point3 getCenter(const std::vector<util::Point3> &nodes, const size_t
+&elem_type);
+
+/*!
+ * @brief Computes the centroid and volume of element
+ * @param nodes Vertices of the element
+ * @param elem_type Element type
+ * @return Point-volume Pair of centroid and volume
+ */
+std::pair<util::Point3, double> getCenterAndVol(const std::vector<util::Point3>
+    &nodes, const size_t &elem_type);
+
 } // namespace geometry
 
 } // namespace util

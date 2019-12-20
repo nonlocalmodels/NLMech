@@ -228,6 +228,12 @@ void inp::Input::setMeshDeck() {
     d_meshDeck_p->d_computeMeshSize = true;
   else
     d_meshDeck_p->d_h = d_modelDeck_p->d_h;
+
+  // check if we should consider centroid based discretization
+  if (config["Mesh"]["Is_Centroid_Based_Discretization"])
+    d_meshDeck_p->d_isCentroidBasedDiscretization =
+        config["Mesh"]["Is_Centroid_Based_Discretization"].as<bool>();
+
 } // setMeshDeck
 
 void inp::Input::setMassMatrixDeck() {

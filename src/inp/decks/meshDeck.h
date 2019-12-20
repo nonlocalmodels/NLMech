@@ -45,9 +45,16 @@ struct MeshDeck {
   double d_h;
 
   /*!
+   * @brief Centroid based discretization
+   */
+  bool d_isCentroidBasedDiscretization;
+
+  /*!
    * @brief Constructor
    */
-  MeshDeck() : d_dim(0), d_computeMeshSize(false), d_h(0.){};
+  MeshDeck()
+      : d_dim(0), d_computeMeshSize(false), d_h(0.),
+        d_isCentroidBasedDiscretization(false){};
 };
 
 /** @}*/

@@ -18,8 +18,9 @@
 #include <fstream>
 #include <hpx/include/parallel_algorithm.hpp>
 #include <iostream>
-#include <stdint.h>
-#include <util/compare.h>
+#include <cstdint>
+#include "util/compare.h"
+#include "util/utilGeom.h"
 
 fe::Mesh::Mesh(inp::MeshDeck *deck)
     : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
@@ -54,7 +55,7 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
     inp::Policy::getInstance()->addToTags(1, "Mesh_d_vol");
 
   // read mesh data from file
-  createData(d_filename);
+  createData(d_filename, deck->d_isCentroidBasedDiscretization);
 
   // check if we need to compute mesh size
   if (deck->d_computeMeshSize)
@@ -64,7 +65,7 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
 //
 // Utility functions
 //
-void fe::Mesh::createData(const std::string &filename) {
+void fe::Mesh::createData(const std::string &filename, bool is_centroid_based) {
 
   int file_type = -1;
 
@@ -101,22 +102,37 @@ void fe::Mesh::createData(const std::string &filename) {
     rw::reader::readMshFile(filename, d_dim, &d_nodes, d_eType, d_numElems,
                             &d_enc, &d_nec, &d_vol, false);
 
-  // compute data from mesh data
-  d_numNodes = d_nodes.size();
-  d_eNumVertex = util::vtk_map_element_to_num_nodes[d_eType];
-  d_numDofs = d_numNodes * d_dim;
-
-  //
-  // assign default values to fixity
-  //
-  d_fix = std::vector<uint8_t>(d_nodes.size(), uint8_t(0));
-
   //
   // compute nodal volume if required
   //
   bool compute_vol = false;
   if (is_fd and d_vol.empty())
     compute_vol = true;
+
+  // see if we want to create nodes at the centroid of each element
+  if (d_numElems > 0 and is_centroid_based and is_fd) {
+    nodesAtCentroid();
+
+    // above also computes the vol so we do need to compute again
+    compute_vol = false;
+
+    // element data is now useless
+    d_enc.clear();
+    d_numElems = 0;
+  }
+
+  // compute data from mesh data
+  d_numNodes = d_nodes.size();
+  if (d_numElems > 0)
+    d_eNumVertex = util::vtk_map_element_to_num_nodes[d_eType];
+  else
+    d_eNumVertex = 0;
+  d_numDofs = d_numNodes * d_dim;
+
+  //
+  // assign default values to fixity
+  //
+  d_fix = std::vector<uint8_t>(d_nodes.size(), uint8_t(0));
 
   // if this is weak finite element simulation then check from policy if
   // volume is to be computed
@@ -133,6 +149,30 @@ void fe::Mesh::createData(const std::string &filename) {
   // compute bounding box
   //
   computeBBox();
+}
+
+void fe::Mesh::nodesAtCentroid() {
+
+  // store current nodes
+  auto fe_nodes = d_nodes;
+
+  // resize node data
+  d_nodes = std::vector<util::Point3>(d_numElems, util::Point3());
+  d_vol = std::vector<double>(d_numElems, 0.);
+
+  // loop over all elements
+  for (size_t i=0; i<d_numElems; i++) {
+
+    // get nodes of this element
+    auto el_nodes = getElementConnectivityNodes(i);
+
+    // compute centroid of the element and volume of the element
+    auto center_and_vol = util::geometry::getCenterAndVol(el_nodes, d_eType);
+
+    // add to node data
+    d_nodes[i] = center_and_vol.first;
+    d_vol[i] = center_and_vol.second;
+  }
 }
 
 void fe::Mesh::computeVol() {

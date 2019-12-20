@@ -125,3 +125,15 @@ util::Point3 util::function::signVector(const util::Point3 &v) {
 
   return r;
 }
+
+double util::function::getDeterminant(const std::vector<util::Point3> &rows) {
+
+  double a =
+      rows[0].d_x * (rows[1].d_y * rows[2].d_z - rows[1].d_z * rows[2].d_y);
+  double b =
+      rows[0].d_y * (rows[1].d_x * rows[2].d_z - rows[1].d_z * rows[2].d_x);
+  double c =
+      rows[0].d_z * (rows[1].d_x * rows[2].d_y - rows[1].d_y * rows[2].d_x);
+
+  return a - b + c;
+}
