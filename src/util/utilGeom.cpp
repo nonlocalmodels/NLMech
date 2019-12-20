@@ -234,8 +234,9 @@ std::pair<util::Point3, double> util::geometry::getCenterAndVol(const std::vecto
   if (elem_type == util::vtk_type_line) {
 
     if (nodes.size() != 2) {
-      std::cerr << "Error: Number of nodes and the element type does not "
-                   "match.\n";
+      std::cerr << "Error: Number of nodes = " << nodes.size() 
+                << " and the element type = " << elem_type 
+                << " does not match.\n";
       exit(1);
     }
 
@@ -247,8 +248,9 @@ std::pair<util::Point3, double> util::geometry::getCenterAndVol(const std::vecto
   } else if (elem_type == util::vtk_type_triangle) {
 
     if (nodes.size() != 3) {
-      std::cerr << "Error: Number of nodes and the element type does not "
-                   "match.\n";
+      std::cerr << "Error: Number of nodes = " << nodes.size() 
+                << " and the element type = " << elem_type 
+                << " does not match.\n";
       exit(1);
     }
 
@@ -262,8 +264,9 @@ std::pair<util::Point3, double> util::geometry::getCenterAndVol(const std::vecto
   } else if (elem_type == util::vtk_type_quad) {
 
     if (nodes.size() != 4) {
-      std::cerr << "Error: Number of nodes and the element type does not "
-                   "match.\n";
+      std::cerr << "Error: Number of nodes = " << nodes.size() 
+                << " and the element type = " << elem_type 
+                << " does not match.\n";
       exit(1);
     }
 
@@ -275,8 +278,9 @@ std::pair<util::Point3, double> util::geometry::getCenterAndVol(const std::vecto
   } else if (elem_type == util::vtk_type_tetra) {
 
     if (nodes.size() != 4) {
-      std::cerr << "Error: Number of nodes and the element type does not "
-                   "match.\n";
+      std::cerr << "Error: Number of nodes = " << nodes.size() 
+                << " and the element type = " << elem_type 
+                << " does not match.\n";
       exit(1);
     }
 

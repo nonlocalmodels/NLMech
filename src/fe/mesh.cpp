@@ -102,6 +102,14 @@ void fe::Mesh::createData(const std::string &filename, bool is_centroid_based) {
     rw::reader::readMshFile(filename, d_dim, &d_nodes, d_eType, d_numElems,
                             &d_enc, &d_nec, &d_vol, false);
 
+  // compute data from mesh data
+  d_numNodes = d_nodes.size();
+  if (d_numElems > 0)
+    d_eNumVertex = util::vtk_map_element_to_num_nodes[d_eType];
+  else
+    d_eNumVertex = 1;
+  d_numDofs = d_numNodes * d_dim;
+
   //
   // compute nodal volume if required
   //
@@ -111,6 +119,7 @@ void fe::Mesh::createData(const std::string &filename, bool is_centroid_based) {
 
   // see if we want to create nodes at the centroid of each element
   if (d_numElems > 0 and is_centroid_based and is_fd) {
+
     nodesAtCentroid();
 
     // above also computes the vol so we do need to compute again
@@ -119,15 +128,12 @@ void fe::Mesh::createData(const std::string &filename, bool is_centroid_based) {
     // element data is now useless
     d_enc.clear();
     d_numElems = 0;
-  }
 
-  // compute data from mesh data
-  d_numNodes = d_nodes.size();
-  if (d_numElems > 0)
-    d_eNumVertex = util::vtk_map_element_to_num_nodes[d_eType];
-  else
-    d_eNumVertex = 0;
-  d_numDofs = d_numNodes * d_dim;
+    // update
+    d_numNodes = d_nodes.size();
+    d_eNumVertex = 1;
+    d_numDofs = d_numNodes * d_dim;
+  }  
 
   //
   // assign default values to fixity
