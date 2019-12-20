@@ -153,11 +153,10 @@ void fe::Mesh::createData(const std::string &filename, bool is_centroid_based) {
 
 void fe::Mesh::nodesAtCentroid() {
 
-  // store current nodes
-  auto fe_nodes = d_nodes;
+  // store node data temporarily
+  auto fe_nodes = std::vector<util::Point3>(d_numElems, util::Point3());
 
-  // resize node data
-  d_nodes = std::vector<util::Point3>(d_numElems, util::Point3());
+  // resize vol data
   d_vol = std::vector<double>(d_numElems, 0.);
 
   // loop over all elements
@@ -170,9 +169,12 @@ void fe::Mesh::nodesAtCentroid() {
     auto center_and_vol = util::geometry::getCenterAndVol(el_nodes, d_eType);
 
     // add to node data
-    d_nodes[i] = center_and_vol.first;
+    fe_nodes[i] = center_and_vol.first;
     d_vol[i] = center_and_vol.second;
   }
+
+  // delete old data and replace with new node data
+  d_nodes = fe_nodes;
 }
 
 void fe::Mesh::computeVol() {
