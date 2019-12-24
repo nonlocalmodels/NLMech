@@ -90,8 +90,13 @@ tools::pp::Compute::Compute(const std::string &filename)
 
     // see if we need to read the data
     bool read_file = false;
-    for (const auto &data : d_computeData)
-      read_file = (d_nOut >= data.d_start && d_nOut <= data.d_end);
+    for (const auto &data : d_computeData) {
+
+      // modify read file flag only if it is false
+      if (!read_file)
+        read_file = (d_nOut >= data.d_start && d_nOut <= data.d_end);
+    }
+    
     if (!read_file)
       continue;
 
@@ -1058,6 +1063,8 @@ void tools::pp::Compute::computeJIntegral() {
     computeJIntegralAngledCrack();
     return;
   }
+
+  // std::cout << "computeJIntegral processing step = " << d_nOut << "\n";
 
   // to hold energy into crack
   auto j_energy = JEnergy();
