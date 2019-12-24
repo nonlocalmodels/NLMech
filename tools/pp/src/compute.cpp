@@ -1521,22 +1521,6 @@ void tools::pp::Compute::computeJIntegralAngledCrack() {
     exit(1);
   }
 
-  // set lateral component of crack velocity zero
-  if (data->d_setLateralCompVZero) {
-    if (data->d_crackOrient == -1)
-      ctip.d_v.d_x = 0.;
-    else if (data->d_crackOrient == 1)
-      ctip.d_v.d_y = 0.;
-  }
-
-  // set lateral component of displacement of crack tip zero
-  if (data->d_setLateralCompUZero) {
-    if (data->d_crackOrient == -1)
-      ctip.d_p.d_x = data->d_setLateralCompX;
-    else if (data->d_crackOrient == 1)
-      ctip.d_p.d_y = data->d_setLateralCompX;
-  }
-
   // Schematic
   // Here we rotate the domain such that direction of crack is from
   // horizontal direction and is from left to right
