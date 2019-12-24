@@ -50,27 +50,12 @@ double util::function::hatFunctionQuick(const double &x, const double &x_min,
 
 double util::function::linearStepFunc(const double &x, const double &x1,
                                       const double &x2) {
+  double period = std::floor(x / x2);
 
-  //
-  // a = floor(x/(x1+x2))
-  // xl = a * (x1 + x2), xm = xl + x1, xr = xm + x2
-  // fl = a * x1
-  //
-  // At xl, value of the function is = period number \times x1
-  //
-  // From xl to xm, the function grows linear with slope 1
-  // so the value in between [xl, xm) will be
-  // fl + (x - xl) = a*x1 + (x - a*(x1+x2)) = x - a*x2
-  //
-  // In [xm, xr) function is constant and the value is
-  // fl + (xm - xl) = a*x1 + (xl + x1 - xl) = (a+1)*x1
-
-  double period = std::floor(x / (x1 + x2));
-
-  if (util::compare::definitelyLessThan(x, period * (x1 + x2) + x1))
-    return x - period * x2;
+  if (util::compare::definitelyLessThan(x, period * x2 + x1))
+    return period * x1 + x - period * x2;
   else
-    return (period + 1.) * x1;
+    return period * x1 + x1;
 }
 
 double util::function::gaussian(const double &r, const double &a,
