@@ -898,6 +898,16 @@ void model::FDModel::output() {
       d_policy_p->populateData("Model_d_eF"))
     writer.appendFieldData(tag, d_teF);
 
+  tag = "Neighbors";
+  if (d_outputDeck_p->isTagInOutput(tag)) {
+    std::vector<size_t> amountNeighbors;
+    size_t nodes = d_mesh_p->getNumNodes();
+    for (size_t i = 0; i < nodes; i++)
+      amountNeighbors.push_back(
+          d_neighbor_p->getNeighbors(i).size());
+    writer.appendPointData(tag, &amountNeighbors);
+  }
+
   writer.close();
 }
 
