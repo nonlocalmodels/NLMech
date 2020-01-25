@@ -10,6 +10,7 @@
 #include "util/feElementDefs.h" // global definition of elements
 #include <iostream>
 #include <util/compare.h>
+#include "util/matrix.h"
 
 fe::TriElem::TriElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_triangle) {

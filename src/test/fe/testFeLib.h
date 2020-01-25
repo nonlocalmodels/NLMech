@@ -151,6 +151,13 @@ void testTriElem(size_t n);
 void testQuadElem(size_t n);
 
 /*!
+ * @brief Perform test on quadrature points on tetrahedral elements
+ *
+ * @param n Order of quadrature point approximation
+ */
+void testTetElem(size_t n);
+
+/*!
  * @brief Computes the time needed when quad data for elements are stored and
  * when they are computed as and when needed
  *
@@ -197,6 +204,17 @@ double getExactIntegrationRefTri(size_t alpha, size_t beta);
  * @return I Exact integration of \f$ f(s,t) = s^\alpha\, t^\beta \f$
  */
 double getExactIntegrationRefQuad(size_t alpha, size_t beta);
+
+/*!
+ * @brief Computes integration of polynomial exactly over reference tetrahedral
+ *
+ * @param alpha Polynomial order in variable s
+ * @param beta Polynomial order in variable t
+ * @param theta Polynomial order in variable r
+ * @return I Exact integration of \f$ f(s,t) = s^\alpha\, t^\beta \, r^\theta
+ * \f$
+ */
+double getExactIntegrationRefTet(size_t alpha, size_t beta, size_t theta);
 
 /*!
  * @brief Computes \f$ {n\choose r}\f$ "n choose r"

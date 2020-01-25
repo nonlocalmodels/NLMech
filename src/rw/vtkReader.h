@@ -9,11 +9,14 @@
 #ifndef RW_VTKREADER_H
 #define RW_VTKREADER_H
 
+#include <util/matrixBlaze.h>
 #include <vtkSmartPointer.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkXMLUnstructuredGridReader.h>
 
-#include "util/point.h"           // definition of Point3
+#include "util/point.h"  // definition of Point3
+#include "util/matrix.h"           // definition of matrices
+#include "util/matrixBlaze.h"
 
 namespace rw {
 
@@ -60,6 +63,59 @@ public:
   void readNodes(std::vector<util::Point3> *nodes);
 
   /*!
+   * @brief Reads cell data, i.e. element-node connectivity and node-element
+   * connectivity
+   * @param filename Name of mesh file
+   * @param dim Dimension
+   * @param element_type Type of element
+   * @param enc Element-node connectivity
+   * @param nec Node-element connectivity
+   */
+  void readCells(size_t dim, size_t &element_type,
+                 size_t &num_elem, std::vector<size_t> *enc,
+                 std::vector<std::vector<size_t>> *nec);
+
+  /*!
+   * @brief reads point data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readPointData(const std::string &name, std::vector<uint8_t> *data);
+
+  /*!
+   * @brief reads point data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readPointData(const std::string &name, std::vector<size_t> *data);
+
+  /*!
+   * @brief reads point data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readPointData(const std::string &name, std::vector<int> *data);
+
+  /*!
+   * @brief reads point data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readPointData(const std::string &name, std::vector<float> *data);
+
+  /*!
+   * @brief reads point data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readPointData(const std::string &name, std::vector<double> *data);
+
+  /*!
    * @brief reads point data from .vtu file
    * @param name Name of data
    * @param data Pointer to the vector of data
@@ -73,7 +129,56 @@ public:
    * @param data Pointer to the vector of data
    * @return status True if data is found otherwise false
    */
-  bool readPointData(const std::string &name, std::vector<double> *data);
+  bool readPointData(const std::string &name, std::vector<util::SymMatrix3> *data);
+
+  /*!
+   * @brief reads point data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readPointData(const std::string &name,
+                     std::vector<util::Matrix33> *data);
+
+  /*!
+   * @brief reads cell data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readCellData(const std::string &name, std::vector<float> *data);
+
+  /*!
+   * @brief reads cell data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readCellData(const std::string &name, std::vector<double> *data);
+
+  /*!
+   * @brief reads cell data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readCellData(const std::string &name, std::vector<util::Point3> *data);
+
+  /*!
+   * @brief reads cell data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readCellData(const std::string &name, std::vector<util::SymMatrix3> *data);
+
+  /*!
+   * @brief reads cell data from .vtu file
+   * @param name Name of data
+   * @param data Pointer to the vector of data
+   * @return status True if data is found otherwise false
+   */
+  bool readCellData(const std::string &name, std::vector<util::Matrix33> *data);
 
   /*! @brief Close the file */
   void close();
