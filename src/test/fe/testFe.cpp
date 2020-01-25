@@ -27,15 +27,21 @@ int main() {
     for (size_t i = 1; i < 6; i++)
       test::testQuadElem(i);
 
+    // test quad data for triangle element
+    for (size_t i = 1; i < 4; i++)
+      test::testTetElem(i);
+
     // test additional time in computing quad points instead of storing it
-    for (size_t i = 1; i < 6; i++) {
-      test::testTriElemTime(i, 1000);
+    if (false) {
+      for (size_t i = 1; i < 6; i++) {
+        test::testTriElemTime(i, 1000);
 
-      test::testTriElemTime(i, 10000);
+        test::testTriElemTime(i, 10000);
 
-      test::testTriElemTime(i, 100000);
+        test::testTriElemTime(i, 100000);
 
-      test::testTriElemTime(i, 1000000);
+        test::testTriElemTime(i, 1000000);
+      }
     }
   }
 

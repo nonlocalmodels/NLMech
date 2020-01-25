@@ -10,6 +10,7 @@
 #define FE_QUADDATA_H
 
 #include <util/point.h>           // definition of Point3
+#include <util/utilIO.h>
 #include <vector>
 
 namespace fe {
@@ -64,6 +65,26 @@ struct QuadData {
    * @brief Constructor
    */
   QuadData() : d_w(0.), d_p(util::Point3()), d_detJ(0.){};
+
+  std::string printStr(int nt = 0, int lvl = 0) const {
+
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- QuadData --------" << std::endl << std::endl;
+    oss << tabS << "Weight = " << d_w << std::endl;
+    oss << tabS << "Point = " << d_p.printStr() << std::endl;
+    oss << tabS << "Shapes = " << util::io::printStr(d_shapes, 0) << std::endl;
+    oss << tabS << "Derivative = " << util::io::printStr(d_derShapes, 0)
+        << std::endl;
+    oss << tabS << "Jacobian = " << util::io::printStr(d_J, 0)
+        << std::endl;
+    oss << tabS << "Det(J) = " << d_detJ << std::endl;
+    oss << std::endl;
+
+    return oss.str();
+  };
+
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 } // namespace fe
