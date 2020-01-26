@@ -8,10 +8,10 @@
 
 #include "fe1D.h"
 
+#include <hpx/config.hpp>
 #include <yaml-cpp/yaml.h>  // YAML reader
 
 #include <cmath>
-#include <hpx/config.hpp>
 #include <iostream>
 
 #include "rw/writer.h"           // definition of vtk and msh writer interface
