@@ -33,6 +33,38 @@ rw::reader::VtkReader::VtkReader(const std::string &filename) {
   d_reader_p->Update();
 }
 
+std::vector<std::string> rw::reader::VtkReader::readVtuFilePointTags() {
+
+  // read point field data
+  d_grid_p = d_reader_p->GetOutput();
+  vtkPointData *p_field = d_grid_p->GetPointData();
+
+  std::vector<std::string> tags;
+
+  for (size_t i=0; i<p_field->GetNumberOfArrays(); i++) {
+    auto tag = p_field->GetArrayName(i);
+    tags.emplace_back(tag);
+  }
+
+  return tags;
+}
+
+std::vector<std::string> rw::reader::VtkReader::readVtuFileCellTags() {
+
+  // read point field data
+  d_grid_p = d_reader_p->GetOutput();
+  vtkCellData *c_field = d_grid_p->GetCellData();
+
+  std::vector<std::string> tags;
+
+  for (size_t i=0; i<c_field->GetNumberOfArrays(); i++) {
+    auto tag = c_field->GetArrayName(i);
+    tags.emplace_back(tag);
+  }
+
+  return tags;
+}
+
 void rw::reader::VtkReader::readMesh(size_t dim,
                                      std::vector<util::Point3> *nodes,
                                      size_t &element_type, size_t &num_elem,

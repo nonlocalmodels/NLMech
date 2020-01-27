@@ -121,6 +121,7 @@ add_subdirectory(src/test)
 add_subdirectory(tools/mesh)
 add_subdirectory(tools/pp)
 add_subdirectory(tools/dc)
+add_subdirectory(tools/uScale)
 
 # Build executable
 add_hpx_executable(NLMech SOURCES src/main.cpp 

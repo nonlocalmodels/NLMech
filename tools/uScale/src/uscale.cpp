@@ -11,11 +11,12 @@
 
 #include <limits>
 
-#include "dcInclude.h"
 #include "fe/mesh.h"
 #include "inp/decks/meshDeck.h"
 #include "rw/reader.h"
+#include "rw/util.h"
 #include "rw/writer.h"
+#include "srcInclude.h"
 #include "util/compare.h"
 #include "util/matrix.h"
 #include "util/point.h"
@@ -40,84 +41,96 @@ namespace {
  * @param tolerance
  * @param config YAML input file
  */
-void readInputFile(std::string &in_filename,
+void readInputFile(size_t &dim, std::string &in_filename,
                    std::string &out_filename, double &scale_factor,
-                   YAML::Node config) {
+                   const YAML::Node &config) {
+
+  if (config["Dimension"])
+    dim = config["Dimension"].as<size_t>();
+  else
+    dim = 2;
 
   in_filename = config["Input_Filename"].as<std::string>();
   out_filename = config["Out_Filename"].as<std::string>();
 
-  if (config["Scale_Factor"]) scale_factor = config["Scale_Factor"].as<double>();  
+  if (config["Scale_Factor"])
+    scale_factor = config["Scale_Factor"].as<double>();
 }
 
 //
 // compute error
 //
 void compute(const YAML::Node &config) {
-  
+
+  size_t dim = 2;
   std::string in_filename;
   std::string out_filename;
   double scale_factor = 1.;
 
   // read file
-  fdSimple::readInputFile(in_filename, out_filename, scale_factor, config);
+  readInputFile(dim, in_filename, out_filename, scale_factor, config);
 
-  // create output file stream
-  FILE *file_out = fopen(out_filename.c_str(), "w");
+  //  std::cout << in_filename << ", " << out_filename << ", " << scale_factor
+  //            << "\n";
 
-  // write header
-  size_t s_counter = 0;
-
-  std::ostringstream oss;
-  for (const auto &s : compare_tags) {
-    oss << s.c_str() << "_L2_Error, " << s.c_str() << "_Sup_Error";
-
-    // handle special cases
-    if (s_counter < compare_tags.size() - 1) oss << ", ";
-
-    s_counter++;
-  }
-  oss << "\n";
-
-  fprintf(file_out, "%s", oss.str().c_str());
-  if (print_screen) {
-    std::cout << "------------------------\n";
-    std::cout << oss.str();
-  }
-
-  // reset oss
-  oss.str("");
-  oss.clear();
-
-  // read input filename
+  // read input vtu file
   // nodes current position
   std::vector<util::Point3> nodes_current;
   rw::reader::readVtuFileNodes(in_filename, dim, &nodes_current, false);
-  
+
   std::vector<util::Point3> nodes_u;
   rw::reader::readVtuFilePointData(in_filename, "Displacement", &nodes_u);
 
+  auto data_tags = rw::reader::readVtuFilePointTags(in_filename);
+
   // loop over nodes and modify current position
-  counter = 0;
+  size_t counter = 0;
   for (const auto &u : nodes_u) {
 
     auto temp = nodes_current[counter] - u;
-    nodes_current[counter] = temp + scale_factor * u;
+    nodes_current[counter] = temp + u * scale_factor;
 
     counter++;
   }
 
   // open a new vtu file and write the data
-    
+  auto writer = rw::writer::Writer(out_filename, "vtu", "");
+  writer.appendNodes(&nodes_current);
+
+  // loop over tag in data_tags, read data from input vtu file, and
+  // write the data to output vtu file
+  for (const auto &tag : data_tags) {
+
+    // case when data is of double type
+    auto type = rw::getDataType(tag);
+    if (type == "double") {
+      std::vector<double> data;
+
+      // read
+      rw::reader::readVtuFilePointData(in_filename, tag, &data);
+
+      // write
+      writer.appendPointData(tag, &data);
+    } else if (type == "point") {
+
+      std::vector<util::Point3> data;
+
+      // read
+      rw::reader::readVtuFilePointData(in_filename, tag, &data);
+
+      // write
+      writer.appendPointData(tag, &data);
+    }
+  }
+
+  // get time from input vtu file
+  writer.addTimeStep(0.);
+  writer.close();
 }
 
-}  // namespace fdSimple
+} // namespace
 
 //
 // main function
 //
-bool dc::fdSimple(YAML::Node config) {
-  fdSimple::compute(config);
-
-  return error;
-}
+void uscale::run(YAML::Node config) { compute(config); }

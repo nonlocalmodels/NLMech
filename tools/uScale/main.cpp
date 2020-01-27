@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
     found++;
   }
 
-  if (filename = "dummy") {
+  if (filename == "dummy") {
     std::cerr << argv[0] << " -i input.yaml -k type" << std::endl;
     exit(1);
   }

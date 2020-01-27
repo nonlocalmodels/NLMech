@@ -85,6 +85,20 @@ void readVtuFileNodes(const std::string &filename, size_t dim,
                      ref_config = false);
 
 /*!
+ * @brief Reads all point data tags
+ * @param filename Name of mesh file
+ * @return List List of point data tags
+ */
+std::vector<std::string> readVtuFilePointTags(const std::string &filename);
+
+/*!
+ * @brief Reads all cell data tags
+ * @param filename Name of mesh file
+ * @return List List of point data tags
+ */
+std::vector<std::string> readVtuFileCellTags(const std::string &filename);
+
+/*!
  * @brief Reads cell data, i.e. element-node connectivity and node-element
  * connectivity
  * @param filename Name of mesh file
