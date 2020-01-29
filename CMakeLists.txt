@@ -117,8 +117,11 @@ add_subdirectory(src/data)
 # add test directory
 add_subdirectory(src/test)
 
-# add tool directory
+# Build documentation
+set(Enable_Tools FALSE CACHE BOOL "Enables the tools to the build target")
+if(${Enable_Documentation})
 add_subdirectory(tools)
+endif()
 
 # Build executable
 add_hpx_executable(NLMech SOURCES src/main.cpp 
