@@ -305,6 +305,12 @@ public:
    * E_{lefm} = V G_c, \f]
    * where \f$ G_c\f$ is the critical energy release rate.
    *
+   * 8. \b Strain \b energy \b within \b contour \b domain: \f[
+   * E_{strain, A} = \int_{A(t)} W(x) dx. \f]
+   *
+   * 9. \b Kinetic \b energy \b within \b contour \b domain: \f[
+   * E_{kinetic, A} = \int_{A(t)} \frac{\rho}{2} |\dot{u}(x)|^2 dx. \f]
+   *
    * Method:
    *
    * 1. We store the ids of nodes which are within horizon distance from the
@@ -479,14 +485,20 @@ private:
    * @param p Point
    * @param nodes Pointer to ids of nodes to perform search
    * @param elements Pointer to ids of elements to perform search
+   * @param normal Normal to the edge of contour
    * @param pd_energy Peridynamic energy density
    * @param kinetic_energy Kinetic energy density
+   * @param elastic_energy Elastic energy density
+   * @param dot_u Material velocity at the quadrature point
    */
   void getContourContribJInt(const util::Point3 &p,
                      const std::vector<size_t> *nodes,
                      const std::vector<size_t> *elements,
+                             const util::Point3 &normal,
                      double &pd_energy,
-                     double &kinetic_energy);
+                     double &kinetic_energy,
+                     double &elastic_energy,
+                     util::Point3 &dot_u);
 
   /*!
    * @brief Updates crack tip location and crack velocity
@@ -597,6 +609,14 @@ private:
       const std::vector<std::vector<double>> &Zs, const std::vector<double> *Z,
       bool is_top);
 
+  /*!
+   * @brief Exits code safely in the event there is error
+   *
+   * @param err_message Error message
+   * @param writer Writer object
+   */
+  void safeExit(const std::string &err_message, rw::writer::Writer *writer = nullptr);
+
   /** @}*/
 
   /*! @brief Input filename for compute instruction */
@@ -675,6 +695,12 @@ private:
    * simulation, i.e. d_dtN.
    */
   size_t d_dtEnd;
+
+  /*!
+   * @brief Save success/failur of function
+   */
+  bool d_fnSuccess;
+  std::string d_fnErrMsg;
 
   /*! @brief Displacement of nodes */
   std::vector<util::Point3> d_u;

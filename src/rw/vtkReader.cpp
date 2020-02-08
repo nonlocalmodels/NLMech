@@ -411,9 +411,9 @@ bool rw::reader::VtkReader::readPointData(const std::string &name,
   (*data).resize(array->GetNumberOfTuples());
   for (size_t i = 0; i < array->GetNumberOfTuples(); i++) {
     array->GetTuples(i, i, data_a);
-    (*data)[i] = util::SymMatrix3(data_a->GetValue(0), data_a->GetValue(1),
-                                  data_a->GetValue(2), data_a->GetValue(3),
-                                  data_a->GetValue(4), data_a->GetValue(5));
+    (*data)[i] = util::SymMatrix3({data_a->GetValue(0), data_a->GetValue(1),
+                                   data_a->GetValue(2), data_a->GetValue(3),
+                                   data_a->GetValue(4), data_a->GetValue(5)});
   }
 
   return true;
@@ -559,9 +559,9 @@ bool rw::reader::VtkReader::readCellData(const std::string &name,
   (*data).resize(array->GetNumberOfTuples());
   for (size_t i = 0; i < array->GetNumberOfTuples(); i++) {
     array->GetTuples(i, i, data_a);
-    (*data)[i] = util::SymMatrix3(data_a->GetValue(0), data_a->GetValue(1),
-                                  data_a->GetValue(2), data_a->GetValue(3),
-                                  data_a->GetValue(4), data_a->GetValue(5));
+    (*data)[i] = util::SymMatrix3({data_a->GetValue(0), data_a->GetValue(1),
+                                   data_a->GetValue(2), data_a->GetValue(3),
+                                   data_a->GetValue(4), data_a->GetValue(5)});
   }
 
   return true;

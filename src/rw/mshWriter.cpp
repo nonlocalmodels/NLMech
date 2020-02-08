@@ -187,8 +187,8 @@ void rw::writer::MshWriter::appendPointData(
   writeMshDataHeader(name, 6, data->size(), true);
   for (size_t i=0; i < data->size(); i++) {
     auto d = (*data)[i];
-    fprintf(d_file, "%zu %lf %lf %lf %lf %lf %lf\n", i + 1, d.d_xx, d.d_yy,
-            d.d_zz, d.d_xy, d.d_yz, d.d_xz);
+    fprintf(d_file, "%zu %lf %lf %lf %lf %lf %lf\n", i + 1, d(0,0), d(1,1),
+            d(2,2), d(1,2), d(0,2), d(0,1));
   }
   fprintf(d_file, "$EndNodeData\n");
 }
@@ -210,8 +210,8 @@ void rw::writer::MshWriter::appendCellData(
   writeMshDataHeader(name, 6, data->size(), false);
   for (size_t i=0; i < data->size(); i++) {
     auto d = (*data)[i];
-    fprintf(d_file, "%zu %lf %lf %lf %lf %lf %lf\n", i + 1, d.d_xx, d.d_yy,
-            d.d_zz, d.d_xy, d.d_yz, d.d_xz);
+    fprintf(d_file, "%zu %lf %lf %lf %lf %lf %lf\n", i + 1, d(0,0), d(1,1),
+            d(2,2), d(1,2), d(0,2), d(0,1));
   }
   fprintf(d_file, "$EndElementData\n");
 }

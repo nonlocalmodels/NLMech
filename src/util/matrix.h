@@ -21,82 +21,435 @@ struct Matrix3 {
    */
   /**@{*/
 
-  /*! @brief the xx component */
-  float d_xx;
-
-  /*! @brief the xy component */
-  float d_xy;
-
-  /*! @brief the xz component */
-  float d_xz;
-
-  /*! @brief the yx component */
-  float d_yx;
-
-  /**< @brief the yy component */
-  float d_yy;
-
-  /*! @brief the yz component */
-  float d_yz;
-
-  /*! @brief the zx component */
-  float d_zx;
-
-  /*! @brief the zy component */
-  float d_zy;
-
-  /*! @brief the zz component */
-  float d_zz;
+  /*! @brief data */
+  float d_data[3][3]{};
 
   /** @}*/
 
   /*!
    * @brief Constructor
    */
-  Matrix3()
-      : d_xx(0.), d_xy(0.), d_xz(0.), d_yx(0.), d_yy(0.), d_yz(0.), d_zx(0.),
-        d_zy(0.), d_zz(0.){};
+  Matrix3() {
+
+    d_data[0][0] = 0.;
+    d_data[0][1] = 0.;
+    d_data[0][2] = 0.;
+
+    d_data[1][0] = 0.;
+    d_data[1][1] = 0.;
+    d_data[1][2] = 0.;
+
+    d_data[2][0] = 0.;
+    d_data[2][1] = 0.;
+    d_data[2][2] = 0.;
+  };
+
+  /*!
+   * @brief Constructor
+   *
+   * @param diagonal Diagonal vector
+   */
+  Matrix3(const util::Point3& diagonal) {
+
+    d_data[0][0] = diagonal.d_x;
+    d_data[0][1] = 0.;
+    d_data[0][2] = 0.;
+
+    d_data[1][0] = 0.;
+    d_data[1][1] = diagonal.d_y;
+    d_data[1][2] = 0.;
+
+    d_data[2][0] = 0.;
+    d_data[2][1] = 0.;
+    d_data[2][2] = diagonal.d_z;
+  };
+
+  /*!
+   * @brief Constructor
+   *
+   * @param a1 first row
+   * @param a2 second row
+   * @param a3 third row
+   */
+  Matrix3(const util::Point3& a1, const util::Point3& a2, const util::Point3& a3) {
+
+    d_data[0][0] = a1.d_x;
+    d_data[0][1] = a1.d_y;
+    d_data[0][2] = a1.d_z,
+        d_data[1][0] = a2.d_x;
+    d_data[1][1] = a2.d_y;
+    d_data[1][2] = a2.d_z;
+    d_data[2][0] = a3.d_x;
+    d_data[2][1] = a3.d_y;
+    d_data[2][2] = a3.d_z;
+  };
+
+  /*!
+   * @brief Constructor
+   *
+   * @param m Matrix in vector template
+   */
+  Matrix3(const std::vector<std::vector<double>> &m) {
+    for (size_t i=0; i<3; i++)
+      for (size_t j=0; j<3; j++)
+        d_data[i][j] = m[i][j];
+  }
+
+  /*!
+   * @brief Constructor
+   *
+   * @param m Matrix in vector template
+   */
+  Matrix3(const Matrix3 &m) {
+    for (size_t i=0; i<3; i++)
+      for (size_t j=0; j<3; j++)
+        d_data[i][j] = m(i,j);
+  }
+
+  /*!
+   * @brief Prints the information
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+
+    std::string tabS = "";
+    for (int i = 0; i < nt; i++)
+      tabS += "\t";
+
+    std::ostringstream oss;
+    for (size_t i=0; i<3; i++)
+      oss << tabS << "[" << (*this)(i, 0) << ", " << (*this)(i, 1) << ", "
+          << (*this)(i, 2) << "]" << std::endl;
+    oss << std::endl;
+
+    return oss.str();
+  }
+
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
+
+  Point3 operator()(size_t i) {
+    return Point3(d_data[i]);
+  }
+  Point3 operator()(size_t i) const {
+    return Point3(d_data[i]);
+  }
+
+  float &operator()(size_t i, size_t j) { return d_data[i][j]; }
+  const float &operator()(size_t i, size_t j) const { return d_data[i][j]; }
+
+  /*!
+ * @brief Computes the dot product between matrix and vector
+ *
+ * @param m Matrix
+ * @param v vector
+ * @return vector Dot produc
+ */
+  std::vector<double> dot(const std::vector<double> &v) const {
+
+    auto r = std::vector<double>(3,0.);
+    for (size_t i=0; i<3; i++)
+      for (size_t j=0; j<3; j++)
+        r[i] += (*this)(i,j) * v[j];
+
+    return r;
+  }
+  util::Point3 dot(const util::Point3 &v) {
+
+    return {(*this)(0) * v, (*this)(1) * v, (*this)(2) * v};
+  }
+
+  /*!
+ * @brief Computes the tranpose of matrix
+ * @return Matrix Transpose of m
+ */
+  Matrix3 transpose() const {
+
+    Matrix3 m = Matrix3(*this);
+
+    m(0,1) = (*this)(1,0);
+    m(0,2) = (*this)(2,0);
+
+    m(1,0) = (*this)(0,1);
+    m(1,2) = (*this)(2,1);
+
+    m(2,0) = (*this)(0,2);
+    m(2,1) = (*this)(1,2);
+
+    return m;
+  }
+
+  /*!
+ * @brief Computes the determinant of matrix
+ *
+ * @param m Matrix
+ * @return det Determinant
+ */
+  double det() const {
+    return (*this)(0,0) * ((*this)(1,1) * (*this)(2,2) - (*this)(2,1) * (*this)(1,2)) -
+           (*this)(0,1) * ((*this)(1,0) * (*this)(2,2) - (*this)(2,0) * (*this)(1,2)) +
+           (*this)(0,2) * ((*this)(1,0) * (*this)(2,1) - (*this)(2,0) * (*this)(1,1));
+  }
+
+  /*!
+ * @brief Computes the determinant of matrix
+ *
+ * @param m Matrix
+ * @return inv Inverse of m
+ */
+  Matrix3 inv() const {
+
+    Matrix3 m = Matrix3();
+
+    auto det_inv = 1. / this->det();
+
+    m(0,0) = det_inv *
+             ((*this)(1,1) * (*this)(2,2) - (*this)(2,1) * (*this)(1,2));
+    m(0,1) = -det_inv *
+             ((*this)(0,1) * (*this)(2,2) - (*this)(2,1) * (*this)(0,2));
+    m(0,2) = det_inv *
+             ((*this)(0,1) * (*this)(1,2) - (*this)(1,1) * (*this)(0,2));
+
+    m(1,0) = -det_inv *
+             ((*this)(1,0) * (*this)(2,2) - (*this)(2,0) * (*this)(1,2));
+    m(1,1) = det_inv *
+             ((*this)(0,0) * (*this)(2,2) - (*this)(2,0) * (*this)(0,2));
+    m(1,2) = -det_inv *
+             ((*this)(0,0) * (*this)(1,2) - (*this)(1,0) * (*this)(0,2));
+
+    m(2,0) = det_inv *
+             ((*this)(1,0) * (*this)(2,1) - (*this)(2,0) * (*this)(1,1));
+    m(2,1) = -det_inv *
+             ((*this)(0,0) * (*this)(2,1) - (*this)(2,0) * (*this)(0,1));
+    m(2,2) = det_inv *
+             ((*this)(0,0) * (*this)(1,1) - (*this)(1,0) * (*this)(0,1));
+
+    return m;
+  }
 };
 
-/*! @brief A structure to represent 3d symmetric matrices */
+/*! @brief A structure to represent 3d matrices */
 struct SymMatrix3 {
 
   /**
    * @name Data members
+   *
+   * 0 - xx component
+   * 1 - yy component
+   * 2 - zz component
+   * 3 - yz component
+   * 4 - xz component
+   * 5 - xy component
    */
   /**@{*/
 
-  /*! @brief the xx component */
-  float d_xx;
-
-  /*! @brief the yy component */
-  float d_yy;
-
-  /*! @brief the zz component */
-  float d_zz;
-
-  /*! @brief the xy (yx) component */
-  float d_xy;
-
-  /*! @brief the xz (zx) component */
-  float d_xz;
-
-  /*! @brief the yz (zy) component */
-  float d_yz;
+  /*! @brief data */
+  float d_data[6]{};
 
   /** @}*/
 
   /*!
    * @brief Constructor
    */
-  SymMatrix3() : d_xx(0.), d_yy(0.), d_zz(0.), d_xy(0.), d_xz(0.), d_yz(0.){};
+  SymMatrix3() {
+
+    d_data[0] = 0.;
+    d_data[1] = 0.;
+    d_data[2] = 0.;
+    d_data[3] = 0.;
+    d_data[4] = 0.;
+    d_data[5] = 0.;
+  };
 
   /*!
    * @brief Constructor
+   *
+   * @param diagonal Diagonal vector
    */
-  SymMatrix3(const float &xx, const float &yy, const float &zz, const float &xy,
-             const float &xz, const float &yz)
-      : d_xx(xx), d_yy(yy), d_zz(zz), d_xy(xy), d_xz(xz), d_yz(yz){};
+  SymMatrix3(const util::Point3& diagonal) {
+
+    d_data[0] = diagonal.d_x;
+    d_data[1] = diagonal.d_y;
+    d_data[2] = diagonal.d_z;
+
+    d_data[3] = 0.;
+    d_data[4] = 0.;
+    d_data[5] = 0.;
+  };
+
+  /*!
+   * @brief Constructor
+   *
+   * @param m Matrix in vector template
+   */
+  SymMatrix3(const std::vector<std::vector<double>> &m) {
+
+    d_data[0] = m[0][0];
+    d_data[1] = m[1][1];
+    d_data[2] = m[2][2];
+    d_data[3] = 0.5 * (m[1][2] + m[2][1]);
+    d_data[4] = 0.5 * (m[0][2] + m[2][0]);
+    d_data[5] = 0.5 * (m[0][1] + m[1][0]);
+  }
+  SymMatrix3(const std::vector<double> &m) {
+
+    d_data[0] = m[0];
+    d_data[1] = m[1];
+    d_data[2] = m[2];
+    d_data[3] = m[3];
+    d_data[4] = m[4];
+    d_data[5] = m[5];
+  }
+
+  /*!
+   * @brief Constructor
+   *
+   * @param m Matrix in vector template
+   */
+  SymMatrix3(const Matrix3 &m) {
+
+    d_data[0] = m(0,0);
+    d_data[1] = m(1,1);
+    d_data[2] = m(2,2);
+    d_data[3] = 0.5 * (m(1,2) + m(2,1));
+    d_data[4] = 0.5 * (m(0,2) + m(2,0));
+    d_data[5] = 0.5 * (m(0,1) + m(1,0));
+  }
+  SymMatrix3(const SymMatrix3 &m) {
+
+    for (size_t i=0; i<6; i++)
+      d_data[i] = m.d_data[i];
+  }
+
+  /*!
+   * @brief Prints the information
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+
+    std::string tabS = "";
+    for (int i = 0; i < nt; i++)
+      tabS += "\t";
+
+    std::ostringstream oss;
+    for (size_t i=0; i<3; i++)
+      oss << tabS << "[" << (*this)(i, 0) << ", " << (*this)(i, 1) << ", "
+          << (*this)(i, 2) << "]" << std::endl;
+    oss << std::endl;
+
+    return oss.str();
+  }
+
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
+
+  Point3 operator()(size_t i) {
+    return {(*this)(i, 0), (*this)(i, 1), (*this)(i, 2)};
+  }
+  Point3 operator()(size_t i) const {
+    return {(*this)(i, 0), (*this)(i, 1), (*this)(i, 2)};
+  }
+
+  float &operator()(size_t i, size_t j) {
+    return d_data[i == j ? i : 6 - i - j];
+  }
+  const float &operator()(size_t i, size_t j) const {
+    return d_data[i == j ? i : 6 - i - j];
+  }
+
+  const float &get(size_t i) const {
+    return d_data[i];
+  }
+  float &get(size_t i) {
+    return d_data[i];
+  }
+
+  /*!
+ * @brief Copy
+ */
+  void copy(double m[6]) const {
+
+    for (size_t i=0; i<6; i++)
+      m[i] = d_data[i];
+  }
+
+  /*!
+   * @brief Computes the dot product of this matrix with another vector
+   * @param b A vector
+   * @return Vector Resulting vector
+   */
+  std::vector<double> dot(const std::vector<double> &v) const {
+
+    auto r = std::vector<double>(3,0.);
+    for (size_t i=0; i<3; i++)
+      for (size_t j=0; j<3; j++)
+        r[i] += (*this)(i,j) * v[j];
+
+    return r;
+  }
+  util::Point3 dot(const util::Point3 &v) {
+
+    return {(*this)(0) * v, (*this)(1) * v, (*this)(2) * v};
+  }
+
+  /*!
+ * @brief Computes the tranpose of matrix
+ * @return Matrix Transpose of m
+ */
+  SymMatrix3 transpose() const {
+
+    return (*this);
+  }
+
+  /*!
+ * @brief Computes the determinant of matrix
+ *
+ * @param m Matrix
+ * @return det Determinant
+ */
+  double det() const {
+    return (*this)(0,0) * ((*this)(1,1) * (*this)(2,2) - (*this)(2,1) * (*this)(1,2)) -
+           (*this)(0,1) * ((*this)(1,0) * (*this)(2,2) - (*this)(2,0) * (*this)(1,2)) +
+           (*this)(0,2) * ((*this)(1,0) * (*this)(2,1) - (*this)(2,0) * (*this)(1,1));
+  }
+
+  /*!
+ * @brief Computes the determinant of matrix
+ *
+ * @param m Matrix
+ * @return inv Inverse of m
+ */
+  SymMatrix3 inv() const {
+
+    SymMatrix3 m = SymMatrix3();
+
+    auto det_inv = 1. / this->det();
+
+    m(0,0) = det_inv *
+             ((*this)(1,1) * (*this)(2,2) - (*this)(2,1) * (*this)(1,2));
+    m(0,1) = -det_inv *
+             ((*this)(0,1) * (*this)(2,2) - (*this)(2,1) * (*this)(0,2));
+    m(0,2) = det_inv *
+             ((*this)(0,1) * (*this)(1,2) - (*this)(1,1) * (*this)(0,2));
+
+    m(1,0) = -det_inv *
+             ((*this)(1,0) * (*this)(2,2) - (*this)(2,0) * (*this)(1,2));
+    m(1,1) = det_inv *
+             ((*this)(0,0) * (*this)(2,2) - (*this)(2,0) * (*this)(0,2));
+    m(1,2) = -det_inv *
+             ((*this)(0,0) * (*this)(1,2) - (*this)(1,0) * (*this)(0,2));
+
+    m(2,0) = det_inv *
+             ((*this)(1,0) * (*this)(2,1) - (*this)(2,0) * (*this)(1,1));
+    m(2,1) = -det_inv *
+             ((*this)(0,0) * (*this)(2,1) - (*this)(2,0) * (*this)(0,1));
+    m(2,2) = det_inv *
+             ((*this)(0,0) * (*this)(1,1) - (*this)(1,0) * (*this)(0,1));
+
+    return m;
+  }
 };
 
 /*!
@@ -124,7 +477,7 @@ std::vector<double> &v);
  * @return Matrix Transpose of m
  */
 std::vector<std::vector<double>> transpose(const
-std::vector<std::vector<double>> &m);
+                                           std::vector<std::vector<double>> &m);
 
 /*!
  * @brief Computes the determinant of matrix

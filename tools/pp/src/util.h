@@ -65,10 +65,18 @@ struct JEnergy {
    */
   double d_lefmEnergyRate;
 
+  /*!
+   * @brief Strain energy and kinetic energy within contour
+   */
+  double d_pdStrainEnergyInsideContour;
+  double d_kineticEnergyInsideContour;
+
   JEnergy()
       : d_contourPdStrainEnergy(0.), d_contourPdStrainEnergyRate(0.),
         d_contourKineticEnergyRate(0.), d_contourElasticInternalWorkRate(0.),
-        d_pdInternalWork(0.), d_pdInternalWorkRate(0.), d_lefmEnergyRate(0.){};
+        d_pdInternalWork(0.), d_pdInternalWorkRate(0.), d_lefmEnergyRate(0.),
+        d_pdStrainEnergyInsideContour(0.), d_kineticEnergyInsideContour(0.)
+        {};
 };
 
 /*!
