@@ -20,6 +20,7 @@ geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       nodes->size(), [this, horizon, nodes](boost::uint64_t i) {
+        //  for (size_t i=0; i<nodes->size(); i++) {
         util::Point3 xi = (*nodes)[i];
 
         // loop over all the nodes and check which nodes are

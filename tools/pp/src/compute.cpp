@@ -1510,7 +1510,7 @@ void tools::pp::Compute::computeJIntegral() {
           double strain_energy = 0.;
 
           // add peridynamic energy
-          auto i_neighs = this->d_neighbor_p->getNeighbors(i);
+          auto i_neighs = this->d_neighbor_p->getNeighbors(id);
           for (auto j : i_neighs) {
             auto xj = d_mesh_p->getNode(j);
             if (util::compare::definitelyGreaterThan(xj.dist(xi),
@@ -1897,6 +1897,7 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     oss.str("");
     oss << "Error: Can not find element for point p = (" << p.d_x << ", "
               << p.d_y << ") for interpolation.\n";
+    oss << "Num elems = " << elements->size() << "\n";
     safeExit(oss.str());
 
     // for debug
