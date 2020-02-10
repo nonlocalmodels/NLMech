@@ -50,12 +50,13 @@ double util::function::hatFunctionQuick(const double &x, const double &x_min,
 
 double util::function::linearStepFunc(const double &x, const double &x1,
                                       const double &x2) {
-  double period = std::floor(x / x2);
 
-  if (util::compare::definitelyLessThan(x, period * x2 + x1))
-    return period * x1 + x - period * x2;
+  double period = std::floor(x / (x1 + x2));
+
+  if (util::compare::definitelyLessThan(x, period * (x1 + x2) + x1))
+    return x - period * x2;
   else
-    return period * x1 + x1;
+    return (period + 1.) * x1;
 }
 
 double util::function::gaussian(const double &r, const double &a,
