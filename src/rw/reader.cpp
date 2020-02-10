@@ -97,6 +97,43 @@ void rw::reader::readVtuFileNodes(const std::string &filename, size_t dim,
   rdr.close();
 }
 
+bool rw::reader::vtuHasPointData(const std::string &filename, const
+                                 std::string &tag) {
+  // call vtk reader
+  auto rdr = rw::reader::VtkReader(filename);
+  auto has_data = rdr.vtuHasPointData(tag);
+  rdr.close();
+  return has_data;
+}
+
+bool rw::reader::vtuHasCellData(const std::string &filename, const
+std::string &tag) {
+  // call vtk reader
+  auto rdr = rw::reader::VtkReader(filename);
+  auto has_data = rdr.vtuHasCellData(tag);
+  rdr.close();
+  return has_data;
+}
+
+std::vector<std::string> rw::reader::readVtuFilePointTags(const std::string &filename){
+
+  // call vtk reader
+  auto rdr = rw::reader::VtkReader(filename);
+  auto data = rdr.readVtuFilePointTags();
+  rdr.close();
+  return data;
+}
+
+std::vector<std::string> rw::reader::readVtuFileCellTags(const std::string
+                                                         &filename){
+
+  // call vtk reader
+  auto rdr = rw::reader::VtkReader(filename);
+  auto data = rdr.readVtuFileCellTags();
+  rdr.close();
+  return data;
+}
+
 void rw::reader::readVtuFileCells(const std::string &filename, size_t dim,
                                   size_t &element_type, size_t &num_elem,
                                   std::vector<size_t> *enc,

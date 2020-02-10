@@ -14,9 +14,9 @@
 #include <vtkUnstructuredGrid.h>
 #include <vtkXMLUnstructuredGridReader.h>
 
-#include "util/point.h"  // definition of Point3
-#include "util/matrix.h"           // definition of matrices
+#include "util/matrix.h" // definition of matrices
 #include "util/matrixBlaze.h"
+#include "util/point.h" // definition of Point3
 
 namespace rw {
 
@@ -37,6 +37,34 @@ public:
    * @note filename is expected to have .vtu extension
    */
   explicit VtkReader(const std::string &filename);
+
+  /*!
+   * @brief Checks if file has needed data
+   * @param tag Tag name of data
+   * @return True If file has data otherwise false
+   */
+  bool vtuHasPointData(const std::string &data_tag);
+
+  /*!
+   * @brief Checks if file has needed data
+   * @param tag Tag name of data
+   * @return True If file has data otherwise false
+   */
+  bool vtuHasCellData(const std::string &data_tag);
+
+  /*!
+   * @brief Reads all point data tags
+   * @param filename Name of mesh file
+   * @return List List of point data tags
+   */
+  std::vector<std::string> readVtuFilePointTags();
+
+  /*!
+   * @brief Reads all cell data tags
+   * @param filename Name of mesh file
+   * @return List List of point data tags
+   */
+  std::vector<std::string> readVtuFileCellTags();
 
   /*!
    * @brief Reads mesh data into node file and element file
@@ -71,8 +99,8 @@ public:
    * @param enc Element-node connectivity
    * @param nec Node-element connectivity
    */
-  void readCells(size_t dim, size_t &element_type,
-                 size_t &num_elem, std::vector<size_t> *enc,
+  void readCells(size_t dim, size_t &element_type, size_t &num_elem,
+                 std::vector<size_t> *enc,
                  std::vector<std::vector<size_t>> *nec);
 
   /*!
@@ -129,7 +157,8 @@ public:
    * @param data Pointer to the vector of data
    * @return status True if data is found otherwise false
    */
-  bool readPointData(const std::string &name, std::vector<util::SymMatrix3> *data);
+  bool readPointData(const std::string &name,
+                     std::vector<util::SymMatrix3> *data);
 
   /*!
    * @brief reads point data from .vtu file
@@ -170,7 +199,8 @@ public:
    * @param data Pointer to the vector of data
    * @return status True if data is found otherwise false
    */
-  bool readCellData(const std::string &name, std::vector<util::SymMatrix3> *data);
+  bool readCellData(const std::string &name,
+                    std::vector<util::SymMatrix3> *data);
 
   /*!
    * @brief reads cell data from .vtu file
@@ -184,7 +214,6 @@ public:
   void close();
 
 private:
-
   /*! @brief Counter */
   static size_t d_count;
 

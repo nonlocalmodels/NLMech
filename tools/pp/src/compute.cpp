@@ -117,16 +117,25 @@ void processQuadPointForContour(size_t E, int top_side,
 } // namespace
 
 tools::pp::Compute::Compute(const std::string &filename)
-    : d_inpFilename(filename), d_tagZ("Damage_Z"), d_nOut(0), d_nC(0),
+    : d_inpFilename(filename), d_nOut(0), d_nC(0),
       d_time(0.), d_currentData(nullptr), d_dtOutChange(0),
       d_writerReady(false), d_uPlus(false), d_dtN(0), d_dtStart(0), d_dtEnd(0),
-      d_fnSuccess(true), d_fnErrMsg(""),
+      d_fnSuccess(true), d_fnErrMsg(""), d_needDamageZ(false),
+      d_needNeighborList(false),
       d_modelDeck_p(nullptr), d_outputDeck_p(nullptr),
       d_fractureDeck_p(nullptr), d_matDeck_p(nullptr), d_mesh_p(nullptr),
       d_fracture_p(nullptr), d_neighbor_p(nullptr), d_input_p(nullptr),
       d_material_p(nullptr) {
 
   init();
+
+  // build neighbor list if we need it
+  if (d_needNeighborList) {
+    std::cout << "PP: Computing neighbor list\n";
+    d_neighbor_p = new geometry::Neighbor(d_modelDeck_p->d_horizon,
+                                          d_input_p->getNeighborDeck(),
+                                          d_mesh_p->getNodesP());
+  }
 
   // take the smaller output interval as dt_out
   size_t dt_out = d_outputDeck_p->d_dtOutCriteria;
@@ -189,6 +198,7 @@ tools::pp::Compute::Compute(const std::string &filename)
       f2.get();
     }
 
+    bool damage_computed = false;
     // loop over compute sets and do as instructed in input file
     for (d_nC = 0; d_nC < d_computeData.size(); d_nC++) {
       d_currentData = &(d_computeData[d_nC]);
@@ -223,20 +233,38 @@ tools::pp::Compute::Compute(const std::string &filename)
       rw::writer::Writer writer;
       d_writerReady = false;
 
+      // get damage at nodes if required
+      if (d_needDamageZ) {
+        if (!damage_computed) {
+          if (!d_Z.empty())
+            d_Z.clear();
+          // check if the input file has damage data
+          if (rw::reader::vtuHasPointData(sim_out_filename, "Damage_Z"))
+            rw::reader::readVtuFilePointData(sim_out_filename, "Damage_Z",
+                                             &d_Z);
+          else
+            computeDamage(&writer, &d_Z, false);
+
+          damage_computed = true;
+        }
+      }
+
       // apply postprocessing
       transformU(&writer);
       transformV(&writer);
       computeStrain(&writer);
 
-      // nodal damage
-      std::vector<double> Z;
-      findCrackTip(&Z, &writer);
-      if (d_currentData->d_damageAtNodes)
-        computeDamage(&writer, &Z, true);
-      if (!Z.empty())
-        Z.shrink_to_fit();
+      findCrackTip(&d_Z, &writer);
 
       computeJIntegral();
+
+      if (d_currentData->d_damageAtNodes) {
+
+        if (!d_writerReady)
+          initWriter(&writer, &d_u);
+
+        writer.appendPointData("Damage_Z", &d_Z);
+      }
 
       // close file
       if (d_writerReady)
@@ -348,6 +376,8 @@ void tools::pp::Compute::init() {
 
   if (config["Compute"]["Tag_Z"])
     d_tagZ = config["Compute"]["Tag_Z"].as<std::string>();
+  else
+    d_tagZ = "Damage_Z";
 
   if (config["Compute"]["Take_U_Plus"])
     d_uPlus = config["Compute"]["Take_U_Plus"].as<bool>();
@@ -502,7 +532,10 @@ void tools::pp::Compute::readComputeInstruction(
 
   // Compute damage at nodes
   if (config["Compute"][set]["Damage_Z"]) {
+
     data->d_damageAtNodes = config["Compute"][set]["Damage_Z"].as<bool>();
+    d_needDamageZ = true;
+    d_needNeighborList = true;
 
     if (data->d_damageAtNodes && !d_fileZ.empty()) {
       std::cerr << "Error: Damage file is specified in Compute:File_Z and at "
@@ -638,12 +671,18 @@ void tools::pp::Compute::readComputeInstruction(
     if (config["Compute"][set]["Crack_Tip"]["Min_Z_Allowed"])
       data->d_findCrackTip_p->d_minZAllowed =
           config["Compute"][set]["Crack_Tip"]["Min_Z_Allowed"].as<double>();
+
+    d_needDamageZ = true;
+    d_needNeighborList = true;
   }
 
   // J integral
   if (config["Compute"][set]["J_Integral"]) {
     if (!data->d_computeJInt_p)
       data->d_computeJInt_p = new tools::pp::ComputeJIntegral();
+
+    d_needDamageZ = true;
+    d_needNeighborList = true;
 
     auto e = config["Compute"][set]["J_Integral"];
     if (e["Crack_Orient"])
@@ -1069,13 +1108,18 @@ void tools::pp::Compute::computeDamage(rw::writer::Writer *writer,
   if (Z->size() != d_mesh_p->getNumNodes())
     Z->resize(d_mesh_p->getNumNodes());
 
+  if (d_neighbor_p == nullptr)
+    safeExit("Error: Need neighbor list to compute damage. This should have "
+             "been created at the beginning.\n");
+
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       d_mesh_p->getNumNodes(), [&Z, this](boost::uint64_t i) {
         auto xi = d_mesh_p->getNode(i);
 
         double locz = 0.;
-        for (size_t j = 0; j < d_mesh_p->getNumNodes(); j++) {
+        auto i_neighs = this->d_neighbor_p->getNeighbors(i);
+        for (const auto &j : i_neighs) {
           if (util::compare::definitelyGreaterThan(
                   xi.dist(d_mesh_p->getNode(j)), d_modelDeck_p->d_horizon) ||
               j == i)
@@ -1466,7 +1510,8 @@ void tools::pp::Compute::computeJIntegral() {
           double strain_energy = 0.;
 
           // add peridynamic energy
-          for (auto j : search_nodes) {
+          auto i_neighs = this->d_neighbor_p->getNeighbors(i);
+          for (auto j : i_neighs) {
             auto xj = d_mesh_p->getNode(j);
             if (util::compare::definitelyGreaterThan(xj.dist(xi),
                                                      d_modelDeck_p->d_horizon) ||
@@ -1494,8 +1539,41 @@ void tools::pp::Compute::computeJIntegral() {
             strain_energy += ef.first * volj;
           } // loop over nodes for pd energy density
 
+          pd_strain_energies[i] += strain_energy * voli;
+        });
+    f.get();
+
+    // add energies
+    j_energy.d_pdStrainEnergyInsideContour = util::methods::add(pd_strain_energies);
+    j_energy.d_kineticEnergyInsideContour = util::methods::add(kinetic_energies);
+  }
+
+  //
+  // Compute peridynamic fracture energy
+  //
+
+  // loop over nodes and compute fracture energy
+  {
+    auto pd_fracture_energies = std::vector<double>(d_mesh_p->getNumNodes(),
+                                                    0.);
+
+    // loop over nodes in compliment of domain A
+    auto f = hpx::parallel::for_loop(
+        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+        d_mesh_p->getNumNodes(),
+        [&pd_fracture_energies, this](boost::uint64_t i) {
+
+          auto xi = d_mesh_p->getNode(i);
+          auto ui = d_u[i];
+          auto voli = d_mesh_p->getNodalVolume(i);
+          auto Zi = this->d_Z[i];
+
+          // compute pd strain energy
+          double fracture_energy = 0.;
+
           // add peridynamic energy
-          for (auto j : search_node_comp) {
+          auto i_neighs = this->d_neighbor_p->getNeighbors(i);
+          for (auto j : i_neighs) {
             auto xj = d_mesh_p->getNode(j);
             if (util::compare::definitelyGreaterThan(xj.dist(xi),
                                                      d_modelDeck_p->d_horizon) ||
@@ -1520,17 +1598,18 @@ void tools::pp::Compute::computeJIntegral() {
             auto ef = d_material_p->getBondEF(rji, Sji, fracture_state, true);
 
             // add contribution to energy
-            strain_energy += ef.first * volj;
+            fracture_energy += ef.first * volj;
           } // loop over nodes for pd energy density
 
-          pd_strain_energies[i] += strain_energy * voli;
+          if (util::compare::definitelyGreaterThan(Zi, 1.0 - 1.0E-10))
+            pd_fracture_energies[i] += fracture_energy * voli;
         });
     f.get();
 
     // add energies
-    j_energy.d_pdStrainEnergyInsideContour = util::methods::add(pd_strain_energies);
-    j_energy.d_kineticEnergyInsideContour = util::methods::add(kinetic_energies);
+    j_energy.d_pdFractureEnergy = util::methods::add(pd_fracture_energies);
   }
+
 
   // compute remaining energies
   {
@@ -1582,12 +1661,14 @@ void tools::pp::Compute::computeJIntegral() {
               "pd_internal_work_rate, "
               "lefm_energy_rate, "
               "pd_strain_energy_inside, "
-              "kinetic_energy_inside\n");
+              "kinetic_energy_inside, "
+              "pd_fracture_energy\n");
     }
 
     // write data
     fprintf(data->d_fileNew,
             "%u, %4.6e, "
+            "%4.6e, "
             "%4.6e, "
             "%4.6e, "
             "%4.6e, "
@@ -1606,7 +1687,8 @@ void tools::pp::Compute::computeJIntegral() {
             j_energy.d_pdInternalWorkRate,
             j_energy.d_lefmEnergyRate,
             j_energy.d_pdStrainEnergyInsideContour,
-            j_energy.d_kineticEnergyInsideContour);
+            j_energy.d_kineticEnergyInsideContour,
+            j_energy.d_pdFractureEnergy);
   }
 }
 

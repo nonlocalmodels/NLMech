@@ -311,6 +311,12 @@ public:
    * 9. \b Kinetic \b energy \b within \b contour \b domain: \f[
    * E_{kinetic, A} = \int_{A(t)} \frac{\rho}{2} |\dot{u}(x)|^2 dx. \f]
    *
+   * 10. \b Peridynamic \b fracture \b energy:
+   * \f[
+   * E_{pd,fracture} = \int_{x, Z(x) > 1} \bar{W}(x;u(t)) dx \f]
+   * where \f$ Z(x) \f$ is the damage at node x and \f$\bar{W}\f$ is the
+   * peridynamic energy density at point x.
+   *
    * Method:
    *
    * 1. We store the ids of nodes which are within horizon distance from the
@@ -702,11 +708,20 @@ private:
   bool d_fnSuccess;
   std::string d_fnErrMsg;
 
+  /*! @brief Need damage at nodes */
+  bool d_needDamageZ;
+
+  /*! @brief Need neighbor list */
+  bool d_needNeighborList;
+
   /*! @brief Displacement of nodes */
   std::vector<util::Point3> d_u;
 
   /*! @brief Velocity of nodes */
   std::vector<util::Point3> d_v;
+
+  /*! @brief Damage of nodes */
+  std::vector<double> d_Z;
 
   /*! @brief Model deck */
   inp::ModelDeck *d_modelDeck_p;
