@@ -1516,7 +1516,7 @@ void tools::pp::Compute::computeJIntegral() {
           auto voli = d_mesh_p->getNodalVolume(id);
 
           // kinetic energy
-          kinetic_energies[i] = 0.5 * d_material_p->getDensity() * vi.dot(vi);
+          kinetic_energies[i] = 0.5 * d_material_p->getDensity() * vi.dot(vi) * voli;
 
           // compute pd strain energy
           double strain_energy = 0.;
