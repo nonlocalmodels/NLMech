@@ -534,6 +534,13 @@ void tools::pp::Compute::readComputeInstruction(
 
   // check if we need to perform calculations in reference or current
   // configuration
+
+  // check in global space first
+  if (config["Compute"]["Calculate_In_Ref_Config"])
+    data->d_calculateInRefConfig =
+        config["Compute"]["Calculate_In_Ref_Config"].as<bool>();
+
+  // now check in local space (override the value provided in global space)
   if (config["Compute"][set]["Calculate_In_Ref_Config"])
     data->d_calculateInRefConfig =
         config["Compute"][set]["Calculate_In_Ref_Config"].as<bool>();
@@ -1182,14 +1189,15 @@ void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
 void tools::pp::Compute::computeJIntegral() {
 
   auto data = d_currentData->d_computeJInt_p;
+  const bool calc_in_ref = d_currentData->d_calculateInRefConfig;
   if (!data)
     return;
 
   // if we are dealing with arbitrarily inclined crack then call appropriate
   // function and return
   if (data->d_isCrackInclined)
-    safeExit("Error: For inclined crack, J-integral is not implemented "
-                 "yet.\n");
+    safeExit("Error: For inclined crack, J-integral needs to be "
+             "re-implemented following new structure of code.\n");
 
   // std::cout << "computeJIntegral processing step = " << d_nOut << "\n";
 
@@ -1247,7 +1255,7 @@ void tools::pp::Compute::computeJIntegral() {
   std::vector<size_t> search_elems;
   listElemsAndNodesInDomain(
       cd, d_modelDeck_p->d_horizon + 2. * d_mesh_p->getMeshSize(),
-      d_mesh_p->getMeshSize(), &search_nodes, &search_elems);
+      d_mesh_p->getMeshSize(), &search_nodes, &search_elems, calc_in_ref);
 
   //
   // Compute contour integral
@@ -1271,11 +1279,12 @@ void tools::pp::Compute::computeJIntegral() {
 
   // Assumption:
   //
-  // For vertical crack, we assume it has +ve velocity in +y direction
+  // For vertical crack, we assume (convention) it has +ve velocity in +y
+  // direction
   // therefore n dot n_c = -1 on bottom edge A-B and n dot n_c = +1 on top
   // edge C-D
   //
-  // For horizontal crack, we assume it has +ve velocity in +x direction
+  // For horizontal crack, we assume (convention) it has +ve velocity in +x direction
   // therefore n dot n_c = -1 on left edge D-A and n dot n_c = +1 on right
   // edge B-C
 
@@ -1322,7 +1331,7 @@ void tools::pp::Compute::computeJIntegral() {
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
         [&ced, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
-         E, this](boost::uint64_t I) {
+         E, this, calc_in_ref](boost::uint64_t I) {
 
           double kinetic_energy_q = 0.;
           double pd_energy_q = 0.;
@@ -1376,7 +1385,7 @@ void tools::pp::Compute::computeJIntegral() {
               getContourContribJInt(qd.d_p, &search_nodes, &search_elems,
                                     edge_normal,
                                     pd_energy_q, kinetic_energy_q,
-                                    elastic_energy_q, dot_u_q);
+                                    elastic_energy_q, dot_u_q, calc_in_ref);
 
               // pd energy
               pd_strain_energy += pd_energy_q * n_dot_n_c * qd.d_w;
@@ -1741,13 +1750,16 @@ size_t tools::pp::Compute::findNode(const util::Point3 &x,
 void tools::pp::Compute::listElemsAndNodesInDomain(
     const std::pair<util::Point3, util::Point3> &cd, const double &tol,
     const double &tol_elem, std::vector<size_t> *nodes,
-    std::vector<size_t> *elements) {
+    std::vector<size_t> *elements,
+    bool calc_in_ref) {
 
   // nodes list
   nodes->clear();
   for (size_t i = 0; i < d_mesh_p->getNumNodes(); i++) {
 
     auto x = d_mesh_p->getNode(i);
+    if (!calc_in_ref)
+      x += d_u[i];
 
     // check if node is in the bigger domain and not in smaller domain
     if (util::geometry::isPointInsideRectangle(
@@ -1774,6 +1786,8 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
         break;
 
       auto x = d_mesh_p->getNode(i);
+      if (!calc_in_ref)
+        x += d_u[i];
 
       // check if node is in the bigger domain and not in smaller domain
       if (util::geometry::isPointInsideRectangle(
@@ -1811,13 +1825,14 @@ void tools::pp::Compute::decomposeSearchNodes(
 
 bool tools::pp::Compute::triCheckAndInterpolateUV(
     const util::Point3 &p, util::Point3 &up, util::Point3 &vp,
-    const std::vector<size_t> &ids, bool check_only) {
+    const std::vector<size_t> &ids, bool calc_in_ref, bool check_only) {
 
   // get triangle element object
   auto tri_quad = fe::TriElem(0);
-  auto nodes = std::vector<util::Point3>{d_mesh_p->getNode(ids[0]),
-                                         d_mesh_p->getNode(ids[1]),
-                                         d_mesh_p->getNode(ids[2])};
+  auto nodes = std::vector<util::Point3>{
+      d_mesh_p->getNode(ids[0]) + (calc_in_ref ? util::Point3() : d_u[ids[0]]),
+      d_mesh_p->getNode(ids[1]) + (calc_in_ref ? util::Point3() : d_u[ids[1]]),
+      d_mesh_p->getNode(ids[2]) + (calc_in_ref ? util::Point3() : d_u[ids[2]])};
   double area = std::abs(tri_quad.elemSize(nodes));
   double sum_area = 0.;
   for (size_t a = 0; a < nodes.size(); a++)
@@ -1851,7 +1866,8 @@ bool tools::pp::Compute::triCheckAndInterpolateUV(
 void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
                                        util::Point3 &vp,
                                        const std::vector<size_t> *nodes,
-                                       const std::vector<size_t> *elements) {
+                                       const std::vector<size_t> *elements,
+                                       bool calc_in_ref) {
   // check if element data is available
   if (elements->empty()) {
     // use piecewise constant interpolation
@@ -1859,9 +1875,13 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     long int loc_i = -1;
     // search for closest node
     for (auto i : *nodes) {
-      if (util::compare::definitelyLessThan(p.dist(d_mesh_p->getNode(i)),
+      auto xi = d_mesh_p->getNode(i);
+      if (!calc_in_ref)
+        xi += d_u[i];
+
+      if (util::compare::definitelyLessThan(p.dist(xi),
                                             dist)) {
-        dist = p.dist(d_mesh_p->getNode(i));
+        dist = p.dist(xi);
         loc_i = i;
       }
     }
@@ -1881,17 +1901,17 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
 
       // cases
       if (d_mesh_p->getElementType() == util::vtk_type_triangle) {
-        if (triCheckAndInterpolateUV(p, up, vp, ids))
+        if (triCheckAndInterpolateUV(p, up, vp, ids, calc_in_ref))
           return;
       } else if (d_mesh_p->getElementType() == util::vtk_type_quad) {
         // check in triangle {v1, v2, v3}
         if (triCheckAndInterpolateUV(
-                p, up, vp, std::vector<size_t>{ids[0], ids[1], ids[2]}))
+                p, up, vp, std::vector<size_t>{ids[0], ids[1], ids[2]}, calc_in_ref))
           return;
 
         // check in triangle {v1, v3, v4}
         if (triCheckAndInterpolateUV(
-                p, up, vp, std::vector<size_t>{ids[0], ids[2], ids[3]}))
+                p, up, vp, std::vector<size_t>{ids[0], ids[2], ids[3]}, calc_in_ref))
           return;
       }
     }
@@ -1907,7 +1927,8 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     std::vector<util::Point3> enodes;
     for (auto e : *elements) {
       for (auto n : d_mesh_p->getElementConnectivity(e))
-        enodes.emplace_back(d_mesh_p->getNode(n));
+        enodes.emplace_back(d_mesh_p->getNode(n) +
+                            (calc_in_ref ? util::Point3() : d_u[n]));
     }
     enodes.emplace_back(p);
     std::vector<size_t> etags(enodes.size(), 1);
@@ -1930,7 +1951,8 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
                                           double &pd_energy,
                                           double &kinetic_energy,
                                           double &elastic_energy,
-                                          util::Point3 &dot_u) {
+                                          util::Point3 &dot_u,
+                                          bool calc_in_ref) {
 
   // reset data
   pd_energy = 0.;
@@ -1939,7 +1961,7 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
   // get displacement and velocity at point
   auto uq = util::Point3();
   auto vq = util::Point3();
-  interpolateUV(p, uq, vq, nodes, elements);
+  interpolateUV(p, uq, vq, nodes, elements, calc_in_ref);
 
   // add kinetic energy
   kinetic_energy += 0.5 * d_material_p->getDensity() * vq.dot(vq);
@@ -1974,6 +1996,11 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
   // get elastic work done
   dot_u = vq;
 
+  // if there is no element-node connectivity data, we can not compute
+  // elastic work done, so return
+  if (d_mesh_p->getNumElements() == 0)
+    return;
+
   // get Quadrature
   fe::BaseElem *quad;
   if (d_mesh_p->getElementType() == util::vtk_type_triangle)
@@ -1995,6 +2022,11 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
     auto id_nds = d_mesh_p->getElementConnectivity(e);
     auto nds = d_mesh_p->getElementConnectivityNodes(e);
 
+    if (!calc_in_ref) {
+      for (size_t i=0; i<id_nds.size(); i++)
+        nds[i] += d_u[id_nds[i]];
+    }
+
     auto qds = quad->getQuadDatas(nds);
     auto dx = qds[0].d_p - p;
 
@@ -2013,6 +2045,11 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
     // quad data, and first quad data
     auto id_nds = d_mesh_p->getElementConnectivity(e_found);
     auto nds = d_mesh_p->getElementConnectivityNodes(e_found);
+    if (!calc_in_ref) {
+      for (size_t i=0; i<id_nds.size(); i++)
+        nds[i] += d_u[id_nds[i]];
+    }
+
     auto qds = quad->getQuadDatas(nds);
     auto qd0 = qds[0];
 

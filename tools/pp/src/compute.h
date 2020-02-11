@@ -403,12 +403,14 @@ private:
    * @param tol_elem Thickness for element list search
    * @param nodes Pointer to ids of nodes
    * @param elements Pointer to ids of elements
+   * @param calc_in_ref Calculate in reference configuration
    */
   void
   listElemsAndNodesInDomain(const std::pair<util::Point3, util::Point3> &cd,
                             const double &tol, const double &tol_elem,
                             std::vector<size_t> *nodes,
-                            std::vector<size_t> *elements);
+                            std::vector<size_t> *elements,
+                            bool calc_in_ref);
 
   /*!
    * @brief Decompose node list into two lists
@@ -440,14 +442,16 @@ private:
    * @param up Displacement at the point p
    * @param vp Velocity at the point p
    * @param ids Global ids of vertices of triangle
+   * @param calc_in_ref Calculate in reference configuration
    * @param check_only True if only interested in whether the point belongs
    * to triangle
    * @return status True if point is found in the triangle. Otherwise false.
    */
   bool triCheckAndInterpolateUV(const util::Point3 &p, util::Point3 &up,
                                 util::Point3 &vp,
-                                const std::vector<size_t> &ids, bool
-                                check_only = false);
+                                const std::vector<size_t> &ids,
+                                bool calc_in_ref,
+                                bool check_only = false);
 
   /*!
    * @brief Interpolates displacement and velocity at given point
@@ -476,10 +480,11 @@ private:
    * @param vp Velocity at the point p
    * @param nodes Pointer to ids of nodes to perform search
    * @param elements Pointer to ids of elements to perform search
+   * @param calc_in_ref Calculate in reference configuration
    */
   void interpolateUV(const util::Point3 &p, util::Point3 &up, util::Point3 &vp,
                      const std::vector<size_t> *nodes,
-                     const std::vector<size_t> *elements);
+                     const std::vector<size_t> *elements, bool calc_in_ref);
 
   /*!
    * @brief Computes contribution to energy into crack from the quadrature
@@ -496,6 +501,7 @@ private:
    * @param kinetic_energy Kinetic energy density
    * @param elastic_energy Elastic energy density
    * @param dot_u Material velocity at the quadrature point
+   * @param calc_in_ref Calculate in reference configuration
    */
   void getContourContribJInt(const util::Point3 &p,
                      const std::vector<size_t> *nodes,
@@ -504,7 +510,8 @@ private:
                      double &pd_energy,
                      double &kinetic_energy,
                      double &elastic_energy,
-                     util::Point3 &dot_u);
+                     util::Point3 &dot_u,
+                             bool calc_in_ref);
 
   /*!
    * @brief Updates crack tip location and crack velocity
