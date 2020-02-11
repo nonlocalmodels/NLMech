@@ -96,6 +96,8 @@ Compute:
     Dt_Start: 70
     Dt_End: 100
     Output_Only_Nodes: true
+    # set true if compute crack tip in reference configuration
+    Calculate_In_Ref_Config: true
     # compute crack tip location and velocity
     Crack_Tip:
       # specify the max value of damage to be considered in searching for tip

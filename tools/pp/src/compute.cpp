@@ -242,8 +242,18 @@ tools::pp::Compute::Compute(const std::string &filename)
           if (rw::reader::vtuHasPointData(sim_out_filename, "Damage_Z"))
             rw::reader::readVtuFilePointData(sim_out_filename, "Damage_Z",
                                              &d_Z);
-          else
-            computeDamage(&writer, &d_Z, false);
+          else {
+            // see if file for damage is provided
+            if (!d_fileZ.empty()) {
+              std::string fn = d_fileZ + "_" + std::to_string(d_nOut) + ".vtu";
+              if (!rw::reader::readVtuFilePointData(fn, d_tagZ, &d_Z)) {
+                std::cerr << "Error: Can not read file = " << fn
+                          << " or data = " << d_tagZ << " not available in vtu file.\n";
+                exit(1);
+              }
+            } else
+              computeDamage(&writer, &d_Z, false);
+          }
 
           damage_computed = true;
         }
@@ -521,6 +531,13 @@ void tools::pp::Compute::readComputeInstruction(
               << set << ".\n";
     exit(1);
   }
+
+  // check if we need to perform calculations in reference or current
+  // configuration
+  if (config["Compute"][set]["Calculate_In_Ref_Config"])
+    data->d_calculateInRefConfig =
+        config["Compute"][set]["Calculate_In_Ref_Config"].as<bool>();
+
 
   // Scale displacement
   if (config["Compute"][set]["Scale_U_Ouptut"]) {
@@ -1154,20 +1171,6 @@ void tools::pp::Compute::findCrackTip(std::vector<double> *Z,
   auto data = d_currentData->d_findCrackTip_p;
   if (!data)
     return;
-
-  // compute damage at current displacement
-  if (Z->size() != d_mesh_p->getNumNodes())
-    Z->resize(d_mesh_p->getNumNodes());
-  if (d_fileZ.empty())
-    computeDamage(writer, Z, false);
-  else {
-    std::string fn = d_fileZ + "_" + std::to_string(d_nOut) + ".vtu";
-    if (!rw::reader::readVtuFilePointData(fn, d_tagZ, Z)) {
-      std::cerr << "Error: Can not read file = " << fn
-                << " or data = " << d_tagZ << " not available in vtu file.\n";
-      exit(1);
-    }
-  }
 
   // compute crack tip location and crack tip velocity
   updateCrack(d_time, Z);
@@ -2362,6 +2365,8 @@ util::Point3 tools::pp::Compute::findTipInRects(
     const std::vector<std::vector<double>> &Zs, const std::vector<double> *Z,
     bool is_top) {
 
+  const bool calc_in_ref = d_currentData->d_calculateInRefConfig;
+
   if (is_top)
     std::cout << "    Tip information: Top     \n";
   else
@@ -2417,7 +2422,9 @@ util::Point3 tools::pp::Compute::findTipInRects(
       continue;
 
     auto mz = sortZ[r];
-    auto y0 = d_mesh_p->getNode(mz.d_i) + d_u[mz.d_i];
+    auto y0 = d_mesh_p->getNode(mz.d_i);
+    if (!calc_in_ref)
+      y0 += d_u[mz.d_i];
     auto Z0 = mz.d_Z;
     double diff_Z_for_alternate_point = 0.1;
     if (sortZ.size() > r + 1) {
@@ -2437,7 +2444,9 @@ util::Point3 tools::pp::Compute::findTipInRects(
       if (x == mz.d_i)
         continue;
 
-      auto y = d_mesh_p->getNode(x) + d_u[x];
+      auto y = d_mesh_p->getNode(x);
+      if (!calc_in_ref)
+        y += d_u[x];
       double dist = 0.;
       if (crack.d_o == -1)
         dist = std::abs(y.d_x - pold.d_x);
@@ -2504,8 +2513,12 @@ util::Point3 tools::pp::Compute::findTipInRects(
 
       for (auto x : nodes[mz.d_r]) {
 
-        auto y = d_mesh_p->getNode(x) + d_u[x];
-        auto y0 = d_mesh_p->getNode(mz.d_i) + d_u[mz.d_i];
+        auto y = d_mesh_p->getNode(x);
+        auto y0 = d_mesh_p->getNode(mz.d_i);
+        if (!calc_in_ref) {
+          y += d_u[x];
+          y0 += d_u[mz.d_i];
+        }
         if (util::compare::definitelyLessThan(std::abs((*Z)[x] - mz.d_Z),
                                               diff_z) &&
             x != mz.d_i) {
@@ -2560,9 +2573,15 @@ util::Point3 tools::pp::Compute::findTipInRects(
   if (sym_rect[0] >= 0) {
     // crack tip is given by average of symmetrically opposite points
     size_t i1 = sortZ[0].d_i;
-    auto y1 = d_mesh_p->getNode(i1) + d_u[i1];
+    auto y1 = d_mesh_p->getNode(i1);
     size_t i2 = sym_rect[0];
-    auto y2 = d_mesh_p->getNode(i2) + d_u[i2];
+    auto y2 = d_mesh_p->getNode(i2);
+
+    if (!calc_in_ref) {
+      y1 += d_u[i1];
+      y2 += d_u[i2];
+    }
+
     if (crack.d_o == -1) {
       pnew.d_y = y1.d_y;
       pnew.d_x = 0.5 * (y1.d_x + y2.d_x);
@@ -2581,9 +2600,15 @@ util::Point3 tools::pp::Compute::findTipInRects(
   else {
     if (sym_rect[1] >= 0) {
       size_t i1 = sortZ[1].d_i;
-      auto y1 = d_mesh_p->getNode(i1) + d_u[i1];
+      auto y1 = d_mesh_p->getNode(i1);
       size_t i2 = sym_rect[1];
-      auto y2 = d_mesh_p->getNode(i2) + d_u[i2];
+      auto y2 = d_mesh_p->getNode(i2);
+
+      if (!calc_in_ref) {
+        y1 += d_u[i1];
+        y2 += d_u[i2];
+      }
+
       if (crack.d_o == -1) {
         pnew.d_y = y1.d_y;
         pnew.d_x = 0.5 * (y1.d_x + y2.d_x);
@@ -2601,8 +2626,12 @@ util::Point3 tools::pp::Compute::findTipInRects(
     else {
       // use average between best node in rectangle and old tip
       size_t i1 = sortZ[0].d_i;
-      auto y1 = d_mesh_p->getNode(i1) + d_u[i1];
+      auto y1 = d_mesh_p->getNode(i1);
       auto y2 = pold;
+
+      if (!calc_in_ref)
+        y1 += d_u[i1];
+
       if (crack.d_o == -1) {
         pnew.d_y = y1.d_y;
         pnew.d_x = 0.5 * (y1.d_x + y2.d_x);

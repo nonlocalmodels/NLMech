@@ -370,12 +370,15 @@ struct InstructionData {
   /*! @brief J-integral calculation operation */
   tools::pp::ComputeJIntegral *d_computeJInt_p;
 
+  /*! @brief Calculate in reference configuration */
+  bool d_calculateInRefConfig;
+
   InstructionData()
       : d_outFormat("vtu"), d_start(-1), d_end(-1), d_interval(1),
         d_outOnlyNodes(true), d_removeElements(false), d_transformU_p(nullptr),
         d_transformV_p(nullptr), d_compStrain_p(nullptr),
         d_findCrackTip_p(nullptr), d_damageAtNodes(false),
-        d_computeJInt_p(nullptr){};
+        d_computeJInt_p(nullptr), d_calculateInRefConfig(false) {};
 };
 
 } // namespace pp
