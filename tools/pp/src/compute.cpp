@@ -86,20 +86,22 @@ void processQuadPointForContour(size_t E, int top_side,
     // process vertical edges
 
     // store original quad point
-    auto p_temp = p;
+    double py = p.d_x;
 
     if (top_side == 0) {
       // process edge B-C
       // transform quad point along vertical line to correct
       // coordinate
-      p = util::Point3(cd.second.d_x, p_temp.d_x, 0.);
+      p.d_x = cd.second.d_x;
+      p.d_y = py;
       // normal
       edge_normal = util::Point3(1., 0., 0.);
     } else {
       // process edge D-A
       // transform quad point along vertical line to correct
       // coordinate
-      p = util::Point3(cd.first.d_x, p_temp.d_x, 0.);
+      p.d_x = cd.first.d_x;
+      p.d_y = py;
       // normal
       edge_normal = util::Point3(-1., 0., 0.);
     }
@@ -1346,6 +1348,10 @@ void tools::pp::Compute::computeJIntegral() {
     if (E == 1 && data->d_crackOrient == -1 && !data->d_isCrackInclined)
       safeExit("For vertical crack, we should not reach this point\n");
 
+    // Debug
+    //  collect all quad points
+    // std::vector<util::Point3> quad_points(2 * N, util::Point3());
+
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
         [&ced, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
@@ -1396,12 +1402,15 @@ void tools::pp::Compute::computeJIntegral() {
             for (int top_side = 0; top_side < 2; top_side++) {
 
               // process data
+              util::Point3 qp = qd.d_p;
               processQuadPointForContour(E, top_side, cd, ctip.d_v, ctip.d_d,
-                                         qd.d_p, edge_normal, n_dot_n_c,
+                                         qp, edge_normal, n_dot_n_c,
                                          n_dot_v_c);
 
+              // quad_points[2 * I + top_side] = qp;
+
               // get energy density
-              getContourContribJInt(qd.d_p, &search_nodes, &search_elems,
+              getContourContribJInt(qp, &search_nodes, &search_elems,
                                     edge_normal,
                                     pd_energy_q, kinetic_energy_q,
                                     elastic_energy_q, dot_u_q, calc_in_ref);
@@ -1428,6 +1437,16 @@ void tools::pp::Compute::computeJIntegral() {
           ced.d_contourElasticInternalWorksRate[I] = elastic_internal_work_rate;
         });
     f.get();
+
+    // {
+    //   // write to csv file and exit
+    //   std::ofstream qd_pt_file;
+    //   qd_pt_file.open(d_outPreTag + "quad_points.csv");
+    //   for (auto p : quad_points)
+    //     qd_pt_file << p.d_x << ", " << p.d_y << "\n";
+    //   qd_pt_file.close();
+    //   safeExit("Output debug quad points and exit");
+    // }
 
     // sum energies
     j_energy.d_contourPdStrainEnergy += util::methods::add(ced.d_contourPdStrainEnergies);
@@ -1940,8 +1959,6 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     oss << "Error: Can not find element for point p = (" << p.d_x << ", "
               << p.d_y << ") for interpolation.\n";
     oss << "Num elems = " << elements->size() << "\n";
-    safeExit(oss.str());
-
     // for debug
     std::vector<util::Point3> enodes;
     for (auto e : *elements) {
@@ -1958,7 +1975,8 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     writer1.appendNodes(&enodes);
     writer1.appendPointData("Tag", &etags);
     writer1.close();
-    exit(1);
+
+    safeExit(oss.str());
   }
 }
 
