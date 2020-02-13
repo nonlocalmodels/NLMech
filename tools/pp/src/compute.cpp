@@ -52,10 +52,12 @@ void processQuadPointForContour(size_t E, int top_side,
                                 const std::pair<util::Point3, util::Point3>
                                     &cd,
                                 const util::Point3 &ctip_v,
+                                const util::Point3 &ctip_d,
                                 util::Point3 &p,
                                 util::Point3 &edge_normal,
                                 double &n_dot_n_c,
                                 double &n_dot_v_c) {
+
   if (E == 0) {
     // process horizontal edges
     if (top_side == 0) {
@@ -65,10 +67,6 @@ void processQuadPointForContour(size_t E, int top_side,
       p.d_y = cd.first.d_y;
       // normal
       edge_normal = util::Point3(0., -1., 0.);
-      // n dot n-c for edge A-B = - 1
-      n_dot_n_c = -1.;
-      // n dot v_c for edge A-B = - (y component of v_c)
-      n_dot_v_c = -ctip_v.d_y;
     }
     else {
       // process edge C-D
@@ -77,11 +75,12 @@ void processQuadPointForContour(size_t E, int top_side,
       p.d_y = cd.second.d_y;
       // normal
       edge_normal = util::Point3(0., 1., 0.);
-      // n dot n-c for edge C-D = 1
-      n_dot_n_c = 1.;
-      // n dot v_c for edge C-D = (y component of v_c)
-      n_dot_v_c = ctip_v.d_y;
     }
+
+    // n dot n_c where n_c is direction along crack
+    n_dot_n_c = edge_normal.dot(ctip_d);
+    // n dot v_c where v_c is velocity direction
+    n_dot_v_c = edge_normal.dot(ctip_v);
   }
   else {
     // process vertical edges
@@ -96,10 +95,6 @@ void processQuadPointForContour(size_t E, int top_side,
       p = util::Point3(cd.second.d_x, p_temp.d_x, 0.);
       // normal
       edge_normal = util::Point3(1., 0., 0.);
-      // n dot n-c for edge B-C = 1
-      n_dot_n_c = 1.;
-      // n dot v_c for edge B-C = (x component of v_c)
-      n_dot_v_c = ctip_v.d_x;
     } else {
       // process edge D-A
       // transform quad point along vertical line to correct
@@ -107,11 +102,12 @@ void processQuadPointForContour(size_t E, int top_side,
       p = util::Point3(cd.first.d_x, p_temp.d_x, 0.);
       // normal
       edge_normal = util::Point3(-1., 0., 0.);
-      // n dot n-c for edge D-A = -1
-      n_dot_n_c = -1.;
-      // n dot v_c for edge D-A = -(x component of v_c)
-      n_dot_v_c = -ctip_v.d_x;
     }
+
+    // n dot n_c where n_c is direction along crack
+    n_dot_n_c = edge_normal.dot(ctip_d);
+    // n dot v_c where v_c is velocity direction
+    n_dot_v_c = edge_normal.dot(ctip_v);
   } // process vertical edges
 }
 } // namespace
@@ -1193,12 +1189,6 @@ void tools::pp::Compute::computeJIntegral() {
   if (!data)
     return;
 
-  // if we are dealing with arbitrarily inclined crack then call appropriate
-  // function and return
-  if (data->d_isCrackInclined)
-    safeExit("Error: For inclined crack, J-integral needs to be "
-             "re-implemented following new structure of code.\n");
-
   // std::cout << "computeJIntegral processing step = " << d_nOut << "\n";
 
   // to hold energy into crack
@@ -1207,6 +1197,17 @@ void tools::pp::Compute::computeJIntegral() {
   // get crack tip data
   auto ctip = data->d_crackTipData[(d_nOut - d_currentData->d_start) /
                                    d_currentData->d_interval];
+
+  // If this is inclined crack, then we are already provided the crack direction
+  // in the input file. If this is not a inclined crack than compute the
+  // direction based on orientation of crack
+  if (!data->d_isCrackInclined) {
+    if (data->d_crackOrient == -1)
+      ctip.d_d = util::Point3(0., 1., 0.);
+    else if (data->d_crackOrient == 1)
+      ctip.d_d = util::Point3(1., 0., 0.);
+  }
+
   if (ctip.d_n != d_nOut) {
 
     oss.str("");
@@ -1233,6 +1234,8 @@ void tools::pp::Compute::computeJIntegral() {
 
   // Schematic for horizontal crack (similar for vertical crack)
   //
+  // Case when vertical or horizontal crack
+  //
   //                         D                    C
   //                         + + + + + + + + + + +
   //                         +                   +
@@ -1241,6 +1244,18 @@ void tools::pp::Compute::computeJIntegral() {
   //                         +                   +
   //                         +                   +
   //                         + + + + + + + + + + +
+  //                        A                    B
+  //
+  // Case when inclined crack
+  //
+  //                         D                    C
+  //                         + + + + + + + + + + +
+  //                         +                   +
+  //                         +    o              +
+  //                         + /                 +
+  //                      /  +                   +
+  //                  /      +                   +
+  //              /          + + + + + + + + + + +
   //                        A                    B
   //
   // Contour is formed by lines A-B, B-C, C-D, D-A
@@ -1270,6 +1285,9 @@ void tools::pp::Compute::computeJIntegral() {
   // to evaluate contour integrals on vertical edges D-A and B-C.
   // Similarly, if velocity is along the vertical direction then we only need
   // to evaluate contour integrals on horizontal edge A-B and C-D.
+  //
+  // However if this is inclined crack, then we have to integrate over all
+  // four edges
   bool integrate_horizontal = true;
 
   // skip horizontal edge for horizontal crack
@@ -1294,11 +1312,11 @@ void tools::pp::Compute::computeJIntegral() {
   for (size_t E = 0; E < 2; E++) {
 
     // skip horizontal edge if required
-    if (E == 0 && !integrate_horizontal)
+    if (E == 0 && !integrate_horizontal && !data->d_isCrackInclined)
       continue;
 
     // skip vertical edge if required
-    if (E == 1 && integrate_horizontal)
+    if (E == 1 && integrate_horizontal && !data->d_isCrackInclined)
       continue;
 
     long int N = 0;
@@ -1323,9 +1341,9 @@ void tools::pp::Compute::computeJIntegral() {
     ced.d_contourElasticInternalWorksRate = std::vector<double>(N, 0.);
 
     // check
-    if (E == 0 && data->d_crackOrient == 1)
+    if (E == 0 && data->d_crackOrient == 1 && !data->d_isCrackInclined)
       safeExit("For horizontal crack, we should not reach this point\n");
-    if (E == 1 && data->d_crackOrient == -1)
+    if (E == 1 && data->d_crackOrient == -1 && !data->d_isCrackInclined)
       safeExit("For vertical crack, we should not reach this point\n");
 
     auto f = hpx::parallel::for_loop(
@@ -1378,8 +1396,9 @@ void tools::pp::Compute::computeJIntegral() {
             for (int top_side = 0; top_side < 2; top_side++) {
 
               // process data
-              processQuadPointForContour(E, top_side, cd, ctip.d_v, qd.d_p,
-                                         edge_normal, n_dot_n_c, n_dot_v_c);
+              processQuadPointForContour(E, top_side, cd, ctip.d_v, ctip.d_d,
+                                         qd.d_p, edge_normal, n_dot_n_c,
+                                         n_dot_v_c);
 
               // get energy density
               getContourContribJInt(qd.d_p, &search_nodes, &search_elems,
