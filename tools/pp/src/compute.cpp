@@ -707,11 +707,31 @@ void tools::pp::Compute::readComputeInstruction(
     d_needNeighborList = true;
 
     auto e = config["Compute"][set]["J_Integral"];
-    if (e["Crack_Orient"])
+    if (!e["Crack_Orient"]) {
+      data->d_computeJInt_p->d_crackOrient = d_fractureDeck_p->d_cracks[0].d_o;
+    } else {
+
       data->d_computeJInt_p->d_crackOrient = e["Crack_Orient"].as<int>();
-    else {
-      std::cerr << "Error: Crack orientation is not provided.\n";
-      exit(1);
+
+      if (data->d_computeJInt_p->d_crackOrient !=
+          d_fractureDeck_p->d_cracks[0].d_o) {
+        if (data->d_computeJInt_p->d_crackOrient != 0) {
+          std::cerr << "Error: Setting crack orient as "
+                    << data->d_computeJInt_p->d_crackOrient
+                    << ", however the crack orient in fracture deck is "
+                    << d_fractureDeck_p->d_cracks[0].d_o
+                    << ".\n Crack could initially be horizontal or vertical "
+                       "and later it is arbitrarily oriented.\n "
+                       "However the case when crack is opposite orientation "
+                       "of what it's initial orientation seems wrong.\n";
+          exit(1);
+        } else {
+          std::cout << "Warning: Setting crack orient as "
+                    << data->d_computeJInt_p->d_crackOrient
+                    << ", however the crack orient in fracture deck is "
+                    << d_fractureDeck_p->d_cracks[0].d_o << ".\n";
+        }
+      }
     }
 
     // see if crack inclined flag is provided. This flag is important if
@@ -1296,6 +1316,10 @@ void tools::pp::Compute::computeJIntegral() {
   if (data->d_crackOrient == 1)
     integrate_horizontal = false;
 
+  // Debug
+  //  Must delete after testing
+  // d_material_p->getMaterialDeck()->d_irreversibleBondBreak = false;
+
 
   // Assumption:
   //
@@ -1352,10 +1376,11 @@ void tools::pp::Compute::computeJIntegral() {
     //  collect all quad points
     // std::vector<util::Point3> quad_points(2 * N, util::Point3());
 
-    auto f = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
-        [&ced, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
-         E, this, calc_in_ref](boost::uint64_t I) {
+    //    auto f = hpx::parallel::for_loop(
+    //        hpx::parallel::execution::par(hpx::parallel::execution::task), 0, N,
+    //        [&ced, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
+    //         E, this, calc_in_ref](boost::uint64_t I) {
+    for (size_t I =0; I < N; I++) {
 
           double kinetic_energy_q = 0.;
           double pd_energy_q = 0.;
@@ -1415,6 +1440,32 @@ void tools::pp::Compute::computeJIntegral() {
                                     pd_energy_q, kinetic_energy_q,
                                     elastic_energy_q, dot_u_q, calc_in_ref);
 
+              // debug information
+              if (false) {
+                std::cout << "--------------------------------------------------------\n";
+                std::cout << "E: " << E << ", I: " << I
+                          << ", qp: " << qp.printStr() << ", qw: " << qd.d_w
+                          << ", top_side: " << top_side << "\n";
+
+                std::cout << "tip: " << ctip.d_p.printStr()
+                          << ", v: " << ctip.d_v.printStr()
+                          << ", d: " << ctip.d_d.printStr()
+                          << ", edge_normal: " << edge_normal.printStr()
+                          << ", n_dot_n_c: " << n_dot_n_c
+                          << ", n_dot_v_c: " << n_dot_v_c << "\n";
+
+                std::cout << "pd_energy_q: " << pd_energy_q
+                          << ", kinetic_energy_q: " << kinetic_energy_q
+                          << ", elastic_energy_q: " << elastic_energy_q
+                          << ", pd_strain_energy: "
+                          << pd_energy_q * n_dot_n_c * qd.d_w
+                          << ", pd_strain_energy_rate: "
+                          << pd_energy_q * n_dot_v_c * qd.d_w
+                          << ", elastic_internal_work_rate: "
+                          << elastic_energy_q * qd.d_w << "\n\n";
+              }
+
+
               // pd energy
               pd_strain_energy += pd_energy_q * n_dot_n_c * qd.d_w;
 
@@ -1435,8 +1486,9 @@ void tools::pp::Compute::computeJIntegral() {
           ced.d_contourPdStrainEnergiesRate[I] = pd_strain_energy_rate;
           ced.d_contourKineticEnergiesRate[I] = kinetic_energy_rate;
           ced.d_contourElasticInternalWorksRate[I] = elastic_internal_work_rate;
-        });
-    f.get();
+        }
+    //    );
+    //    f.get();
 
     // {
     //   // write to csv file and exit
@@ -1907,7 +1959,11 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
                                        const std::vector<size_t> *elements,
                                        bool calc_in_ref) {
   // check if element data is available
-  if (elements->empty()) {
+  bool elem_interp = false;
+  if (elements != nullptr)
+    if (!elements->empty())
+      elem_interp = true;
+  if (!elem_interp) {
     // use piecewise constant interpolation
     double dist = 1000.;
     long int loc_i = -1;
@@ -1998,12 +2054,14 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
   // get displacement and velocity at point
   auto uq = util::Point3();
   auto vq = util::Point3();
-  interpolateUV(p, uq, vq, nodes, elements, calc_in_ref);
+  // interpolateUV(p, uq, vq, nodes, elements, calc_in_ref);
+  interpolateUV(p, uq, vq, nodes, nullptr, calc_in_ref);
 
   // add kinetic energy
-  kinetic_energy += 0.5 * d_material_p->getDensity() * vq.dot(vq);
+  kinetic_energy = 0.5 * d_material_p->getDensity() * vq.dot(vq);
 
   // add peridynamic energy
+  double loc_pd_energy = 0.;
   for (auto j : *nodes) {
     auto xj = d_mesh_p->getNode(j);
     if (util::compare::definitelyGreaterThan(xj.dist(p),
@@ -2027,8 +2085,10 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
     auto ef = d_material_p->getBondEF(rjq, Sjq, fracture_state, true);
 
     // add contribution to energy
-    pd_energy += ef.first * volj;
+    loc_pd_energy += ef.first * volj;
   } // loop over nodes for pd energy density
+
+  pd_energy = loc_pd_energy;
 
   // get elastic work done
   dot_u = vq;
@@ -2101,7 +2161,7 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
                    0.5 * ui.d_y * qd0.d_derShapes[i][0];
     }
 
-    if (d_matDeck_p->d_isPlaneStrain)
+    if (!d_matDeck_p->d_isPlaneStrain)
       ssn(2, 2) = -d_matDeck_p->d_matData.d_nu * (ssn(0, 0) + ssn(1, 1)) /
                   (1. - d_matDeck_p->d_matData.d_nu);
 
@@ -2115,7 +2175,7 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
     sss(1, 1) = d_matDeck_p->d_matData.d_lambda * trace * 1. +
                 2. * d_matDeck_p->d_matData.d_mu * ssn(1, 1);
                 
-    if (!d_matDeck_p->d_isPlaneStrain)
+    if (d_matDeck_p->d_isPlaneStrain)
       sss(2, 2) = d_matDeck_p->d_matData.d_nu * (sss(0, 0) + sss(1, 1));
 
     // static int debug = -1;

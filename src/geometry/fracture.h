@@ -47,6 +47,14 @@ public:
   explicit Fracture(inp::FractureDeck *deck);
 
   /*!
+   * @brief Sets fracture state according to the crack data
+   * @param nodes Pointer to nodal coordinates
+   * @param neighbor_list Pointer to neighbor list
+   */
+  void addCrack(const double &time, const std::vector<util::Point3> *nodes,
+            const std::vector<std::vector<size_t>> *neighbor_list);
+
+  /*!
    * @brief Sets the bond state
    *
    * @param i Nodal id

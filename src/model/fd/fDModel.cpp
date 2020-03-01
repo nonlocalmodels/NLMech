@@ -313,6 +313,10 @@ void model::FDModel::integrate() {
       // check if we need to modify the output frequency
       checkOutputCriteria();
     }
+
+    // check for crack application
+    d_fracture_p->addCrack(d_time, d_mesh_p->getNodesP(),
+                           d_neighbor_p->getNeighborsP());
   } // loop over time steps
 }
 

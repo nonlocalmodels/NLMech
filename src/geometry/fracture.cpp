@@ -31,11 +31,37 @@ geometry::Fracture::Fracture(
           s++;
         d_fracture[i] = std::vector<uint8_t>(s, uint8_t(0));
 
-        for (auto crack : d_fractureDeck_p->d_cracks)
-          this->computeFracturedBondFd(i, &crack, nodes, &ns);
+        for (auto &crack : d_fractureDeck_p->d_cracks)
+          if (crack.d_activationTime < 0.) {
+            this->computeFracturedBondFd(i, &crack, nodes, &ns);
+            crack.d_crackAcrivated = true;
+          }
       }); // end of parallel for loop
 
   f.get();
+}
+
+void geometry::Fracture::addCrack(const double &time, const std::vector<util::Point3> *nodes,
+    const std::vector<std::vector<size_t>> *neighbor_list) {
+
+  for (auto &crack : d_fractureDeck_p->d_cracks) {
+    if (std::abs(crack.d_activationTime - time) < 1.0e-12 and
+        !crack.d_crackAcrivated) {
+
+      auto f = hpx::parallel::for_loop(
+          hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+          neighbor_list->size(),
+          [this, nodes, neighbor_list, &crack](boost::uint64_t i) {
+            auto ns = (*neighbor_list)[i];
+
+            this->computeFracturedBondFd(i, &crack, nodes, &ns);
+          }); // end of parallel for loop
+
+      f.get();
+
+      crack.d_crackAcrivated = true;
+    }
+  }
 }
 
 void geometry::Fracture::computeFracturedBondFd(

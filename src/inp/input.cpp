@@ -325,6 +325,9 @@ void inp::Input::setFractureDeck() {
       }
     }
 
+    if (e["Activation_Time"])
+      crack.d_activationTime = e["Activation_Time"].as<double>();
+
     // add crack data to list
     d_fractureDeck_p->d_cracks.push_back(crack);
   }

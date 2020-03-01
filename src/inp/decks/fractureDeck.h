@@ -83,6 +83,13 @@ struct EdgeCrack {
   /*! @brief Track bottom point (left) of crack */
   bool d_trackb;
 
+  /*! @brief Activation time (for example when we abruptly slit the domain
+   * at specified time) */
+  double d_activationTime;
+
+  /*! @brief Is crack activated */
+  bool d_crackAcrivated;
+
   /*!
    * @brief Constructor
    */
@@ -92,7 +99,8 @@ struct EdgeCrack {
         d_pt(util::Point3()), d_pb(util::Point3()),
         d_oldPt(util::Point3()), d_oldPb(util::Point3()),
         d_initPt(util::Point3()), d_initPb(util::Point3()),
-        d_trackt(false), d_trackb(false) {};
+        d_trackt(false), d_trackb(false), d_activationTime(-1.),
+        d_crackAcrivated(false) {};
 
   /*!
    * @brief Checks if point lies outside the crack
