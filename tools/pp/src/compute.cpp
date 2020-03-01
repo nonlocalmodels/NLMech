@@ -2097,8 +2097,8 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
 
       ssn(0, 0) += ui.d_x * qd0.d_derShapes[i][0];
       ssn(1, 1) += ui.d_y * qd0.d_derShapes[i][1];
-      ssn(0, 1) += 0.5 * ui.d_x * qd0.d_derShapes[i][1];
-      ssn(0, 1) += 0.5 * ui.d_y * qd0.d_derShapes[i][0];
+      ssn(0, 1) += 0.5 * ui.d_x * qd0.d_derShapes[i][1] +
+                   0.5 * ui.d_y * qd0.d_derShapes[i][0];
     }
 
     if (d_matDeck_p->d_isPlaneStrain)
@@ -2109,14 +2109,21 @@ tools::pp::Compute::getContourContribJInt(const util::Point3 &p,
     auto trace = ssn(0, 0) + ssn(1, 1) + ssn(2, 2);
     sss(0, 0) = d_matDeck_p->d_matData.d_lambda * trace * 1. +
                 2. * d_matDeck_p->d_matData.d_mu * ssn(0, 0);
+
     sss(0, 1) = 2. * d_matDeck_p->d_matData.d_mu * ssn(0, 1);
-    sss(0, 2) = 2. * d_matDeck_p->d_matData.d_mu * ssn(0, 2);
 
     sss(1, 1) = d_matDeck_p->d_matData.d_lambda * trace * 1. +
                 2. * d_matDeck_p->d_matData.d_mu * ssn(1, 1);
-    sss(1, 2) = 2. * d_matDeck_p->d_matData.d_mu * ssn(1, 2);
+                
     if (!d_matDeck_p->d_isPlaneStrain)
       sss(2, 2) = d_matDeck_p->d_matData.d_nu * (sss(0, 0) + sss(1, 1));
+
+    // static int debug = -1;
+    // if (debug < 0) {
+    //   std::cout << "Lambda = " << d_matDeck_p->d_matData.d_lambda
+    //             << ", G = " << d_matDeck_p->d_matData.d_mu << "\n";
+    //   debug = 0;
+    // }
 
     // compute Stress * dot_u * normal
     util::Point3 stress_dot_v = sss.dot(dot_u);
