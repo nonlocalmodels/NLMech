@@ -70,7 +70,7 @@ public:
    * @param j Local id of bond in neighbor list of i
    * @return bool True if bond is fractured otherwise false
    */
-  bool getBondState(const size_t &i, const size_t &j);
+  bool getBondState(const size_t &i, const size_t &j) const;
 
   /*!
    * @brief Returns the list of bonds of node i
@@ -78,7 +78,7 @@ public:
    * @param i Nodal id
    * @return list Bonds of node i
    */
-  const std::vector<uint8_t> getBonds(const size_t &i);
+  const std::vector<uint8_t> getBonds(const size_t &i) const;
 
 private:
   /*!

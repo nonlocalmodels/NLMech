@@ -87,8 +87,18 @@ protected:
   /*! @brief Total force on the nodes */
   std::vector<util::Point3> d_f;
 
-  /*! @brief Hydrostatic strains at the nodes */
-  std::vector<double> d_hS;
+  /*! @brief Dilation
+   *
+   * In case of Rob's state based model, this will give the spherical
+   * (hydrostatic) strain
+   */
+  std::vector<double> d_thetaX;
+
+  /*! @brief Weighted volume
+   *
+   * In case of Rob's state based model, this data is not required
+   */
+  std::vector<double> d_mX;
 
   /*! @brief Current time step */
   size_t d_n;

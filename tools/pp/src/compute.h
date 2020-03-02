@@ -486,6 +486,10 @@ private:
                      const std::vector<size_t> *nodes,
                      const std::vector<size_t> *elements, bool calc_in_ref);
 
+  size_t interpolateUVNodes(const util::Point3 &p, util::Point3 &up,
+                           util::Point3 &vp,
+                     const std::vector<size_t> *nodes, bool calc_in_ref);
+
   /*!
    * @brief Computes contribution to energy into crack from the quadrature
    * point on contour
@@ -729,6 +733,19 @@ private:
 
   /*! @brief Damage of nodes */
   std::vector<double> d_Z;
+
+  /*! @brief Dilation
+   *
+   * In case of Rob's state based model, this will give the spherical
+   * (hydrostatic) strain
+   */
+  std::vector<double> d_thetaX;
+
+  /*! @brief Weighted volume
+   *
+   * In case of Rob's state based model, this data is not required
+   */
+  std::vector<double> d_mX;
 
   /*! @brief Model deck */
   inp::ModelDeck *d_modelDeck_p;

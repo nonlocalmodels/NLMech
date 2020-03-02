@@ -528,6 +528,18 @@ void inp::Input::setMaterialDeck() {
     std::cerr << "Error: Please specify the material type.\n";
     exit(1);
   }
+
+  if (d_materialDeck_p->d_materialType == "PDBond") {
+    std::cout << "Warning: We now have new name for peridynamic material. "
+                 "RNPBond for Robs nonlinear bond-based material. PMBBond for"
+                 " pmb. PDElasticBond for linear elastic bond-based. PDState "
+                 "for Silling state-based peridynamic model.\n";
+    std::cout << "Warning: PDBond is changed to RNPBond.\n";
+
+    d_materialDeck_p->d_materialType = "RNPBond";
+  }
+
+
   if (e["Compute_From_Classical"])
     d_materialDeck_p->d_computeParamsFromElastic =
         e["Compute_From_Classical"].as<bool>();

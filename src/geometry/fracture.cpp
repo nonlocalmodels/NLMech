@@ -177,12 +177,12 @@ void geometry::Fracture::setBondState(const size_t &i, const size_t &j,
         : (d_fracture[i][j / 8] &= ~(1UL << (j % 8)));
 }
 
-bool geometry::Fracture::getBondState(const size_t &i, const size_t &j) {
+bool geometry::Fracture::getBondState(const size_t &i, const size_t &j) const {
 
   auto bond = d_fracture[i][j / 8];
   return bond >> (j % 8) & 1UL;
 }
 
-const std::vector<uint8_t> geometry::Fracture::getBonds(const size_t &i) {
+const std::vector<uint8_t> geometry::Fracture::getBonds(const size_t &i) const {
   return d_fracture[i];
 }

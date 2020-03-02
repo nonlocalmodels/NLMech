@@ -118,16 +118,13 @@ private:
    * @brief Computes peridynamic forces
    */
   void computeForces();
+  void computeForce(const size_t &i);
+  void computeForceState(const size_t &i);
 
   /*!
    * @brief Computes damping force in absorbing layers
    */
   void computeDampingForces();
-
-  /*!
-   * @brief Computes hydrostatic strains for force calculation
-   */
-  void computeHydrostaticStrains();
 
   /*!
    * @brief Computes postprocessing quantities
