@@ -45,21 +45,25 @@ void geometry::Fracture::addCrack(const double &time, const std::vector<util::Po
     const std::vector<std::vector<size_t>> *neighbor_list) {
 
   for (auto &crack : d_fractureDeck_p->d_cracks) {
-    if (std::abs(crack.d_activationTime - time) < 1.0e-12 and
-        !crack.d_crackAcrivated) {
+    if (!crack.d_crackAcrivated) {
 
-      auto f = hpx::parallel::for_loop(
-          hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-          neighbor_list->size(),
-          [this, nodes, neighbor_list, &crack](boost::uint64_t i) {
-            auto ns = (*neighbor_list)[i];
+      if (util::compare::definitelyLessThan(crack.d_activationTime, time)) {
 
-            this->computeFracturedBondFd(i, &crack, nodes, &ns);
-          }); // end of parallel for loop
+        std::cout << "Fracture: Adding crack to system\n";
 
-      f.get();
+        auto f = hpx::parallel::for_loop(
+            hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+            neighbor_list->size(),
+            [this, nodes, neighbor_list, &crack](boost::uint64_t i) {
+              auto ns = (*neighbor_list)[i];
 
-      crack.d_crackAcrivated = true;
+              this->computeFracturedBondFd(i, &crack, nodes, &ns);
+            }); // end of parallel for loop
+
+        f.get();
+
+        crack.d_crackAcrivated = true;
+      }
     }
   }
 }
