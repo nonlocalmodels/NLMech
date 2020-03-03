@@ -118,8 +118,8 @@ private:
    * @brief Computes peridynamic forces
    */
   void computeForces();
-  void computeForce(const size_t &i);
-  void computeForceState(const size_t &i);
+  std::pair<double, util::Point3> computeForce(const size_t &i);
+  std::pair<double, util::Point3> computeForceState(const size_t &i);
 
   /*!
    * @brief Computes damping force in absorbing layers

@@ -17,6 +17,7 @@ namespace {
 
 double computeStateMxI(size_t i, const std::vector<util::Point3> &nodes,
                        const std::vector<double> &nodal_vol,
+                       const std::vector<std::vector<size_t>> &neighbor_list,
                        const double &mesh_size,
                        const material::pd::Material *material) {
 
@@ -28,16 +29,19 @@ double computeStateMxI(size_t i, const std::vector<util::Point3> &nodes,
   auto check_up = horizon + 0.5 * mesh_size;
   auto check_low = horizon - 0.5 * mesh_size;
 
-  for (size_t j = 0; j < nodes.size(); j++) {
+  const auto &i_neighs = neighbor_list[i];
+  for (size_t j = 0; j < i_neighs.size(); j++) {
 
-    const auto &xj = nodes[j];
+    auto j_id = i_neighs[j];
+
+    const auto &xj = nodes[j_id];
     double rji = (xj - xi).length();
 
-    if (util::compare::definitelyGreaterThan(rji, horizon) or j == i)
+    if (util::compare::definitelyGreaterThan(rji, horizon) or j_id == i)
       continue;
 
     // get corrected volume of node j
-    auto volj = nodal_vol[j];
+    auto volj = nodal_vol[j_id];
 
     if (util::compare::definitelyGreaterThan(rji, check_low))
       volj *= (check_up - rji) / mesh_size;
@@ -64,6 +68,7 @@ double computeStateMxI(size_t i, const std::vector<util::Point3> &nodes,
 double computeStateThetaxI(size_t i, const std::vector<util::Point3> &nodes,
                            const std::vector<util::Point3> &nodes_disp,
                            const std::vector<double> &nodal_vol,
+                           const std::vector<std::vector<size_t>> &neighbor_list,
                            const double &mesh_size,
                            const material::pd::Material *material,
                            const geometry::Fracture *fracture,
@@ -79,17 +84,20 @@ double computeStateThetaxI(size_t i, const std::vector<util::Point3> &nodes,
   auto check_up = horizon + 0.5 * mesh_size;
   auto check_low = horizon - 0.5 * mesh_size;
 
-  for (size_t j = 0; j < nodes.size(); j++) {
+  const auto &i_neighs = neighbor_list[i];
+  for (size_t j = 0; j < i_neighs.size(); j++) {
 
-    const auto &xj = nodes[j];
-    const auto &uj = nodes_disp[j];
+    auto j_id = i_neighs[j];
+
+    const auto &xj = nodes[j_id];
+    const auto &uj = nodes_disp[j_id];
     double rji = (xj - xi).length();
 
-    if (util::compare::definitelyGreaterThan(rji, horizon) or j == i)
+    if (util::compare::definitelyGreaterThan(rji, horizon) or j_id == i)
       continue;
 
     // get corrected volume of node j
-    auto volj = nodal_vol[j];
+    auto volj = nodal_vol[j_id];
 
     if (util::compare::definitelyGreaterThan(rji, check_low))
       volj *= (check_up - rji) / mesh_size;
@@ -112,6 +120,7 @@ double computeStateThetaxI(size_t i, const std::vector<util::Point3> &nodes,
 double computeHydrostaticStrainI(size_t i, const std::vector<util::Point3> &nodes,
                            const std::vector<util::Point3> &nodes_disp,
                            const std::vector<double> &nodal_vol,
+                                 const std::vector<std::vector<size_t>> &neighbor_list,
                            const double &mesh_size,
                            const material::pd::Material *material,
                            const geometry::Fracture *fracture,
@@ -131,17 +140,20 @@ double computeHydrostaticStrainI(size_t i, const std::vector<util::Point3> &node
   if (dim == 3)
     vol_ball *= horizon * 4. / 3.;
 
-  for (size_t j = 0; j < nodes.size(); j++) {
+  const auto &i_neighs = neighbor_list[i];
+  for (size_t j = 0; j < i_neighs.size(); j++) {
 
-    const auto &xj = nodes[j];
-    const auto &uj = nodes_disp[j];
+    auto j_id = i_neighs[j];
+
+    const auto &xj = nodes[j_id];
+    const auto &uj = nodes_disp[j_id];
     double rji = (xj - xi).length();
 
-    if (util::compare::definitelyGreaterThan(rji, horizon) or j == i)
+    if (util::compare::definitelyGreaterThan(rji, horizon) or j_id == i)
       continue;
 
     // get corrected volume of node j
-    auto volj = nodal_vol[j];
+    auto volj = nodal_vol[j_id];
 
     if (util::compare::definitelyGreaterThan(rji, check_low))
       volj *= (check_up - rji) / mesh_size;
@@ -161,21 +173,26 @@ double computeHydrostaticStrainI(size_t i, const std::vector<util::Point3> &node
 
 void updateBondFractureDataI(size_t i, const std::vector<util::Point3> &nodes,
                                  const std::vector<util::Point3> &nodes_disp,
+                             const std::vector<std::vector<size_t>> &neighbor_list,
                                  const material::pd::Material *material,
                                  geometry::Fracture *fracture) {
 
-  for (size_t j = 0; j < nodes.size(); j++) {
+  const auto &i_neighs = neighbor_list[i];
+  for (size_t j = 0; j < i_neighs.size(); j++) {
 
-    double s = material->getS(nodes[j] - nodes[i], nodes_disp[j] -
+    auto j_id = i_neighs[j];
+
+    double s = material->getS(nodes[j_id] - nodes[i], nodes_disp[j_id] -
     nodes_disp[i]);
-    double sc = material->getSc((nodes[j] - nodes[i]).length());
+    double sc = material->getSc((nodes[j_id] - nodes[i]).length());
 
     // get fracture state, modify, and set
     auto fs = fracture->getBondState(i, j);
     if (!fs &&
-        util::compare::definitelyGreaterThan(std::abs(s), sc + 1.0e-10))
+        util::compare::definitelyGreaterThan(std::abs(s), sc + 1.0e-10)) {
       fs = true;
-    fracture->setBondState(i, j, fs);
+      fracture->setBondState(i, j, fs);
+    }
   }
 }
 
@@ -183,6 +200,7 @@ void updateBondFractureDataI(size_t i, const std::vector<util::Point3> &nodes,
 
 void material::computeStateMx(const std::vector<util::Point3> &nodes,
                               const std::vector<double> &nodal_vol,
+                              const std::vector<std::vector<size_t>> &neighbor_list,
                               const double &mesh_size,
                               const material::pd::Material *material,
                               std::vector<double> &mx,
@@ -191,14 +209,15 @@ void material::computeStateMx(const std::vector<util::Point3> &nodes,
   mx.resize(nodes.size());
   if (!compute_in_parallel) {
     for (size_t i = 0; i < nodes.size(); i++)
-      mx[i] = computeStateMxI(i, nodes, nodal_vol, mesh_size, material);
+      mx[i] = computeStateMxI(i, nodes, nodal_vol, neighbor_list, mesh_size, material);
   } else {
 
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
         nodes.size(),
-        [nodes, nodal_vol, mesh_size, material, &mx](boost::uint64_t i) {
-          mx[i] = computeStateMxI(i, nodes, nodal_vol, mesh_size, material);
+        [nodes, nodal_vol, neighbor_list, mesh_size, material, &mx](boost::uint64_t i) {
+          mx[i] = computeStateMxI(i, nodes, nodal_vol, neighbor_list, mesh_size,
+              material);
         } // loop over nodes
     );    // end of parallel for loop
     f.get();
@@ -208,7 +227,9 @@ void material::computeStateMx(const std::vector<util::Point3> &nodes,
 void material::computeStateThetax(
     const std::vector<util::Point3> &nodes,
     const std::vector<util::Point3> &nodes_disp,
-    const std::vector<double> &nodal_vol, const double &mesh_size,
+    const std::vector<double> &nodal_vol,
+    const std::vector<std::vector<size_t>> &neighbor_list,
+    const double &mesh_size,
     const material::pd::Material *material,
     const geometry::Fracture *fracture, const std::vector<double> &mx,
     std::vector<double> &thetax, bool compute_in_parallel) {
@@ -216,18 +237,19 @@ void material::computeStateThetax(
   thetax.resize(nodes.size());
   if (!compute_in_parallel) {
     for (size_t i = 0; i < nodes.size(); i++)
-      thetax[i] = computeStateThetaxI(i, nodes, nodes_disp, nodal_vol, mesh_size,
-          material,
-                                      fracture, mx);
+      thetax[i] =
+          computeStateThetaxI(i, nodes, nodes_disp, nodal_vol, neighbor_list,
+                              mesh_size, material, fracture, mx);
   } else {
 
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
         nodes.size(),
-        [nodes, nodes_disp, nodal_vol, mesh_size, material, fracture, mx,
+        [nodes, nodes_disp, nodal_vol, neighbor_list, mesh_size, material, fracture, mx,
          &thetax](boost::uint64_t i) {
-          thetax[i] = computeStateThetaxI(i, nodes, nodes_disp, nodal_vol, mesh_size,
-                                          material, fracture, mx);
+          thetax[i] = computeStateThetaxI(i, nodes, nodes_disp, nodal_vol,
+                                          neighbor_list, mesh_size, material,
+                                          fracture, mx);
         } // loop over nodes
     );    // end of parallel for loop
     f.get();
@@ -237,6 +259,7 @@ void material::computeStateThetax(
 void material::computeHydrostaticStrain(const std::vector<util::Point3> &nodes,
                                const std::vector<util::Point3> &nodes_disp,
                                const std::vector<double> &nodal_vol,
+                                        const std::vector<std::vector<size_t>> &neighbor_list,
                                const double &mesh_size,
                                const material::pd::Material *material,
                                const geometry::Fracture *fracture,
@@ -246,18 +269,19 @@ void material::computeHydrostaticStrain(const std::vector<util::Point3> &nodes,
   thetax.resize(nodes.size());
   if (!compute_in_parallel) {
     for (size_t i = 0; i < nodes.size(); i++)
-      thetax[i] = computeHydrostaticStrainI(i, nodes, nodes_disp, nodal_vol, mesh_size,
-                                      material,
-                                      fracture, dim);
+      thetax[i] = computeHydrostaticStrainI(i, nodes, nodes_disp, nodal_vol,
+                                            neighbor_list, mesh_size, material,
+                                            fracture, dim);
   } else {
 
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
         nodes.size(),
-        [nodes, nodes_disp, nodal_vol, mesh_size, material, fracture, dim,
+        [nodes, nodes_disp, nodal_vol, neighbor_list, mesh_size, material, fracture, dim,
          &thetax](boost::uint64_t i) {
-          thetax[i] = computeHydrostaticStrainI(i, nodes, nodes_disp, nodal_vol, mesh_size,
-                                          material, fracture, dim);
+          thetax[i] = computeHydrostaticStrainI(i, nodes, nodes_disp, nodal_vol,
+                                                neighbor_list, mesh_size,
+                                                material, fracture, dim);
         } // loop over nodes
     );    // end of parallel for loop
     f.get();
@@ -267,20 +291,22 @@ void material::computeHydrostaticStrain(const std::vector<util::Point3> &nodes,
 
 void material::updateBondFractureData(const std::vector<util::Point3> &nodes,
                             const std::vector<util::Point3> &nodes_disp,
+                                      const std::vector<std::vector<size_t>> &neighbor_list,
                             const material::pd::Material *material,
                             geometry::Fracture *fracture, bool
                             compute_in_parallel) {
 
   if (!compute_in_parallel) {
     for (size_t i = 0; i < nodes.size(); i++)
-      updateBondFractureDataI(i, nodes, nodes_disp, material, fracture);
+      updateBondFractureDataI(i, nodes, nodes_disp, neighbor_list, material, fracture);
   } else {
 
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
         nodes.size(),
-        [nodes, nodes_disp, material, &fracture](boost::uint64_t i) {
-          updateBondFractureDataI(i, nodes, nodes_disp, material, fracture);
+        [nodes, nodes_disp, neighbor_list, material, &fracture](boost::uint64_t i) {
+          updateBondFractureDataI(i, nodes, nodes_disp, neighbor_list, material,
+              fracture);
         } // loop over nodes
     );    // end of parallel for loop
     f.get();

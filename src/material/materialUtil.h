@@ -32,6 +32,7 @@ namespace material {
    */
 void computeStateMx(const std::vector<util::Point3> &nodes,
                     const std::vector<double> &nodal_vol,
+                    const std::vector<std::vector<size_t>> &neighbor_list,
                     const double &mesh_size,
                     const material::pd::Material *material,
                     std::vector<double> &mx, bool compute_in_parallel = false);
@@ -52,6 +53,7 @@ void computeStateMx(const std::vector<util::Point3> &nodes,
 void computeStateThetax(const std::vector<util::Point3> &nodes,
                     const std::vector<util::Point3> &nodes_disp,
                     const std::vector<double> &nodal_vol,
+                        const std::vector<std::vector<size_t>> &neighbor_list,
                         const double &mesh_size,
                     const material::pd::Material *material,
                         const geometry::Fracture *fracture,
@@ -74,6 +76,7 @@ void computeStateThetax(const std::vector<util::Point3> &nodes,
 void computeHydrostaticStrain(const std::vector<util::Point3> &nodes,
                                const std::vector<util::Point3> &nodes_disp,
                                const std::vector<double> &nodal_vol,
+                              const std::vector<std::vector<size_t>> &neighbor_list,
                                const double &mesh_size,
                                const material::pd::Material *material,
                                const geometry::Fracture *fracture,
@@ -91,6 +94,7 @@ void computeHydrostaticStrain(const std::vector<util::Point3> &nodes,
    */
 void updateBondFractureData(const std::vector<util::Point3> &nodes,
                               const std::vector<util::Point3> &nodes_disp,
+                            const std::vector<std::vector<size_t>> &neighbor_list,
                               const material::pd::Material *material,
                               geometry::Fracture *fracture, bool
                               compute_in_parallel = false);

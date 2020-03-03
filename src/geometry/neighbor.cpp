@@ -45,6 +45,21 @@ geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
 const std::vector<size_t> &geometry::Neighbor::getNeighbors(const size_t &i) {
   return d_neighbors[i];
 }
-const std::vector<std::vector<size_t>> *geometry::Neighbor::getNeighborsP() {
+
+std::vector<std::vector<size_t>> *geometry::Neighbor::getNeighborsListP
+    () {
   return &d_neighbors;
+}
+const std::vector<std::vector<size_t>> *geometry::Neighbor::getNeighborsListP
+() const {
+  return &d_neighbors;
+}
+
+std::vector<std::vector<size_t>> &geometry::Neighbor::getNeighborsList
+    () {
+  return d_neighbors;
+}
+const std::vector<std::vector<size_t>> &geometry::Neighbor::getNeighborsList
+() const {
+  return d_neighbors;
 }

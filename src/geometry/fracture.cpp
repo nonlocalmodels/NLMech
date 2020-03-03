@@ -179,6 +179,16 @@ void geometry::Fracture::setBondState(const size_t &i, const size_t &j,
 
 bool geometry::Fracture::getBondState(const size_t &i, const size_t &j) const {
 
+//  if (d_fracture.size() <= i) {
+//    std::cerr << "Error: Size of fracture data is invalid\n";
+//    exit(1);
+//  }
+//
+//  if (d_fracture[i].size() <= j / 8) {
+//    std::cerr << "Error: Size of fracture data at node " << i << " is invalid\n";
+//    exit(1);
+//  }
+
   auto bond = d_fracture[i][j / 8];
   return bond >> (j % 8) & 1UL;
 }

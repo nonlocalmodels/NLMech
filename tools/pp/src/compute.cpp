@@ -1227,7 +1227,7 @@ void tools::pp::Compute::computeJIntegral() {
     if (d_fracture_p == nullptr) {
       d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck(),
                                             d_mesh_p->getNodesP(),
-                                            d_neighbor_p->getNeighborsP());
+                                            d_neighbor_p->getNeighborsListP());
     }
 
     // initialization
@@ -1241,6 +1241,7 @@ void tools::pp::Compute::computeJIntegral() {
 
         material::computeStateMx(
             d_mesh_p->getNodes(), d_mesh_p->getNodalVolumes(),
+            d_neighbor_p->getNeighborsList(),
             d_mesh_p->getMeshSize(), d_material_p, d_mX, true);
       }
     }
@@ -1248,17 +1249,17 @@ void tools::pp::Compute::computeJIntegral() {
     // update theta for given displacement
     if (d_material_p->name() == "RNPState")
       material::computeHydrostaticStrain(
-          d_mesh_p->getNodes(), d_u, d_mesh_p->getNodalVolumes(),
+          d_mesh_p->getNodes(), d_u, d_mesh_p->getNodalVolumes(), d_neighbor_p->getNeighborsList(),
           d_mesh_p->getMeshSize(), d_material_p, d_fracture_p, d_thetaX,
           d_modelDeck_p->d_dim, true);
     else if (d_material_p->name() == "PDState") {
 
       // need to update the fracture state of bonds
-      material::updateBondFractureData(d_mesh_p->getNodes(), d_u, d_material_p,
+      material::updateBondFractureData(d_mesh_p->getNodes(), d_u, d_neighbor_p->getNeighborsList(), d_material_p,
                                        d_fracture_p, true);
 
       material::computeStateThetax(d_mesh_p->getNodes(), d_u,
-                                   d_mesh_p->getNodalVolumes(),
+                                   d_mesh_p->getNodalVolumes(), d_neighbor_p->getNeighborsList(),
                                    d_mesh_p->getMeshSize(), d_material_p,
                                    d_fracture_p, d_mX, d_thetaX, true);
     }

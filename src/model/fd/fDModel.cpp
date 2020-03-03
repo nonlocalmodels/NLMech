@@ -122,7 +122,7 @@ void model::FDModel::initHObjects() {
                "fracture state of bonds.\n";
   d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck(),
                                         d_mesh_p->getNodesP(),
-                                        d_neighbor_p->getNeighborsP());
+                                        d_neighbor_p->getNeighborsListP());
 
   // create interior flags
   std::cout << "FDModel: Creating interior flags for nodes.\n";
@@ -191,6 +191,7 @@ void model::FDModel::init() {
 
       material::computeStateMx(
           d_mesh_p->getNodes(), d_mesh_p->getNodalVolumes(),
+          d_neighbor_p->getNeighborsList(),
           d_mesh_p->getMeshSize(), d_material_p, d_mX, true);
     }
   }
@@ -330,7 +331,7 @@ void model::FDModel::integrate() {
 
     // check for crack application
     d_fracture_p->addCrack(d_time, d_mesh_p->getNodesP(),
-                           d_neighbor_p->getNeighborsP());
+                           d_neighbor_p->getNeighborsListP());
   } // loop over time steps
 }
 
@@ -474,15 +475,16 @@ void model::FDModel::computeForces() {
   if (d_material_p->isStateActive()) {
     if (d_material_p->name() == "RNPState")
       material::computeHydrostaticStrain(
-          nodes, d_u, volumes, d_mesh_p->getMeshSize(), d_material_p,
+          nodes, d_u, volumes, d_neighbor_p->getNeighborsList(), d_mesh_p->getMeshSize(), d_material_p,
           d_fracture_p, d_thetaX, d_modelDeck_p->d_dim, true);
-    else if (d_material_p->name() == "PDState") {
+   else if (d_material_p->name() == "PDState") {
 
       // need to update the fracture state of bonds
-      material::updateBondFractureData(nodes, d_u, d_material_p, d_fracture_p,
+      material::updateBondFractureData(nodes, d_u, d_neighbor_p->getNeighborsList(), d_material_p, d_fracture_p,
                                        true);
 
-      material::computeStateThetax(nodes, d_u, volumes, d_mesh_p->getMeshSize(),
+      material::computeStateThetax(nodes, d_u, volumes,
+          d_neighbor_p->getNeighborsList(), d_mesh_p->getMeshSize(),
                                    d_material_p, d_fracture_p, d_mX, d_thetaX,
                                    true);
     }
@@ -493,7 +495,7 @@ void model::FDModel::computeForces() {
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
         d_mesh_p->getNumNodes(),
         [this](boost::uint64_t i) {
-          this->computeForceState(i);
+          this->d_f[i] += this->computeForceState(i).second;
         } // loop over nodes
     );    // end of parallel for loop
     f.get();
@@ -502,17 +504,18 @@ void model::FDModel::computeForces() {
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
         d_mesh_p->getNumNodes(),
         [this](boost::uint64_t i) {
-          this->computeForce(i);
+          this->d_f[i] += this->computeForce(i).second;
         } // loop over nodes
     );    // end of parallel for loop
     f.get();
   }
 }
 
-void model::FDModel::computeForce(const size_t &i) {
+std::pair<double, util::Point3> model::FDModel::computeForce(const size_t &i) {
 
   // local variable to hold force
-  util::Point3 force_i = util::Point3();
+  auto force_i = util::Point3();
+  double energy_i = 0.;
 
   // reference coordinate and displacement at the node
   auto xi = this->d_mesh_p->getNode(i);
@@ -527,7 +530,7 @@ void model::FDModel::computeForce(const size_t &i) {
   auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
 
   // inner loop over neighbors
-  auto i_neighs = this->d_neighbor_p->getNeighbors(i);
+  const auto &i_neighs = this->d_neighbor_p->getNeighbors(i);
   for (size_t j = 0; j < i_neighs.size(); j++) {
 
     auto j_id = i_neighs[j];
@@ -565,16 +568,19 @@ void model::FDModel::computeForce(const size_t &i) {
 
     force_i +=
         scalar_f * this->d_material_p->getBondForceDirection(xj - xi, uj - ui);
+
+    energy_i += ef.first * volj;
   } // loop over neighboring nodes
 
-  // update force and energy
-  this->d_f[i] += force_i;
+  return std::make_pair(energy_i, force_i);
 }
 
-void model::FDModel::computeForceState(const size_t &i) {
+std::pair<double, util::Point3> model::FDModel::computeForceState(const size_t
+&i) {
 
   // local variable to hold force
-  util::Point3 force_i = util::Point3();
+  auto force_i = util::Point3();
+  double energy_i = 0.;
 
   // reference coordinate and displacement at the node
   auto xi = this->d_mesh_p->getNode(i);
@@ -591,7 +597,7 @@ void model::FDModel::computeForceState(const size_t &i) {
   auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
 
   // inner loop over neighbors
-  auto i_neighs = this->d_neighbor_p->getNeighbors(i);
+  const auto &i_neighs = this->d_neighbor_p->getNeighbors(i);
   for (size_t j = 0; j < i_neighs.size(); j++) {
 
     auto j_id = i_neighs[j];
@@ -634,8 +640,7 @@ void model::FDModel::computeForceState(const size_t &i) {
         scalar_f * this->d_material_p->getBondForceDirection(xj - xi, uj - ui);
   } // loop over neighboring nodes
 
-  // update force and energy
-  this->d_f[i] += force_i;
+  return std::make_pair(energy_i, force_i);
 }
 
 void model::FDModel::computeDampingForces() {
@@ -688,6 +693,8 @@ void model::FDModel::computeDampingForces() {
 
 void model::FDModel::computePostProcFields() {
 
+  std::cout << "Postprocessing\n";
+
   // if work done is to be computed, get the external forces
   std::vector<util::Point3> f_ext;
   if (d_policy_p->populateData("Model_d_w")) {
@@ -727,7 +734,7 @@ void model::FDModel::computePostProcFields() {
         auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
 
         // inner loop over neighbors
-        auto i_neighs = this->d_neighbor_p->getNeighbors(i);
+        const auto &i_neighs = this->d_neighbor_p->getNeighbors(i);
         for (size_t j = 0; j < i_neighs.size(); j++) {
 
           auto j_id = i_neighs[j];
