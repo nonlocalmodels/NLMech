@@ -50,8 +50,9 @@ public:
    * @brief Sets fracture state according to the crack data
    * @param nodes Pointer to nodal coordinates
    * @param neighbor_list Pointer to neighbor list
+   * @return True if one of the crack is applied at given time
    */
-  void addCrack(const double &time, const std::vector<util::Point3> *nodes,
+  bool addCrack(const double &time, const std::vector<util::Point3> *nodes,
             const std::vector<std::vector<size_t>> *neighbor_list);
 
   /*!

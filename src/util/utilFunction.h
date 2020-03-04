@@ -96,6 +96,16 @@ double hatFunctionQuick(const double &x, const double &x_min,
 double linearStepFunc(const double &x, const double &x1, const double &x2);
 
 /*!
+ * @brief Compute derivative of linear step function
+ *
+ * @param x  Point in real line
+ * @param x1 Point such that function is linear with slope 1 in [0, x1)
+ * @param x2 Point such that function is constant in [x1, x1 + x2)
+ * @return value Derivative of step function at x
+ */
+double derLinearStepFunc(const double &x, const double &x1, const double &x2);
+
+/*!
  * @brief Compute gaussian function in 1-d
  *
  * Guassian (1-d) function: \f$ f(r) = a \exp(-\frac{r^2}{\beta}). \f$

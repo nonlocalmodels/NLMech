@@ -59,6 +59,17 @@ double util::function::linearStepFunc(const double &x, const double &x1,
     return (period + 1.) * x1;
 }
 
+double util::function::derLinearStepFunc(const double &x, const double &x1,
+                                      const double &x2) {
+
+  double period = std::floor(x / (x1 + x2));
+
+  if (util::compare::definitelyLessThan(x, period * (x1 + x2) + x1))
+    return 1.;
+  else
+    return 0.;
+}
+
 double util::function::gaussian(const double &r, const double &a,
                                 const double &beta) {
   return a * std::exp(-std::pow(r, 2) / beta);

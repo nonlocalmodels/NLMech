@@ -1372,7 +1372,7 @@ void tools::pp::Compute::computeJIntegral() {
 
   // Debug
   //  Must delete after testing
-  d_material_p->getMaterialDeckP()->d_irreversibleBondBreak = false;
+  // d_material_p->getMaterialDeckP()->d_irreversibleBondBreak = false;
 
   // Assumption:
   //
@@ -1518,14 +1518,18 @@ void tools::pp::Compute::computeJIntegral() {
                       << elastic_energy_q * qd.d_w << "\n\n";
           }
 
-          // pd energy
-          pd_strain_energy += pd_energy_q * n_dot_n_c * qd.d_w;
+//          // Debug
+//          //  Must be deleted after testing
+//          if (top_side == 0) {
+            // pd energy
+            pd_strain_energy += pd_energy_q * n_dot_n_c * qd.d_w;
 
-          // pd energy rate
-          pd_strain_energy_rate += pd_energy_q * n_dot_v_c * qd.d_w;
+            // pd energy rate
+            pd_strain_energy_rate += pd_energy_q * n_dot_v_c * qd.d_w;
 
-          // kinetic energy rate
-          kinetic_energy_rate += kinetic_energy_q * n_dot_v_c * qd.d_w;
+            // kinetic energy rate
+            kinetic_energy_rate += kinetic_energy_q * n_dot_v_c * qd.d_w;
+//          }
 
           // elastic internal work rate
           elastic_internal_work_rate += elastic_energy_q * qd.d_w;

@@ -330,8 +330,11 @@ void model::FDModel::integrate() {
     }
 
     // check for crack application
-    d_fracture_p->addCrack(d_time, d_mesh_p->getNodesP(),
-                           d_neighbor_p->getNeighborsListP());
+    if (d_fracture_p->addCrack(d_time, d_mesh_p->getNodesP(),
+                           d_neighbor_p->getNeighborsListP())) {
+      // check if we need to modify the output frequency
+      checkOutputCriteria();
+    }
   } // loop over time steps
 }
 

@@ -41,7 +41,8 @@ geometry::Fracture::Fracture(
   f.get();
 }
 
-void geometry::Fracture::addCrack(const double &time, const std::vector<util::Point3> *nodes,
+bool geometry::Fracture::addCrack(const double &time, const
+                               std::vector<util::Point3> *nodes,
     const std::vector<std::vector<size_t>> *neighbor_list) {
 
   for (auto &crack : d_fractureDeck_p->d_cracks) {
@@ -63,9 +64,13 @@ void geometry::Fracture::addCrack(const double &time, const std::vector<util::Po
         f.get();
 
         crack.d_crackAcrivated = true;
+
+        return true;
       }
     }
   }
+
+  return false;
 }
 
 void geometry::Fracture::computeFracturedBondFd(

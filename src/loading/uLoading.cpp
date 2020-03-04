@@ -9,6 +9,8 @@
 #include "uLoading.h"
 #include "../inp/decks/loadingDeck.h"
 #include "fe/mesh.h"
+#include "util/compare.h"
+#include "util/utilFunction.h"
 #include "util/utilGeom.h"
 
 loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
@@ -38,7 +40,8 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     }
 
     if (bc.d_timeFnType != "constant" and bc.d_timeFnType != "linear" and
-        bc.d_timeFnType != "quadratic" and bc.d_timeFnType != "sin") {
+        bc.d_timeFnType != "quadratic" and bc.d_timeFnType != "linear_step" and
+        bc.d_timeFnType != "linear_slow_fast" and bc.d_timeFnType != "sin") {
 
       std::cerr << "Error: Displacement bc space function type = "
                 << bc.d_timeFnType << " not recognised. "
@@ -50,6 +53,10 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     size_t time_num_params = 1;
     if (bc.d_timeFnType == "quadratic" or bc.d_timeFnType == "sin")
       time_num_params = 2;
+    if (bc.d_timeFnType == "linear_step")
+      time_num_params = 3;
+    else if (bc.d_timeFnType == "linear_slow_fast")
+      time_num_params = 4;
     if (bc.d_timeFnParams.size() != time_num_params) {
       std::cerr << "Error: Displacement bc insufficient parameters for time "
                    "function. Need "
@@ -148,6 +155,22 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
         double a = M_PI * bc.d_timeFnParams[1];
         du = umax * std::sin(a * time);
         dv = umax * a * std::cos(a * time);
+      } else if (bc.d_timeFnType == "linear_step") {
+
+        du = umax * util::function::linearStepFunc(time, bc.d_timeFnParams[1],
+                                                   bc.d_timeFnParams[2]);
+        dv = umax * util::function::derLinearStepFunc(
+                        time, bc.d_timeFnParams[1], bc.d_timeFnParams[2]);
+      }
+      else if (bc.d_timeFnType == "linear_slow_fast") {
+        if (util::compare::definitelyGreaterThan(time, bc.d_timeFnParams[1])) {
+          du = umax * bc.d_timeFnParams[3] * time;
+          dv = umax * bc.d_timeFnParams[3];
+        }
+        else {
+          du = umax * bc.d_timeFnParams[2] * time;
+          dv = umax * bc.d_timeFnParams[2];
+        }
       }
 
       for (auto d : bc.d_direction) {

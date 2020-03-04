@@ -271,7 +271,7 @@ public:
             getInfFn(r) * 4. * s * d_C * d_beta *
                 std::exp(-d_beta * r * s * s) / d_invFactor);
       else
-        return std::make_pair(d_C / d_invFactor, 0.);
+        return std::make_pair(getInfFn(r) * d_C / d_invFactor, 0.);
     } else {
       return std::make_pair(getInfFn(r) * d_C * d_beta *
                                 r * s * s / d_invFactor,
