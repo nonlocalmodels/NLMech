@@ -271,9 +271,6 @@ struct ComputeJIntegral {
   /*! @brief Specify file from which crack tip information is to be read */
   std::string d_crackTipFile;
 
-  /*! @brief Factor of horizon for defining contour */
-  std::vector<double> d_contourFactor;
-
   /*! @brief Data to hold crack tip information */
   std::vector<tools::pp::CrackTipData> d_crackTipData;
 
@@ -298,13 +295,21 @@ struct ComputeJIntegral {
   /*! @brief Specify if we inclined crack */
   bool d_isCrackInclined;
 
+  /*! @brief Factor of horizon for defining contour */
+  std::vector<double> d_contourFactor;
+
+  /*! @brief Contour given by rectangle */
+  bool d_contourGiven;
+  std::pair<util::Point3, util::Point3> d_contour;
+
   /*!
    * @brief Constructor
    */
   ComputeJIntegral()
       : d_crackOrient(0), d_crackId(1), d_file(nullptr), d_fileNew(nullptr),
         d_setLateralCompVZero(false), d_setLateralCompUZero(false),
-        d_setLateralCompX(0.), d_isCrackInclined(false) {};
+        d_setLateralCompX(0.), d_isCrackInclined(false), d_contourGiven(false),
+        d_contour({util::Point3(), util::Point3()}){};
 };
 
 /*!

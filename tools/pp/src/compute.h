@@ -506,6 +506,7 @@ private:
    * @param elastic_energy Elastic energy density
    * @param dot_u Material velocity at the quadrature point
    * @param calc_in_ref Calculate in reference configuration
+   * @param ctip Current crack tip data
    */
   void getContourContribJInt(const util::Point3 &p,
                      const std::vector<size_t> *nodes,
@@ -515,7 +516,8 @@ private:
                      double &kinetic_energy,
                      double &elastic_energy,
                      util::Point3 &dot_u,
-                             bool calc_in_ref);
+                             bool calc_in_ref,
+                             const tools::pp::CrackTipData &ctip);
 
   /*!
    * @brief Updates crack tip location and crack velocity

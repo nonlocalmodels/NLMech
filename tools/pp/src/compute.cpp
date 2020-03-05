@@ -108,6 +108,29 @@ void processQuadPointForContour(size_t E, int top_side,
     n_dot_v_c = edge_normal.dot(ctip_v);
   } // process vertical edges
 }
+
+bool doesBondIntersectCrack(const util::Point3 &p1, const util::Point3 &p2,
+                            const tools::pp::CrackTipData &ctip,
+                            const int &crack_orient) {
+
+  if (crack_orient == -1) {
+    // vertical crack (use x coordinate to know the veritcal line)
+    double p1_check = p1.d_x - ctip.d_p.d_x;
+    double p2_check = p2.d_x - ctip.d_p.d_x;
+    return util::compare::definitelyLessThan(p1_check * p2_check, 0.);
+
+  } else if (crack_orient == 1) {
+    // horizontal crack (use y coordinate to know the horizontal line)
+    double p1_check = p1.d_y - ctip.d_p.d_y;
+    double p2_check = p2.d_y - ctip.d_p.d_y;
+    return util::compare::definitelyLessThan(p1_check * p2_check, 0.);
+  } else {
+
+    std::cerr << "Error: Extend doesBondIntersectCrack() to arbitrarily "
+                 "oriented crack.\n";
+    exit(1);
+  }
+}
 } // namespace
 
 tools::pp::Compute::Compute(const std::string &filename)
@@ -769,9 +792,31 @@ void tools::pp::Compute::readComputeInstruction(
       if (data->d_computeJInt_p->d_contourFactor.size() == 1)
         data->d_computeJInt_p->d_contourFactor.push_back(
             data->d_computeJInt_p->d_contourFactor[0]);
+
+      data->d_computeJInt_p->d_contourGiven = false;
+
+    } else if (e["Contour"]) {
+      std::vector<double> locs;
+      for (auto f : e["Contour"])
+        locs.push_back(f.as<double>());
+
+      if (locs.size() != 6) {
+        std::cerr << "Error: Need 6 parameters corresponding to x,y,z "
+                     "coordinate of two corner points to define the contour.\n";
+        exit(1);
+      }
+
+      data->d_computeJInt_p->d_contour.first = util::Point3(locs[0], locs[1],
+                                                            locs[2]);
+      data->d_computeJInt_p->d_contour.second = util::Point3(locs[3], locs[4],
+                                                            locs[5]);
+
+      data->d_computeJInt_p->d_contourFactor = {-1., -1.};
+
+      data->d_computeJInt_p->d_contourGiven = true;
     } else {
-      std::cerr << "Error: Factors to create contour for J integral not "
-                   "provided.\n";
+      std::cerr << "Error: Either factors to create contour for J integral or"
+                   " contour rectangle is required for J-integral calculation.\n";
       exit(1);
     }
 
@@ -1241,27 +1286,28 @@ void tools::pp::Compute::computeJIntegral() {
 
         material::computeStateMx(
             d_mesh_p->getNodes(), d_mesh_p->getNodalVolumes(),
-            d_neighbor_p->getNeighborsList(),
-            d_mesh_p->getMeshSize(), d_material_p, d_mX, true);
+            d_neighbor_p->getNeighborsList(), d_mesh_p->getMeshSize(),
+            d_material_p, d_mX, true);
       }
     }
 
     // update theta for given displacement
     if (d_material_p->name() == "RNPState")
       material::computeHydrostaticStrain(
-          d_mesh_p->getNodes(), d_u, d_mesh_p->getNodalVolumes(), d_neighbor_p->getNeighborsList(),
-          d_mesh_p->getMeshSize(), d_material_p, d_fracture_p, d_thetaX,
-          d_modelDeck_p->d_dim, true);
+          d_mesh_p->getNodes(), d_u, d_mesh_p->getNodalVolumes(),
+          d_neighbor_p->getNeighborsList(), d_mesh_p->getMeshSize(),
+          d_material_p, d_fracture_p, d_thetaX, d_modelDeck_p->d_dim, true);
     else if (d_material_p->name() == "PDState") {
 
       // need to update the fracture state of bonds
-      material::updateBondFractureData(d_mesh_p->getNodes(), d_u, d_neighbor_p->getNeighborsList(), d_material_p,
-                                       d_fracture_p, true);
+      material::updateBondFractureData(d_mesh_p->getNodes(), d_u,
+                                       d_neighbor_p->getNeighborsList(),
+                                       d_material_p, d_fracture_p, true);
 
-      material::computeStateThetax(d_mesh_p->getNodes(), d_u,
-                                   d_mesh_p->getNodalVolumes(), d_neighbor_p->getNeighborsList(),
-                                   d_mesh_p->getMeshSize(), d_material_p,
-                                   d_fracture_p, d_mX, d_thetaX, true);
+      material::computeStateThetax(
+          d_mesh_p->getNodes(), d_u, d_mesh_p->getNodalVolumes(),
+          d_neighbor_p->getNeighborsList(), d_mesh_p->getMeshSize(),
+          d_material_p, d_fracture_p, d_mX, d_thetaX, true);
     }
   }
 
@@ -1335,11 +1381,17 @@ void tools::pp::Compute::computeJIntegral() {
   //                        A                    B
   //
   // Contour is formed by lines A-B, B-C, C-D, D-A
-  double tolx = 0.5 * data->d_contourFactor[0] * d_modelDeck_p->d_horizon;
-  double toly = 0.5 * data->d_contourFactor[1] * d_modelDeck_p->d_horizon;
-  auto cd = std::make_pair(
-      util::Point3(ctip.d_p.d_x - tolx, ctip.d_p.d_y - toly, 0.),
-      util::Point3(ctip.d_p.d_x + tolx, ctip.d_p.d_y + toly, 0.));
+  std::pair<util::Point3, util::Point3> cd;
+  if (data->d_contourGiven)
+    cd = data->d_contour;
+  else {
+
+    double tolx = 0.5 * data->d_contourFactor[0] * d_modelDeck_p->d_horizon;
+    double toly = 0.5 * data->d_contourFactor[1] * d_modelDeck_p->d_horizon;
+    cd = std::make_pair(
+        util::Point3(ctip.d_p.d_x - tolx, ctip.d_p.d_y - toly, 0.),
+        util::Point3(ctip.d_p.d_x + tolx, ctip.d_p.d_y + toly, 0.));
+  }
 
   // compute nodes and elements list for search
   std::vector<size_t> search_nodes;
@@ -1388,6 +1440,8 @@ void tools::pp::Compute::computeJIntegral() {
   // loop over horizontal and vertical edge of contour
   // E = 0 : horizontal edge A-B and C-D
   // E = 1 : vertical edge D-A and B-C
+
+  double h_contour = 0.5 * h;
   for (size_t E = 0; E < 2; E++) {
 
     // skip horizontal edge if required
@@ -1401,15 +1455,15 @@ void tools::pp::Compute::computeJIntegral() {
     long int N = 0;
     if (E == 0) {
       // number of elements for horizontal edge
-      N = (cd.second.d_x - cd.first.d_x) / h;
-      if (util::compare::definitelyLessThan(cd.first.d_x + double(N) * h,
-                                            cd.second.d_x))
+      N = (cd.second.d_x - cd.first.d_x) / h_contour;
+      if (util::compare::definitelyLessThan(
+              cd.first.d_x + double(N) * h_contour, cd.second.d_x))
         N++;
     } else {
       // number of elements for vertical edge
-      N = (cd.second.d_y - cd.first.d_y) / h;
-      if (util::compare::definitelyLessThan(cd.first.d_y + double(N) * h,
-                                            cd.second.d_y))
+      N = (cd.second.d_y - cd.first.d_y) / h_contour;
+      if (util::compare::definitelyLessThan(
+              cd.first.d_y + double(N) * h_contour, cd.second.d_y))
         N++;
     }
 
@@ -1460,14 +1514,14 @@ void tools::pp::Compute::computeJIntegral() {
       auto x2 = 0.;
       if (E == 0) {
         // discretization of horizontal line
-        x1 = cd.first.d_x + double(I) * h;
-        x2 = cd.first.d_x + double(I + 1) * h;
+        x1 = cd.first.d_x + double(I) * h_contour;
+        x2 = cd.first.d_x + double(I + 1) * h_contour;
         if (I == N - 1)
           x2 = cd.second.d_x;
       } else {
         // discretization of vertical line
-        x1 = cd.first.d_y + double(I) * h;
-        x2 = cd.first.d_y + double(I + 1) * h;
+        x1 = cd.first.d_y + double(I) * h_contour;
+        x2 = cd.first.d_y + double(I + 1) * h_contour;
         if (I == N - 1)
           x2 = cd.second.d_y;
       }
@@ -1490,7 +1544,7 @@ void tools::pp::Compute::computeJIntegral() {
           // get energy density
           getContourContribJInt(qp, &search_nodes, &search_elems, edge_normal,
                                 pd_energy_q, kinetic_energy_q, elastic_energy_q,
-                                dot_u_q, calc_in_ref);
+                                dot_u_q, calc_in_ref, ctip);
 
           // debug information
           if (false) {
@@ -1520,7 +1574,12 @@ void tools::pp::Compute::computeJIntegral() {
 
 //          // Debug
 //          //  Must be deleted after testing
-//          if (top_side == 0) {
+//          if ((data->d_crackOrient == -1 and
+//               util::compare::definitelyGreaterThan(qd.d_p.d_x,
+//                                                    ctip.d_p.d_x)) or
+//              (data->d_crackOrient == 1 and
+//               util::compare::definitelyGreaterThan(qd.d_p.d_y,
+//                                                    ctip.d_p.d_y))) {
             // pd energy
             pd_strain_energy += pd_energy_q * n_dot_n_c * qd.d_w;
 
@@ -1529,10 +1588,10 @@ void tools::pp::Compute::computeJIntegral() {
 
             // kinetic energy rate
             kinetic_energy_rate += kinetic_energy_q * n_dot_v_c * qd.d_w;
-//          }
 
-          // elastic internal work rate
-          elastic_internal_work_rate += elastic_energy_q * qd.d_w;
+            // elastic internal work rate
+            elastic_internal_work_rate += elastic_energy_q * qd.d_w;
+//          }
         }
 
       } // loop over quad points
@@ -2127,7 +2186,10 @@ void tools::pp::Compute::getContourContribJInt(
     const util::Point3 &p, const std::vector<size_t> *nodes,
     const std::vector<size_t> *elements, const util::Point3 &normal,
     double &pd_energy, double &kinetic_energy, double &elastic_energy,
-    util::Point3 &dot_u, bool calc_in_ref) {
+    util::Point3 &dot_u, bool calc_in_ref,
+    const tools::pp::CrackTipData &ctip) {
+
+  const auto crack_orient = d_currentData->d_computeJInt_p->d_crackOrient;
 
   // reset data
   pd_energy = 0.;
@@ -2176,6 +2238,24 @@ void tools::pp::Compute::getContourContribJInt(
       auto ef = d_material_p->getBondEF(rjq, Sjq, fracture_state, true);
 
       // add contribution to energy
+      // Debug
+      //  Add contribution to strain energy only if the bond is strain above
+      //  critical strain
+      //  This does not give good result
+      if (false) {
+        double sr = std::abs(Sjq) / this->d_material_p->getSc(rjq);
+        if (util::compare::definitelyGreaterThan(sr, 1.))
+          loc_pd_energy += ef.first * volj;
+      }
+
+      // Debug
+      //  Add contribution to strain energy only if the bond intersects the
+      //  crack line
+      if (false) {
+        if (doesBondIntersectCrack(xj, p, ctip, crack_orient))
+          loc_pd_energy += ef.first * volj;
+      }
+
       loc_pd_energy += ef.first * volj;
     } // loop over nodes for pd energy density
 
