@@ -86,6 +86,11 @@ protected:
 
   /*! @brief Total force on the nodes */
   std::vector<util::Point3> d_f;
+  
+
+  /*! @brief Total force on the nodes */
+  std::vector<util::Point3> d_f_area;
+
 
   /*! @brief Dilation
    *
@@ -157,6 +162,12 @@ protected:
 
   /*! @brief Total bond-based fracture energy */
   float d_teFB;
+
+  /*! @brief Maximal y coordinate */
+  float d_max_y;
+
+  /*! @brief Minimal y coordinate */
+  float d_min_y;
 
   /** @}*/
 };

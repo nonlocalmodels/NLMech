@@ -176,6 +176,14 @@ void model::FDModel::init() {
   d_v = std::vector<util::Point3>(nnodes, util::Point3());
   d_f = std::vector<util::Point3>(nnodes, util::Point3());
 
+  std::string tag = "Reaction_Force";
+  if (d_outputDeck_p->isTagInOutput(tag)){
+    d_f_area = std::vector<util::Point3>(nnodes, util::Point3());
+    d_max_y = this->d_mesh_p->getBoundingBox().second[2];
+    d_min_y = this->d_mesh_p->getBoundingBox().first[2];
+  }
+
+
   // check material type and if needed update policy
   if (!d_material_p->isStateActive()) {
     d_policy_p->addToTags(0, "Model_d_hS");
