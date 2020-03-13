@@ -943,6 +943,7 @@ void model::FDModel::output() {
   if (d_outputDeck_p->isTagInOutput(tag)) {
     writer.appendPointData(tag, &d_reaction_force);
     double sum = std::accumulate(d_total_reaction_force.begin(), d_total_reaction_force.end(), 0);
+    //ToDo: Add divison by the area of the layer L 
     writer.appendFieldData("Total_Reaction_Force",sum);
   }
 
