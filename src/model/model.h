@@ -12,6 +12,7 @@
 #include "util/matrix.h"    // definition of SymMatrix3
 #include "util/point.h"     // definition of Point3
 #include <vector>
+#include <atomic>
 
 /*!
  * @brief Collection of Peridynamic models
@@ -88,8 +89,9 @@ protected:
   std::vector<util::Point3> d_f;
   
 
-  /*! @brief Total force on the nodes */
-  std::vector<util::Point3> d_f_area;
+  /*! @brief Total reaction force */
+  std::vector<util::Point3> d_reaction_force;
+  std::vector<double> d_total_reaction_force;
 
 
   /*! @brief Dilation
@@ -162,12 +164,6 @@ protected:
 
   /*! @brief Total bond-based fracture energy */
   float d_teFB;
-
-  /*! @brief Maximal y coordinate */
-  float d_max_y;
-
-  /*! @brief Minimal y coordinate */
-  float d_min_y;
 
   /** @}*/
 };
