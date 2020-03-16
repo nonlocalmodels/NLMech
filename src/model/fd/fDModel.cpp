@@ -585,13 +585,8 @@ std::pair<double, util::Point3> model::FDModel::computeForce(const size_t &i) {
 
 
     //Todo: Add reaction force computation
-    if( is_reaction_force(i,j_id).first)
+    if( is_reaction_force(i,j_id))
       d_reaction_force[i] += (this->d_mesh_p->getNodalVolume(i)* scalar_f * this->d_material_p->getBondForceDirection(xj - xi, uj - ui));
-      
-
-    //if ( is_reaction_force(i,j_id).second)
-    //d_reaction_force[i] += this->d_mesh_p->getNodalVolume(i);
-    
 
   } // loop over neighboring nodes
 
@@ -668,16 +663,13 @@ std::pair<double, util::Point3> model::FDModel::computeForceState(const size_t
   return std::make_pair(energy_i, force_i);
 }
 
-std::pair<bool,bool> model::FDModel::is_reaction_force(size_t i, size_t j){
-
-std::pair<bool,bool> res(false,false);
+bool model::FDModel::is_reaction_force(size_t i, size_t j){
 
 auto xi = this->d_mesh_p->getNode(i);
 auto xj = this->d_mesh_p->getNode(j);
 auto delta = d_modelDeck_p->d_horizon;
 auto min_x = this->d_mesh_p->getBoundingBox().first[0];
 auto max_x = this->d_mesh_p->getBoundingBox().second[0];
-auto h = this->d_mesh_p->getMeshSize();
 auto max_y = this->d_mesh_p->getBoundingBox().second[1];
 auto min_y = this->d_mesh_p->getBoundingBox().first[1];
 auto eps = 1e-6;
@@ -692,14 +684,11 @@ util::Point3 B = util::Point3(max_x,max_y - delta + eps,0.);
 
 if(util::geometry::doLinesIntersect(A,B,xi,xj))
 
-res.first = true;
+return true;
 
 }
 
-if (xi.d_y > min_y + delta * delta && xi.d_y < max_y - delta )
-  res.second = true;
-
-return res;
+return false;
 
 }
 
@@ -943,8 +932,17 @@ void model::FDModel::output() {
   if (d_outputDeck_p->isTagInOutput(tag)) {
     writer.appendPointData(tag, &d_reaction_force);
     double sum = std::accumulate(d_total_reaction_force.begin(), d_total_reaction_force.end(), 0);
-    //ToDo: Add divison by the area of the layer L 
-    writer.appendFieldData("Total_Reaction_Force",sum);
+    
+    //Computation of the area
+    auto delta = d_modelDeck_p->d_horizon;
+    auto min_x = this->d_mesh_p->getBoundingBox().first[0];
+    auto max_x = this->d_mesh_p->getBoundingBox().second[0];
+    auto max_y = this->d_mesh_p->getBoundingBox().second[1];
+    auto min_y = this->d_mesh_p->getBoundingBox().first[1];
+
+    double area = (std::abs(max_x-min_x)-delta) * (std::abs(max_y-min_y) - delta);
+
+    writer.appendFieldData("Total_Reaction_Force",sum/area);
   }
 
 
