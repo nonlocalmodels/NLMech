@@ -122,6 +122,14 @@ private:
   std::pair<double, util::Point3> computeForceState(const size_t &i);
 
   /*!
+   * @brief Validates if there is a reaction force between node i and node j
+   * @param i id of node i 
+   * @param j id of node j
+   * @return is reaction force 
+   */
+  bool is_reaction_force(size_t i, size_t j);
+
+  /*!
    * @brief Computes damping force in absorbing layers
    */
   void computeDampingForces();
@@ -268,6 +276,9 @@ private:
    *
    */
   void checkOutputCriteria();
+
+
+
 
   /** @}*/
 

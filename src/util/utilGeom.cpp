@@ -298,3 +298,49 @@ std::pair<util::Point3, double> util::geometry::getCenterAndVol(const std::vecto
     exit(1);
   }
 }
+
+
+bool util::geometry::doLinesIntersect (util::Point3 A , util::Point3 B, util::Point3 C, util::Point3 D){
+
+ //four direction for two lines and points of other line
+   int dir1 = direction(A, B, C);
+   int dir2 = direction(A, B, D);
+   int dir3 = direction(C, D, A);
+   int dir4 = direction(C, D, B);
+   
+   if(dir1 != dir2 && dir3 != dir4)
+      return true; //they are intersecting
+
+   if(dir1==0 && onLine(A,B, C)) //when p2 of line2 are on the line1
+      return true;
+
+   if(dir2==0 && onLine(A,B, D)) //when p1 of line2 are on the line1
+      return true;
+
+   if(dir3==0 && onLine(C,D, A)) //when p2 of line1 are on the line2
+      return true;
+
+   if(dir4==0 && onLine(C,D, B)) //when p1 of line1 are on the line2
+      return true;
+         
+   return false;
+
+}
+
+
+bool util::geometry::onLine(util::Point3 A , util::Point3 B, util::Point3 C) {   
+   if(C.d_x <= std::max(A.d_x, B.d_x) && C.d_x <= std::min(A.d_x, B.d_x) &&
+      (C.d_y <= std::max(A.d_y, B.d_y) && C.d_y <= std::min(A.d_y, B.d_y)))
+      return true;
+   
+   return false;
+}
+
+int util::geometry::direction(util::Point3 A , util::Point3 B, util::Point3 C) {
+   int val = (B.d_y-A.d_y)*(C.d_x-B.d_x)-(B.d_x-A.d_x)*(C.d_y-B.d_y);
+   if (val == 0)
+      return 0;     //colinear
+   else if(val < 0)
+      return 2;    //anti-clockwise direction
+      return 1;    //clockwise direction
+}

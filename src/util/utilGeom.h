@@ -113,6 +113,36 @@ util::Point3 getCenter(const std::vector<util::Point3> &nodes, const size_t
 std::pair<util::Point3, double> getCenterAndVol(const std::vector<util::Point3>
     &nodes, const size_t &elem_type);
 
+/*!
+ * @brief Checks if the two lines between A and B and between C and C interesect
+ * @param A Start point of the first line
+ * @param B End point of the first line
+ * @param C Start point of the second line
+ * @param D End point of the second line
+ * @return interesction 
+ */
+
+bool doLinesIntersect (util::Point3 A , util::Point3 B, util::Point3 C, util::Point3 D);
+
+
+/*!
+ * @brief Checks if the point C in on thw between A and B 
+ * @param A Start point of the first line
+ * @param B End point of the first line
+ * @param C Point to test
+ * @return interesction 
+ */
+bool onLine(util::Point3 A , util::Point3 B, util::Point3 C);
+
+/*!
+ * @brief Checks if the point C in on thw between A and B 
+ * @param A Point 1
+ * @param B Point 2
+ * @param C Point 3 
+ * @return Direction
+ */
+int direction(util::Point3 A , util::Point3 B, util::Point3 C);
+
 } // namespace geometry
 
 } // namespace util

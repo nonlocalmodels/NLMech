@@ -176,6 +176,13 @@ void model::FDModel::init() {
   d_v = std::vector<util::Point3>(nnodes, util::Point3());
   d_f = std::vector<util::Point3>(nnodes, util::Point3());
 
+  //Allocate the reaction force vector
+  if (d_outputDeck_p->isTagInOutput("Reaction_Force")) 
+  {
+  d_reaction_force = std::vector<util::Point3>(nnodes,util::Point3());
+  d_total_reaction_force = std::vector<double>(nnodes,0.);
+  }
+
   // check material type and if needed update policy
   if (!d_material_p->isStateActive()) {
     d_policy_p->addToTags(0, "Model_d_hS");
@@ -519,6 +526,8 @@ std::pair<double, util::Point3> model::FDModel::computeForce(const size_t &i) {
   // local variable to hold force
   auto force_i = util::Point3();
   double energy_i = 0.;
+  d_reaction_force[i] = util::Point3();
+  d_total_reaction_force[i] = 0.;
 
   // reference coordinate and displacement at the node
   auto xi = this->d_mesh_p->getNode(i);
@@ -573,7 +582,15 @@ std::pair<double, util::Point3> model::FDModel::computeForce(const size_t &i) {
         scalar_f * this->d_material_p->getBondForceDirection(xj - xi, uj - ui);
 
     energy_i += ef.first * volj;
+
+
+    //Todo: Add reaction force computation
+    if( is_reaction_force(i,j_id))
+      d_reaction_force[i] += (this->d_mesh_p->getNodalVolume(i)* scalar_f * this->d_material_p->getBondForceDirection(xj - xi, uj - ui));
+
   } // loop over neighboring nodes
+
+  d_total_reaction_force[i] = d_reaction_force[i].length();
 
   return std::make_pair(energy_i, force_i);
 }
@@ -644,6 +661,35 @@ std::pair<double, util::Point3> model::FDModel::computeForceState(const size_t
   } // loop over neighboring nodes
 
   return std::make_pair(energy_i, force_i);
+}
+
+bool model::FDModel::is_reaction_force(size_t i, size_t j){
+
+auto xi = this->d_mesh_p->getNode(i);
+auto xj = this->d_mesh_p->getNode(j);
+auto delta = d_modelDeck_p->d_horizon;
+auto min_x = this->d_mesh_p->getBoundingBox().first[0];
+auto max_x = this->d_mesh_p->getBoundingBox().second[0];
+auto max_y = this->d_mesh_p->getBoundingBox().second[1];
+auto min_y = this->d_mesh_p->getBoundingBox().first[1];
+auto eps = 1e-6;
+
+//Make sure that the node is not in the boundary layer and in 
+//the L layer
+if (xi.d_y > max_y - 1.5 * delta && xi.d_y < max_y - delta )
+{
+
+util::Point3 A = util::Point3(min_x,max_y - delta + eps,0.);
+util::Point3 B = util::Point3(max_x,max_y - delta + eps,0.);
+
+if(util::geometry::doLinesIntersect(A,B,xi,xj))
+
+return true;
+
+}
+
+return false;
+
 }
 
 void model::FDModel::computeDampingForces() {
@@ -882,6 +928,23 @@ void model::FDModel::output() {
 
     writer.appendPointData(tag, &force);
   }
+  tag = "Reaction_Force";
+  if (d_outputDeck_p->isTagInOutput(tag)) {
+    writer.appendPointData(tag, &d_reaction_force);
+    double sum = std::accumulate(d_total_reaction_force.begin(), d_total_reaction_force.end(), 0);
+    
+    //Computation of the area
+    auto delta = d_modelDeck_p->d_horizon;
+    auto min_x = this->d_mesh_p->getBoundingBox().first[0];
+    auto max_x = this->d_mesh_p->getBoundingBox().second[0];
+    auto max_y = this->d_mesh_p->getBoundingBox().second[1];
+    auto min_y = this->d_mesh_p->getBoundingBox().first[1];
+
+    double area = (std::abs(max_x-min_x)-delta) * (std::abs(max_y-min_y) - delta);
+
+    writer.appendFieldData("Total_Reaction_Force",sum/area);
+  }
+
 
   // //
   // // debug

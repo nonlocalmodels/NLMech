@@ -435,7 +435,10 @@ private:
    */
   std::vector<int> d_gInvMap;
 
-  /*! @brief Bounding box */
+  /*! @brief Bounding box 
+  * @return (xmin,ymin,zmin) and (xmax,ymax,zmax)
+  */
+  
   std::pair<std::vector<double>, std::vector<double>> d_bbox;
 
   /*! @brief Mesh size */
