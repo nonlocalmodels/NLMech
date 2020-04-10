@@ -447,7 +447,7 @@ void inp::Input::setLoadingDeck() {
             locs.push_back(j.as<double>());
 
           if (locs.size() != 4) {
-            std::cerr << "Error: Check Rectangle data in Displacement_BC.\n";
+            std::cerr << "Error: Check Rectangle data in " + tag + ".\n";
             exit(1);
           }
           bc.d_x1 = locs[0];
@@ -461,7 +461,7 @@ void inp::Input::setLoadingDeck() {
             locs.push_back(j.as<double>());
 
           if (locs.size() != 4) {
-            std::cerr << "Error: Check Rectangle data in Displacement_BC.\n";
+            std::cerr << "Error: Check Rectangle data in " + tag + ".\n";
             exit(1);
           }
           bc.d_x1 = locs[0];
@@ -484,7 +484,66 @@ void inp::Input::setLoadingDeck() {
                    "smaller than theta or it is very close to theta\n";
             exit(1);
           }
-        } // read bc region
+        } else if (e["Location"]["Point"] and e["Location"]["Radius"])
+        {
+
+         
+          bc.d_regionType = "circle";
+
+          std::vector<double> locs;
+          for (auto j : e["Location"]["Point"])
+            locs.push_back(j.as<double>());
+
+          if (locs.size() != 2) {
+            std::cerr << "Error: Check Point data in " + tag + ".\n";
+            exit(1);
+          }
+
+          bc.d_x1 = locs[0];
+          bc.d_y1 = locs[1];
+
+          std::vector<double> radii;
+          for (auto j : e["Location"]["Radius"])
+            radii.push_back(j.as<double>());
+
+          if (radii.size() != 1) {
+            std::cerr << "Error: Check Radii data in " + tag + ".\n";
+            exit(1);
+          }
+
+          bc.d_r1 = radii[0];
+
+        }
+        else if (e["Location"]["Point"] and e["Location"]["Radii"] )
+        {
+          bc.d_regionType = "torus";
+
+          std::vector<double> locs;
+          for (auto j : e["Location"]["Point"])
+            locs.push_back(j.as<double>());
+
+          if (locs.size() != 2) {
+            std::cerr << "Error: Check Point data in " + tag + ".\n";
+            exit(1);
+          }
+
+          bc.d_x1 = locs[0];
+          bc.d_y1 = locs[1];
+
+          std::vector<double> radii;
+          for (auto j : e["Location"]["Radii"])
+            radii.push_back(j.as<double>());
+
+          if (radii.size() != 2) {
+            std::cerr << "Error: Check Radii data in " + tag + ".\n";
+            exit(1);
+          }
+
+          bc.d_r1 = radii[0];
+          bc.d_r2 = radii[1];
+        }
+         
+        // read bc region
 
         // read direction
         for (auto j : e["Direction"])

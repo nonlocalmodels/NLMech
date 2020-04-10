@@ -135,13 +135,22 @@ bool doLinesIntersect (util::Point3 A , util::Point3 B, util::Point3 C, util::Po
 bool onLine(util::Point3 A , util::Point3 B, util::Point3 C);
 
 /*!
- * @brief Checks if the point C in on thw between A and B 
+ * @brief Checks if the point C in on the line between A and B 
  * @param A Point 1
  * @param B Point 2
  * @param C Point 3 
  * @return Direction
  */
 int direction(util::Point3 A , util::Point3 B, util::Point3 C);
+
+/*!
+ * @brief Checks if the point A is within the circle with the center and the radisu
+ * @param A Point 1
+ * @param center Center of the circle
+ * @param radius Radius of the cricle
+ * @return Direction
+ */
+bool isPointinCircle(util::Point3 A, util::Point3 center, double radius);
 
 } // namespace geometry
 
