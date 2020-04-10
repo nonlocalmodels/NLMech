@@ -177,7 +177,7 @@ void model::FDModel::init() {
   d_f = std::vector<util::Point3>(nnodes, util::Point3());
 
   //Allocate the reaction force vector
-  if (d_outputDeck_p->isTagInOutput("Reaction_Force")) 
+  if (d_outputDeck_p->isTagInOutput("Reaction_Force") or d_outputDeck_p->isTagInOutput("Total_Reaction_Force") ) 
   {
   d_reaction_force = std::vector<util::Point3>(nnodes,util::Point3());
   d_total_reaction_force = std::vector<double>(nnodes,0.);
@@ -526,8 +526,12 @@ std::pair<double, util::Point3> model::FDModel::computeForce(const size_t &i) {
   // local variable to hold force
   auto force_i = util::Point3();
   double energy_i = 0.;
+
+
+   if (d_outputDeck_p->isTagInOutput("Reaction_Force") or d_outputDeck_p->isTagInOutput("Total_Reaction_Force") ) {
   d_reaction_force[i] = util::Point3();
   d_total_reaction_force[i] = 0.;
+   }
 
   // reference coordinate and displacement at the node
   auto xi = this->d_mesh_p->getNode(i);
@@ -585,12 +589,14 @@ std::pair<double, util::Point3> model::FDModel::computeForce(const size_t &i) {
 
 
     //Todo: Add reaction force computation
-    if( is_reaction_force(i,j_id))
+    if( is_reaction_force(i,j_id) and (d_outputDeck_p->isTagInOutput("Reaction_Force") or d_outputDeck_p->isTagInOutput("Total_Reaction_Force")  ))
       d_reaction_force[i] += (this->d_mesh_p->getNodalVolume(i)* scalar_f * this->d_material_p->getBondForceDirection(xj - xi, uj - ui));
 
   } // loop over neighboring nodes
 
-  d_total_reaction_force[i] = d_reaction_force[i].length();
+
+  if (d_outputDeck_p->isTagInOutput("Total_Reaction_Force") )
+    d_total_reaction_force[i] = d_reaction_force[i].length();
 
   return std::make_pair(energy_i, force_i);
 }
@@ -931,6 +937,10 @@ void model::FDModel::output() {
   tag = "Reaction_Force";
   if (d_outputDeck_p->isTagInOutput(tag)) {
     writer.appendPointData(tag, &d_reaction_force);
+  }
+  tag = "Total_Reaction_Force";
+  if (d_outputDeck_p->isTagInOutput(tag)) {
+  
     double sum = std::accumulate(d_total_reaction_force.begin(), d_total_reaction_force.end(), 0);
     
     //Computation of the area
