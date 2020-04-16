@@ -119,7 +119,7 @@ add_subdirectory(src/test)
 
 # Build documentation
 set(Enable_Tools FALSE CACHE BOOL "Enables the tools to the build target")
-if(${Enable_Documentation})
+if(${Enable_Tools})
 add_subdirectory(tools)
 endif()
 
