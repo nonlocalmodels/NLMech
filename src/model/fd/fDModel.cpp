@@ -952,7 +952,7 @@ void model::FDModel::output() {
 
     double area = (std::abs(max_x-min_x)-delta) * (std::abs(max_y-min_y) - delta);
 
-    writer.appendFieldData("Total_Reaction_Force",sum/area);
+    writer.appendFieldData("Total_Reaction_Force",sum*area);
   }
 
 

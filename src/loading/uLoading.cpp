@@ -20,13 +20,16 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
   // fill the list of nodes where bc is applied and also set fixity of these
   // nodes
   for (const auto &bc : d_bcData) {
-
+    std::cout << bc.d_regionType << std::endl;
     // check bc first
     if (bc.d_regionType != "rectangle" and
-        bc.d_regionType != "angled_rectangle") {
+        bc.d_regionType != "angled_rectangle" and
+        bc.d_regionType != "circle" and
+         bc.d_regionType != "torus"
+        ) {
       std::cerr
           << "Error: Displacement bc region type = " << bc.d_regionType
-          << " not recognised. Should be rectangle or angled_rectangle. \n";
+          << " not recognised. Should be rectangle or angled_rectangle or circle or torus. \n";
       exit(1);
     }
 
@@ -105,7 +108,26 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
         }
         // store the id of this node
         fix_nodes.push_back(i);
+      } else if (bc.d_regionType == "circle" &&
+          util::geometry::isPointinCircle(mesh->getNode(i), util::Point3(bc.d_x1,bc.d_y1,0.), bc.d_r1)) {
+
+        // loop over direction and set fixity
+        for (auto dof : bc.d_direction) {
+          // pass 0 for x, 1 for y, and 2 for z dof
+          mesh->setFixity(i, dof - 1, true);
+        }
       }
+      else if (bc.d_regionType == "torus" &&
+          util::geometry::isPointinCircle(mesh->getNode(i), util::Point3(bc.d_x1,bc.d_y1,0.), bc.d_r1) && 
+          ! util::geometry::isPointinCircle(mesh->getNode(i), util::Point3(bc.d_x1,bc.d_y1,0.), bc.d_r2 )) {
+
+        // loop over direction and set fixity
+        for (auto dof : bc.d_direction) {
+          // pass 0 for x, 1 for y, and 2 for z dof
+          mesh->setFixity(i, dof - 1, true);
+        }
+      }
+      
 
     } // loop over nodes
 
