@@ -16,8 +16,8 @@
 
 namespace {
 
-bool checkPoint(const std::vector<double> &p, const std::vector<util::Point3> &nodes) {
-
+bool checkPoint(const std::vector<double> &p,
+                const std::vector<util::Point3> &nodes) {
   // check to see if p is in reference tet element
   bool check = false;
   if (util::compare::definitelyLessThan(p[0], -1.0E-5) ||
@@ -26,12 +26,10 @@ bool checkPoint(const std::vector<double> &p, const std::vector<util::Point3> &n
       util::compare::definitelyGreaterThan(p[0], 1. + 1.0E-5) ||
       util::compare::definitelyGreaterThan(p[1], 1. + 1.0E-5) ||
       util::compare::definitelyGreaterThan(p[2], 1. + 1.0E-5)) {
-
     check = true;
   }
 
   if (!check) {
-
     // check if projection of point in x, y, z plane is within the limit
     if (util::compare::definitelyGreaterThan(p[0], 1. + 1.0E-5 - p[1]))
       check = true;
@@ -44,30 +42,24 @@ bool checkPoint(const std::vector<double> &p, const std::vector<util::Point3> &n
   }
 
   if (check) {
-    std::cerr << "Error: Point p = ("
-              << p[0] << ", " << p[1] << ", " << p[2]
+    std::cerr << "Error: Point p = (" << p[0] << ", " << p[1] << ", " << p[2]
               << ") does not belong to reference tet element = {("
               << nodes[0].d_x << ", " << nodes[0].d_y << ", " << nodes[0].d_z
-              << "), ("
-              << nodes[1].d_x << "," << nodes[1].d_y << ", " << nodes[1].d_z
-              << "), ("
-              << nodes[2].d_x << "," << nodes[2].d_y << ", " << nodes[2].d_z
-              << "), ("
-              << nodes[3].d_x << "," << nodes[3].d_y << ", " << nodes[3].d_z
-              << ")}.\n"
+              << "), (" << nodes[1].d_x << "," << nodes[1].d_y << ", "
+              << nodes[1].d_z << "), (" << nodes[2].d_x << "," << nodes[2].d_y
+              << ", " << nodes[2].d_z << "), (" << nodes[3].d_x << ","
+              << nodes[3].d_y << ", " << nodes[3].d_z << ")}.\n"
               << "Coordinates in reference element are: "
-              << "xi = " << p[0]
-              << ", eta = " << p[1]
-              << ", zeta = " << p[2] << "\n";
+              << "xi = " << p[0] << ", eta = " << p[1] << ", zeta = " << p[2]
+              << "\n";
     exit(1);
   }
 }
 
-} // anonymous namespace
+}  // anonymous namespace
 
 fe::TetElem::TetElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_triangle) {
-
   if (d_quadOrder > 3) {
     std::cout << "Error: For linear tet element, we only support upto 3 quad "
                  "order approximation.\n";
@@ -94,7 +86,6 @@ std::vector<double> fe::TetElem::getShapes(
 
 std::vector<std::vector<double>> fe::TetElem::getDerShapes(
     const util::Point3 &p, const std::vector<util::Point3> &nodes) {
-
   // get derivatives of shape function in reference tet element
   auto ders_ref = getDerShapes(mapPointToRefElem(p, nodes));
 
@@ -109,21 +100,18 @@ std::vector<std::vector<double>> fe::TetElem::getDerShapes(
                                         std::vector<double>(3, 0.));
 
   // grad N_i = J_inv * grad N_i^ref
-  for (size_t i = 0; i < 4; i++)
-    ders[i] = util::dot(J_inv, ders_ref[i]);
+  for (size_t i = 0; i < 4; i++) ders[i] = util::dot(J_inv, ders_ref[i]);
 
   return ders;
 }
 
 std::vector<fe::QuadData> fe::TetElem::getQuadDatas(
     const std::vector<util::Point3> &nodes) {
-
   // copy quad data associated to reference element
   auto qds = d_quads;
 
   // modify data
   for (auto &qd : qds) {
-
     // get Jacobian and determinant
     qd.d_detJ = getJacobian(qd.d_p, nodes, &(qd.d_J));
 
@@ -132,7 +120,7 @@ std::vector<fe::QuadData> fe::TetElem::getQuadDatas(
 
     // map point to triangle
     qd.d_p = util::Point3();
-    for (size_t i=0; i<4; i++) {
+    for (size_t i = 0; i < 4; i++) {
       qd.d_p.d_x += qd.d_shapes[i] * nodes[i].d_x;
       qd.d_p.d_y += qd.d_shapes[i] * nodes[i].d_y;
       qd.d_p.d_z += qd.d_shapes[i] * nodes[i].d_z;
@@ -162,13 +150,12 @@ std::vector<fe::QuadData> fe::TetElem::getQuadPoints(
 
   // modify data
   for (auto &qd : qds) {
-
     // transform quad weight
     qd.d_w *= getJacobian(qd.d_p, nodes, nullptr);
 
     // map point to triangle
     qd.d_p = util::Point3();
-    for (size_t i=0; i<4; i++) {
+    for (size_t i = 0; i < 4; i++) {
       qd.d_p.d_x += qd.d_shapes[i] * nodes[i].d_x;
       qd.d_p.d_y += qd.d_shapes[i] * nodes[i].d_y;
       qd.d_p.d_z += qd.d_shapes[i] * nodes[i].d_z;
@@ -185,7 +172,6 @@ std::vector<double> fe::TetElem::getShapes(const util::Point3 &p) {
 
 std::vector<std::vector<double>> fe::TetElem::getDerShapes(
     const util::Point3 &p) {
-
   // d N1/d xi = -1, d N1/d eta = -1, d N1/d zeta = -1,
   // d N2/ d xi = 1, d N2/d eta = 0, d N2/d zeta = 0,
   // d N3/ d xi = 0, d N3/d eta = 1, d N3/d zeta = 0,
@@ -201,7 +187,6 @@ std::vector<std::vector<double>> fe::TetElem::getDerShapes(
 
 util::Point3 fe::TetElem::mapPointToRefElem(
     const util::Point3 &p, const std::vector<util::Point3> &nodes) {
-
   // get Jacobian matrix and compute its transpose
   std::vector<std::vector<double>> J;
   auto detJ = getJacobian(p, nodes, &J);
@@ -214,8 +199,7 @@ util::Point3 fe::TetElem::mapPointToRefElem(
   auto B_inv = util::inv(B);
 
   // get vector from first vertex to point p
-  std::vector<double> vec_p = {p.d_x - nodes[0].d_x,
-                               p.d_y - nodes[0].d_y,
+  std::vector<double> vec_p = {p.d_x - nodes[0].d_x, p.d_y - nodes[0].d_y,
                                p.d_z - nodes[0].d_z};
   // multiply B_inv to vector to transform point
   auto p_ref = util::dot(B_inv, vec_p);
@@ -253,14 +237,14 @@ double fe::TetElem::getJacobian(const util::Point3 &p,
     std::vector<std::vector<double>> J_local;
     J_local.resize(3);
     J_local[0] = std::vector<double>{nodes[1].d_x - nodes[0].d_x,
-                                  nodes[1].d_y - nodes[0].d_y,
-                                  nodes[1].d_z - nodes[0].d_z};
+                                     nodes[1].d_y - nodes[0].d_y,
+                                     nodes[1].d_z - nodes[0].d_z};
     J_local[1] = std::vector<double>{nodes[2].d_x - nodes[0].d_x,
-                                  nodes[2].d_y - nodes[0].d_y,
-                                  nodes[2].d_z - nodes[0].d_z};
+                                     nodes[2].d_y - nodes[0].d_y,
+                                     nodes[2].d_z - nodes[0].d_z};
     J_local[2] = std::vector<double>{nodes[3].d_x - nodes[0].d_x,
-                                  nodes[3].d_y - nodes[0].d_y,
-                                  nodes[3].d_z - nodes[0].d_z};
+                                     nodes[3].d_y - nodes[0].d_y,
+                                     nodes[3].d_z - nodes[0].d_z};
 
     return util::det(J_local);
   }

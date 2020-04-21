@@ -34,43 +34,38 @@ rw::reader::VtkReader::VtkReader(const std::string &filename) {
 }
 
 bool rw::reader::VtkReader::vtuHasPointData(const std::string &data_tag) {
-
   // read point field data
   d_grid_p = d_reader_p->GetOutput();
   vtkPointData *p_field = d_grid_p->GetPointData();
-  for (size_t i=0; i<p_field->GetNumberOfArrays(); i++) {
+  for (size_t i = 0; i < p_field->GetNumberOfArrays(); i++) {
     auto tag = p_field->GetArrayName(i);
 
-    if (tag == data_tag)
-      return true;
+    if (tag == data_tag) return true;
   }
 
   return false;
 }
 
 bool rw::reader::VtkReader::vtuHasCellData(const std::string &data_tag) {
-
   // read point field data
   d_grid_p = d_reader_p->GetOutput();
   vtkCellData *c_field = d_grid_p->GetCellData();
-  for (size_t i=0; i<c_field->GetNumberOfArrays(); i++) {
+  for (size_t i = 0; i < c_field->GetNumberOfArrays(); i++) {
     auto tag = c_field->GetArrayName(i);
-    if (tag == data_tag)
-      return true;
+    if (tag == data_tag) return true;
   }
 
   return false;
 }
 
 std::vector<std::string> rw::reader::VtkReader::readVtuFilePointTags() {
-
   // read point field data
   d_grid_p = d_reader_p->GetOutput();
   vtkPointData *p_field = d_grid_p->GetPointData();
 
   std::vector<std::string> tags;
 
-  for (size_t i=0; i<p_field->GetNumberOfArrays(); i++) {
+  for (size_t i = 0; i < p_field->GetNumberOfArrays(); i++) {
     auto tag = p_field->GetArrayName(i);
     tags.emplace_back(tag);
   }
@@ -79,21 +74,19 @@ std::vector<std::string> rw::reader::VtkReader::readVtuFilePointTags() {
 }
 
 std::vector<std::string> rw::reader::VtkReader::readVtuFileCellTags() {
-
   // read point field data
   d_grid_p = d_reader_p->GetOutput();
   vtkCellData *c_field = d_grid_p->GetCellData();
 
   std::vector<std::string> tags;
 
-  for (size_t i=0; i<c_field->GetNumberOfArrays(); i++) {
+  for (size_t i = 0; i < c_field->GetNumberOfArrays(); i++) {
     auto tag = c_field->GetArrayName(i);
     tags.emplace_back(tag);
   }
 
   return tags;
 }
-
 
 void rw::reader::VtkReader::readMesh(size_t dim,
                                      std::vector<util::Point3> *nodes,

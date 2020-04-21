@@ -29,23 +29,19 @@ static const double tol = 1.0E-12;
 
 static void readNodes(const std::string &filename,
                       std::vector<util::Point3> &nodes) {
-
   // csv reader
   io::CSVReader<3> in(filename);
   double x, y, z;
-  while (in.read_row(x, y, z))
-    nodes.emplace_back(x, y, z);
+  while (in.read_row(x, y, z)) nodes.emplace_back(x, y, z);
 }
 
 static size_t readElements(const std::string &filename, const size_t &elem_type,
                            std::vector<size_t> &elements) {
-
   if (elem_type == util::vtk_type_triangle) {
     io::CSVReader<3> in(filename);
     std::vector<size_t> ids(3, 0);
     while (in.read_row(ids[0], ids[1], ids[2])) {
-      for (auto id : ids)
-        elements.emplace_back(id);
+      for (auto id : ids) elements.emplace_back(id);
     }
 
     size_t num_vertex = util::vtk_map_element_to_num_nodes[elem_type];
@@ -54,8 +50,7 @@ static size_t readElements(const std::string &filename, const size_t &elem_type,
     io::CSVReader<4> in(filename);
     std::vector<size_t> ids(4, 0);
     while (in.read_row(ids[0], ids[1], ids[2], ids[3])) {
-      for (auto id : ids)
-        elements.emplace_back(id);
+      for (auto id : ids) elements.emplace_back(id);
     }
 
     size_t num_vertex = util::vtk_map_element_to_num_nodes[elem_type];
@@ -64,8 +59,7 @@ static size_t readElements(const std::string &filename, const size_t &elem_type,
     io::CSVReader<4> in(filename);
     std::vector<size_t> ids(4, 0);
     while (in.read_row(ids[0], ids[1], ids[2], ids[3])) {
-      for (auto id : ids)
-        elements.emplace_back(id);
+      for (auto id : ids) elements.emplace_back(id);
     }
 
     size_t num_vertex = util::vtk_map_element_to_num_nodes[elem_type];
@@ -77,7 +71,6 @@ static bool checkRefIntegration(const size_t &n, const size_t &i,
                                 const size_t &j,
                                 const std::vector<fe::QuadData> &qds,
                                 double &I_exact) {
-
   double I_approx = 0.;
   for (auto qd : qds)
     I_approx += qd.d_w * std::pow(qd.d_p.d_x, i) * std::pow(qd.d_p.d_y, j);
@@ -99,7 +92,6 @@ static bool checkRefIntegration(const size_t &n, const size_t &i,
                                 const size_t &j, const size_t &k,
                                 const std::vector<fe::QuadData> &qds,
                                 double &I_exact) {
-
   double I_approx = 0.;
   for (auto qd : qds)
     I_approx += qd.d_w * std::pow(qd.d_p.d_x, i) * std::pow(qd.d_p.d_y, j) *
@@ -115,8 +107,7 @@ static bool checkRefIntegration(const size_t &n, const size_t &i,
 
     std::cout << "Print " << i << " " << j << " " << k
               << " debug id = " << debug_id << "\n";
-    for (auto qd : qds)
-      std::cout << qd.printStr() << "\n";
+    for (auto qd : qds) std::cout << qd.printStr() << "\n";
 
     return false;
   }
@@ -129,19 +120,15 @@ static bool checkRefIntegration(const size_t &n, const size_t &i,
 //
 
 double test::getNChooseR(size_t n, size_t r) {
-
-  if (r == 0)
-    return 1.;
+  if (r == 0) return 1.;
 
   double a = 1.;
-  for (size_t i = 1; i <= r; i++)
-    a *= double(n - i + 1) / double(i);
+  for (size_t i = 1; i <= r; i++) a *= double(n - i + 1) / double(i);
 
   return a;
 }
 
 double test::getExactIntegrationRefTri(size_t alpha, size_t beta) {
-
   // compute exact integration of s^\alpha t^\beta
   double I = 0.;
   for (size_t k = 0; k <= beta + 1; k++) {
@@ -157,7 +144,6 @@ double test::getExactIntegrationRefTri(size_t alpha, size_t beta) {
 }
 
 double test::getExactIntegrationRefQuad(size_t alpha, size_t beta) {
-
   // compute exact integration of s^\alpha t^\beta
   if (alpha % 2 == 0 and beta % 2 == 0)
     return 4. / double((alpha + 1) * (beta + 1));
@@ -167,21 +153,16 @@ double test::getExactIntegrationRefQuad(size_t alpha, size_t beta) {
 
 double test::getExactIntegrationRefTet(size_t alpha, size_t beta,
                                        size_t theta) {
-
   double I = 0.;
   for (size_t i = 0; i <= theta + 1; i++) {
-
     double factor_i = test::getNChooseR(theta + 1, i) /
                       (double(theta + 1) * double(i + beta + 1));
-    if (i % 2 != 0)
-      factor_i = factor_i * (-1.);
+    if (i % 2 != 0) factor_i = factor_i * (-1.);
 
     for (size_t j = 0; j <= theta + beta + 2 + 1; j++) {
-
       double factor_j =
           test::getNChooseR(theta + beta + 2, j) / (double(j + alpha + 1));
-      if (j % 2 != 0)
-        factor_j = factor_j * (-1.);
+      if (j % 2 != 0) factor_j = factor_j * (-1.);
 
       I += factor_i * factor_j;
     }
@@ -193,7 +174,6 @@ double test::getExactIntegrationRefTet(size_t alpha, size_t beta,
 void test::testLineElem(size_t n) { return; }
 
 void test::testTriElem(size_t n) {
-
   //
   // Test1: We test accuracy of integrals of polynomials over reference
   // triangle. Reference triangle {(0,0), (1,0), (0,1)}.
@@ -216,8 +196,7 @@ void test::testTriElem(size_t n) {
                                        util::Point3(0., 1., 0.)};
     std::vector<fe::QuadData> qds = quad.getQuadPoints(nodes);
     double sum = 0.;
-    for (auto qd : qds)
-      sum += qd.d_w;
+    for (auto qd : qds) sum += qd.d_w;
 
     if (std::abs(sum - 0.5) > tol) {
       std::cout << "Error in order = " << n
@@ -232,9 +211,7 @@ void test::testTriElem(size_t n) {
     //
     for (size_t i = 0; i <= n; i++)
       for (size_t j = 0; j <= n; j++) {
-
-        if (i + j > n)
-          continue;
+        if (i + j > n) continue;
 
         //
         // when {(0,0), (1,0), (0,1)}
@@ -245,8 +222,7 @@ void test::testTriElem(size_t n) {
         // test integration of polynomial f(s,t) = s^i t^j
         // get the exact integration
         double I_exact = test::getExactIntegrationRefTri(i, j);
-        if (!checkRefIntegration(n, i, j, qds, I_exact))
-          error_test_1++;
+        if (!checkRefIntegration(n, i, j, qds, I_exact)) error_test_1++;
 
         //
         // when vertices are {(1,0), (0,1), (0,0)}
@@ -264,8 +240,7 @@ void test::testTriElem(size_t n) {
         // included in the weight.
         //
         // Thus the following method for I_approx is correct.
-        if (!checkRefIntegration(n, i, j, qds, I_exact))
-          error_test_1++;
+        if (!checkRefIntegration(n, i, j, qds, I_exact)) error_test_1++;
 
         //
         // when vertices are {(0,1), (0,0), (1,0)}
@@ -273,10 +248,9 @@ void test::testTriElem(size_t n) {
         nodes = {util::Point3(0., 1., 0.), util::Point3(),
                  util::Point3(1., 0., 0.)};
         qds = quad.getQuadPoints(nodes);
-        if (!checkRefIntegration(n, i, j, qds, I_exact))
-          error_test_1++;
+        if (!checkRefIntegration(n, i, j, qds, I_exact)) error_test_1++;
       }
-  } // Test 1
+  }  // Test 1
 
   //
   // Test 2
@@ -296,9 +270,7 @@ void test::testTriElem(size_t n) {
     // loop over polynomials
     for (size_t i = 0; i <= n; i++)
       for (size_t j = 0; j <= n; j++) {
-
-        if (i + j > n)
-          continue;
+        if (i + j > n) continue;
 
         double I_exact = 1. / (double(i + 1) * double(j + 1));
         double I_approx = 0.;
@@ -345,7 +317,6 @@ void test::testTriElem(size_t n) {
 }
 
 void test::testQuadElem(size_t n) {
-
   //
   // Test1: We test accuracy of integrals of polynomials over reference
   // quadrangle. Reference triangle {(-1,-1), (1,-1), (1,1), (-1,1)}.
@@ -369,8 +340,7 @@ void test::testQuadElem(size_t n) {
         util::Point3(1., 1., 0.), util::Point3(-1., 1., 0.)};
     std::vector<fe::QuadData> qds = quad.getQuadPoints(nodes);
     double sum = 0.;
-    for (auto qd : qds)
-      sum += qd.d_w;
+    for (auto qd : qds) sum += qd.d_w;
 
     if (std::abs(sum - 4.0) > tol) {
       std::cout << "Error in order = " << n
@@ -385,7 +355,6 @@ void test::testQuadElem(size_t n) {
     //
     for (size_t i = 0; i <= 2 * n - 1; i++)
       for (size_t j = 0; j <= 2 * n - 1; j++) {
-
         //
         // when {(-1,-1), (1,-1), (1,1), (-1,1)}
         //
@@ -395,8 +364,7 @@ void test::testQuadElem(size_t n) {
         // test integration of polynomial f(s,t) = s^i t^j
         // get the exact integration
         double I_exact = test::getExactIntegrationRefQuad(i, j);
-        if (!checkRefIntegration(n, i, j, qds, I_exact))
-          error_test_1++;
+        if (!checkRefIntegration(n, i, j, qds, I_exact)) error_test_1++;
 
         //
         // when {(-1,1), (-1,-1), (1,-1), (1,1)}
@@ -414,8 +382,7 @@ void test::testQuadElem(size_t n) {
         // included in the weight.
         //
         // Thus the following method for I_approx is correct.
-        if (!checkRefIntegration(n, i, j, qds, I_exact))
-          error_test_1++;
+        if (!checkRefIntegration(n, i, j, qds, I_exact)) error_test_1++;
 
         //
         // when {(1,1), (-1,1), (-1,-1), (1,-1)}
@@ -423,8 +390,7 @@ void test::testQuadElem(size_t n) {
         nodes = {util::Point3(1., 1., 0.), util::Point3(-1., 1., 0.),
                  util::Point3(-1., -1., 0.), util::Point3(1., -1., 0.)};
         qds = quad.getQuadPoints(nodes);
-        if (!checkRefIntegration(n, i, j, qds, I_exact))
-          error_test_1++;
+        if (!checkRefIntegration(n, i, j, qds, I_exact)) error_test_1++;
 
         //
         // when {(1,-1), (1,1), (-1,1), (-1,-1)}
@@ -432,10 +398,9 @@ void test::testQuadElem(size_t n) {
         nodes = {util::Point3(1., -1., 0.), util::Point3(1., 1., 0.),
                  util::Point3(-1., 1., 0.), util::Point3(-1., -1., 0.)};
         qds = quad.getQuadPoints(nodes);
-        if (!checkRefIntegration(n, i, j, qds, I_exact))
-          error_test_1++;
+        if (!checkRefIntegration(n, i, j, qds, I_exact)) error_test_1++;
       }
-  } // Test 1
+  }  // Test 1
 
   //
   // Test 2
@@ -455,7 +420,6 @@ void test::testQuadElem(size_t n) {
     // loop over polynomials
     for (size_t i = 0; i <= 2 * n - 1; i++)
       for (size_t j = 0; j <= 2 * n - 1; j++) {
-
         double I_exact = 1. / (double(i + 1) * double(j + 1));
         double I_approx = 0.;
         // loop over elements and compute I_approx
@@ -495,7 +459,6 @@ void test::testQuadElem(size_t n) {
 }
 
 void test::testTriElemTime(size_t n, size_t N) {
-
   // get Quadrature
   auto quad = fe::TriElem(n);
 
@@ -536,10 +499,8 @@ void test::testTriElemTime(size_t n, size_t N) {
   std::vector<fe::QuadData> quad_data;
   for (size_t e = 0; e < N; e++) {
     std::vector<fe::QuadData> qds = quad.getQuadPoints(nodes);
-    if (e == 0)
-      num_quad_pts = qds.size();
-    for (auto qd : qds)
-      quad_data.emplace_back(qd);
+    if (e == 0) num_quad_pts = qds.size();
+    for (auto qd : qds) quad_data.emplace_back(qd);
   }
 
   std::uint64_t t21 = hpx::util::high_resolution_clock::now();
@@ -568,7 +529,6 @@ void test::testTriElemTime(size_t n, size_t N) {
 }
 
 void test::testTetElem(size_t n) {
-
   //
   // Test1: We test accuracy of integrals of polynomials over reference
   // tetrahedron. Reference element {(0,0,0), (1,0,0), (0,1,0), (0,0,1)}.
@@ -593,8 +553,7 @@ void test::testTetElem(size_t n) {
     std::vector<fe::QuadData> qds = quad.getQuadPoints(nodes);
 
     double sum = 0.;
-    for (auto qd : qds)
-      sum += qd.d_w;
+    for (auto qd : qds) sum += qd.d_w;
 
     if (std::abs(sum - 1. / 6.) > tol) {
       std::cout << "Error in order = " << n
@@ -610,9 +569,7 @@ void test::testTetElem(size_t n) {
     for (size_t i = 0; i <= n; i++)
       for (size_t j = 0; j <= n; j++)
         for (size_t k = 0; k <= n; k++) {
-
-          if (i + j + k > n)
-            continue;
+          if (i + j + k > n) continue;
 
           //
           // +ve order of indices are:
@@ -649,8 +606,7 @@ void test::testTetElem(size_t n) {
           //
           // Thus the following method for I_approx is correct.
           debug_id = 1;
-          if (!checkRefIntegration(n, i, j, k, qds, I_exact))
-            error_test_1++;
+          if (!checkRefIntegration(n, i, j, k, qds, I_exact)) error_test_1++;
 
           //
           // when vertices are {(0,1,0), (0,0,1), (0,0,0), (1,0,0)}
@@ -659,8 +615,7 @@ void test::testTetElem(size_t n) {
                    util::Point3(0., 0., 0.), util::Point3(1., 0., 0.)};
           qds = quad.getQuadPoints(nodes);
           debug_id = 2;
-          if (!checkRefIntegration(n, i, j, k, qds, I_exact))
-            error_test_1++;
+          if (!checkRefIntegration(n, i, j, k, qds, I_exact)) error_test_1++;
 
           //
           // when vertices are {(0,0,1), (0,0,0), (1,0,0), (0,1,0)}
@@ -669,10 +624,9 @@ void test::testTetElem(size_t n) {
                    util::Point3(1., 0., 0.), util::Point3(0., 1., 0.)};
           qds = quad.getQuadPoints(nodes);
           debug_id = 3;
-          if (!checkRefIntegration(n, i, j, k, qds, I_exact))
-            error_test_1++;
+          if (!checkRefIntegration(n, i, j, k, qds, I_exact)) error_test_1++;
         }
-  } // Test 1
+  }  // Test 1
 
   //
   // Test 2
@@ -693,9 +647,7 @@ void test::testTetElem(size_t n) {
     for (size_t i = 0; i <= n; i++)
       for (size_t j = 0; j <= n; j++)
         for (size_t k = 0; k <= n; k++) {
-
-          if (i + j + k > n)
-            continue;
+          if (i + j + k > n) continue;
 
           double I_exact = 1. / (double(i + 1) * double(j + 1) * double(k + 1));
           double I_approx = 0.;
@@ -712,18 +664,14 @@ void test::testTetElem(size_t n) {
                           std::pow(qd.d_p.d_y, j) * std::pow(qd.d_p.d_z, k);
 
               if (false) {
-
                 std::cout << "Print " << i << " " << j << " " << k << "\n";
                 std::cout << util::io::printStr(enodes) << "\n";
                 std::vector<size_t> enode_ids = {
-                      elements[num_vertex * e + 0],
-                      elements[num_vertex * e + 1],
-                      elements[num_vertex * e + 2],
-                      elements[num_vertex * e + 3]};
+                    elements[num_vertex * e + 0], elements[num_vertex * e + 1],
+                    elements[num_vertex * e + 2], elements[num_vertex * e + 3]};
                 std::cout << util::io::printStr(enode_ids) << "\n";
                 std::cout << qd.printStr() << "\n";
               }
-
             }
           }
 

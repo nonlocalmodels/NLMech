@@ -7,15 +7,14 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Config.h>
-#include <hpx/hpx_main.hpp>                     // Need main source file
+#include <hpx/hpx_main.hpp>  // Need main source file
 #include <hpx/util/high_resolution_clock.hpp>
-#include "inp/input.h"                          // Input class
-#include "model/fd/fDModel.h"                   // Model class
+#include "inp/input.h"         // Input class
+#include "model/fd/fDModel.h"  // Model class
 #include <iostream>
-#include <boost/program_options.hpp> // program options
+#include <boost/program_options.hpp>  // program options
 
 int main(int argc, char *argv[]) {
-
   boost::program_options::options_description desc("Allowed options");
   desc.add_options()("help", "produce help message")(
       "input-file,i", boost::program_options::value<std::string>(),
@@ -33,19 +32,17 @@ int main(int argc, char *argv[]) {
 
   // read input file
   std::string filename;
-  if (vm.count("input-file"))
-    filename = vm["input-file"].as<std::string>();
+  if (vm.count("input-file")) filename = vm["input-file"].as<std::string>();
 
   if (filename.empty()) {
-    std::cerr << argv[0] << " (Version " << MAJOR_VERSION <<
-    		"." << MINOR_VERSION << "." << UPDATE_VERSION <<
-			") -i input.yaml --hpx:threads=n" << std::endl;
+    std::cerr << argv[0] << " (Version " << MAJOR_VERSION << "."
+              << MINOR_VERSION << "." << UPDATE_VERSION
+              << ") -i input.yaml --hpx:threads=n" << std::endl;
     exit(1);
   }
   // Print program version
-  std::cout << argv[0] << " (Version " << MAJOR_VERSION <<
-  		"." << MINOR_VERSION << "." << UPDATE_VERSION <<
-			")" << std::endl;
+  std::cout << argv[0] << " (Version " << MAJOR_VERSION << "." << MINOR_VERSION
+            << "." << UPDATE_VERSION << ")" << std::endl;
   // record current time
   std::uint64_t begin = hpx::util::high_resolution_clock::now();
 

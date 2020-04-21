@@ -10,26 +10,21 @@
 #include <hpx/hpx_main.hpp>
 
 int main() {
-
   //
   // test quadrature method for triangle
   //
   {
     // test quad data for line element
-    for (size_t i = 1; i < 6; i++)
-      test::testLineElem(i);
+    for (size_t i = 1; i < 6; i++) test::testLineElem(i);
 
     // test quad data for triangle element
-    for (size_t i = 1; i < 6; i++)
-      test::testTriElem(i);
+    for (size_t i = 1; i < 6; i++) test::testTriElem(i);
 
     // test quad data for quadrangle element
-    for (size_t i = 1; i < 6; i++)
-      test::testQuadElem(i);
+    for (size_t i = 1; i < 6; i++) test::testQuadElem(i);
 
     // test quad data for triangle element
-    for (size_t i = 1; i < 4; i++)
-      test::testTetElem(i);
+    for (size_t i = 1; i < 4; i++) test::testTetElem(i);
 
     // test additional time in computing quad points instead of storing it
     if (false) {

@@ -7,12 +7,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "fe1D.h"
-#include "rw/writer.h"    // definition of vtk and msh writer interface
-#include "util/point.h" // definition of Point3
-#include "util/feElementDefs.h"   // definition of fe element type
+#include "rw/writer.h"           // definition of vtk and msh writer interface
+#include "util/point.h"          // definition of Point3
+#include "util/feElementDefs.h"  // definition of fe element type
 #include <cmath>
 #include <iostream>
-#include <yaml-cpp/yaml.h> // YAML reader
+#include <yaml-cpp/yaml.h>  // YAML reader
 
 namespace {
 
@@ -31,7 +31,6 @@ struct InpData {
 };
 
 void readInputFile(InpData *data, YAML::Node config) {
-
   // read output path, filenames
   if (config["Output"]) {
     if (config["Output"]["Path"])
@@ -59,8 +58,7 @@ void readInputFile(InpData *data, YAML::Node config) {
 
   if (config["Domain"]) {
     std::vector<double> d;
-    for (auto e : config["Domain"])
-      d.push_back(e.as<double>());
+    for (auto e : config["Domain"]) d.push_back(e.as<double>());
 
     data->d_domain.first = d[0];
     data->d_domain.second = d[1];
@@ -95,10 +93,9 @@ void readInputFile(InpData *data, YAML::Node config) {
     data->d_compressType = config["Compress_Type"].as<std::string>();
 }
 
-} // namespace
+}  // namespace
 
 void tools::mesh::fe1D(const std::string &filename) {
-
   // read input file
   YAML::Node config = YAML::LoadFile(filename);
   InpData data;

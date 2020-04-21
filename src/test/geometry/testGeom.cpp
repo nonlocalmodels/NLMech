@@ -10,7 +10,6 @@
 #include <hpx/hpx_main.hpp>
 
 int main() {
-
   //
   // test Fracture class and specifically the bitwise operation
   //

@@ -18,7 +18,6 @@ loading::InitialCondition::InitialCondition(inp::InitialConditionDeck *deck)
 void loading::InitialCondition::apply(std::vector<util::Point3> *u,
                                       std::vector<util::Point3> *v,
                                       fe::Mesh *mesh) {
-
   // process displacement
   if (!d_deck_p->d_uICData.d_type.empty() &&
       d_deck_p->d_uICData.d_type != "file") {
@@ -67,13 +66,11 @@ void loading::InitialCondition::apply(std::vector<util::Point3> *u,
 double loading::InitialCondition::getICFormula(
     const std::string &fn_type, const std::vector<double> &params,
     const util::Point3 &x, const size_t &dof, const size_t &dim) {
-
   if (fn_type == "gaussian" && dim == 2)
     return util::function::gaussian2d(x, dof, params);
   else if (fn_type == "double_gaussian" && dim == 2)
     return util::function::doubleGaussian2d(x, dof, params);
   else {
-
     std::cerr << "Error: Check initial condition flag = " << fn_type
               << ". Currently only guassian and double_guassian "
                  "type functions are supported in 2-d.\n";

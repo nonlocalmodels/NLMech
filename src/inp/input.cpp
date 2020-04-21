@@ -32,13 +32,18 @@ static inline bool definitelyGreaterThan(const double &a, const double &b) {
 }
 
 inp::Input::Input(const std::string &filename)
-    : d_fractureDeck_p(nullptr), d_meshDeck_p(nullptr),
-      d_initialConditionDeck_p(nullptr), d_interiorFlagsDeck_p(nullptr),
-      d_loadingDeck_p(nullptr), d_materialDeck_p(nullptr),
-      d_neighborDeck_p(nullptr), d_outputDeck_p(nullptr),
-      d_policyDeck_p(nullptr), d_modelDeck_p(nullptr),
-      d_solverDeck_p(nullptr), d_absorbingCondDeck_p(nullptr) {
-
+    : d_fractureDeck_p(nullptr),
+      d_meshDeck_p(nullptr),
+      d_initialConditionDeck_p(nullptr),
+      d_interiorFlagsDeck_p(nullptr),
+      d_loadingDeck_p(nullptr),
+      d_materialDeck_p(nullptr),
+      d_neighborDeck_p(nullptr),
+      d_outputDeck_p(nullptr),
+      d_policyDeck_p(nullptr),
+      d_modelDeck_p(nullptr),
+      d_solverDeck_p(nullptr),
+      d_absorbingCondDeck_p(nullptr) {
   d_inputFilename = filename;
 
   // follow the order of reading
@@ -143,9 +148,7 @@ void inp::Input::setModelDeck() {
     d_modelDeck_p->d_h = config["Model"]["Mesh_Size"].as<double>();
 
   if (!config["Model"]["Horizon"]) {
-
     if (!config["Model"]["Horizon_h_Ratio"] or !config["Model"]["Mesh_Size"]) {
-
       std::cerr << "Error: Horizon is not provided. In this case "
                    "Horizon_h_Ratio and Mesh_Size are necessary to compute "
                    "horizon.\n";
@@ -174,9 +177,8 @@ void inp::Input::setModelDeck() {
   d_modelDeck_p->d_dt = d_modelDeck_p->d_tFinal / d_modelDeck_p->d_Nt;
 
   // check if this is restart problem
-  if (config["Restart"])
-    d_modelDeck_p->d_isRestartActive = true;
-} // setModelDeck
+  if (config["Restart"]) d_modelDeck_p->d_isRestartActive = true;
+}  // setModelDeck
 
 void inp::Input::setRestartDeck() {
   d_restartDeck_p = new inp::RestartDeck();
@@ -200,7 +202,7 @@ void inp::Input::setRestartDeck() {
       exit(1);
     }
   }
-} // setRestartDeck
+}  // setRestartDeck
 
 void inp::Input::setMeshDeck() {
   d_meshDeck_p = new inp::MeshDeck();
@@ -219,7 +221,6 @@ void inp::Input::setMeshDeck() {
   if (config["Mesh"]["File"])
     d_meshDeck_p->d_filename = config["Mesh"]["File"].as<std::string>();
   else {
-
     std::cerr << "Error: Please specify mesh filename.\n";
     exit(1);
   }
@@ -234,7 +235,7 @@ void inp::Input::setMeshDeck() {
     d_meshDeck_p->d_isCentroidBasedDiscretization =
         config["Mesh"]["Is_Centroid_Based_Discretization"].as<bool>();
 
-} // setMeshDeck
+}  // setMeshDeck
 
 void inp::Input::setMassMatrixDeck() {
   d_massMatrixDeck_p = new inp::MassMatrixDeck();
@@ -269,7 +270,7 @@ void inp::Input::setNeighborDeck() {
   if (config["Neighbor"]["Add_Partial_Elems"])
     d_neighborDeck_p->d_addPartialElems =
         config["Neighbor"]["Add_Partial_Elems"].as<bool>();
-} // setNeighborDeck
+}  // setNeighborDeck
 
 void inp::Input::setFractureDeck() {
   d_fractureDeck_p = new inp::FractureDeck();
@@ -278,11 +279,9 @@ void inp::Input::setFractureDeck() {
   size_t ncracks = 0;
   if (config["Fracture"]["Cracks"]["Sets"])
     ncracks = config["Fracture"]["Cracks"]["Sets"].as<size_t>();
-  if (ncracks == 0)
-    return;
+  if (ncracks == 0) return;
 
   for (size_t s = 1; s <= ncracks; s++) {
-
     // prepare string Set_s to read file
     std::string read_set = "Set_";
     read_set.append(std::to_string(s));
@@ -290,13 +289,11 @@ void inp::Input::setFractureDeck() {
 
     inp::EdgeCrack crack;
 
-    if (e["Orientation"])
-      crack.d_o = e["Orientation"].as<int>();
+    if (e["Orientation"]) crack.d_o = e["Orientation"].as<int>();
 
     if (e["Line"]) {
       std::vector<double> locs;
-      for (auto j : e["Line"])
-        locs.push_back(j.as<double>());
+      for (auto j : e["Line"]) locs.push_back(j.as<double>());
       if (locs.size() != 4) {
         std::cerr << "Error: Input data in tag Line does not have enough "
                      "elements.\n";
@@ -331,7 +328,7 @@ void inp::Input::setFractureDeck() {
     // add crack data to list
     d_fractureDeck_p->d_cracks.push_back(crack);
   }
-} // setFractureDeck
+}  // setFractureDeck
 
 void inp::Input::setInteriorFlagsDeck() {
   d_interiorFlagsDeck_p = new inp::InteriorFlagsDeck();
@@ -347,15 +344,13 @@ void inp::Input::setInteriorFlagsDeck() {
 
     if (config["No_Fail_Region"]["Compute_And_Not_Store"])
       d_interiorFlagsDeck_p->d_computeAndNotStoreFlag =
-        config["No_Fail_Region"]["Compute_And_Not_Store"].as<bool>();
+          config["No_Fail_Region"]["Compute_And_Not_Store"].as<bool>();
 
     size_t num_regions = 0;
-    if (e["Num_Regions"])
-      num_regions = e["Num_Regions"].as<size_t>();
+    if (e["Num_Regions"]) num_regions = e["Num_Regions"].as<size_t>();
 
     d_interiorFlagsDeck_p->d_noFailRegions.resize(num_regions);
-    for (size_t i = 1; i<=num_regions; i++) {
-
+    for (size_t i = 1; i <= num_regions; i++) {
       // prepare string Set_s to read file
       std::string read_set = "Region_";
       read_set.append(std::to_string(i));
@@ -372,14 +367,13 @@ void inp::Input::setInteriorFlagsDeck() {
       }
 
       // get parameters
-      for (auto f : ee["Parameters"])
-        data.second.push_back(f.as<double>());
+      for (auto f : ee["Parameters"]) data.second.push_back(f.as<double>());
 
       // add data
-      d_interiorFlagsDeck_p->d_noFailRegions[i-1] = data;
+      d_interiorFlagsDeck_p->d_noFailRegions[i - 1] = data;
     }
   }
-} // setInteriorFlagsDeck
+}  // setInteriorFlagsDeck
 
 void inp::Input::setInitialConditionDeck() {
   d_initialConditionDeck_p = new inp::InitialConditionDeck();
@@ -414,7 +408,7 @@ void inp::Input::setInitialConditionDeck() {
     for (auto j : e["Parameters"])
       d_initialConditionDeck_p->d_vICData.d_params.push_back(j.as<double>());
   }
-} // setInitialConditionDeck
+}  // setInitialConditionDeck
 
 void inp::Input::setLoadingDeck() {
   d_loadingDeck_p = new inp::LoadingDeck();
@@ -425,13 +419,10 @@ void inp::Input::setLoadingDeck() {
   std::vector<std::string> vtags = {"Displacement_BC", "Force_BC"};
 
   for (const auto &tag : vtags) {
-
     // read boundary condition data
     if (config[tag]) {
-
       int nsets = config[tag]["Sets"].as<int>();
       for (size_t s = 1; s <= nsets; s++) {
-
         // prepare string Set_s to read file
         std::string read_set = "Set_";
         read_set.append(std::to_string(s));
@@ -473,26 +464,20 @@ void inp::Input::setLoadingDeck() {
 
           // perform check
           double alpha = std::atan((bc.d_y2 - bc.d_y1) / (bc.d_x2 - bc.d_x1));
-          if (definitelyGreaterThan(0.0, alpha))
-            alpha = alpha + M_PI;
+          if (definitelyGreaterThan(0.0, alpha)) alpha = alpha + M_PI;
 
           if (definitelyGreaterThan(bc.d_theta, alpha) or
               std::abs(alpha - bc.d_theta) <= 1.0E-5) {
-
             std::cerr
                 << "Error: Check angled rectangle. Either angle of diagonal is "
                    "smaller than theta or it is very close to theta\n";
             exit(1);
           }
-        } else if (e["Location"]["Point"] and e["Location"]["Radius"])
-        {
-
-         
+        } else if (e["Location"]["Point"] and e["Location"]["Radius"]) {
           bc.d_regionType = "circle";
 
           std::vector<double> locs;
-          for (auto j : e["Location"]["Point"])
-            locs.push_back(j.as<double>());
+          for (auto j : e["Location"]["Point"]) locs.push_back(j.as<double>());
 
           if (locs.size() != 2) {
             std::cerr << "Error: Check Point data in " + tag + ".\n";
@@ -513,14 +498,11 @@ void inp::Input::setLoadingDeck() {
 
           bc.d_r1 = radii[0];
 
-        }
-        else if (e["Location"]["Point"] and e["Location"]["Radii"] )
-        {
+        } else if (e["Location"]["Point"] and e["Location"]["Radii"]) {
           bc.d_regionType = "torus";
 
           std::vector<double> locs;
-          for (auto j : e["Location"]["Point"])
-            locs.push_back(j.as<double>());
+          for (auto j : e["Location"]["Point"]) locs.push_back(j.as<double>());
 
           if (locs.size() != 2) {
             std::cerr << "Error: Check Point data in " + tag + ".\n";
@@ -531,8 +513,7 @@ void inp::Input::setLoadingDeck() {
           bc.d_y1 = locs[1];
 
           std::vector<double> radii;
-          for (auto j : e["Location"]["Radii"])
-            radii.push_back(j.as<double>());
+          for (auto j : e["Location"]["Radii"]) radii.push_back(j.as<double>());
 
           if (radii.size() != 2) {
             std::cerr << "Error: Check Radii data in " + tag + ".\n";
@@ -542,12 +523,11 @@ void inp::Input::setLoadingDeck() {
           bc.d_r1 = radii[0];
           bc.d_r2 = radii[1];
         }
-         
+
         // read bc region
 
         // read direction
-        for (auto j : e["Direction"])
-          bc.d_direction.push_back(j.as<size_t>());
+        for (auto j : e["Direction"]) bc.d_direction.push_back(j.as<size_t>());
 
         // read time function type
         if (e["Time_Function"]) {
@@ -569,10 +549,10 @@ void inp::Input::setLoadingDeck() {
           d_loadingDeck_p->d_uBCData.push_back(bc);
         else
           d_loadingDeck_p->d_fBCData.push_back(bc);
-      } // loop sets
-    }   // if tag exists
-  }     // loop over tags
-} // setLoadingDeck
+      }  // loop sets
+    }    // if tag exists
+  }      // loop over tags
+}  // setLoadingDeck
 
 void inp::Input::setMaterialDeck() {
   d_materialDeck_p = new inp::MaterialDeck();
@@ -598,26 +578,19 @@ void inp::Input::setMaterialDeck() {
     d_materialDeck_p->d_materialType = "RNPBond";
   }
 
-
   if (e["Compute_From_Classical"])
     d_materialDeck_p->d_computeParamsFromElastic =
         e["Compute_From_Classical"].as<bool>();
-  if (e["E"])
-    d_materialDeck_p->d_matData.d_E = e["E"].as<double>();
-  if (e["G"])
-    d_materialDeck_p->d_matData.d_G = e["G"].as<double>();
-  if (e["K"])
-    d_materialDeck_p->d_matData.d_K = e["K"].as<double>();
+  if (e["E"]) d_materialDeck_p->d_matData.d_E = e["E"].as<double>();
+  if (e["G"]) d_materialDeck_p->d_matData.d_G = e["G"].as<double>();
+  if (e["K"]) d_materialDeck_p->d_matData.d_K = e["K"].as<double>();
   if (e["Lambda"])
     d_materialDeck_p->d_matData.d_lambda = e["Lambda"].as<double>();
-  if (e["Mu"])
-    d_materialDeck_p->d_matData.d_mu = e["Mu"].as<double>();
+  if (e["Mu"]) d_materialDeck_p->d_matData.d_mu = e["Mu"].as<double>();
   if (e["Poisson_Ratio"])
     d_materialDeck_p->d_matData.d_nu = e["Poisson_Ratio"].as<double>();
-  if (e["Gc"])
-    d_materialDeck_p->d_matData.d_Gc = e["Gc"].as<double>();
-  if (e["KIc"])
-    d_materialDeck_p->d_matData.d_KIc = e["KIc"].as<double>();
+  if (e["Gc"]) d_materialDeck_p->d_matData.d_Gc = e["Gc"].as<double>();
+  if (e["KIc"]) d_materialDeck_p->d_matData.d_KIc = e["KIc"].as<double>();
 
   // read pairwise (bond) potential
   if (e["Bond_Potential"]) {
@@ -650,8 +623,7 @@ void inp::Input::setMaterialDeck() {
   // read influence function
   if (e["Influence_Function"]) {
     auto f = e["Influence_Function"];
-    if (f["Type"])
-      d_materialDeck_p->d_influenceFnType = f["Type"].as<size_t>();
+    if (f["Type"]) d_materialDeck_p->d_influenceFnType = f["Type"].as<size_t>();
     if (f["Parameters"])
       for (auto j : f["Parameters"])
         d_materialDeck_p->d_influenceFnParams.push_back(j.as<double>());
@@ -664,7 +636,7 @@ void inp::Input::setMaterialDeck() {
     std::cerr << "Error: Please specify the density of the material.\n";
     exit(1);
   }
-} // setMaterialDeck
+}  // setMaterialDeck
 
 void inp::Input::setOutputDeck() {
   d_outputDeck_p = new inp::OutputDeck();
@@ -674,8 +646,7 @@ void inp::Input::setOutputDeck() {
     auto e = config["Output"];
     if (e["File_Format"])
       d_outputDeck_p->d_outFormat = e["File_Format"].as<std::string>();
-    if (e["Path"])
-      d_outputDeck_p->d_path = e["Path"].as<std::string>();
+    if (e["Path"]) d_outputDeck_p->d_path = e["Path"].as<std::string>();
     if (e["Tags"])
       for (auto f : e["Tags"])
         d_outputDeck_p->d_outTags.push_back(f.as<std::string>());
@@ -684,15 +655,15 @@ void inp::Input::setOutputDeck() {
       d_outputDeck_p->d_dtOut = e["Output_Interval"].as<size_t>();
     d_outputDeck_p->d_dtOutOld = d_outputDeck_p->d_dtOut;
     d_outputDeck_p->d_dtOutCriteria = d_outputDeck_p->d_dtOut;
-    if (e["Debug"])
-      d_outputDeck_p->d_debug = e["Debug"].as<size_t>();
+    if (e["Debug"]) d_outputDeck_p->d_debug = e["Debug"].as<size_t>();
     if (e["Perform_FE_Out"])
       d_outputDeck_p->d_performFEOut = e["Perform_FE_Out"].as<bool>();
     if (e["Compress_Type"])
       d_outputDeck_p->d_compressType = e["Compress_Type"].as<std::string>();
     if (e["Output_Criteria"]) {
       if (e["Output_Criteria"]["Type"])
-        d_outputDeck_p->d_outCriteria = e["Output_Criteria"]["Type"].as<std::string>();
+        d_outputDeck_p->d_outCriteria =
+            e["Output_Criteria"]["Type"].as<std::string>();
       if (e["Output_Criteria"]["New_Interval"])
         d_outputDeck_p->d_dtOutCriteria =
             e["Output_Criteria"]["New_Interval"].as<size_t>();
@@ -703,7 +674,7 @@ void inp::Input::setOutputDeck() {
       }
     }
   }
-} // setOutputDeck
+}  // setOutputDeck
 
 void inp::Input::setPolicyDeck() {
   d_policyDeck_p = new inp::PolicyDeck();
@@ -715,7 +686,7 @@ void inp::Input::setPolicyDeck() {
   if (config["Policy"]["Enable_PostProcessing"])
     d_policyDeck_p->d_enablePostProcessing =
         config["Policy"]["Enable_PostProcessing"].as<bool>();
-} // setPolicyDeck
+}  // setPolicyDeck
 
 void inp::Input::setSolverDeck() {
   d_solverDeck_p = new inp::SolverDeck();
@@ -723,22 +694,19 @@ void inp::Input::setSolverDeck() {
 
   if (config["Solver"]) {
     auto e = config["Solver"];
-    if (e["Type"])
-      d_solverDeck_p->d_solverType = e["Type"].as<std::string>();
+    if (e["Type"]) d_solverDeck_p->d_solverType = e["Type"].as<std::string>();
     if (e["Max_Iteration"])
       d_solverDeck_p->d_maxIters = e["Max_Iteration"].as<int>();
-    if (e["Tolerance"])
-      d_solverDeck_p->d_tol = e["Tolerance"].as<double>();
+    if (e["Tolerance"]) d_solverDeck_p->d_tol = e["Tolerance"].as<double>();
   }
-} // setSolverDeck
+}  // setSolverDeck
 
 void inp::Input::setAbsorbingCondDeck() {
   d_absorbingCondDeck_p = new inp::AbsorbingCondDeck();
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   auto ci = config["Absorbing_Condition"];
-  if (!ci)
-    return;
+  if (!ci) return;
 
   // set damping active to true
   d_absorbingCondDeck_p->d_dampingActive = true;
@@ -750,11 +718,12 @@ void inp::Input::setAbsorbingCondDeck() {
   // get damping coefficient type
   if (!ci["Damping_Coefficient"]) {
     std::cerr << "Error: Expecting data in block "
-                 "Absorbing_Condition->Damping_Coefficient" << std::endl;
+                 "Absorbing_Condition->Damping_Coefficient"
+              << std::endl;
     exit(1);
   } else {
-
-    d_absorbingCondDeck_p->d_dampingCoeffType = ci["Damping_Coefficient"]["Type"].as<std::string>();
+    d_absorbingCondDeck_p->d_dampingCoeffType =
+        ci["Damping_Coefficient"]["Type"].as<std::string>();
 
     for (auto f : ci["Damping_Coefficient"]["Parameters"])
       d_absorbingCondDeck_p->d_dampingCoeffParams.push_back(f.as<double>());
@@ -763,13 +732,13 @@ void inp::Input::setAbsorbingCondDeck() {
   // get damping regions
   if (!ci["Damping_Num_Regions"]) {
     std::cerr << "Error: Expecting number of damping regions data in "
-                 "Absorbing_Condition->Damping_Num_Regions" << std::endl;
+                 "Absorbing_Condition->Damping_Num_Regions"
+              << std::endl;
     exit(1);
   }
   int n = ci["Damping_Num_Regions"].as<int>();
 
-  for (int i = 1; i<=n; i++) {
-
+  for (int i = 1; i <= n; i++) {
     // create tag for i^th region
     // prepare string Set_s to read file
     std::string read_set = "Region_";
@@ -781,10 +750,10 @@ void inp::Input::setAbsorbingCondDeck() {
     // get relative location of region
     if (!e["Relative_Loc"]) {
       std::cerr << "Error: Must specify relative location of damping region "
-                   "with respect to whole simulation domain" << std::endl;
+                   "with respect to whole simulation domain"
+                << std::endl;
       exit(1);
     } else {
-
       dg.d_relativeLoc = e["Relative_Loc"].as<std::string>();
     }
 
@@ -793,7 +762,6 @@ void inp::Input::setAbsorbingCondDeck() {
       std::cerr << "Error: Must specify values in Check_Flags" << std::endl;
       exit(1);
     } else {
-
       size_t lco = 0;
       for (auto f : e["Check_Flags"]) {
         if (lco == 0)
@@ -817,7 +785,6 @@ void inp::Input::setAbsorbingCondDeck() {
       std::cerr << "Error: Must specify values in Layer_Thickness" << std::endl;
       exit(1);
     } else {
-
       size_t lco = 0;
       for (auto f : e["Layer_Thickness"]) {
         if (lco == 0)
@@ -843,13 +810,12 @@ void inp::Input::setAbsorbingCondDeck() {
       exit(1);
     }
 
-    for (auto f : e["Domain"])
-      locs.push_back(f.as<double>());
+    for (auto f : e["Domain"]) locs.push_back(f.as<double>());
 
     if (locs.size() != 4 and locs.size() != 6) {
       std::cerr << "Error: We expect data Absorbing_Condition->" << read_set
-      << " has four/six entries giving corner points of a rectangle" <<
-      std::endl;
+                << " has four/six entries giving corner points of a rectangle"
+                << std::endl;
       exit(1);
     }
 
@@ -868,4 +834,4 @@ void inp::Input::setAbsorbingCondDeck() {
     std::cerr << "Error: Check damping region data" << std::endl;
     exit(1);
   }
-} // setAbsorbingCondDeck
+}  // setAbsorbingCondDeck

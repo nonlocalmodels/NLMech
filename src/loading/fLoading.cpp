@@ -14,13 +14,11 @@
 #include "util/utilGeom.h"
 
 loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
-
   d_bcData = deck->d_fBCData;
 
   // fill the list of nodes where bc is applied and also set fixity of these
   // nodes
   for (const auto &bc : d_bcData) {
-
     // check bc first
     if (bc.d_regionType != "rectangle" and
         bc.d_regionType != "angled_rectangle") {
@@ -43,9 +41,7 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
     if (bc.d_timeFnType != "constant" and bc.d_timeFnType != "linear" and
         bc.d_timeFnType != "linear_step" and
-        bc.d_timeFnType != "linear_slow_fast" and
-        bc.d_timeFnType != "sin") {
-
+        bc.d_timeFnType != "linear_slow_fast" and bc.d_timeFnType != "sin") {
       std::cerr << "Error: Force bc space function type = " << bc.d_timeFnType
                 << " not recognised. "
                 << "Currently constant, linear, linear_step, linear_slow_fast"
@@ -86,7 +82,6 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
     // now loop over nodes
     for (size_t i = 0; i < mesh->getNumNodes(); i++) {
-
       if (bc.d_regionType == "rectangle" &&
           util::geometry::isPointInsideRectangle(mesh->getNode(i), bc.d_x1,
                                                  bc.d_x2, bc.d_y1, bc.d_y2))
@@ -96,21 +91,18 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
                    mesh->getNode(i), bc.d_x1, bc.d_x2, bc.d_y1, bc.d_y2,
                    bc.d_theta))
         fix_nodes.push_back(i);
-    } // loop over nodes
+    }  // loop over nodes
 
     // add computed list of nodes to the data
     d_bcNodes.push_back(fix_nodes);
-  } // loop over bc sets
+  }  // loop over bc sets
 }
 
 void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
                               fe::Mesh *mesh) {
-
   for (size_t s = 0; s < d_bcData.size(); s++) {
-
     inp::BCData bc = d_bcData[s];
     for (auto i : d_bcNodes[s]) {
-
       util::Point3 x = mesh->getNode(i);
       double fmax = 1.0;
 
@@ -178,6 +170,6 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
         else if (d == 3)
           (*f)[i].d_z += fmax;
       }
-    } // loop over nodes
-  }   // loop over bc sets
+    }  // loop over nodes
+  }    // loop over bc sets
 }
