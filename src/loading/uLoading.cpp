@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "uLoading.h"
+
 #include "../inp/decks/loadingDeck.h"
 #include "fe/mesh.h"
 #include "util/compare.h"
@@ -31,10 +32,11 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     }
 
     if (bc.d_spatialFnType != "constant" and bc.d_spatialFnType != "sin_x" and
-        bc.d_spatialFnType != "sin_y" and bc.d_spatialFnType != "linear_x" and
-        bc.d_spatialFnType != "linear_y") {
+        bc.d_spatialFnType != "sin_y" and bc.d_spatialFnType != "sin_z" and
+        bc.d_spatialFnType != "linear_x" and
+        bc.d_spatialFnType != "linear_y" and bc.d_spatialFnType != "linear_z") {
       std::cerr << "Error: Displacement bc space function type = "
-                << bc.d_spatialFnType << " not recognised. "
+                << bc.d_spatialFnType << " not recognized. "
                 << "Currently only constant function is implemented. \n";
       exit(1);
     }
@@ -66,7 +68,8 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
     size_t spatial_num_params = 0;
     if (bc.d_spatialFnType == "sin_x" or bc.d_spatialFnType == "sin_y" or
-        bc.d_spatialFnType == "linear_x" or bc.d_spatialFnType == "linear_y")
+        bc.d_spatialFnType == "sin_z" or bc.d_spatialFnType == "linear_x" or
+        bc.d_spatialFnType == "linear_y" or bc.d_spatialFnType == "linear_y")
       spatial_num_params = 1;
     if (bc.d_spatialFnParams.size() < spatial_num_params) {
       std::cerr << "Error: Force bc insufficient parameters for spatial "
@@ -126,6 +129,8 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
         }
       }
 
+      // store the id of this node
+      fix_nodes.push_back(i);
     }  // loop over nodes
 
     // add computed list of nodes to the data
@@ -150,12 +155,18 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
       } else if (bc.d_spatialFnType == "sin_y") {
         double a = M_PI * bc.d_spatialFnParams[0];
         umax = umax * std::sin(a * x.d_y);
+      } else if (bc.d_spatialFnType == "sin_z") {
+        double a = M_PI * bc.d_spatialFnParams[0];
+        umax = umax * std::sin(a * x.d_z);
       } else if (bc.d_spatialFnType == "linear_x") {
         double a = bc.d_spatialFnParams[0];
         umax = umax * a * x.d_x;
       } else if (bc.d_spatialFnType == "linear_y") {
         double a = bc.d_spatialFnParams[0];
         umax = umax * a * x.d_y;
+      } else if (bc.d_spatialFnType == "linear_z") {
+        double a = bc.d_spatialFnParams[0];
+        umax = umax * a * x.d_z;
       }
 
       // apply time function
