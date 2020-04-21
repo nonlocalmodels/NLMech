@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "uLoading.h"
+
 #include "../inp/decks/loadingDeck.h"
 #include "fe/mesh.h"
 #include "util/compare.h"
@@ -14,7 +15,6 @@
 #include "util/utilGeom.h"
 
 loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
-
   d_bcData = deck->d_uBCData;
 
   // fill the list of nodes where bc is applied and also set fixity of these
@@ -34,18 +34,17 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     }
 
     if (bc.d_spatialFnType != "constant" and bc.d_spatialFnType != "sin_x" and
-        bc.d_spatialFnType != "sin_y" and bc.d_spatialFnType != "linear_x" and
-        bc.d_spatialFnType != "linear_y") {
+        bc.d_spatialFnType != "sin_y" and bc.d_spatialFnType != "sin_z" and
+        bc.d_spatialFnType != "linear_x" and
+        bc.d_spatialFnType != "linear_y" and bc.d_spatialFnType != "linear_z") {
       std::cerr << "Error: Displacement bc space function type = "
-                << bc.d_spatialFnType << " not recognised. "
+                << bc.d_spatialFnType << " not recognized. "
                 << "Currently only constant function is implemented. \n";
       exit(1);
     }
 
     if (bc.d_timeFnType != "constant" and bc.d_timeFnType != "linear" and
-        bc.d_timeFnType != "quadratic" and bc.d_timeFnType != "linear_step" and
-        bc.d_timeFnType != "linear_slow_fast" and bc.d_timeFnType != "sin") {
-
+        bc.d_timeFnType != "quadratic" and bc.d_timeFnType != "sin") {
       std::cerr << "Error: Displacement bc space function type = "
                 << bc.d_timeFnType << " not recognised. "
                 << "Currently constant, linear, quadratic, sin functions are "
@@ -70,7 +69,8 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
     size_t spatial_num_params = 0;
     if (bc.d_spatialFnType == "sin_x" or bc.d_spatialFnType == "sin_y" or
-        bc.d_spatialFnType == "linear_x" or bc.d_spatialFnType == "linear_y")
+        bc.d_spatialFnType == "sin_z" or bc.d_spatialFnType == "linear_x" or
+        bc.d_spatialFnType == "linear_y" or bc.d_spatialFnType == "linear_y")
       spatial_num_params = 1;
     if (bc.d_spatialFnParams.size() < spatial_num_params) {
       std::cerr << "Error: Force bc insufficient parameters for spatial "
@@ -129,21 +129,20 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
       }
       
 
-    } // loop over nodes
+      // store the id of this node
+      fix_nodes.push_back(i);
+    }  // loop over nodes
 
     // add computed list of nodes to the data
     d_bcNodes.push_back(fix_nodes);
-  } // loop over bc sets
+  }  // loop over bc sets
 }
 
 void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
                               std::vector<util::Point3> *v, fe::Mesh *mesh) {
-
   for (size_t s = 0; s < d_bcData.size(); s++) {
-
     inp::BCData bc = d_bcData[s];
     for (auto i : d_bcNodes[s]) {
-
       util::Point3 x = mesh->getNode(i);
       double umax = bc.d_timeFnParams[0];
       double du = 0.;
@@ -156,12 +155,18 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
       } else if (bc.d_spatialFnType == "sin_y") {
         double a = M_PI * bc.d_spatialFnParams[0];
         umax = umax * std::sin(a * x.d_y);
+      } else if (bc.d_spatialFnType == "sin_z") {
+        double a = M_PI * bc.d_spatialFnParams[0];
+        umax = umax * std::sin(a * x.d_z);
       } else if (bc.d_spatialFnType == "linear_x") {
         double a = bc.d_spatialFnParams[0];
         umax = umax * a * x.d_x;
       } else if (bc.d_spatialFnType == "linear_y") {
         double a = bc.d_spatialFnParams[0];
         umax = umax * a * x.d_y;
+      } else if (bc.d_spatialFnType == "linear_z") {
+        double a = bc.d_spatialFnParams[0];
+        umax = umax * a * x.d_z;
       }
 
       // apply time function
@@ -207,6 +212,6 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
           (*v)[i].d_z = dv;
         }
       }
-    } // loop over nodes
-  }   // loop over bc sets
+    }  // loop over nodes
+  }    // loop over bc sets
 }
