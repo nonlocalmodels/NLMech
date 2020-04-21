@@ -97,8 +97,8 @@ void rw::reader::readVtuFileNodes(const std::string &filename, size_t dim,
   rdr.close();
 }
 
-std::vector<std::string> rw::reader::readVtuFilePointTags(const std::string &filename){
-
+std::vector<std::string> rw::reader::readVtuFilePointTags(
+    const std::string &filename) {
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   auto data = rdr.readVtuFilePointTags();
@@ -106,9 +106,8 @@ std::vector<std::string> rw::reader::readVtuFilePointTags(const std::string &fil
   return data;
 }
 
-std::vector<std::string> rw::reader::readVtuFileCellTags(const std::string
-&filename){
-
+std::vector<std::string> rw::reader::readVtuFileCellTags(
+    const std::string &filename) {
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   auto data = rdr.readVtuFileCellTags();

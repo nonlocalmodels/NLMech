@@ -44,7 +44,6 @@ namespace {
 void readInputFile(size_t &dim, std::string &in_filename,
                    std::string &out_filename, double &scale_factor,
                    const YAML::Node &config) {
-
   if (config["Dimension"])
     dim = config["Dimension"].as<size_t>();
   else
@@ -61,7 +60,6 @@ void readInputFile(size_t &dim, std::string &in_filename,
 // compute error
 //
 void compute(const YAML::Node &config) {
-
   size_t dim = 2;
   std::string in_filename;
   std::string out_filename;
@@ -86,7 +84,6 @@ void compute(const YAML::Node &config) {
   // loop over nodes and modify current position
   size_t counter = 0;
   for (const auto &u : nodes_u) {
-
     auto temp = nodes_current[counter] - u;
     nodes_current[counter] = temp + u * scale_factor;
 
@@ -100,7 +97,6 @@ void compute(const YAML::Node &config) {
   // loop over tag in data_tags, read data from input vtu file, and
   // write the data to output vtu file
   for (const auto &tag : data_tags) {
-
     // case when data is of double type
     auto type = rw::getDataType(tag);
     if (type == "double") {
@@ -112,7 +108,6 @@ void compute(const YAML::Node &config) {
       // write
       writer.appendPointData(tag, &data);
     } else if (type == "point") {
-
       std::vector<util::Point3> data;
 
       // read
@@ -128,7 +123,7 @@ void compute(const YAML::Node &config) {
   writer.close();
 }
 
-} // namespace
+}  // namespace
 
 //
 // main function
