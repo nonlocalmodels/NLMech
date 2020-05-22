@@ -9,10 +9,12 @@
 #ifndef UTIL_POINT_H
 #define UTIL_POINT_H
 
+#include "matrixBlaze.h"
 #include <cmath>
 #include <iomanip>
 #include <iostream>
 #include <vector>
+#include <stdlib.h>
 
 /*!
  * @brief Collection of methods useful in simulation
@@ -76,7 +78,7 @@ struct Point3 {
       d_y = p[1];
       d_z = p[2];
     }
-  };
+  }
 
   /*!
    *  @brief Copy constructor
@@ -115,6 +117,30 @@ struct Point3 {
    */
   double lengthSq() const { return d_x * d_x + d_y * d_y + d_z *
   d_z; }
+
+  /*
+   * @brief Returns the unit vector
+   * @return Vector Unit vector
+   */
+  Point3 unit() {
+    auto l = this->length();
+    if (l < 1.0E-10)
+      return {};
+    else
+      return {d_x/l, d_y/l, d_z/l};
+  }
+
+  /*!
+   * @brief Returns the unit vector
+   * @return Vector Unit vector
+   */
+  Point3 unit() const {
+    auto l = this->length();
+    if (l < 1.0E-10)
+      return {};
+    else
+      return {d_x/l, d_y/l, d_z/l};
+  }
 
   /*!
    * @brief Computes the dot product of this vector with another point
@@ -166,6 +192,75 @@ struct Point3 {
     auto l_sq = (is_unit ? 1. : this->length() * this->length());
     auto dot = this->dot(b);
     return b - Point3(dot * d_x / l_sq, dot * d_y / l_sq, dot * d_z / l_sq);
+  }
+
+
+  /*!
+   * @brief Computes the angle between vector given by this and the vector b
+   * @param b Another vector
+   * @return Value a dot product
+   */
+  double angle(Point3 b) const {
+
+    auto ahat = this->unit();
+    auto bhat = b.unit();
+    return std::acos(ahat.dot(bhat));
+  }
+
+  /*!
+   * @brief Computes the dot product of the vector and its transpose
+   * @return dot(x,x.T)
+   */
+  util::Matrix33 toMatrix() {
+
+    util::Matrix33 tmp = util::Matrix33();
+
+    tmp(0, 0) = this->d_x * this->d_x;
+    tmp(0, 1) = this->d_x * this->d_y;
+    tmp(0, 2) = this->d_x * this->d_z;
+
+    tmp(1, 0) = this->d_y * this->d_x;
+    tmp(1, 1) = this->d_y * this->d_y;
+    tmp(1, 2) = this->d_y * this->d_z;
+
+    tmp(2, 0) = this->d_z * this->d_x;
+    tmp(2, 1) = this->d_z * this->d_y;
+    tmp(2, 2) = this->d_z * this->d_z;
+
+    return tmp;
+  }
+
+  /*!
+   * @brief Computes the dot product of the vector x and the transpose of y
+   * @param b The node b
+   * @return dot(x,y.T)
+   */
+  util::Matrix33 toMatrix(const util::Point3 b) {
+
+    util::Matrix33 tmp = util::Matrix33();
+
+    tmp(0, 0) = this->d_x * b.d_x;
+    tmp(0, 1) = this->d_x * b.d_y;
+    tmp(0, 2) = this->d_x * b.d_z;
+
+    tmp(1, 0) = this->d_y * b.d_x;
+    tmp(1, 1) = this->d_y * b.d_y;
+    tmp(1, 2) = this->d_y * b.d_z;
+
+    tmp(2, 0) = this->d_z * b.d_x;
+    tmp(2, 1) = this->d_z * b.d_y;
+    tmp(2, 2) = this->d_z * b.d_z;
+
+    return tmp;
+  }
+
+  /*!
+   * @brief Converts the point to an blaze vector
+   * @return Point as blaze vector 3D
+   */
+  util::Vector3 toVector() {
+
+    return util::Vector3{this->d_x, this->d_y, this->d_z};
   }
 
   /**
@@ -293,9 +388,16 @@ struct Point3 {
     else
       return d_z;
   }
+  
+  friend std::ostream &operator<<(std::ostream &os, const Point3 p);
 
   /** @}*/
 };
+
+inline std::ostream &operator<<(std::ostream &os, const Point3 p) {
+  os << p.d_x << " " << p.d_y << " " << p.d_z << std::endl;
+  return os;
+}
 
 } // namespace util
 

@@ -40,7 +40,6 @@ public:
   /*! @brief Constructor */
   Loading() = default;
 
-protected:
   /*! @brief List of displacement bcs */
   std::vector<inp::BCData> d_bcData;
 

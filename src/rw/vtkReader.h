@@ -13,7 +13,6 @@
 #include <vtkSmartPointer.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkXMLUnstructuredGridReader.h>
-
 #include "util/matrix.h" // definition of matrices
 #include "util/matrixBlaze.h"
 #include "util/point.h" // definition of Point3
@@ -64,6 +63,13 @@ public:
    * @param filename Name of mesh file
    * @return List List of point data tags
    */
+  std::vector<std::string> readVtuFilePointTags();
+
+  /*!
+ * @brief Reads all cell data tags
+ * @param filename Name of mesh file
+ * @return List List of point data tags
+ */
   std::vector<std::string> readVtuFileCellTags();
 
   /*!

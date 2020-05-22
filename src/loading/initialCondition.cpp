@@ -7,10 +7,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "initialCondition.h"
+
+#include <iostream>
+
 #include "../inp/decks/initialConditionDeck.h"
 #include "fe/mesh.h"
 #include "util/utilFunction.h"
-#include <iostream>
 
 loading::InitialCondition::InitialCondition(inp::InitialConditionDeck *deck)
     : d_deck_p(deck) {}

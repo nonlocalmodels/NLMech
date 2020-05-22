@@ -49,6 +49,12 @@ namespace fe {
 class Mesh {
 
 public:
+
+  /*!
+   * @brief Constructor
+   */
+  Mesh();
+
   /*!
    * @brief Constructor
    */
@@ -240,9 +246,7 @@ public:
   const {
     return d_bbox;
   };
-  std::pair<std::vector<double>, std::vector<double>> &getBoundingBox() {
-    return d_bbox;
-  };
+
 
   /** @}*/
 
@@ -252,12 +256,54 @@ public:
   /**@{*/
 
   /*!
+   * @brief Set the mesh data for finite difference simulations
+   *
+   * @param dim Dimension
+   * @param nodes Reference to nodes reference configuration
+   * @param volumes Reference to nodal volumes
+   */
+  void setMeshData(const size_t &dim, std::vector<util::Point3> &nodes,
+                   std::vector<double> &volumes);
+
+  /*!
+   * @brief Set the nodal data of the mesh
+   * @param nodes Reference to nodes reference configuration
+   */
+  void setNodes(std::vector<util::Point3> &nodes);
+
+  /*!
+   * @brief Set the nodal volume data of the mesh
+   * @param volumes Reference to nodal volumes
+   */
+  void setNodalVolumes(std::vector<double> &volumes);
+
+  /*!
+   * @brief Set nodal fixity masks
+   * @param fixity Reference to fixity of all nodes
+   */
+  void setFixity(std::vector<uint8_t> &fixity);
+
+  /*!
    * @brief Set the fixity to free (0) or fixed (1)
    * @param i Id of node
    * @param dof Dof which is affected
    * @param flag Set fixity to fixed if true or free
    */
   void setFixity(const size_t &i, const unsigned int &dof, const bool &flag);
+
+  /*!
+   * @brief Set the mesh size
+   * @param h Mesh size
+   */
+  void setMeshSize(const double &h);
+
+  /*!
+   * @brief Reads mesh data from the file and populates other data
+   *
+   * @param deck Mesh deck
+   * @param filename Name of the mesh file
+   * */
+  void readFromFile(inp::MeshDeck *deck, const std::string &filename);
 
   /*!
    * @brief Clear element-node connectivity data

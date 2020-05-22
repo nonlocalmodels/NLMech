@@ -7,9 +7,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "neighbor.h"
+
+#include <hpx/include/parallel_algorithm.hpp>
+
 #include "inp/decks/neighborDeck.h"
 #include "util/compare.h"
-#include <hpx/include/parallel_algorithm.hpp>
 
 geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
                              const std::vector<util::Point3> *nodes)
@@ -43,18 +45,20 @@ const std::vector<size_t> &geometry::Neighbor::getNeighbors(const size_t &i) {
   return d_neighbors[i];
 }
 
-std::vector<std::vector<size_t>> *geometry::Neighbor::getNeighborsListP() {
+std::vector<std::vector<size_t>> *geometry::Neighbor::getNeighborsListP
+    () {
   return &d_neighbors;
 }
-const std::vector<std::vector<size_t>> *geometry::Neighbor::getNeighborsListP()
-    const {
+const std::vector<std::vector<size_t>> *geometry::Neighbor::getNeighborsListP
+() const {
   return &d_neighbors;
 }
 
-std::vector<std::vector<size_t>> &geometry::Neighbor::getNeighborsList() {
+std::vector<std::vector<size_t>> &geometry::Neighbor::getNeighborsList
+    () {
   return d_neighbors;
 }
-const std::vector<std::vector<size_t>> &geometry::Neighbor::getNeighborsList()
-    const {
+const std::vector<std::vector<size_t>> &geometry::Neighbor::getNeighborsList
+() const {
   return d_neighbors;
 }

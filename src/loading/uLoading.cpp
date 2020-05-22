@@ -24,10 +24,12 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     // check bc first
     if (bc.d_regionType != "rectangle" and
         bc.d_regionType != "angled_rectangle" and
-        bc.d_regionType != "circle" and bc.d_regionType != "torus") {
-      std::cerr << "Error: Displacement bc region type = " << bc.d_regionType
-                << " not recognised. Should be rectangle or angled_rectangle "
-                   "or circle or torus. \n";
+        bc.d_regionType != "circle" and
+         bc.d_regionType != "torus"
+        ) {
+      std::cerr
+          << "Error: Displacement bc region type = " << bc.d_regionType
+          << " not recognised. Should be rectangle or angled_rectangle or circle or torus. \n";
       exit(1);
     }
 
@@ -44,6 +46,7 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     if (bc.d_timeFnType != "constant" and bc.d_timeFnType != "linear" and
         bc.d_timeFnType != "quadratic" and bc.d_timeFnType != "linear_step" and
         bc.d_timeFnType != "linear_slow_fast" and bc.d_timeFnType != "sin") {
+
       std::cerr << "Error: Displacement bc space function type = "
                 << bc.d_timeFnType << " not recognised. "
                 << "Currently constant, linear, quadratic, sin functions are "
@@ -84,6 +87,7 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
     // now loop over nodes
     for (size_t i = 0; i < mesh->getNumNodes(); i++) {
+
       if (bc.d_regionType == "rectangle" &&
           util::geometry::isPointInsideRectangle(mesh->getNode(i), bc.d_x1,
                                                  bc.d_x2, bc.d_y1, bc.d_y2)) {
@@ -107,27 +111,25 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
         // store the id of this node
         fix_nodes.push_back(i);
       } else if (bc.d_regionType == "circle" &&
-                 util::geometry::isPointinCircle(
-                     mesh->getNode(i), util::Point3(bc.d_x1, bc.d_y1, 0.),
-                     bc.d_r1)) {
-        // loop over direction and set fixity
-        for (auto dof : bc.d_direction) {
-          // pass 0 for x, 1 for y, and 2 for z dof
-          mesh->setFixity(i, dof - 1, true);
-        }
-      } else if (bc.d_regionType == "torus" &&
-                 util::geometry::isPointinCircle(
-                     mesh->getNode(i), util::Point3(bc.d_x1, bc.d_y1, 0.),
-                     bc.d_r1) &&
-                 !util::geometry::isPointinCircle(
-                     mesh->getNode(i), util::Point3(bc.d_x1, bc.d_y1, 0.),
-                     bc.d_r2)) {
+          util::geometry::isPointinCircle(mesh->getNode(i), util::Point3(bc.d_x1,bc.d_y1,0.), bc.d_r1)) {
+
         // loop over direction and set fixity
         for (auto dof : bc.d_direction) {
           // pass 0 for x, 1 for y, and 2 for z dof
           mesh->setFixity(i, dof - 1, true);
         }
       }
+      else if (bc.d_regionType == "torus" &&
+          util::geometry::isPointinCircle(mesh->getNode(i), util::Point3(bc.d_x1,bc.d_y1,0.), bc.d_r1) && 
+          ! util::geometry::isPointinCircle(mesh->getNode(i), util::Point3(bc.d_x1,bc.d_y1,0.), bc.d_r2 )) {
+
+        // loop over direction and set fixity
+        for (auto dof : bc.d_direction) {
+          // pass 0 for x, 1 for y, and 2 for z dof
+          mesh->setFixity(i, dof - 1, true);
+        }
+      }
+      
 
       // store the id of this node
       fix_nodes.push_back(i);
@@ -183,15 +185,18 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
         du = umax * std::sin(a * time);
         dv = umax * a * std::cos(a * time);
       } else if (bc.d_timeFnType == "linear_step") {
+
         du = umax * util::function::linearStepFunc(time, bc.d_timeFnParams[1],
                                                    bc.d_timeFnParams[2]);
         dv = umax * util::function::derLinearStepFunc(
                         time, bc.d_timeFnParams[1], bc.d_timeFnParams[2]);
-      } else if (bc.d_timeFnType == "linear_slow_fast") {
+      }
+      else if (bc.d_timeFnType == "linear_slow_fast") {
         if (util::compare::definitelyGreaterThan(time, bc.d_timeFnParams[1])) {
           du = umax * bc.d_timeFnParams[3] * time;
           dv = umax * bc.d_timeFnParams[3];
-        } else {
+        }
+        else {
           du = umax * bc.d_timeFnParams[2] * time;
           dv = umax * bc.d_timeFnParams[2];
         }

@@ -7,12 +7,20 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <Config.h>
-#include <hpx/hpx_main.hpp>  // Need main source file
-#include <hpx/util/high_resolution_clock.hpp>
-#include "inp/input.h"         // Input class
-#include "model/fd/fDModel.h"  // Model class
-#include <iostream>
+
+#include <hpx/hpx_main.hpp>           // Need main source file
 #include <boost/program_options.hpp>  // program options
+#include <hpx/util/high_resolution_clock.hpp>
+#include <iostream>
+
+#include "inp/decks/materialDeck.h"
+#include "inp/input.h"  // Input class
+#include "material/materials.h"
+#include "model/models.h"  // Model class
+
+namespace inp {
+struct MaterialDeck;
+}  // namespace inp
 
 int main(int argc, char *argv[]) {
   boost::program_options::options_description desc("Allowed options");
@@ -50,8 +58,24 @@ int main(int argc, char *argv[]) {
   auto *deck = new inp::Input(filename);
 
   // check which model to run
-  if (deck->getSpatialDiscretization() == "finite_difference")
-    model::FDModel fdModel(deck);
+  if (deck->getSpatialDiscretization() == "finite_difference") {
+    if (deck->getModelDeck()->d_timeDiscretization == "quasi_static") {
+      if (deck->getMaterialDeck()->d_materialType == "ElasticState") {
+        model::QuasiStaticModel<material::pd::ElasticState> QuasiStaticModel(
+            deck);
+      }
+    } else if (deck->getModelDeck()->d_timeDiscretization ==
+               "central difference") {
+      model::FDModel fdModel(deck);
+
+    } else {
+      std::cerr << "Error: No known material deck specified" << std::endl;
+      exit(1);
+    }
+
+  } else
+    std::cerr << "Warning no model for the spatial discretization specified!"
+              << std::endl;
 
   // get time elapsed
   std::uint64_t end = hpx::util::high_resolution_clock::now();

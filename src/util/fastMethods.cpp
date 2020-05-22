@@ -7,9 +7,11 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "fastMethods.h"
-#include "compare.h"
+
 #include <hpx/include/parallel_minmax.hpp>
 #include <hpx/include/parallel_reduce.hpp>
+
+#include "compare.h"
 
 static bool compare_point(const util::Point3 &a, const util::Point3 &b) {
   return util::compare::definitelyLessThan(a.length(), b.length());

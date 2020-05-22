@@ -7,6 +7,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "input.h"
+
+#include <hpx/config.hpp>
+#include <yaml-cpp/yaml.h>
+
+#include <cmath>
+#include <iostream>
+
 #include "decks/fractureDeck.h"
 #include "decks/initialConditionDeck.h"
 #include "decks/interiorFlagsDeck.h"
@@ -42,8 +49,7 @@ inp::Input::Input(const std::string &filename)
       d_outputDeck_p(nullptr),
       d_policyDeck_p(nullptr),
       d_modelDeck_p(nullptr),
-      d_solverDeck_p(nullptr),
-      d_absorbingCondDeck_p(nullptr) {
+      d_solverDeck_p(nullptr) {
   d_inputFilename = filename;
 
   // follow the order of reading
@@ -235,7 +241,7 @@ void inp::Input::setMeshDeck() {
     d_meshDeck_p->d_isCentroidBasedDiscretization =
         config["Mesh"]["Is_Centroid_Based_Discretization"].as<bool>();
 
-}  // setMeshDeck
+} // setMeshDeck
 
 void inp::Input::setMassMatrixDeck() {
   d_massMatrixDeck_p = new inp::MassMatrixDeck();
@@ -279,7 +285,16 @@ void inp::Input::setFractureDeck() {
   size_t ncracks = 0;
   if (config["Fracture"]["Cracks"]["Sets"])
     ncracks = config["Fracture"]["Cracks"]["Sets"].as<size_t>();
-  if (ncracks == 0) return;
+
+  if (ncracks == 0)
+    return;
+  else {
+    if (d_modelDeck_p->d_dim != 2) {
+      std::cerr << "Error: Pre-cracks can only be prescribed for material in "
+                   "dimension 2.\n";
+      exit(1);
+    }
+  }
 
   for (size_t s = 1; s <= ncracks; s++) {
     // prepare string Set_s to read file
@@ -344,13 +359,15 @@ void inp::Input::setInteriorFlagsDeck() {
 
     if (config["No_Fail_Region"]["Compute_And_Not_Store"])
       d_interiorFlagsDeck_p->d_computeAndNotStoreFlag =
-          config["No_Fail_Region"]["Compute_And_Not_Store"].as<bool>();
+        config["No_Fail_Region"]["Compute_And_Not_Store"].as<bool>();
 
     size_t num_regions = 0;
-    if (e["Num_Regions"]) num_regions = e["Num_Regions"].as<size_t>();
+    if (e["Num_Regions"])
+      num_regions = e["Num_Regions"].as<size_t>();
 
     d_interiorFlagsDeck_p->d_noFailRegions.resize(num_regions);
-    for (size_t i = 1; i <= num_regions; i++) {
+    for (size_t i = 1; i<=num_regions; i++) {
+
       // prepare string Set_s to read file
       std::string read_set = "Region_";
       read_set.append(std::to_string(i));
@@ -367,11 +384,13 @@ void inp::Input::setInteriorFlagsDeck() {
       }
 
       // get parameters
-      for (auto f : ee["Parameters"]) data.second.push_back(f.as<double>());
+      for (auto f : ee["Parameters"])
+        data.second.push_back(f.as<double>());
 
       // add data
-      d_interiorFlagsDeck_p->d_noFailRegions[i - 1] = data;
+      d_interiorFlagsDeck_p->d_noFailRegions[i-1] = data;
     }
+          config["No_Fail_Region"]["Compute_And_Not_Store"].as<bool>();
   }
 }  // setInteriorFlagsDeck
 
@@ -431,14 +450,25 @@ void inp::Input::setLoadingDeck() {
         inp::BCData bc;
 
         // read region data
-        if (e["Location"]["Rectangle"]) {
+        if (e["Location"]["Line"]) {
+          bc.d_regionType = "line";
+          std::vector<double> locs;
+          for (auto j : e["Location"]["Line"]) locs.push_back(j.as<double>());
+
+          if (locs.size() != 2) {
+            std::cerr << "Error: Check Line data in " << tag << ".\n";
+            exit(1);
+          }
+          bc.d_x1 = locs[0];
+          bc.d_x2 = locs[1];
+        } else if (e["Location"]["Rectangle"]) {
           bc.d_regionType = "rectangle";
           std::vector<double> locs;
           for (auto j : e["Location"]["Rectangle"])
             locs.push_back(j.as<double>());
 
           if (locs.size() != 4) {
-            std::cerr << "Error: Check Rectangle data in " + tag + ".\n";
+            std::cerr << "Error: Check Rectangle data in " << tag << ".\n";
             exit(1);
           }
           bc.d_x1 = locs[0];
@@ -473,11 +503,15 @@ void inp::Input::setLoadingDeck() {
                    "smaller than theta or it is very close to theta\n";
             exit(1);
           }
-        } else if (e["Location"]["Point"] and e["Location"]["Radius"]) {
+        } else if (e["Location"]["Point"] and e["Location"]["Radius"])
+        {
+
+         
           bc.d_regionType = "circle";
 
           std::vector<double> locs;
-          for (auto j : e["Location"]["Point"]) locs.push_back(j.as<double>());
+          for (auto j : e["Location"]["Point"])
+            locs.push_back(j.as<double>());
 
           if (locs.size() != 2) {
             std::cerr << "Error: Check Point data in " + tag + ".\n";
@@ -498,11 +532,14 @@ void inp::Input::setLoadingDeck() {
 
           bc.d_r1 = radii[0];
 
-        } else if (e["Location"]["Point"] and e["Location"]["Radii"]) {
+        }
+        else if (e["Location"]["Point"] and e["Location"]["Radii"] )
+        {
           bc.d_regionType = "torus";
 
           std::vector<double> locs;
-          for (auto j : e["Location"]["Point"]) locs.push_back(j.as<double>());
+          for (auto j : e["Location"]["Point"])
+            locs.push_back(j.as<double>());
 
           if (locs.size() != 2) {
             std::cerr << "Error: Check Point data in " + tag + ".\n";
@@ -513,7 +550,8 @@ void inp::Input::setLoadingDeck() {
           bc.d_y1 = locs[1];
 
           std::vector<double> radii;
-          for (auto j : e["Location"]["Radii"]) radii.push_back(j.as<double>());
+          for (auto j : e["Location"]["Radii"])
+            radii.push_back(j.as<double>());
 
           if (radii.size() != 2) {
             std::cerr << "Error: Check Radii data in " + tag + ".\n";
@@ -523,8 +561,24 @@ void inp::Input::setLoadingDeck() {
           bc.d_r1 = radii[0];
           bc.d_r2 = radii[1];
         }
-
+         
         // read bc region
+        else if (e["Location"]["Cuboid"]) {
+          bc.d_regionType = "cuboid";
+          std::vector<double> locs;
+          for (auto j : e["Location"]["Cuboid"]) locs.push_back(j.as<double>());
+
+          if (locs.size() != 6) {
+            std::cerr << "Error: Check Cuboid data in " << tag << ".\n";
+            exit(1);
+          }
+          bc.d_x1 = locs[0];
+          bc.d_x2 = locs[3];
+          bc.d_y1 = locs[1];
+          bc.d_y2 = locs[4];
+          bc.d_z1 = locs[2];
+          bc.d_z2 = locs[5];
+        }  // read bc region
 
         // read direction
         for (auto j : e["Direction"]) bc.d_direction.push_back(j.as<size_t>());
@@ -577,6 +631,7 @@ void inp::Input::setMaterialDeck() {
 
     d_materialDeck_p->d_materialType = "RNPBond";
   }
+
 
   if (e["Compute_From_Classical"])
     d_materialDeck_p->d_computeParamsFromElastic =
@@ -698,15 +753,18 @@ void inp::Input::setSolverDeck() {
     if (e["Max_Iteration"])
       d_solverDeck_p->d_maxIters = e["Max_Iteration"].as<int>();
     if (e["Tolerance"]) d_solverDeck_p->d_tol = e["Tolerance"].as<double>();
+    if (e["Perturbation"])
+      d_solverDeck_p->d_perturbation = e["Perturbation"].as<double>();
   }
-}  // setSolverDeck
+} // setSolverDeck
 
 void inp::Input::setAbsorbingCondDeck() {
   d_absorbingCondDeck_p = new inp::AbsorbingCondDeck();
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   auto ci = config["Absorbing_Condition"];
-  if (!ci) return;
+  if (!ci)
+    return;
 
   // set damping active to true
   d_absorbingCondDeck_p->d_dampingActive = true;
@@ -718,12 +776,11 @@ void inp::Input::setAbsorbingCondDeck() {
   // get damping coefficient type
   if (!ci["Damping_Coefficient"]) {
     std::cerr << "Error: Expecting data in block "
-                 "Absorbing_Condition->Damping_Coefficient"
-              << std::endl;
+                 "Absorbing_Condition->Damping_Coefficient" << std::endl;
     exit(1);
   } else {
-    d_absorbingCondDeck_p->d_dampingCoeffType =
-        ci["Damping_Coefficient"]["Type"].as<std::string>();
+
+    d_absorbingCondDeck_p->d_dampingCoeffType = ci["Damping_Coefficient"]["Type"].as<std::string>();
 
     for (auto f : ci["Damping_Coefficient"]["Parameters"])
       d_absorbingCondDeck_p->d_dampingCoeffParams.push_back(f.as<double>());
@@ -732,13 +789,13 @@ void inp::Input::setAbsorbingCondDeck() {
   // get damping regions
   if (!ci["Damping_Num_Regions"]) {
     std::cerr << "Error: Expecting number of damping regions data in "
-                 "Absorbing_Condition->Damping_Num_Regions"
-              << std::endl;
+                 "Absorbing_Condition->Damping_Num_Regions" << std::endl;
     exit(1);
   }
   int n = ci["Damping_Num_Regions"].as<int>();
 
-  for (int i = 1; i <= n; i++) {
+  for (int i = 1; i<=n; i++) {
+
     // create tag for i^th region
     // prepare string Set_s to read file
     std::string read_set = "Region_";
@@ -750,10 +807,10 @@ void inp::Input::setAbsorbingCondDeck() {
     // get relative location of region
     if (!e["Relative_Loc"]) {
       std::cerr << "Error: Must specify relative location of damping region "
-                   "with respect to whole simulation domain"
-                << std::endl;
+                   "with respect to whole simulation domain" << std::endl;
       exit(1);
     } else {
+
       dg.d_relativeLoc = e["Relative_Loc"].as<std::string>();
     }
 
@@ -762,6 +819,7 @@ void inp::Input::setAbsorbingCondDeck() {
       std::cerr << "Error: Must specify values in Check_Flags" << std::endl;
       exit(1);
     } else {
+
       size_t lco = 0;
       for (auto f : e["Check_Flags"]) {
         if (lco == 0)
@@ -785,6 +843,7 @@ void inp::Input::setAbsorbingCondDeck() {
       std::cerr << "Error: Must specify values in Layer_Thickness" << std::endl;
       exit(1);
     } else {
+
       size_t lco = 0;
       for (auto f : e["Layer_Thickness"]) {
         if (lco == 0)
@@ -810,12 +869,13 @@ void inp::Input::setAbsorbingCondDeck() {
       exit(1);
     }
 
-    for (auto f : e["Domain"]) locs.push_back(f.as<double>());
+    for (auto f : e["Domain"])
+      locs.push_back(f.as<double>());
 
     if (locs.size() != 4 and locs.size() != 6) {
       std::cerr << "Error: We expect data Absorbing_Condition->" << read_set
-                << " has four/six entries giving corner points of a rectangle"
-                << std::endl;
+      << " has four/six entries giving corner points of a rectangle" <<
+      std::endl;
       exit(1);
     }
 
@@ -834,4 +894,4 @@ void inp::Input::setAbsorbingCondDeck() {
     std::cerr << "Error: Check damping region data" << std::endl;
     exit(1);
   }
-}  // setAbsorbingCondDeck
+} // setAbsorbingCondDeck

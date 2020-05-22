@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "fLoading.h"
+
 #include "../inp/decks/loadingDeck.h"
 #include "fe/mesh.h"
 #include "util/compare.h"
@@ -20,20 +21,21 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
   // nodes
   for (const auto &bc : d_bcData) {
     // check bc first
-    if (bc.d_regionType != "rectangle" and
-        bc.d_regionType != "angled_rectangle") {
+    if (bc.d_regionType != "line" and bc.d_regionType != "rectangle" and
+        bc.d_regionType != "angled_rectangle" and bc.d_regionType != "cuboid") {
       std::cerr
           << "Error: Force bc region type = " << bc.d_regionType
-          << " not recognised. Should be rectangle or angled_rectangle. \n";
+          << " not recognized. Should be rectangle or angled_rectangle. \n";
       exit(1);
     }
 
     if (bc.d_spatialFnType != "constant" and bc.d_spatialFnType != "hat_x" and
-        bc.d_spatialFnType != "hat_y" and bc.d_spatialFnType != "sin_x" and
-        bc.d_spatialFnType != "sin_y" and bc.d_spatialFnType != "linear_x" and
-        bc.d_spatialFnType != "linear_y") {
+        bc.d_spatialFnType != "hat_y" and bc.d_spatialFnType != "hat_z" and
+        bc.d_spatialFnType != "sin_x" and bc.d_spatialFnType != "sin_y" and
+        bc.d_spatialFnType != "sin_z" and bc.d_spatialFnType != "linear_x" and
+        bc.d_spatialFnType != "linear_y" and bc.d_spatialFnType != "linear_z") {
       std::cerr << "Error: Force bc space function type = "
-                << bc.d_spatialFnType << " not recognised. "
+                << bc.d_spatialFnType << " not recognized. "
                 << "Currently only constant, hat_x, hat_y function is "
                    "implemented. \n";
       exit(1);
@@ -43,7 +45,7 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
         bc.d_timeFnType != "linear_step" and
         bc.d_timeFnType != "linear_slow_fast" and bc.d_timeFnType != "sin") {
       std::cerr << "Error: Force bc space function type = " << bc.d_timeFnType
-                << " not recognised. "
+                << " not recognized. "
                 << "Currently constant, linear, linear_step, linear_slow_fast"
                    " are implemented. \n";
       exit(1);
@@ -67,7 +69,8 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     size_t spatial_num_params = 0;
     if (bc.d_spatialFnType == "hat_x" or bc.d_spatialFnType == "hat_y" or
         bc.d_spatialFnType == "sin_x" or bc.d_spatialFnType == "sin_y" or
-        bc.d_spatialFnType == "linear_x" or bc.d_spatialFnType == "linear_y")
+        bc.d_spatialFnType == "sin_z" or bc.d_spatialFnType == "linear_x" or
+        bc.d_spatialFnType == "linear_y" or bc.d_spatialFnType == "linear_z")
       spatial_num_params = 1;
     if (bc.d_spatialFnParams.size() < spatial_num_params) {
       std::cerr << "Error: Force bc insufficient parameters for spatial "
@@ -82,15 +85,23 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
     // now loop over nodes
     for (size_t i = 0; i < mesh->getNumNodes(); i++) {
-      if (bc.d_regionType == "rectangle" &&
-          util::geometry::isPointInsideRectangle(mesh->getNode(i), bc.d_x1,
-                                                 bc.d_x2, bc.d_y1, bc.d_y2))
-        fix_nodes.push_back(i);
-      else if (bc.d_regionType == "angled_rectangle" &&
-               util::geometry::isPointInsideAngledRectangle(
-                   mesh->getNode(i), bc.d_x1, bc.d_x2, bc.d_y1, bc.d_y2,
-                   bc.d_theta))
-        fix_nodes.push_back(i);
+      bool fix = false;
+      auto xi = mesh->getNode(i);
+
+      if (bc.d_regionType == "line")
+        fix = util::compare::definitelyGreaterThan(xi.d_x, bc.d_x1) &&
+              util::compare::definitelyLessThan(mesh->getNode(i).d_x, bc.d_x2);
+      else if (bc.d_regionType == "rectangle")
+        fix = util::geometry::isPointInsideRectangle(xi, bc.d_x1, bc.d_x2,
+                                                     bc.d_y1, bc.d_y2);
+      else if (bc.d_regionType == "angled_rectangle")
+        fix = util::geometry::isPointInsideAngledRectangle(
+            xi, bc.d_x1, bc.d_x2, bc.d_y1, bc.d_y2, bc.d_theta);
+      else if (bc.d_regionType == "cuboid")
+        fix = util::geometry::isPointInsideCuboid(xi, bc.d_x1, bc.d_x2, bc.d_y1,
+                                                  bc.d_y2, bc.d_z1, bc.d_z2);
+
+      if (fix) fix_nodes.push_back(i);
     }  // loop over nodes
 
     // add computed list of nodes to the data
@@ -102,6 +113,7 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
                               fe::Mesh *mesh) {
   for (size_t s = 0; s < d_bcData.size(); s++) {
     inp::BCData bc = d_bcData[s];
+
     for (auto i : d_bcNodes[s]) {
       util::Point3 x = mesh->getNode(i);
       double fmax = 1.0;
@@ -129,18 +141,29 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
       } else if (bc.d_spatialFnType == "hat_y") {
         fmax = bc.d_spatialFnParams[0] *
                util::function::hatFunction(x.d_y, bc.d_y1, bc.d_y2);
+      } else if (bc.d_spatialFnType == "hat_z") {
+        fmax = bc.d_spatialFnParams[0] *
+               util::function::hatFunction(x.d_z, bc.d_z1, bc.d_z2);
       } else if (bc.d_spatialFnType == "sin_x") {
         double a = M_PI * bc.d_spatialFnParams[0];
         fmax = bc.d_spatialFnParams[0] * std::sin(a * x.d_x);
       } else if (bc.d_spatialFnType == "sin_y") {
         double a = M_PI * bc.d_spatialFnParams[0];
         fmax = bc.d_spatialFnParams[0] * std::sin(a * x.d_y);
+      } else if (bc.d_spatialFnType == "sin_z") {
+        double a = M_PI * bc.d_spatialFnParams[0];
+        fmax = bc.d_spatialFnParams[0] * std::sin(a * x.d_z);
       } else if (bc.d_spatialFnType == "linear_x") {
         double a = bc.d_spatialFnParams[0];
         fmax = bc.d_spatialFnParams[0] * a * x.d_x;
       } else if (bc.d_spatialFnType == "linear_y") {
         double a = bc.d_spatialFnParams[0];
         fmax = bc.d_spatialFnParams[0] * a * x.d_y;
+      } else if (bc.d_spatialFnType == "linear_z") {
+        double a = bc.d_spatialFnParams[0];
+        fmax = bc.d_spatialFnParams[0] * a * x.d_z;
+      } else if (bc.d_spatialFnType == "constant") {
+        fmax = bc.d_spatialFnParams[0];
       }
 
       // apply time function

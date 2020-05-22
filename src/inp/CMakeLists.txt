@@ -8,4 +8,4 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 AUX_SOURCE_DIRECTORY(./decks SOURCES)
 
 add_library(Inp ${SOURCES})
-target_link_libraries(Inp Util ${YAML_CPP_LIB})
+target_link_libraries(Inp PUBLIC Util ${YAML_CPP_LIB})

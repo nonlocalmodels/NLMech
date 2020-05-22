@@ -3,7 +3,7 @@
 #
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
 
 project(NLMech CXX)
 set (VERSION_MAJOR 0)
@@ -15,13 +15,29 @@ configure_file (
   "${PROJECT_SOURCE_DIR}/src/Config.h"
   )
 
+# Set director for all exectuables
+set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin")
+
+# Set the common library directory
+get_property(LIB64 GLOBAL PROPERTY FIND_LIBRARY_USE_LIB64_PATHS)
+
+if ("${LIB64}" STREQUAL "TRUE")
+    set(LIBSUFFIX 64)
+else()
+    set(LIBSUFFIX "")
+endif()
+
+set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib${LIBSUFFIX}")
+
+# Add a postfix if the libraries are build in the debug mode
+set(CMAKE_DEBUG_POSTFIX d)
+
 #Enable ctest
 enable_testing()
+add_subdirectory(test)
 
 # Add own cmake scripts
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
-
-cmake_policy(SET CMP0023 OLD)
 
 # Set build type to release if non is specified
 if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
@@ -35,7 +51,7 @@ find_package(HPX REQUIRED)
 
 if (NOT (HPX_BUILD_TYPE STREQUAL CMAKE_BUILD_TYPE))
     message("HPX_BUILD_TYPE: " ${HPX_BUILD_TYPE} " CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
-    message(FATAL_ERROR "Build types used for HPX and this library have to match")
+    message(FATAL_ERROR "Build types used for HPX and this application have to match")
 endif ()
 
 list(APPEND CMAKE_MODULE_PATH "${HPX_PREFIX}/../cmake/")
@@ -50,12 +66,13 @@ if (VTK_VERSION VERSION_LESS "6")
     message(FATAL_ERROR "ERROR: Only VTK library 6+ supported")
 endif ()
 
-# BLAZE
+# BLAZE and BlazeIterative
 find_package(blaze REQUIRED)
+find_package(BlazeIterative REQUIRED)
 
 # BLAS and LAPACK
-find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
+find_package(BLAS REQUIRED)
 
 # Add flags to compiler
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -70,7 +87,7 @@ if (CMAKE_VERSION VERSION_LESS "3.1")
         set(CMAKE_CXX_FLAGS "--std=gnu++14 ${CMAKE_CXX_FLAGS}")
     endif ()
 else ()
-    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX_STANDARD 17)
 endif ()
 
 # include important directories
@@ -95,16 +112,20 @@ add_subdirectory(src/loading)
 add_subdirectory(src/geometry)
 add_subdirectory(src/fe)
 add_subdirectory(src/model)
+add_subdirectory(src/data)
 
 # add test directory
 add_subdirectory(src/test)
 
-# add tool directory
-add_subdirectory(tools/mesh)
-add_subdirectory(tools/pp)
+# Build documentation
+set(Enable_Tools FALSE CACHE BOOL "Enables the tools to the build target")
+if(${Enable_Tools})
+add_subdirectory(tools)
+endif()
 
 # Build executable
-add_hpx_executable(NLMech SOURCES src/main.cpp DEPENDENCIES Inp Model)
+add_hpx_executable(NLMech SOURCES src/main.cpp 
+				   DEPENDENCIES Inp Model ${LAPACK_LIBRARIES})
 
 # Build documentation
 set(Enable_Documentation FALSE CACHE BOOL "Generates target for generating the documentation")

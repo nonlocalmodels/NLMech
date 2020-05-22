@@ -4,8 +4,10 @@
 // (See accompanying file LICENSE.txt)
 
 #include "mshWriter.h"
-#include <iostream>
+
 #include <util/feElementDefs.h>
+
+#include <iostream>
 
 static int ntag = 0;
 static int etag = 0;
@@ -182,8 +184,20 @@ void rw::writer::MshWriter::appendPointData(
   writeMshDataHeader(name, 6, data->size(), true);
   for (size_t i = 0; i < data->size(); i++) {
     auto d = (*data)[i];
+    fprintf(d_file, "%zu %lf %lf %lf %lf %lf %lf\n", i + 1, d(0,0), d(1,1),
+            d(2,2), d(1,2), d(0,2), d(0,1));
+  }
+  fprintf(d_file, "$EndNodeData\n");
+}
+
+void rw::writer::MshWriter::appendPointData(
+    const std::string &name, const std::vector<util::Matrix33> *data) {
+  // Write metadata
+  writeMshDataHeader(name, 6, data->size(), true);
+  for (size_t i = 0; i < data->size(); i++) {
+    auto d = (*data)[i];
     fprintf(d_file, "%zu %lf %lf %lf %lf %lf %lf\n", i + 1, d(0, 0), d(1, 1),
-            d(2, 2), d(1, 2), d(0, 2), d(0, 1));
+            d(2, 2), d(0, 1), d(1, 2), d(0, 2));
   }
   fprintf(d_file, "$EndNodeData\n");
 }
@@ -205,8 +219,8 @@ void rw::writer::MshWriter::appendCellData(
   writeMshDataHeader(name, 6, data->size(), false);
   for (size_t i = 0; i < data->size(); i++) {
     auto d = (*data)[i];
-    fprintf(d_file, "%zu %lf %lf %lf %lf %lf %lf\n", i + 1, d(0, 0), d(1, 1),
-            d(2, 2), d(1, 2), d(0, 2), d(0, 1));
+    fprintf(d_file, "%zu %lf %lf %lf %lf %lf %lf\n", i + 1, d(0,0), d(1,1),
+            d(2,2), d(1,2), d(0,2), d(0,1));
   }
   fprintf(d_file, "$EndElementData\n");
 }

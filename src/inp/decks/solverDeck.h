@@ -31,6 +31,9 @@ struct SolverDeck {
   /*! @brief Tolerance */
   double d_tol;
 
+  /*! @brief Perturbation for the finite difference approximation in the implicit time integration */
+  double d_perturbation;
+
   /*!
    * @brief Constructor
    */

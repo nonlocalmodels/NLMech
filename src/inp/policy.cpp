@@ -7,8 +7,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "policy.h"
-#include "decks/policyDeck.h"
+
 #include <iostream>
+
+#include "decks/policyDeck.h"
 
 static void addTag(std::vector<std::string> &list, const std::string &tag) {
   bool found = false;
@@ -26,7 +28,7 @@ inp::Policy *inp::Policy::getInstance(inp::PolicyDeck *deck) {
   return d_instance_p;
 }
 
-void inp::Policy::destroyInstance() { delete d_instance_p; }
+void inp::Policy::destroyInstance() { delete[] d_instance_p; }
 
 inp::Policy::~Policy() = default;
 
