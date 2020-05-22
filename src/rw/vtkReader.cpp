@@ -33,52 +33,39 @@ rw::reader::VtkReader::VtkReader(const std::string &filename) {
   d_reader_p->Update();
 }
 
-<<<<<<< HEAD
 bool rw::reader::VtkReader::vtuHasPointData(const std::string &data_tag) {
-
   // read point field data
   d_grid_p = d_reader_p->GetOutput();
   vtkPointData *p_field = d_grid_p->GetPointData();
-  for (size_t i=0; i<p_field->GetNumberOfArrays(); i++) {
+  for (size_t i = 0; i < p_field->GetNumberOfArrays(); i++) {
     auto tag = p_field->GetArrayName(i);
 
-    if (tag == data_tag)
-      return true;
+    if (tag == data_tag) return true;
   }
 
   return false;
 }
 
 bool rw::reader::VtkReader::vtuHasCellData(const std::string &data_tag) {
-
   // read point field data
   d_grid_p = d_reader_p->GetOutput();
   vtkCellData *c_field = d_grid_p->GetCellData();
-  for (size_t i=0; i<c_field->GetNumberOfArrays(); i++) {
+  for (size_t i = 0; i < c_field->GetNumberOfArrays(); i++) {
     auto tag = c_field->GetArrayName(i);
-    if (tag == data_tag)
-      return true;
+    if (tag == data_tag) return true;
   }
 
   return false;
 }
 
 std::vector<std::string> rw::reader::VtkReader::readVtuFilePointTags() {
-
-=======
-std::vector<std::string> rw::reader::VtkReader::readVtuFilePointTags() {
->>>>>>> master
   // read point field data
   d_grid_p = d_reader_p->GetOutput();
   vtkPointData *p_field = d_grid_p->GetPointData();
 
   std::vector<std::string> tags;
 
-<<<<<<< HEAD
-  for (size_t i=0; i<p_field->GetNumberOfArrays(); i++) {
-=======
   for (size_t i = 0; i < p_field->GetNumberOfArrays(); i++) {
->>>>>>> master
     auto tag = p_field->GetArrayName(i);
     tags.emplace_back(tag);
   }
@@ -87,21 +74,13 @@ std::vector<std::string> rw::reader::VtkReader::readVtuFilePointTags() {
 }
 
 std::vector<std::string> rw::reader::VtkReader::readVtuFileCellTags() {
-<<<<<<< HEAD
-
-=======
->>>>>>> master
   // read point field data
   d_grid_p = d_reader_p->GetOutput();
   vtkCellData *c_field = d_grid_p->GetCellData();
 
   std::vector<std::string> tags;
 
-<<<<<<< HEAD
-  for (size_t i=0; i<c_field->GetNumberOfArrays(); i++) {
-=======
   for (size_t i = 0; i < c_field->GetNumberOfArrays(); i++) {
->>>>>>> master
     auto tag = c_field->GetArrayName(i);
     tags.emplace_back(tag);
   }
@@ -109,10 +88,6 @@ std::vector<std::string> rw::reader::VtkReader::readVtuFileCellTags() {
   return tags;
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> master
 void rw::reader::VtkReader::readMesh(size_t dim,
                                      std::vector<util::Point3> *nodes,
                                      size_t &element_type, size_t &num_elem,
@@ -356,20 +331,6 @@ bool rw::reader::VtkReader::readPointData(const std::string &name,
   auto data_a = vtkSmartPointer<vtkDoubleArray>::New();
   data_a->SetNumberOfComponents(1);
   data_a->Allocate(1, 1);  // allocate memory
-<<<<<<< HEAD
-
-  (*data).resize(array->GetNumberOfTuples());
-  for (size_t i = 0; i < array->GetNumberOfTuples(); i++) {
-    array->GetTuples(i, i, data_a);
-    (*data)[i] = data_a->GetValue(0);
-  }
-
-  return true;
-}
-
-bool rw::reader::VtkReader::readPointData(const std::string &name,
-                                          std::vector<int> *data) {
-=======
 
   (*data).resize(array->GetNumberOfTuples());
   for (size_t i = 0; i < array->GetNumberOfTuples(); i++) {
@@ -434,7 +395,6 @@ bool rw::reader::VtkReader::readPointData(const std::string &name,
 
 bool rw::reader::VtkReader::readPointData(const std::string &name,
                                           std::vector<double> *data) {
->>>>>>> master
   // read point field data
   d_grid_p = d_reader_p->GetOutput();
   vtkPointData *p_field = d_grid_p->GetPointData();
@@ -506,9 +466,9 @@ bool rw::reader::VtkReader::readPointData(const std::string &name,
   (*data).resize(array->GetNumberOfTuples());
   for (size_t i = 0; i < array->GetNumberOfTuples(); i++) {
     array->GetTuples(i, i, data_a);
-    (*data)[i] = util::SymMatrix3(data_a->GetValue(0), data_a->GetValue(1),
-                                  data_a->GetValue(2), data_a->GetValue(3),
-                                  data_a->GetValue(4), data_a->GetValue(5));
+    (*data)[i] = util::SymMatrix3({data_a->GetValue(0), data_a->GetValue(1),
+                                   data_a->GetValue(2), data_a->GetValue(3),
+                                   data_a->GetValue(4), data_a->GetValue(5)});
   }
 
   return true;
@@ -608,35 +568,6 @@ bool rw::reader::VtkReader::readCellData(const std::string &name,
 }
 
 bool rw::reader::VtkReader::readCellData(const std::string &name,
-<<<<<<< HEAD
-                                         std::vector<double> *data) {
-  // read point field data
-  d_grid_p = d_reader_p->GetOutput();
-  vtkCellData *c_field = d_grid_p->GetCellData();
-
-  // handle for displacement, fixity and node element connectivity
-  if (c_field->HasArray(name.c_str()) == 0) return false;
-
-  vtkDataArray *array = c_field->GetArray(name.c_str());
-
-  // Below is not efficient. Later this can be improved.
-  // declare another array data to hold the ux,uy,uz
-  auto data_a = vtkSmartPointer<vtkDoubleArray>::New();
-  data_a->SetNumberOfComponents(1);
-  data_a->Allocate(1, 1);  // allocate memory
-
-  (*data).resize(array->GetNumberOfTuples());
-  for (size_t i = 0; i < array->GetNumberOfTuples(); i++) {
-    array->GetTuples(i, i, data_a);
-    (*data)[i] = data_a->GetValue(0);
-  }
-
-  return true;
-}
-
-bool rw::reader::VtkReader::readCellData(const std::string &name,
-=======
->>>>>>> master
                                          std::vector<util::Point3> *data) {
   // read point field data
   d_grid_p = d_reader_p->GetOutput();

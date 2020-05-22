@@ -6,8 +6,6 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ////////////////////////////////////////////////////////////////////////////////
 
-//Todo: make member functions private after refactoring
-
 #ifndef RW_WRITER_H
 #define RW_WRITER_H
 
@@ -15,22 +13,6 @@
 #include "util/matrix.h"          // definition of SymMatrix3
 #include <string>
 #include <vector>
-
-namespace inp {
-class Input;
-struct ModelDeck;
-struct OutputDeck;
-} // namespace inp
-
-namespace geometry {
-class Neighbor;
-} // namespace inp
-
-
-// forward declaration
-namespace data {
-class DataManager;
-}
 
 // forward declaration
 namespace rw {
@@ -75,32 +57,11 @@ public:
    * @param format Format of the output file, e.g. "vtu", "msh"
    * @param compress_type Specify the compression type (optional)
    */
-  Writer(const std::string &filename, const std::string &format, const std::string &compress_type);
-
-
-  /*!
-   * @brief Constructor
-   *
-   * Creates and opens .vtu file of name given by filename. The file remains
-   * open till the close() function is invoked or if the instance of this
-   * class is destroyed.
-   *
-   * @param format Format of the output file, e.g. "vtu", "msh"
-   * @param compress_type Specify the compression type (optional)
-   */
-   Writer(const std::string &format, const std::string &compress_type);
-
-
-
+  explicit Writer(const std::string &filename, const std::string &format =
+    "vtu", const std::string &compress_type = "");
 
   /*! @brief Destructor */
   ~Writer();
-
-  /*!
-   * @brief Function to trigger the output
-   */
-  void write(inp::Input *deck,data::DataManager* dataManager,size_t d_n, double d_time);
-
 
   /*!
    * @brief Open a .vtu file
@@ -200,16 +161,6 @@ public:
   void appendPointData(const std::string &name,
                        const std::vector<util::SymMatrix3> *data);
 
- /*!
- * @brief Writes the matrix data associated to nodes to the
- * file
- * @param name Name of the data
- * @param data Vector containing the data
- */
-  void appendPointData(const std::string &name,
-                       const std::vector<util::Matrix33> *data);
-
-
   /** @}*/
 
   /**
@@ -278,9 +229,6 @@ private:
 
   /*! @brief Format of output file */
   std::string d_format;
-
-  /*! @brief Format of output file */
-  std::string d_compression_type;
 
 }; // class Writer
 

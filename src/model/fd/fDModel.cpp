@@ -29,13 +29,15 @@
 #include "inp/decks/modelDeck.h"
 #include "inp/decks/outputDeck.h"
 #include "inp/decks/restartDeck.h"
+#include "inp/decks/materialDeck.h"
 #include "inp/input.h"
 #include "inp/policy.h"
 #include "loading/fLoading.h"
 #include "loading/initialCondition.h"
 #include "loading/uLoading.h"
 #include "material/materialUtil.h"
-#include "material/pd/material.h"
+#include "material/pdMaterial.h"
+#include "material/materials.h"
 
 // standard lib
 #include <fstream>
@@ -148,19 +150,9 @@ void model::FDModel::initHObjects() {
 
   // initialize material class
   std::cout << "FDModel: Initializing material object.\n";
-  auto &material_deck = *d_input_p->getMaterialDeck();
-  if (material_deck.d_materialType == "RNPBond")
-    d_material_p = new material::pd::RnpMaterial(
-        &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
-  else if (material_deck.d_materialType == "PMBBond")
-    d_material_p = new material::pd::PmbMaterial(
-        &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
-  else if (material_deck.d_materialType == "PDElasticBond")
-    d_material_p = new material::pd::PdElastic(
-        &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
-  else if (material_deck.d_materialType == "PDState")
-    d_material_p = new material::pd::PdState(
-        &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
+  d_material_p = new material::pd::Material(d_input_p->getMaterialDeck(),
+                                            d_modelDeck_p->d_dim,
+                                            d_modelDeck_p->d_horizon);
 
   // initialize damping geometry class
   std::cout << "FDModel: Initializing damping object.\n";
@@ -642,8 +634,10 @@ std::pair<double, util::Point3> model::FDModel::computeForceState(
 
     // get peridynamics force and energy density between bond i and j
     auto fs = this->d_fracture_p->getBondState(i, j);
-    auto ef_i = this->d_material_p->getBondEF(rji, Sji, fs, mi, thetai);
-    auto ef_j = this->d_material_p->getBondEF(rji, Sji, fs, mj, thetaj);
+    // auto ef_i = this->d_material_p->getBondEF(rji, Sji, fs, mi, thetai);
+    // auto ef_j = this->d_material_p->getBondEF(rji, Sji, fs, mj, thetaj);
+    auto ef_i = this->d_material_p->getBondEF(rji, Sji, fs, true);
+    auto ef_j = this->d_material_p->getBondEF(rji, Sji, fs, true);
 
     // for state-based, we do not update bond-state as it is already updated
     // this->d_fracture_p->setBondState(i, j, fs);

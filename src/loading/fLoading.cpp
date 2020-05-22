@@ -98,8 +98,9 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
         fix = util::geometry::isPointInsideAngledRectangle(
             xi, bc.d_x1, bc.d_x2, bc.d_y1, bc.d_y2, bc.d_theta);
       else if (bc.d_regionType == "cuboid")
-        fix = util::geometry::isPointInsideCuboid(xi, bc.d_x1, bc.d_x2, bc.d_y1,
-                                                  bc.d_y2, bc.d_z1, bc.d_z2);
+        fix = util::geometry::isPointInsideCuboid(
+            3, xi, util::Point3(bc.d_x1, bc.d_y1, bc.d_z1),
+            util::Point3(bc.d_x2, bc.d_y2, bc.d_z2));
 
       if (fix) fix_nodes.push_back(i);
     }  // loop over nodes

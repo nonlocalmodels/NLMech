@@ -419,7 +419,7 @@ void fe::Mesh::readFromFile(inp::MeshDeck *deck, const std::string &filename) {
   d_filename = filename;
 
   // read file
-  createData(filename);
+  createData(filename, false, deck->d_isCentroidBasedDiscretization);
 
   // check if we need to compute mesh size
   if (deck->d_computeMeshSize) computeMeshSize();

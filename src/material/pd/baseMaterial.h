@@ -43,13 +43,12 @@ public:
    * @param fs Bond fracture state
    * @return pair Pair of energy and force
    */
-/*
   virtual std::pair<double, double> getBondEF(const double &r, const double &s,
                                               const double &J,
                                               bool &fs) {
     return std::make_pair(0., 0.);
   };
-*/
+
   /*!
    * @brief Returns energy and force between bond
    *
@@ -211,6 +210,15 @@ public:
    * loading step
    */
   virtual void update(){}
+
+  /*!
+   * @brief Get direction of bond force
+   * @return vector Unit vector along the bond force
+   */
+  virtual util::Point3 getBondForceDirection(const util::Point3 &dx,
+                                     const util::Point3 &du) const {
+    return util::Point3();
+  }
 
 protected:
   /*! @brief Horizon */

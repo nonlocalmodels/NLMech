@@ -328,7 +328,6 @@ struct SymMatrix3 {
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
    */
-<<<<<<< HEAD
   std::string printStr(int nt = 0, int lvl = 0) const {
 
     std::string tabS = "";
@@ -451,16 +450,6 @@ struct SymMatrix3 {
 
     return m;
   }
-=======
-  SymMatrix3() : d_xx(0.), d_yy(0.), d_zz(0.), d_xy(0.), d_xz(0.), d_yz(0.){};
-
-  /*!
-   * @brief Constructor
-   */
-  SymMatrix3(const float &xx, const float &yy, const float &zz, const float &xy,
-             const float &xz, const float &yz)
-      : d_xx(xx), d_yy(yy), d_zz(zz), d_xy(xy), d_xz(xz), d_yz(yz){};
->>>>>>> master
 };
 
 /*!

@@ -233,14 +233,14 @@ std::pair<util::Point3, double> material::pd::ElasticState::getBondEF(
                 (*d_dataManager_p->getExtensionP())[i][k] *
                 (*d_dataManager_p->getVolumeCorrectionP()
                       ->d_volumeCorrection_p)[i][k] *
-                (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j];
+                (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j];
 
     else
 
       strainE = 0.5 * w * (alpha_s * e_s * e_s + alpha_d * e_d * e_d) *
                 (*d_dataManager_p->getVolumeCorrectionP()
                       ->d_volumeCorrection_p)[i][k] *
-                (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j];
+                (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j];
   }
 
   return std::make_pair<util::Point3, double>(
@@ -275,7 +275,7 @@ util::Matrix33 material::pd::ElasticState::K_shape_tensor(size_t i) {
     K +=
         X.toMatrix() * w *
         (*d_dataManager_p->getVolumeCorrectionP()->d_volumeCorrection_p)[i][n] *
-        (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j];
+        (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j];
   }
   return K;
 }
@@ -293,7 +293,7 @@ util::Matrix33 material::pd::ElasticState::deformation_gradient(size_t i) {
     tmp +=
         Y.toMatrix(X) * w *
         (*d_dataManager_p->getVolumeCorrectionP()->d_volumeCorrection_p)[i][n] *
-        (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j];
+        (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j];
 
     n++;
   }
@@ -329,7 +329,7 @@ double material::pd::ElasticState::dirac_delta(util::Point3 x, size_t i,
 
   if (util::compare::essentiallyEqual(x.length(), 0))
     delta =
-        1. / (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j] *
+        1. / (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j] *
         (*d_dataManager_p->getVolumeCorrectionP()->d_volumeCorrection_p)[i][m];
 
   return delta;
@@ -423,10 +423,10 @@ util::Matrix33 material::pd::ElasticState::getStress(size_t i) {
 
       double volume = (*d_dataManager_p->getVolumeCorrectionP()
                             ->d_volumeCorrection_p)[i][m] *
-                      (*d_dataManager_p->getMeshP()->getNodalVolumeP())[k] *
+                      (*d_dataManager_p->getMeshP()->getNodalVolumesP())[k] *
                       (*d_dataManager_p->getVolumeCorrectionP()
                             ->d_volumeCorrection_p)[i][n] *
-                      (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j];
+                      (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j];
 
       util::Vector3 res = (this->K_modulus_tensor(i, j, k, m) *
                            (this->getStrain(i) * Xk.toVector()));

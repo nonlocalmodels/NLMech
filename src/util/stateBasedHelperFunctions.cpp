@@ -48,7 +48,7 @@ void util::StateBasedHelperFunctions::dilatation(data::DataManager *dataManager,
                   w * X.length() * (*dataManager->getExtensionP())[i][k] *
                   (*dataManager->getVolumeCorrectionP()
                         ->d_volumeCorrection_p)[i][k] *
-                  (*dataManager->getMeshP()->getNodalVolumeP())[j];
+                  (*dataManager->getMeshP()->getNodalVolumesP())[j];
               break;
             case 2:
               (*dataManager->getDilatationP())[i] +=
@@ -58,7 +58,7 @@ void util::StateBasedHelperFunctions::dilatation(data::DataManager *dataManager,
                   (*dataManager->getExtensionP())[i][k] *
                   (*dataManager->getVolumeCorrectionP()
                         ->d_volumeCorrection_p)[i][k] *
-                  (*dataManager->getMeshP()->getNodalVolumeP())[j];
+                  (*dataManager->getMeshP()->getNodalVolumesP())[j];
               break;
             case 3:
               (*dataManager->getDilatationP())[i] +=
@@ -67,7 +67,7 @@ void util::StateBasedHelperFunctions::dilatation(data::DataManager *dataManager,
                   w * X.length() * (*dataManager->getExtensionP())[i][k] *
                   (*dataManager->getVolumeCorrectionP()
                         ->d_volumeCorrection_p)[i][k] *
-                  (*dataManager->getMeshP()->getNodalVolumeP())[j];
+                  (*dataManager->getMeshP()->getNodalVolumesP())[j];
               break;
           }
 

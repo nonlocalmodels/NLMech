@@ -143,7 +143,6 @@ void material::pd::RNPBond::computeMaterialProperties(inp::MaterialDeck *deck,
       deck->d_matData.d_Gc, deck->d_matData.d_nu, deck->d_matData.d_E);
 }
 
-/*
 std::pair<double, double>
 material::pd::RNPBond::getBondEF(const double &r, const double &s,
                                  const double &influence, bool &fs) {
@@ -163,7 +162,6 @@ material::pd::RNPBond::getBondEF(const double &r, const double &s,
   else
     return std::make_pair(influence * d_C / d_invFactor, 0.);
 }
-*/
 
 std::pair<double, double> material::pd::RNPBond::getBondEFNoFail(
     const double &r, const double &s, const double &influence) {

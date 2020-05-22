@@ -45,7 +45,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
   volumes->clear();
 
   // specify type of element to read
-  if (dim != 2 or dim != 3) {
+  if (dim != 2 and dim != 3) {
     std::cerr << "Error: MshReader currently only supports reading of "
                  "triangle/quadrangle elements in dimension 2 and tetragonal "
                  "elements in 3.\n";
@@ -99,10 +99,10 @@ void rw::reader::MshReader::readMesh(size_t dim,
         // read the $ENDNOD delimiter
         std::getline(filein, line);
       }  // end of reading nodes
-        // Read the element block
+         // Read the element block
       else if (line.find("$ELM") == static_cast<std::string::size_type>(0) ||
                line.find("$Elements") ==
-               static_cast<std::string::size_type>(0)) {
+                   static_cast<std::string::size_type>(0)) {
         read_elements = true;
 
         // For reading the number of elements and the node ids from the stream
@@ -170,7 +170,8 @@ void rw::reader::MshReader::readMesh(size_t dim,
             }
 
             // debug
-            //            std::cout << "(" << id << ", " << type << ", " << elem_counter
+            //            std::cout << "(" << id << ", " << type << ", " <<
+            //            elem_counter
             //                      << ") = ";
             //            for (auto enode: e_nodes)
             //              std::cout << enode << ";";

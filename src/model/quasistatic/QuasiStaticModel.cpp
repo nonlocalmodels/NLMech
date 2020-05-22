@@ -187,11 +187,11 @@ void model::QuasiStaticModel<T>::computeForces(bool full) {
           auto res = d_material_p->getBondEF(size_t(i), size_t(j_id));
 
           force_i += res.first *
-                     (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j_id];
+                     (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j_id];
 
           m.lock();
           (*d_dataManager_p->getForceP())[j_id] -=
-              res.first * (*d_dataManager_p->getMeshP()->getNodalVolumeP())[i];
+              res.first * (*d_dataManager_p->getMeshP()->getNodalVolumesP())[i];
           m.unlock();
 
           if (full) {
@@ -263,11 +263,11 @@ inline void model::QuasiStaticModel<T>::computePertubatedForces(size_t thread) {
           auto res = material->getBondEF(size_t(i), size_t(j_id));
 
           force_i += res.first *
-                     (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j_id];
+                     (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j_id];
 
           m.lock();
           (*d_dataManagers[thread]->getForceP())[j_id] -=
-              res.first * (*d_dataManager_p->getMeshP()->getNodalVolumeP())[i];
+              res.first * (*d_dataManager_p->getMeshP()->getNodalVolumesP())[i];
           m.unlock();
         }
         // update force and energy
@@ -500,7 +500,8 @@ void model::QuasiStaticModel<T>::solver() {
   double delta_t = d_dataManager_p->getModelDeckP()->d_dt;
 
   // Write the initial data
-  d_writer_p->write(d_input_p, d_dataManager_p, d_n, d_time);
+  // TODO fix rw
+  //d_writer_p->write(d_input_p, d_dataManager_p, d_n, d_time);
 
   for (; d_n < d_input_p->getModelDeck()->d_Nt + 1; d_n++) {
     d_time = d_n * delta_t;
@@ -558,7 +559,8 @@ void model::QuasiStaticModel<T>::solver() {
 
     this->computeForces(true);
     // Do the output after one successful iteration
-    d_writer_p->write(d_input_p, d_dataManager_p, d_n, d_time);
+    // TODO fix rw
+    // d_writer_p->write(d_input_p, d_dataManager_p, d_n, d_time);
   }
 }
 

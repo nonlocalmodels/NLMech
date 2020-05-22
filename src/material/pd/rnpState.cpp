@@ -151,7 +151,6 @@ void material::pd::RNPState::computeMaterialProperties(inp::MaterialDeck *deck,
       deck->d_matData.d_Gc, deck->d_matData.d_nu, deck->d_matData.d_E);
 }
 
-/*
 std::pair<double, double> material::pd::RNPState::getBondEF(const double &r,
                                                             const double &s,
                                                             const double &J,
@@ -172,7 +171,7 @@ std::pair<double, double> material::pd::RNPState::getBondEF(const double &r,
   else
     return std::make_pair(J * d_C / d_invFactor, 0.);
 }
-*/
+
 std::pair<double, double> material::pd::RNPState::getBondEFNoFail(
     const double &r, const double &s, const double &J) {
   // Return force and energy for no-fail region bonds

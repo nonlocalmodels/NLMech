@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "reader.h"
-
 #include "csv.h"
 #include "mshReader.h"
 #include "vtkReader.h"
@@ -91,15 +90,14 @@ void rw::reader::readVtuFileNodes(const std::string &filename, size_t dim,
       exit(1);
     }
 
-    for (size_t i = 0; i < u.size(); i++)
-      (*nodes)[i] -= u[i];
+    for (size_t i = 0; i < u.size(); i++) (*nodes)[i] -= u[i];
   }
 
   rdr.close();
 }
 
-bool rw::reader::vtuHasPointData(const std::string &filename, const
-                                 std::string &tag) {
+bool rw::reader::vtuHasPointData(const std::string &filename,
+                                 const std::string &tag) {
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   auto has_data = rdr.vtuHasPointData(tag);
@@ -107,15 +105,14 @@ bool rw::reader::vtuHasPointData(const std::string &filename, const
   return has_data;
 }
 
-bool rw::reader::vtuHasCellData(const std::string &filename, const
-std::string &tag) {
+bool rw::reader::vtuHasCellData(const std::string &filename,
+                                const std::string &tag) {
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   auto has_data = rdr.vtuHasCellData(tag);
   rdr.close();
   return has_data;
 }
-
 
 std::vector<std::string> rw::reader::readVtuFilePointTags(
     const std::string &filename) {
@@ -166,8 +163,7 @@ void rw::reader::readVtuFileRestart(const std::string &filename,
     }
 
     u->resize(y.size());
-    for (size_t i = 0; i < y.size(); i++)
-      (*u)[i] = y[i] - (*X)[i];
+    for (size_t i = 0; i < y.size(); i++) (*u)[i] = y[i] - (*X)[i];
   }
 
   // get velocity
@@ -348,8 +344,7 @@ void rw::reader::readMshFileRestart(const std::string &filename,
     }
 
     u->resize(y.size());
-    for (size_t i = 0; i < y.size(); i++)
-      (*u)[i] = y[i] - (*X)[i];
+    for (size_t i = 0; i < y.size(); i++) (*u)[i] = y[i] - (*X)[i];
   }
 
   // get velocity

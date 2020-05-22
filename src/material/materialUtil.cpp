@@ -19,7 +19,7 @@ double computeStateMxI(size_t i, const std::vector<util::Point3> &nodes,
                        const std::vector<double> &nodal_vol,
                        const std::vector<std::vector<size_t>> &neighbor_list,
                        const double &mesh_size,
-                       const material::pd::Material *material) {
+                       material::pd::Material *material) {
 
   double horizon = material->getHorizon();
   const auto &xi = nodes[i];
@@ -70,7 +70,7 @@ double computeStateThetaxI(size_t i, const std::vector<util::Point3> &nodes,
                            const std::vector<double> &nodal_vol,
                            const std::vector<std::vector<size_t>> &neighbor_list,
                            const double &mesh_size,
-                           const material::pd::Material *material,
+                           material::pd::Material *material,
                            const geometry::Fracture *fracture,
                            const std::vector<double> &mx) {
 
@@ -122,7 +122,7 @@ double computeHydrostaticStrainI(size_t i, const std::vector<util::Point3> &node
                            const std::vector<double> &nodal_vol,
                                  const std::vector<std::vector<size_t>> &neighbor_list,
                            const double &mesh_size,
-                           const material::pd::Material *material,
+                           material::pd::Material *material,
                            const geometry::Fracture *fracture,
                            size_t dim) {
 
@@ -174,7 +174,7 @@ double computeHydrostaticStrainI(size_t i, const std::vector<util::Point3> &node
 void updateBondFractureDataI(size_t i, const std::vector<util::Point3> &nodes,
                                  const std::vector<util::Point3> &nodes_disp,
                              const std::vector<std::vector<size_t>> &neighbor_list,
-                                 const material::pd::Material *material,
+                                 material::pd::Material *material,
                                  geometry::Fracture *fracture) {
 
   const auto &i_neighs = neighbor_list[i];
@@ -202,7 +202,7 @@ void material::computeStateMx(const std::vector<util::Point3> &nodes,
                               const std::vector<double> &nodal_vol,
                               const std::vector<std::vector<size_t>> &neighbor_list,
                               const double &mesh_size,
-                              const material::pd::Material *material,
+                              material::pd::Material *material,
                               std::vector<double> &mx,
                               bool compute_in_parallel) {
 
@@ -230,7 +230,7 @@ void material::computeStateThetax(
     const std::vector<double> &nodal_vol,
     const std::vector<std::vector<size_t>> &neighbor_list,
     const double &mesh_size,
-    const material::pd::Material *material,
+    material::pd::Material *material,
     const geometry::Fracture *fracture, const std::vector<double> &mx,
     std::vector<double> &thetax, bool compute_in_parallel) {
 
@@ -261,7 +261,7 @@ void material::computeHydrostaticStrain(const std::vector<util::Point3> &nodes,
                                const std::vector<double> &nodal_vol,
                                         const std::vector<std::vector<size_t>> &neighbor_list,
                                const double &mesh_size,
-                               const material::pd::Material *material,
+                               material::pd::Material *material,
                                const geometry::Fracture *fracture,
                                std::vector<double> &thetax, size_t dim,
                                bool compute_in_parallel) {
@@ -292,7 +292,7 @@ void material::computeHydrostaticStrain(const std::vector<util::Point3> &nodes,
 void material::updateBondFractureData(const std::vector<util::Point3> &nodes,
                             const std::vector<util::Point3> &nodes_disp,
                                       const std::vector<std::vector<size_t>> &neighbor_list,
-                            const material::pd::Material *material,
+                            material::pd::Material *material,
                             geometry::Fracture *fracture, bool
                             compute_in_parallel) {
 
