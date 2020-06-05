@@ -25,7 +25,8 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     if (bc.d_regionType != "rectangle" and
         bc.d_regionType != "angled_rectangle" and
         bc.d_regionType != "circle" and
-         bc.d_regionType != "torus"
+        bc.d_regionType != "torus" and
+        bc.d_regionType != "line"
         ) {
       std::cerr
           << "Error: Displacement bc region type = " << bc.d_regionType
