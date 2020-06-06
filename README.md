@@ -10,7 +10,7 @@ Logo below has been obtained by running Peridynamic simulation on the logo mesh,
 
 ## Building 
 
-The code uses [CMake](https://cmake.org/) as the build system and has following dependencies: [HPX](https://github.com/STEllAR-GROUP/hpx), [Blaze](blaze), [Blaze_Iterative](https://github.com/STEllAR-GROUP/BlazeIterative), [Boost](https://www.boost.org/), [VTK](https://www.vtk.org), and [YAML-CPP](https://github.com/jbeder/yaml-cpp).
+The code uses [CMake](https://cmake.org/) as the build system and has following dependencies: [HPX](https://github.com/STEllAR-GROUP/hpx), [Blaze](https://bitbucket.org/blaze-lib/blaze/src/master/), [Blaze_Iterative](https://github.com/STEllAR-GROUP/BlazeIterative), [Boost](https://www.boost.org/), [VTK](https://www.vtk.org), and [YAML-CPP](https://github.com/jbeder/yaml-cpp).
 
 We provide following support to build the code
 
@@ -19,7 +19,7 @@ We provide following support to build the code
 * [Scripts](https://github.com/nonlocalmodels/HPCBuildInfrastructure) to build the code on HPC systems.
 
 If you just interested the code, we provide a Doker image with the latest stable version and the latest sucessful build of the master branch. For writing your own 
-[YAML] files, we provide a bunch of [examples](https://nonlocalmodels.github.io/examples/).
+[YAML](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) files, we provide a bunch of [examples](https://nonlocalmodels.github.io/examples/).
 
 ## Documentation
 
