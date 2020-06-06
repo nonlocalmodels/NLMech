@@ -5,7 +5,8 @@ using both finite element and finite difference discretization.
 
 Logo below has been obtained by running Peridynamic simulation on the logo mesh, [see](https://nonlocalmodels.github.io/examples/fd-logo-soft-material.html).
 
-![Alt text](assets/logo/logo_sim.png?raw=true "Logo")
+
+<img src="assets/logo/logo_sim.png?raw=true" alt="logo" width="200"/>
 
 
 ## Building 
