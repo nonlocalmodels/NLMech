@@ -808,9 +808,7 @@ INPUT                  = ../src/main.cpp \
                          ../src/test \
                          ../tools/pp \
                          ../tools/mesh \
-                         ../README.md \
-                         ../content/contributing.md \
-                         ../.github/CODE_OF_CONDUCT.md
+                         ../README.md 
                          
 
 # This tag can be used to specify the character encoding of the source files
