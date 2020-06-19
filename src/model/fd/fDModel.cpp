@@ -40,6 +40,12 @@
 // standard lib
 #include <fstream>
 
+namespace {
+
+double contact_Kn = 0.;
+double contact_Rc = 0.;
+}
+
 model::FDModel::FDModel(inp::Input *deck)
     : d_massMatrix_p(nullptr),
       d_mesh_p(nullptr),
@@ -165,6 +171,21 @@ void model::FDModel::initHObjects() {
   // initialize damping geometry class
   std::cout << "FDModel: Initializing damping object.\n";
   d_dampingGeom_p = new geometry::DampingGeom(d_absorbingCondDeck_p, d_mesh_p);
+
+  // initialize contact forces between nodes with broken bonds
+  {
+    if (d_input_p->getMaterialDeck()->d_applyContact) {
+      // set contact radius
+      contact_Rc = 0.9 * d_mesh_p->getMeshSize();
+      // set contact force coefficient
+      contact_Kn = d_material_p->getMaterialDeckP()->d_matData.d_K * 18. /
+                   (M_PI * std::pow(d_modelDeck_p->d_horizon, 5));
+
+      std::cout << "Mesh size: " << d_mesh_p->getMeshSize()
+                << ", Rc: " << contact_Rc
+                << ", Kn: " << contact_Kn << "\n";
+    }
+  }
 }
 
 void model::FDModel::init() {
@@ -526,6 +547,7 @@ std::pair<double, util::Point3> model::FDModel::computeForce(const size_t &i) {
   // reference coordinate and displacement at the node
   auto xi = this->d_mesh_p->getNode(i);
   auto ui = this->d_u[i];
+  auto voli = this->d_mesh_p->getNodalVolume(i);
 
   // get interior flag
   auto node_i_interior = this->d_interiorFlags_p->getInteriorFlag(i, xi);
@@ -575,6 +597,17 @@ std::pair<double, util::Point3> model::FDModel::computeForce(const size_t &i) {
         scalar_f * this->d_material_p->getBondForceDirection(xj - xi, uj - ui);
 
     energy_i += ef.first * volj;
+
+    if (fs) {
+      // add normal contact force
+      auto yji = xj + uj - (xi + ui);
+      auto Rji = yji.length();
+      scalar_f =
+          contact_Kn * (voli * volj / (voli + volj)) * (contact_Rc - Rji) / Rji;
+      if (scalar_f < 0.)
+        scalar_f = 0.;
+      force_i += -scalar_f * yji;
+    }
 
     // Todo: Add reaction force computation
     if (is_reaction_force(i, j_id) and
