@@ -29,7 +29,8 @@ fe::Mesh::Mesh(size_t dim)
       d_eNumVertex(0),
       d_numDofs(0),
       d_h(0.),
-      d_dim(dim) {}
+      d_dim(dim),
+      d_keepElementConn(false) {}
 
 fe::Mesh::Mesh(inp::MeshDeck *deck)
     : d_numNodes(0),
@@ -40,7 +41,8 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
       d_h(deck->d_h),
       d_dim(deck->d_dim),
       d_spatialDiscretization(deck->d_spatialDiscretization),
-      d_filename(deck->d_filename) {
+      d_filename(deck->d_filename),
+      d_keepElementConn(deck->d_keepElementConn) {
   // perform check on input data
   if (d_spatialDiscretization != "finite_difference" and
       d_spatialDiscretization != "weak_finite_element" and
@@ -146,7 +148,7 @@ void fe::Mesh::createData(const std::string &filename, bool ref_config,
 
     // read element data (only if this is fe simulation or if we need
     // element-node connectivity data for nodal volume calculation)
-    if (!is_fd || !found_volume_data)
+    if (!is_fd || !found_volume_data || d_keepElementConn)
       rw::reader::readVtuFileCells(filename, d_dim, d_eType, d_numElems, &d_enc,
                                    &d_nec);
 
@@ -172,9 +174,11 @@ void fe::Mesh::createData(const std::string &filename, bool ref_config,
     // above also computes the vol so we do need to compute again
     compute_vol = false;
 
-    // element data is now useless
-    d_enc.clear();
-    d_numElems = 0;
+    // check if we should retain element data
+    if (!d_keepElementConn) {
+      d_enc.clear();
+      d_numElems = 0;
+    }
 
     // update
     d_numNodes = d_nodes.size();

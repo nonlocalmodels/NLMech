@@ -50,11 +50,16 @@ struct MeshDeck {
   bool d_isCentroidBasedDiscretization;
 
   /*!
+   * @brief Specify if we keep the element-node connectivity data
+   */
+  bool d_keepElementConn;
+
+  /*!
    * @brief Constructor
    */
   MeshDeck()
       : d_dim(0), d_computeMeshSize(false), d_h(0.),
-        d_isCentroidBasedDiscretization(false){};
+        d_isCentroidBasedDiscretization(false), d_keepElementConn(false) {};
 };
 
 /** @}*/

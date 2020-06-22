@@ -443,6 +443,9 @@ private:
 
   /*! @brief Mesh size */
   double d_h;
+
+  /*! @brief Specify if we keep the element connectivity data */
+  bool d_keepElementConn;
 };
 
 } // namespace fe
