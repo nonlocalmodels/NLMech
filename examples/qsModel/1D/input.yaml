@@ -32,7 +32,7 @@ Force_BC:
   Sets: 1
   Set_1:
     Location:
-      Line: [15.9, 16.5]
+      Line: [15.8, 16.5]
     Direction: [1]
     Time_Function:
       Type: linear

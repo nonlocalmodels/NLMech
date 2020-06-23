@@ -20,7 +20,6 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
   // fill the list of nodes where bc is applied and also set fixity of these
   // nodes
   for (const auto &bc : d_bcData) {
-    std::cout << bc.d_regionType << std::endl;
     // check bc first
     if (bc.d_regionType != "rectangle" and
         bc.d_regionType != "angled_rectangle" and
@@ -89,9 +88,13 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     // now loop over nodes
     for (size_t i = 0; i < mesh->getNumNodes(); i++) {
 
+      bool node_fixed = false;
       if (bc.d_regionType == "rectangle" &&
           util::geometry::isPointInsideRectangle(mesh->getNode(i), bc.d_x1,
                                                  bc.d_x2, bc.d_y1, bc.d_y2)) {
+
+        node_fixed = true;
+
         // loop over direction and set fixity
         for (auto dof : bc.d_direction) {
           // pass 0 for x, 1 for y, and 2 for z dof
@@ -100,10 +103,14 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
         // store the id of this node
         fix_nodes.push_back(i);
+
       } else if (bc.d_regionType == "angled_rectangle" &&
                  util::geometry::isPointInsideAngledRectangle(
                      mesh->getNode(i), bc.d_x1, bc.d_x2, bc.d_y1, bc.d_y2,
                      bc.d_theta)) {
+
+        node_fixed = true;
+
         // loop over direction and set fixity
         for (auto dof : bc.d_direction) {
           // pass 0 for x, 1 for y, and 2 for z dof
@@ -113,6 +120,8 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
         fix_nodes.push_back(i);
       } else if (bc.d_regionType == "circle" &&
           util::geometry::isPointinCircle(mesh->getNode(i), util::Point3(bc.d_x1,bc.d_y1,0.), bc.d_r1)) {
+
+        node_fixed = true;
 
         // loop over direction and set fixity
         for (auto dof : bc.d_direction) {
@@ -124,6 +133,8 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
           util::geometry::isPointinCircle(mesh->getNode(i), util::Point3(bc.d_x1,bc.d_y1,0.), bc.d_r1) && 
           ! util::geometry::isPointinCircle(mesh->getNode(i), util::Point3(bc.d_x1,bc.d_y1,0.), bc.d_r2 )) {
 
+        node_fixed = true;
+
         // loop over direction and set fixity
         for (auto dof : bc.d_direction) {
           // pass 0 for x, 1 for y, and 2 for z dof
@@ -133,6 +144,7 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
       
 
       // store the id of this node
+      if (node_fixed)
       fix_nodes.push_back(i);
     }  // loop over nodes
 
