@@ -1,10 +1,10 @@
-Dimension: 2
+Dimension: 1
 Filename_1: output_1.vtu
 Filename_2: output_res.vtu
 # output filename with path
 Out_Filename: compare.txt
 # set false if do not want to print result to std::cout
-Print_Screen: false
+Print_Screen: true
 # Tolerance for the l2 norm
 Tolerance: 1e-12
 # provide list of tags for which comparison has to be made

@@ -5,6 +5,6 @@
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 add_subdirectory(mesh)
-add_subdirectory(pp)
+#add_subdirectory(pp)
 add_subdirectory(dc)
-add_subdirectory(uScale)
+#add_subdirectory(uScale)
