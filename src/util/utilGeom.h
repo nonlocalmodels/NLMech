@@ -126,7 +126,7 @@ bool doLinesIntersect (util::Point3 A , util::Point3 B, util::Point3 C, util::Po
 
 
 /*!
- * @brief Checks if the point C in on thw between A and B 
+ * @brief Checks if the point C in on the between A and B 
  * @param A Start point of the first line
  * @param B End point of the first line
  * @param C Point to test

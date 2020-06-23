@@ -89,6 +89,7 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     for (size_t i = 0; i < mesh->getNumNodes(); i++) {
 
       bool node_fixed = false;
+
       if (bc.d_regionType == "rectangle" &&
           util::geometry::isPointInsideRectangle(mesh->getNode(i), bc.d_x1,
                                                  bc.d_x2, bc.d_y1, bc.d_y2)) {
@@ -100,9 +101,6 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
           // pass 0 for x, 1 for y, and 2 for z dof
           mesh->setFixity(i, dof - 1, true);
         }
-
-        // store the id of this node
-        fix_nodes.push_back(i);
 
       } else if (bc.d_regionType == "angled_rectangle" &&
                  util::geometry::isPointInsideAngledRectangle(
@@ -116,8 +114,8 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
           // pass 0 for x, 1 for y, and 2 for z dof
           mesh->setFixity(i, dof - 1, true);
         }
-        // store the id of this node
-        fix_nodes.push_back(i);
+ 
+ 
       } else if (bc.d_regionType == "circle" &&
           util::geometry::isPointinCircle(mesh->getNode(i), util::Point3(bc.d_x1,bc.d_y1,0.), bc.d_r1)) {
 
@@ -141,7 +139,20 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
           mesh->setFixity(i, dof - 1, true);
         }
       }
-      
+       else if (bc.d_regionType == "line" &&
+          util::compare::definitelyGreaterThan(mesh->getNode(i).d_x, bc.d_x1) &&
+          util::compare::definitelyLessThan(mesh->getNode(i).d_x, bc.d_x2)) {
+
+        node_fixed = true;
+
+        std::cout << "Line" << std::endl;
+
+        // loop over direction and set fixity
+        for (auto dof : bc.d_direction) {
+          // pass 0 for x, 1 for y, and 2 for z dof
+          mesh->setFixity(i, dof - 1, true);
+        }
+      }
 
       // store the id of this node
       if (node_fixed)
