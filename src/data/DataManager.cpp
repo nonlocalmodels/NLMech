@@ -153,3 +153,14 @@ void data::DataManager::setDilatationP(std::vector<double>* pointer) {
 std::vector<double>* data::DataManager::getDilatationP() {
   return d_dilatation_p;
 }
+
+	void data::DataManager::setReactionForceP(std::vector<util::Point3> *pointer){
+    d_reaction_force_p = pointer;
+
+  }
+
+	std::vector<util::Point3>* data::DataManager::getReactionForceP(){
+
+    return d_reaction_force_p;
+
+  }

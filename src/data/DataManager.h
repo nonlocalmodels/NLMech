@@ -91,6 +91,12 @@ public:
 
 	std::vector<util::Point3>* getForceP();
 
+
+	void setReactionForceP(std::vector<util::Point3> *pointer);
+
+	std::vector<util::Point3>* getReactionForceP();
+
+
 	void setVelocityP(std::vector<util::Point3> *pointer);
 
 	std::vector<util::Point3>* getVelocityP();
@@ -182,6 +188,9 @@ private:
 
 	/*! @brief Pointer to the force vector */
 	std::vector<util::Point3> *d_f_p = nullptr;
+
+	/*! @brief Pointer to the reaction force */
+	std::vector<util::Point3> *d_reaction_force_p = nullptr;
 
 	/*! @brief Extension for the neighborhood of each node */
 	std::vector<std::vector<double>>* d_extension_p;

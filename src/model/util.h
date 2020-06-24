@@ -103,6 +103,32 @@ auto writer = rw::writer::Writer(filename,d_input_p->getOutputDeck()->d_outForma
   tag = "Force_Density";
   if (d_input_p->getOutputDeck()->isTagInOutput(tag)) writer.appendPointData(tag, d_dataManager_p->getForceP());
 
+
+  tag = "Reaction_Force";
+  if (d_input_p->getOutputDeck()->isTagInOutput(tag)) {
+    writer.appendPointData(tag, d_dataManager_p->getReactionForceP());
+  }
+
+  /*
+  tag = "Total_Reaction_Force";
+  if (d_outputDeck_p->isTagInOutput(tag)) {
+    double sum = std::accumulate(d_total_reaction_force.begin(),
+                                 d_total_reaction_force.end(), 0);
+
+    // Computation of the area
+    auto delta = d_modelDeck_p->d_horizon;
+    auto min_x = this->d_mesh_p->getBoundingBox().first[0];
+    auto max_x = this->d_mesh_p->getBoundingBox().second[0];
+    auto max_y = this->d_mesh_p->getBoundingBox().second[1];
+    auto min_y = this->d_mesh_p->getBoundingBox().first[1];
+
+    double area =
+        (std::abs(max_x - min_x) - delta) * (std::abs(max_y - min_y) - delta);
+
+    writer.appendFieldData("Total_Reaction_Force", sum * area);
+  }
+*/
+
 /*
   tag = "Strain_Energy";
   if (d_input_p->getOutputDeck()->isTagInOutput(tag) &&
@@ -176,6 +202,10 @@ auto writer = rw::writer::Writer(filename,d_input_p->getOutputDeck()->d_outForma
   tag="Strain_Energy";
   if (d_input_p->getOutputDeck()->isTagInOutput(tag))
     writer.appendPointData(tag, d_dataManager_p->getStrainEnergyP());
+
+tag="Stress_Tensor";
+
+tag="Stress_Tensor";
 
 
 
