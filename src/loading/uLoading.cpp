@@ -145,8 +145,6 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
         node_fixed = true;
 
-        std::cout << "Line" << std::endl;
-
         // loop over direction and set fixity
         for (auto dof : bc.d_direction) {
           // pass 0 for x, 1 for y, and 2 for z dof

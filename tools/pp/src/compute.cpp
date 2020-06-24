@@ -20,7 +20,7 @@
 #include "inp/input.h"               // definition of Input
 #include "inp/policy.h"              // definition of Policy
 #include "material/materialUtil.h"
-#include "material/pd/material.h"  // definition of Material
+#include "material/materials.h"  // definition of Material
 #include "rw/reader.h"             // definition of readVtuFileRestart
 #include "rw/writer.h"             // definition of WriterInterface
 #include "util/fastMethods.h"      // max and min operation
@@ -385,7 +385,7 @@ void tools::pp::Compute::init() {
           &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
   }
 
-  d_matDeck_p = d_material_p->getMaterialDeckP();
+  d_matDeck_p = d_material_p->getMaterialDeck();
 
   // if material deck does not have valid material properties,
   // search the properties in the pp input file
