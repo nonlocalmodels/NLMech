@@ -27,6 +27,10 @@ util::StateBasedHelperFunctions::StateBasedHelperFunctions(
 
 void util::StateBasedHelperFunctions::dilatation(data::DataManager *dataManager,
                                                  size_t dim, double factor) {
+
+ if (dataManager->getDilatationP() != nullptr)
+    delete dataManager->getDilatationP();
+
   dataManager->setDilatationP(new std::vector<double>(
       dataManager->getMeshP()->getNodesP()->size(), 0.));
 
