@@ -452,6 +452,10 @@ util::Matrix33 material::pd::ElasticState::getStress(size_t i) {
 double material::pd::ElasticState::getFactor2D() { return d_factor2D; }
 
 void material::pd::ElasticState::update() {
+
+  if (d_dataManager_p->getStateBasedHelperFunctionsP() != nullptr)
+    delete d_dataManager_p->getStateBasedHelperFunctionsP();
+
   d_dataManager_p->setStateBasedHelperFunctionsP(
       new util::StateBasedHelperFunctions(d_dataManager_p, this->d_factor2D));
 }

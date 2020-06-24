@@ -59,12 +59,22 @@ model::QuasiStaticModel<T>::QuasiStaticModel(inp::Input *deck)
 
 template <class T>
 model::QuasiStaticModel<T>::~QuasiStaticModel() {
-  delete d_dataManager_p;
+
+  delete d_dataManager_p->getMeshP();
+  delete d_dataManager_p->getDisplacementLoadingP();
+  delete d_dataManager_p->getForceLoadingP();
+  delete d_dataManager_p->getNeighborP();
+  delete d_dataManager_p->getVolumeCorrectionP();
+  delete d_dataManager_p->getBodyForceP();
+  delete d_dataManager_p->getDisplacementP();
+  delete d_dataManager_p->getVelocityP();
 
   for (size_t i = 0; i < d_osThreads; i++) delete d_dataManagers[i];
 
   delete d_writer_p;
   delete d_material_p;
+
+  delete d_dataManager_p;
 }
 
 template <class T>
@@ -278,6 +288,8 @@ inline void model::QuasiStaticModel<T>::computePertubatedForces(size_t thread) {
       }  // loop over nodes
 
   );  // end of parallel for loop
+
+    delete material;
 }
 
 template <class T>
@@ -322,7 +334,8 @@ util::Matrixij model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
   size_t dim = d_dataManager_p->getModelDeckP()->d_dim;
   size_t matrixSize = d_nnodes * dim;
 
-  jacobian = util::Matrixij(matrixSize, matrixSize, 0.);
+  jacobian.resize(matrixSize, matrixSize);
+  reset(jacobian);
 
   size_t slice = int(d_nnodes / d_osThreads);
 
@@ -417,7 +430,7 @@ inline void model::QuasiStaticModel<T>::assembly_jacobian_matrix_part(
       }
     }
 
-    traversal_list->clear();
+    delete traversal_list;
   }
 }
 

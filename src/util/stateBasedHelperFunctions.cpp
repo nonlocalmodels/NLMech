@@ -17,6 +17,11 @@ util::StateBasedHelperFunctions::StateBasedHelperFunctions(
   dataManager->setExtensionP(new std::vector<std::vector<double>>(
       dataManager->getMeshP()->getNodesP()->size()));
 
+   if (dataManager->getExtensionP() != nullptr)
+    delete dataManager->getExtensionP();
+  dataManager->setExtensionP(new std::vector<std::vector<double>>(
+      dataManager->getMeshP()->getNodesP()->size()));
+
   dilatation(dataManager, dataManager->getModelDeckP()->d_dim, factor);
 }
 
