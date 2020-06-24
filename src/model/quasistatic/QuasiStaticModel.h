@@ -11,6 +11,7 @@
 
 #include <hpx/config.hpp>
 #include "model/model.h"
+#include "inp/decks/modelDeck.h"
 
 // forward declaration of class
 namespace fe {

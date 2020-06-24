@@ -19,9 +19,9 @@
 #include "loading/uLoading.h"
 #include "material/materials.h"
 #include "material/pdMaterial.h"
-#include "rw/writer.h"
 #include "util/parallel.h"
 #include "util/stateBasedHelperFunctions.h"
+#include "model/util.h"
 
 template <class T>
 model::QuasiStaticModel<T>::QuasiStaticModel(inp::Input *deck)
@@ -559,8 +559,7 @@ void model::QuasiStaticModel<T>::solver() {
 
     this->computeForces(true);
     // Do the output after one successful iteration
-    // TODO fix rw
-    // d_writer_p->write(d_input_p, d_dataManager_p, d_n, d_time);
+   model:output(d_input_p, d_dataManager_p, d_n, d_time);
   }
 }
 
