@@ -572,32 +572,55 @@ util::VectorXi model::QuasiStaticModel<T>::computeResidual() {
   auto bcD = d_dataManager_p->getDisplacementLoadingP()->d_bcData;
 
   for (size_t i = 0; i < d_nnodes; i++) {
-    bool found = false;
+
+
+  std::vector<size_t> dimensions(dim);
+  std::iota (std::begin(dimensions), std::end(dimensions), 0);
 
     size_t k = 0;
     for (auto bc : bcD) {
-      for (auto d : bcN[k])
+      auto direction = bc.d_direction;
+
+      for (auto d : direction){
+      for (auto n : bcN[k])
 
         if (std::find(bcN[k].begin(), bcN[k].end(), i) != bcN[k].end()) {
-          found = true;
+          
+          //dimensions.erase(dimensions.begin()+d-1);
+          dimensions[d-1] = std::numeric_limits<std::size_t>::max();
+          
         }
-
+      }
       k++;
     }
+ 
 
-    if (found == false) {
+    
       size_t id = i * dim;
 
-      res[id] = (*d_dataManager_p->getForceP())[i][0] +
+          for (auto e : dimensions){
+
+      switch(e){
+
+        case 0:
+          res[id] = (*d_dataManager_p->getForceP())[i][0] +
                 (*d_dataManager_p->getBodyForceP())[i][0];
-      
-      if (dim >= 2)
+        break;
+        case 1:
         res[id + 1] = (*d_dataManager_p->getForceP())[i][1] +
                       (*d_dataManager_p->getBodyForceP())[i][1];
-      if (dim == 3)
+        break;
+        case 2:
         res[id + 2] = (*d_dataManager_p->getForceP())[i][2] +
                       (*d_dataManager_p->getBodyForceP())[i][2];
+        break;
+        default:
+        break;
+
+      }
+
     }
+
   }
 
   return res;
