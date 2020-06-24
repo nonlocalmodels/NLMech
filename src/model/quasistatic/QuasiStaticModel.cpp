@@ -422,6 +422,8 @@ inline void model::QuasiStaticModel<T>::assembly_jacobian_matrix_part(
 
         util::Point3 f_diff = force_p - force_m;
 
+        delete tmp;
+
         for (size_t s = 0; s < dim; s++) {
           if (r == s)
             jacobian(i * dim + r, j * dim + s) = f_diff[r] / (2. * eps);
