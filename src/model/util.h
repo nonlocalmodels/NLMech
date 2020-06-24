@@ -203,9 +203,16 @@ auto writer = rw::writer::Writer(filename,d_input_p->getOutputDeck()->d_outForma
   if (d_input_p->getOutputDeck()->isTagInOutput(tag))
     writer.appendPointData(tag, d_dataManager_p->getStrainEnergyP());
 
-tag="Stress_Tensor";
+tag="Strain_Tensor";
+if (d_input_p->getOutputDeck()->isTagInOutput(tag))
+writer.appendPointData("Strain_Tensor",  d_dataManager_p->getStrainTensorP() );
 
 tag="Stress_Tensor";
+if (d_input_p->getOutputDeck()->isTagInOutput(tag))
+writer.appendPointData("Stress_Tensor",  d_dataManager_p->getStressTensorP() );
+
+
+
 
 
 

@@ -134,6 +134,17 @@ void rw::writer::Writer::appendPointData(
     d_legacyVtkWriter_p->appendPointData(name, data);
 }
 
+void rw::writer::Writer::appendPointData(const std::string &name,
+                    const std::vector<blaze::StaticMatrix<double, 3, 3> > *data){
+  if (d_format == "vtu")
+    d_vtkWriter_p->appendPointData(name, data);
+  //else if (d_format == "msh")
+  //  d_mshWriter_p->appendPointData(name, data);
+  //else if (d_format == "legacy_vtk")
+  //  d_legacyVtkWriter_p->appendPointData(name, data);
+                    }
+
+
 void rw::writer::Writer::appendCellData(const std::string &name,
                                         const std::vector<float> *data) {
   if (d_format == "vtu")

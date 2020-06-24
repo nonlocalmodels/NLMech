@@ -207,6 +207,35 @@ void rw::writer::VtkWriter::appendPointData(
   d_grid_p->GetPointData()->AddArray(array);
 }
 
+ void rw::writer::VtkWriter::appendPointData(const std::string &name,
+                       const std::vector<blaze::StaticMatrix<double, 3, 3> > *data){
+
+  auto array = vtkSmartPointer<vtkDoubleArray>::New();
+  array->SetNumberOfComponents(6);
+  array->SetName(name.c_str());
+
+  array->SetComponentName(0, "xx");
+  array->SetComponentName(1, "yy");
+  array->SetComponentName(2, "zz");
+  array->SetComponentName(3, "yz");
+  array->SetComponentName(4, "xz");
+  array->SetComponentName(5, "xy");
+
+  double value[6];
+  for (const auto &i : *data) {
+    value[0] = i(0, 0);
+    value[1] = i(1, 1);
+    value[2] = i(2, 2);
+    value[3] = i(1, 2);
+    value[4] = i(0, 2);
+    value[5] = i(0, 1);
+    array->InsertNextTuple(value);
+  }
+
+  d_grid_p->GetPointData()->AddArray(array);
+
+                       }
+
 void rw::writer::VtkWriter::appendCellData(const std::string &name,
                                            const std::vector<float> *data) {
   auto array = vtkSmartPointer<vtkDoubleArray>::New();

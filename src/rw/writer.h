@@ -161,6 +161,15 @@ public:
   void appendPointData(const std::string &name,
                        const std::vector<util::SymMatrix3> *data);
 
+  /*!
+ * @brief Writes the matrix data associated to nodes to the
+ * file
+ * @param name Name of the data
+ * @param data Vector containing the data
+ */
+  void appendPointData(const std::string &name,
+                       const std::vector<blaze::StaticMatrix<double, 3, 3> > *data);
+
   /** @}*/
 
   /**
