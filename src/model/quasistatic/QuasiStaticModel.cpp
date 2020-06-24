@@ -330,7 +330,7 @@ void model::QuasiStaticModel<T>::removeRow(util::VectorXi &vector,
 }
 
 template <class T>
-util::Matrixij model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
+void model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
   size_t dim = d_dataManager_p->getModelDeckP()->d_dim;
   size_t matrixSize = d_nnodes * dim;
 
@@ -359,7 +359,6 @@ util::Matrixij model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
 
   // hpx::when_all(futures);
 
-  return jacobian;
 }
 
 template <class T>
@@ -436,7 +435,8 @@ inline void model::QuasiStaticModel<T>::assembly_jacobian_matrix_part(
 
 template <class T>
 util::VectorXi model::QuasiStaticModel<T>::newton_step(util::VectorXi &res) {
-  util::Matrixij jacobian = this->assembly_jacobian_matrix();
+  
+  this->assembly_jacobian_matrix();
 
   std::vector<size_t> removeId;
 

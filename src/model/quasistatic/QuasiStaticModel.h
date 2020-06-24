@@ -121,7 +121,7 @@ private:
 	/*! @brief Assembles the Jacobian matrix
 	 * @return Jacobian matrix
 	 */
-	util::Matrixij assembly_jacobian_matrix();
+	void assembly_jacobian_matrix();
 
 	/*! @brief Assembles the Jacobian matrix
 	 * @brief begin First node of the chunk
