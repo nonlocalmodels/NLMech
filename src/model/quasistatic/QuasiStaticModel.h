@@ -208,8 +208,6 @@ private:
 	/*! @brief Data Manager */
 	data::DataManager *d_dataManager_p;
 
-	/*! @brief Output handling*/
-	rw::writer::Writer* d_writer_p;
 };
 
 }

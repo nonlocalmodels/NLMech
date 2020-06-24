@@ -19,6 +19,7 @@ util::StateBasedHelperFunctions::StateBasedHelperFunctions(
 
    if (dataManager->getExtensionP() != nullptr)
     delete dataManager->getExtensionP();
+    
   dataManager->setExtensionP(new std::vector<std::vector<double>>(
       dataManager->getMeshP()->getNodesP()->size()));
 

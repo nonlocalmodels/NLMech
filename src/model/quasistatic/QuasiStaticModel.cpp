@@ -71,9 +71,7 @@ model::QuasiStaticModel<T>::~QuasiStaticModel() {
 
   for (size_t i = 0; i < d_osThreads; i++) delete d_dataManagers[i];
 
-  delete d_writer_p;
   delete d_material_p;
-
   delete d_dataManager_p;
 }
 
@@ -127,6 +125,13 @@ void model::QuasiStaticModel<T>::initHObjects() {
   std::cout << d_name << ": Initializing material object." << std::endl;
   d_material_p = new T(d_input_p->getMaterialDeck(), d_dataManager_p);
 
+  // initialize jacobian matrix
+  size_t dim = d_dataManager_p->getModelDeckP()->d_dim;
+  size_t matrixSize = d_nnodes * dim;
+  std::cout << d_name << ": Initializing Jacobian matrix ("<< d_nnodes << "x" << d_nnodes << ")." << std::endl;
+  jacobian = util::Matrixij(matrixSize, matrixSize, 0.);
+
+
   for (size_t i = 0; i < d_osThreads; i++) {
     d_dataManagers[i]->setMeshP(d_dataManager_p->getMeshP());
     d_dataManagers[i]->setBodyForceP(
@@ -146,11 +151,6 @@ void model::QuasiStaticModel<T>::initHObjects() {
     d_dataManagers[i]->setNeighborP(d_dataManager_p->getNeighborP());
   }
 
-  // Initialize writer class
-
-  d_writer_p =
-      new rw::writer::Writer(d_dataManager_p->getOutputDeckP()->d_outFormat,
-                             d_dataManager_p->getOutputDeckP()->d_compressType);
 
   if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Strain_Energy")) {
     d_dataManager_p->setStrainEnergyP(new std::vector<float>(d_nnodes, 0.));
