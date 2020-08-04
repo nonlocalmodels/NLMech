@@ -41,7 +41,7 @@ Force_BC:
     Spatial_Function:
       Type: constant
       Parameters:
-        - 160
+        - 40
 Solver:
   Type: ConjugateGradient
   Max_Iteration: 100
