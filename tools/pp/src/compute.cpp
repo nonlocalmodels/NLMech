@@ -170,7 +170,7 @@ tools::pp::Compute::Compute(const std::string &filename)
   size_t dt_out_old = d_outputDeck_p->d_dtOutOld;
   size_t dt_interval_factor = dt_out_old / dt_out;
 
-  for (d_nOut = 1; d_nOut <= d_dtN; d_nOut++) {
+  for (d_nOut = 0; d_nOut <= d_dtN; d_nOut++) {
     size_t current_step = d_nOut * dt_out;
     // proceed every dt_out_old interval if the current time step is
     // less than the time step when the change in output will happen
@@ -353,7 +353,7 @@ void tools::pp::Compute::init() {
   d_dtN = d_modelDeck_p->d_Nt / d_outputDeck_p->d_dtOutCriteria;
 
   // read global start and end output step if provided
-  d_dtStart = 1;
+  d_dtStart = 0; // process initial output file also? else set it to 1
   if (config["Dt_Start"]) d_dtStart = config["Dt_Start"].as<int>();
   d_dtEnd = d_dtN;
   if (config["Dt_End"]) d_dtEnd = config["Dt_End"].as<int>();
