@@ -97,6 +97,14 @@ struct MatData {
    */
   double toNu(double lambda, double mu) { return lambda * 0.5 / (lambda + mu); }
 
+    /*!
+   * @brief Compute Poisson's ratio from Bulk modulus and Shear modulus
+   * @param lambda Lame first parameter
+   * @param mu Lame second parameter
+   * @return nu Poisson's ratio
+   */
+  double toNuClassical(double K, double G) { return (3*K - 2*G) / (2*(3*K+G)); }
+
   /*!
    * @brief Compute Young's modulus E from Bulk modulus K and Poisson's ratio nu
    * @param K Bulk modulus

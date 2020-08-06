@@ -23,8 +23,9 @@ material::pd::ElasticState::ElasticState(inp::MaterialDeck *deck,
 
   dim = dataManager->getModelDeckP()->d_dim;
 
-  dataManager->setStateBasedHelperFunctionsP(
-      new util::StateBasedHelperFunctions(d_dataManager_p, this->d_factor2D));
+  if(dataManager->getStateBasedHelperFunctionsP() != nullptr)
+    delete dataManager->getStateBasedHelperFunctionsP();
+
 
   // Compute the PD properties from CCM
   if (deck->d_computeParamsFromElastic)
@@ -36,10 +37,11 @@ material::pd::ElasticState::ElasticState(inp::MaterialDeck *deck,
     exit(1);
   }
 
-  d_deck = deck;
 
   dataManager->setStateBasedHelperFunctionsP(
       new util::StateBasedHelperFunctions(d_dataManager_p, this->d_factor2D));
+
+  d_deck = deck;
 
   strainEnergy =
       d_dataManager_p->getOutputDeckP()->isTagInOutput("Strain_Energy");
@@ -55,31 +57,62 @@ void material::pd::ElasticState::computeParameters(inp::MaterialDeck *deck,
   // For bond-based, Poisson's ratio is fixed to 1/4
   //
 
-  // Compute the correction for 2D plain strain
-  if (!deck->d_isPlaneStrain and dim == 2)
-
-    this->d_factor2D =
-        (2. * deck->d_matData.d_nu - 1.) / (deck->d_matData.d_nu - 1.);
-
-  // dim = dim;
+  // Check for the 1D case (Only the Young's modulus E is mandatory)
 
   if (util::compare::definitelyLessThan(deck->d_matData.d_E, 0.) && dim == 1) {
     std::cerr
         << "Error: Require the Young's modulus E"
-           " to compute the elastic state-based peridynamic parameters.\n";
+           " to compute the 1D elastic state-based peridynamic parameters.\n";
     exit(1);
   }
 
-  /*
+
+  // Check for the 2D case (We need the shear modulus and the Bulk modulus)
+
+  //Check if Young's moduls and Bulk modulus are provided
   if (util::compare::definitelyGreaterThan(deck->d_matData.d_E, 0.) &&
-      util::compare::definitelyGreaterThan(deck->d_matData.d_K, 0.)) {
-    std::cout << "Warning: Both Young's modulus E and Bulk modulus K are "
+      util::compare::definitelyGreaterThan(deck->d_matData.d_K, 0.) && dim == 2 )  {
+         std::cout << "Warning: Both Young's modulus E and Bulk modulus K are "
                  "provided.\n";
-    std::cout << "Warning: To compute the elastic state-based peridynamic "
-                 "parameters, we only require one of those.\n";
-    std::cout << "Warning: Selecting Young's modulus to compute parameters.\n";
+        std::cout << "Warning: To compute the elastic state-based peridynamic "
+                 "parameters, we only require the Bulk modulus K.\n";
+
+      exit(1);
+
+      }
+
+  if (util::compare::approximatelyEqual(deck->d_matData.d_K,-1.) && dim == 2 ){
+      std::cout << "Warning: To compute the elastic state-based peridynamic "
+                 "parameters, we require the Bulk modulus K.\n";
+      exit(1);
+
   }
-*/
+
+  if (util::compare::approximatelyEqual(deck->d_matData.d_G,-1.) && dim == 2 ){
+      std::cout << "Warning: To compute the elastic state-based peridynamic "
+                 "parameters, we require the Shear modulus G.\n";
+      exit(1);
+
+  }
+
+
+  deck->d_matData.d_nu = deck->d_matData.toNuClassical(deck->d_matData.d_K,deck->d_matData.d_G);
+
+  deck->d_matData.d_mu = deck->d_matData.d_G;
+
+
+  // Compute the correction for 2D plain strain
+  if (deck->d_isPlaneStrain == false and dim == 2)
+
+    this->d_factor2D =
+        (2. * deck->d_matData.d_nu - 1.) / (deck->d_matData.d_nu - 1.);
+
+  else
+  {
+     this->d_factor2D = 1;
+  }
+  
+ 
   /* Todo Add damage to elastic model
    if (util::compare::definitelyLessThan(deck->d_matData.d_Gc, 0.) &&
    util::compare::definitelyLessThan(deck->d_matData.d_KIc, 0.)) {
@@ -173,7 +206,7 @@ std::pair<util::Point3, double> material::pd::ElasticState::getBondEF(
     case 2:
       // PD material parameter
 
-      if (!d_deck->d_isPlaneStrain)
+      if (d_deck->d_isPlaneStrain == false)
         alpha_s = (9. / (*d_dataManager_p->getVolumeCorrectionP()
                               ->d_weightedVolume_p)[i]) *
                   (d_deck->d_matData.d_K +
@@ -182,7 +215,7 @@ std::pair<util::Point3, double> material::pd::ElasticState::getBondEF(
                             2) *
                        d_deck->d_matData.d_mu / 9.);
 
-      if (d_deck->d_isPlaneStrain)
+      if (d_deck->d_isPlaneStrain == true)
         alpha_s = (9. / (*d_dataManager_p->getVolumeCorrectionP()
                               ->d_weightedVolume_p)[i]) *
                   (d_deck->d_matData.d_K + d_deck->d_matData.d_mu / 9.);
