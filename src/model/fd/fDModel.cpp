@@ -48,7 +48,6 @@
 model::FDModel::FDModel(inp::Input *deck) 
     : d_massMatrix_p(nullptr),
       d_fracture_p(nullptr),
-      d_neighbor_p(nullptr),
       d_interiorFlags_p(nullptr),
       d_input_p(deck),
       d_policy_p(nullptr),
@@ -133,7 +132,7 @@ void model::FDModel::initHObjects() {
                "fracture state of bonds.\n";
   d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck(),
                                         d_dataManager_p->getMeshP()->getNodesP(),
-                                        d_neighbor_p->getNeighborsListP());
+                                        d_dataManager_p->getNeighborP()->getNeighborsListP());
 
   // create interior flags
   std::cout << "FDModel: Creating interior flags for nodes.\n";
@@ -199,7 +198,7 @@ void model::FDModel::init() {
 
       material::computeStateMx(
           d_dataManager_p->getMeshP()->getNodes(), d_dataManager_p->getMeshP()->getNodalVolumes(),
-          d_neighbor_p->getNeighborsList(), d_dataManager_p->getMeshP()->getMeshSize(),
+          d_dataManager_p->getNeighborP()->getNeighborsList(), d_dataManager_p->getMeshP()->getMeshSize(),
           d_material_p, d_mX, true);
     }
   }
@@ -330,7 +329,7 @@ void model::FDModel::integrate() {
 
     // check for crack application
     if (d_fracture_p->addCrack(d_time, d_dataManager_p->getMeshP()->getNodesP(),
-                               d_neighbor_p->getNeighborsListP())) {
+                               d_dataManager_p->getNeighborP()->getNeighborsListP())) {
       // check if we need to modify the output frequency
       checkOutputCriteria();
     }
@@ -471,17 +470,17 @@ void model::FDModel::computeForces() {
   if (d_material_p->isStateActive()) {
     if (d_material_p->name() == "RNPState")
       material::computeHydrostaticStrain(
-          nodes, d_u, volumes, d_neighbor_p->getNeighborsList(),
+          nodes, d_u, volumes, d_dataManager_p->getNeighborP()->getNeighborsList(),
           d_dataManager_p->getMeshP()->getMeshSize(), d_material_p, d_fracture_p, d_thetaX,
           d_modelDeck_p->d_dim, true);
     else if (d_material_p->name() == "PDState") {
       // need to update the fracture state of bonds
       material::updateBondFractureData(nodes, d_u,
-                                       d_neighbor_p->getNeighborsList(),
+                                       d_dataManager_p->getNeighborP()->getNeighborsList(),
                                        d_material_p, d_fracture_p, true);
 
       material::computeStateThetax(nodes, d_u, volumes,
-                                   d_neighbor_p->getNeighborsList(),
+                                   d_dataManager_p->getNeighborP()->getNeighborsList(),
                                    d_dataManager_p->getMeshP()->getMeshSize(), d_material_p,
                                    d_fracture_p, d_mX, d_thetaX, true);
     }
@@ -532,7 +531,7 @@ std::pair<double, util::Point3> model::FDModel::computeForce(const size_t &i) {
   auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
 
   // inner loop over neighbors
-  const auto &i_neighs = this->d_neighbor_p->getNeighbors(i);
+  const auto &i_neighs = this->d_dataManager_p->getNeighborP()->getNeighbors(i);
   for (size_t j = 0; j < i_neighs.size(); j++) {
     auto j_id = i_neighs[j];
 
@@ -609,7 +608,7 @@ std::pair<double, util::Point3> model::FDModel::computeForceState(
   auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
 
   // inner loop over neighbors
-  const auto &i_neighs = this->d_neighbor_p->getNeighbors(i);
+  const auto &i_neighs = this->d_dataManager_p->getNeighborP()->getNeighbors(i);
   for (size_t j = 0; j < i_neighs.size(); j++) {
     auto j_id = i_neighs[j];
 
@@ -762,7 +761,7 @@ void model::FDModel::computePostProcFields() {
         auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
 
         // inner loop over neighbors
-        const auto &i_neighs = this->d_neighbor_p->getNeighbors(i);
+        const auto &i_neighs = this->d_dataManager_p->getNeighborP()->getNeighbors(i);
         for (size_t j = 0; j < i_neighs.size(); j++) {
           auto j_id = i_neighs[j];
 
@@ -1003,7 +1002,7 @@ void model::FDModel::output() {
     std::vector<size_t> amountNeighbors;
     size_t nodes = d_dataManager_p->getMeshP()->getNumNodes();
     for (size_t i = 0; i < nodes; i++)
-      amountNeighbors.push_back(d_neighbor_p->getNeighbors(i).size());
+      amountNeighbors.push_back(d_dataManager_p->getNeighborP()->getNeighbors(i).size());
     writer.appendPointData(tag, &amountNeighbors);
   }
 
