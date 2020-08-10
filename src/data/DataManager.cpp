@@ -211,14 +211,26 @@ void data::DataManager::setReactionForceP(std::vector<util::Point3> *pointer){
 
   }
 
-	void data::DataManager::setFractureEnergyP(std::vector<float>* pointer){
+	void data::DataManager::setBBFractureEnergyP(std::vector<float>* pointer){
 
     d_eFB_p = pointer;
 
   }
 
-  std::vector<float>* data::DataManager::getFractureEnergyP(){
+  std::vector<float>* data::DataManager::getBBFractureEnergyP(){
 
     return d_eFB_p;
+
+  }
+
+  void data::DataManager::setFractureEnergyP(std::vector<float>* pointer){
+
+    d_eF_p = pointer;
+
+  }
+
+  std::vector<float>* data::DataManager::getFractureEnergyP(){
+
+    return d_eF_p;
 
   }

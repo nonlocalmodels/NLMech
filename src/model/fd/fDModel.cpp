@@ -239,14 +239,15 @@ void model::FDModel::init() {
     tag = "Fracture_Perienergy_Total";
     if (d_outputDeck_p->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_eF"))
-        d_eF = std::vector<float>(nnodes, 0.0);
+
+      d_dataManager_p->setFractureEnergyP(new std::vector<float>(nnodes, 0.0));
     } else
       d_policy_p->addToTags(0, "Model_d_eF");
 
     tag = "Fracture_Perienergy_Bond";
     if (d_outputDeck_p->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_eFB"))
-      d_dataManager_p->setFractureEnergyP(new std::vector<float>(nnodes, 0.0));
+      d_dataManager_p->setBBFractureEnergyP(new std::vector<float>(nnodes, 0.0));
     } else
       d_policy_p->addToTags(0, "Model_d_eFB");
   }
@@ -817,11 +818,11 @@ void model::FDModel::computePostProcFields() {
 
         if (this->d_policy_p->populateData("Model_d_eFB") &&
             util::compare::definitelyGreaterThan(z, 1.0 - 1.0E-10))
-          (*d_dataManager_p->getFractureEnergyP())[i] = energy_i * voli;
+          (*d_dataManager_p->getBBFractureEnergyP())[i] = energy_i * voli;
 
         if (this->d_policy_p->populateData("Model_d_eF") &&
             util::compare::definitelyGreaterThan(z, 1.0 - 1.0E-10))
-          this->d_eF[i] = (energy_i + hydro_energy_i) * voli;
+          (*d_dataManager_p->getFractureEnergyP())[i] = (energy_i + hydro_energy_i) * voli;
 
         if (this->d_policy_p->populateData("Model_d_phi"))
           (*d_dataManager_p->getPhiP())[i] = 1. - a / b;
@@ -844,9 +845,9 @@ void model::FDModel::computePostProcFields() {
   if (this->d_policy_p->populateData("Model_d_w"))
     d_tw = util::methods::add((*d_dataManager_p->getWorkDoneP()));
   if (this->d_policy_p->populateData("Model_d_eF"))
-    d_teF = util::methods::add(d_eF);
+    d_teF = util::methods::add((*d_dataManager_p->getFractureEnergyP()));
   if (this->d_policy_p->populateData("Model_d_eFB"))
-    d_teFB = util::methods::add((*d_dataManager_p->getFractureEnergyP()));
+    d_teFB = util::methods::add((*d_dataManager_p->getBBFractureEnergyP()));
 
   if (this->d_policy_p->populateData("Model_d_e"))
     d_tk = util::methods::add(vec_ke);

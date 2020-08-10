@@ -112,10 +112,6 @@ protected:
   /**@{*/
 
 
-
-  /*! @brief Fracture energy of the nodes */
-  std::vector<float> d_eF;
-
   /*! @brief Strains of the nodes */
   std::vector<util::SymMatrix3> d_strain;
 
