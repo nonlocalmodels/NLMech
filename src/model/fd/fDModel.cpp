@@ -52,7 +52,6 @@ model::FDModel::FDModel(inp::Input *deck)
       d_input_p(deck),
       d_policy_p(nullptr),
       d_initialCondition_p(nullptr),
-      d_fLoading_p(nullptr),
       d_material_p(nullptr),
       d_dampingGeom_p(nullptr),
       d_stop(false) {
@@ -148,7 +147,7 @@ void model::FDModel::initHObjects() {
   std::cout << "FDModel: Initializing displacement loading object.\n";
   d_dataManager_p->setDisplacementLoadingP(new loading::ULoading(d_input_p->getLoadingDeck(), d_dataManager_p->getMeshP()));
   std::cout << "FDModel: Initializing force loading object.\n";
-  d_fLoading_p = new loading::FLoading(d_input_p->getLoadingDeck(), d_dataManager_p->getMeshP());
+  d_dataManager_p->setForceLoadingP(new loading::FLoading(d_input_p->getLoadingDeck(), d_dataManager_p->getMeshP()));
 
   // initialize material class
   std::cout << "FDModel: Initializing material object.\n";
@@ -292,7 +291,7 @@ void model::FDModel::integrate() {
 
   // apply loading
   d_dataManager_p->getDisplacementLoadingP()->apply(d_time, &d_u, &d_v, d_dataManager_p->getMeshP());
-  d_fLoading_p->apply(d_time, &d_f, d_dataManager_p->getMeshP());
+  d_dataManager_p->getForceLoadingP()->apply(d_time, &d_f, d_dataManager_p->getMeshP());
 
   // internal forces
   computeForces();
@@ -386,7 +385,7 @@ void model::FDModel::integrateCD() {
 
   // boundary condition
   d_dataManager_p->getDisplacementLoadingP()->apply(d_time, &d_u, &d_v, d_dataManager_p->getMeshP());
-  d_fLoading_p->apply(d_time, &d_f, d_dataManager_p->getMeshP());
+  d_dataManager_p->getForceLoadingP()->apply(d_time, &d_f, d_dataManager_p->getMeshP());
 
   // internal forces
   computeForces();
@@ -432,7 +431,7 @@ void model::FDModel::integrateVerlet() {
 
   // boundary condition
   d_dataManager_p->getDisplacementLoadingP()->apply(d_time, &d_u, &d_v, d_dataManager_p->getMeshP());
-  d_fLoading_p->apply(d_time, &d_f, d_dataManager_p->getMeshP());
+  d_dataManager_p->getForceLoadingP()->apply(d_time, &d_f, d_dataManager_p->getMeshP());
 
   // internal forces
   computeForces();
@@ -725,7 +724,7 @@ void model::FDModel::computePostProcFields() {
   std::vector<util::Point3> f_ext;
   if (d_policy_p->populateData("Model_d_w")) {
     f_ext = std::vector<util::Point3>(d_dataManager_p->getMeshP()->getNumNodes(), util::Point3());
-    d_fLoading_p->apply(d_time, &f_ext, d_dataManager_p->getMeshP());
+    d_dataManager_p->getForceLoadingP()->apply(d_time, &f_ext, d_dataManager_p->getMeshP());
   }
 
   // local data for kinetic energy

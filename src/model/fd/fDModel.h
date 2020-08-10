@@ -325,9 +325,6 @@ private:
   /*! @brief Pointer to InitialCondition object */
   loading::InitialCondition *d_initialCondition_p;
 
-  /*! @brief Pointer to force Loading object */
-  loading::FLoading *d_fLoading_p;
-
   /*! @brief Pointer to Material object */
   material::pd::Material *d_material_p;
 
