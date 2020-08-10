@@ -123,6 +123,7 @@ void model::QuasiStaticModel<T>::initHObjects() {
 
   // initialize material class
   std::cout << d_name << ": Initializing material object." << std::endl;
+  
   d_material_p = new T(d_input_p->getMaterialDeck(), d_dataManager_p);
 
   // initialize jacobian matrix

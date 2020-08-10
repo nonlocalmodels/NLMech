@@ -217,7 +217,7 @@ private:
 	std::vector<util::Point3> *d_reaction_force_p = nullptr;
 
 	/*! @brief Extension for the neighborhood of each node */
-	std::vector<std::vector<double>>* d_extension_p;
+	std::vector<std::vector<double>>* d_extension_p = nullptr;
 
 	/*! @brief Dilatation of nodes */
 	std::vector<double> *d_dilatation_p = nullptr;
@@ -241,7 +241,7 @@ private:
   	std::vector<float>* d_eFB_p = nullptr;
 
 	/*! @brief Pointer to fracture energy of the nodes */
-  	std::vector<float>* d_eF_p;
+  	std::vector<float>* d_eF_p = nullptr;
 
 	/*! @brief Pointer to the strain tensor vector */
 	std::vector<util::Matrix33>* d_strain_p = nullptr;

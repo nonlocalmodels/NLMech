@@ -17,6 +17,8 @@
 material::pd::ElasticState::ElasticState(inp::MaterialDeck *deck,
                                          data::DataManager *dataManager)
     : BaseMaterial(dim, horizon) {
+
+
   d_dataManager_p = dataManager;
 
   horizon = dataManager->getModelDeckP()->d_horizon;
@@ -25,7 +27,6 @@ material::pd::ElasticState::ElasticState(inp::MaterialDeck *deck,
 
   if(dataManager->getStateBasedHelperFunctionsP() != nullptr)
     delete dataManager->getStateBasedHelperFunctionsP();
-
 
   // Compute the PD properties from CCM
   if (deck->d_computeParamsFromElastic)
@@ -36,13 +37,10 @@ material::pd::ElasticState::ElasticState(inp::MaterialDeck *deck,
               << std::endl;
     exit(1);
   }
-
-
+;
   dataManager->setStateBasedHelperFunctionsP(
       new util::StateBasedHelperFunctions(d_dataManager_p, this->d_factor2D));
-
   d_deck = deck;
-
   strainEnergy =
       d_dataManager_p->getOutputDeckP()->isTagInOutput("Strain_Energy");
 }
