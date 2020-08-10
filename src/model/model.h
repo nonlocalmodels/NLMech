@@ -84,9 +84,6 @@ protected:
 
   /*! @brief Velocity of the nodes */
   std::vector<util::Point3> d_v;
-
-  /*! @brief Total force on the nodes */
-  std::vector<util::Point3> d_f;
   
   /*! @brief Dilation
    *

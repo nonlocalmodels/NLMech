@@ -35,8 +35,6 @@ class Mesh;
 namespace model {
 
 
-
-
 void output(inp::Input *d_input_p,data::DataManager *d_dataManager_p, size_t d_n, double d_time){
 
 
