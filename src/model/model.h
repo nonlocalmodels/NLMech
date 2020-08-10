@@ -116,9 +116,6 @@ protected:
   /*! @brief Fracture energy of the nodes */
   std::vector<float> d_eF;
 
-  /*! @brief Bond-based fracture energy of the nodes */
-  std::vector<float> d_eFB;
-
   /*! @brief Strains of the nodes */
   std::vector<util::SymMatrix3> d_strain;
 

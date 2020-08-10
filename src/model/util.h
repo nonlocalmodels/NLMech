@@ -161,11 +161,13 @@ auto writer = rw::writer::Writer(filename,d_input_p->getOutputDeck()->d_outForma
       d_policy_p->populateData("Model_d_Z"))
     writer.appendPointData(tag, d_dataManager_p->getDamageFunctionP());
 
-  /*
+  
   tag = "Fracture_Perienergy_Bond";
   if (d_input_p->getOutputDeck()->isTagInOutput(tag) &&
       d_policy_p->populateData("Model_d_eFB"))
-    writer.appendPointData(tag, &d_eFB);
+    writer.appendPointData(tag, d_dataManager_p->getFractureEnergyP());
+
+  /*
 
   tag = "Fracture_Perienergy_Total";
   if (d_input_p->getOutputDeck()->isTagInOutput(tag) &&

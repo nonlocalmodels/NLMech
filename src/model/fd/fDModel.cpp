@@ -246,7 +246,7 @@ void model::FDModel::init() {
     tag = "Fracture_Perienergy_Bond";
     if (d_outputDeck_p->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_eFB"))
-        d_eFB = std::vector<float>(nnodes, 0.0);
+      d_dataManager_p->setFractureEnergyP(new std::vector<float>(nnodes, 0.0));
     } else
       d_policy_p->addToTags(0, "Model_d_eFB");
   }
@@ -817,7 +817,7 @@ void model::FDModel::computePostProcFields() {
 
         if (this->d_policy_p->populateData("Model_d_eFB") &&
             util::compare::definitelyGreaterThan(z, 1.0 - 1.0E-10))
-          this->d_eFB[i] = energy_i * voli;
+          (*d_dataManager_p->getFractureEnergyP())[i] = energy_i * voli;
 
         if (this->d_policy_p->populateData("Model_d_eF") &&
             util::compare::definitelyGreaterThan(z, 1.0 - 1.0E-10))
@@ -846,7 +846,7 @@ void model::FDModel::computePostProcFields() {
   if (this->d_policy_p->populateData("Model_d_eF"))
     d_teF = util::methods::add(d_eF);
   if (this->d_policy_p->populateData("Model_d_eFB"))
-    d_teFB = util::methods::add(d_eFB);
+    d_teFB = util::methods::add((*d_dataManager_p->getFractureEnergyP()));
 
   if (this->d_policy_p->populateData("Model_d_e"))
     d_tk = util::methods::add(vec_ke);

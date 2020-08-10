@@ -171,6 +171,10 @@ public:
 
 	std::vector<float>* getDamageFunctionP();
 
+	void setFractureEnergyP(std::vector<float>*pointer);
+
+    std::vector<float>* getFractureEnergyP();
+
 private:
 
 	/**
@@ -223,11 +227,14 @@ private:
 	/*! @brief Pointer to the Work done on each of the nodes */
   	std::vector<float>* d_w_p = nullptr;
 
-	 /*! @brief Damage function \f$ \phi \f$ at the nodes */
+	/*! @brief Pointer to damage function \f$ \phi \f$ at the nodes */
   	std::vector<float>* d_phi_p = nullptr;
 
-	  /*! @brief Damage function \f$ Z \f$ at the nodes */
+	/*! @brief Pointer to damage function \f$ Z \f$ at the nodes */
   	std::vector<float>* d_Z_p = nullptr;
+
+	/*! @brief Pointer to bond-based fracture energy of the nodes */
+  	std::vector<float>* d_eFB_p = nullptr;
 
 	/*! @brief Pointer to the strain tensor vector */
 	std::vector<util::Matrix33>* d_strain_p = nullptr;
