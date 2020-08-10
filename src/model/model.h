@@ -79,9 +79,6 @@ protected:
    */
   /**@{*/
 
-  /*! @brief Displacement of the nodes */
-  std::vector<util::Point3> d_u;
-
   /*! @brief Velocity of the nodes */
   std::vector<util::Point3> d_v;
   
