@@ -229,6 +229,9 @@ private:
 	/*! @brief Pointer to force Loading object */
 	loading::FLoading *d_fLoading_p = nullptr;
 
+	/*! @brief Pointer to initial condition object */
+	loading::InitialCondition *d_initialCondition_p = nullptr;
+
 
 };
 

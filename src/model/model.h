@@ -90,7 +90,6 @@ protected:
   
 
   /*! @brief Total reaction force */
-  std::vector<util::Point3> d_reaction_force;
   std::vector<double> d_total_reaction_force;
 
 
