@@ -52,7 +52,6 @@ model::FDModel::FDModel(inp::Input *deck)
       d_input_p(deck),
       d_policy_p(nullptr),
       d_initialCondition_p(nullptr),
-      d_uLoading_p(nullptr),
       d_fLoading_p(nullptr),
       d_material_p(nullptr),
       d_dampingGeom_p(nullptr),
@@ -147,7 +146,7 @@ void model::FDModel::initHObjects() {
 
   // initialize loading class
   std::cout << "FDModel: Initializing displacement loading object.\n";
-  d_uLoading_p = new loading::ULoading(d_input_p->getLoadingDeck(), d_dataManager_p->getMeshP());
+  d_dataManager_p->setDisplacementLoadingP(new loading::ULoading(d_input_p->getLoadingDeck(), d_dataManager_p->getMeshP()));
   std::cout << "FDModel: Initializing force loading object.\n";
   d_fLoading_p = new loading::FLoading(d_input_p->getLoadingDeck(), d_dataManager_p->getMeshP());
 
@@ -292,7 +291,7 @@ void model::FDModel::integrate() {
   if (d_n == 0) d_initialCondition_p->apply(&d_u, &d_v, d_dataManager_p->getMeshP());
 
   // apply loading
-  d_uLoading_p->apply(d_time, &d_u, &d_v, d_dataManager_p->getMeshP());
+  d_dataManager_p->getDisplacementLoadingP()->apply(d_time, &d_u, &d_v, d_dataManager_p->getMeshP());
   d_fLoading_p->apply(d_time, &d_f, d_dataManager_p->getMeshP());
 
   // internal forces
@@ -386,7 +385,7 @@ void model::FDModel::integrateCD() {
   d_time += d_modelDeck_p->d_dt;
 
   // boundary condition
-  d_uLoading_p->apply(d_time, &d_u, &d_v, d_dataManager_p->getMeshP());
+  d_dataManager_p->getDisplacementLoadingP()->apply(d_time, &d_u, &d_v, d_dataManager_p->getMeshP());
   d_fLoading_p->apply(d_time, &d_f, d_dataManager_p->getMeshP());
 
   // internal forces
@@ -432,7 +431,7 @@ void model::FDModel::integrateVerlet() {
   d_time += d_modelDeck_p->d_dt;
 
   // boundary condition
-  d_uLoading_p->apply(d_time, &d_u, &d_v, d_dataManager_p->getMeshP());
+  d_dataManager_p->getDisplacementLoadingP()->apply(d_time, &d_u, &d_v, d_dataManager_p->getMeshP());
   d_fLoading_p->apply(d_time, &d_f, d_dataManager_p->getMeshP());
 
   // internal forces
