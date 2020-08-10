@@ -48,6 +48,10 @@ class Material;
 }
 } // namespace material
 
+namespace data {
+class DataManager;
+} // namespace data
+
 namespace model {
 
 /**
@@ -306,9 +310,6 @@ private:
   /*! @brief Pointer to Mass matrix object containing mass matrix (if any) */
   fe::MassMatrix *d_massMatrix_p;
 
-  /*! @brief Pointer to Mesh object */
-  fe::Mesh *d_mesh_p;
-
   /*! @brief Pointer to Fracture object */
   geometry::Fracture *d_fracture_p;
 
@@ -338,6 +339,9 @@ private:
 
   /*! @brief Pointer to Material object */
   geometry::DampingGeom *d_dampingGeom_p;
+
+  /*! @brief Data Manager */
+	data::DataManager *d_dataManager_p;
 
   /** @}*/
 };

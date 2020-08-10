@@ -340,7 +340,7 @@ void model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
 
   size_t slice = int(d_nnodes / d_osThreads);
 
-  // std::vector<hpx::future<void>> futures;
+  std::vector<hpx::future<void>> futures;
 
   for (size_t thread = 0; thread < d_osThreads; thread++) {
     size_t start = thread * slice;
@@ -351,14 +351,18 @@ void model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
     else
       end = d_nnodes;
 
-    // futures.push_back(hpx::async([this,start,end,thread](){
+    futures.push_back(hpx::async([this,start,end,thread](){
 
     this->assembly_jacobian_matrix_part(start, end, thread);
 
-    //}));
+    }));
   }
 
-  // hpx::when_all(futures);
+   for(size_t i = 0; i < futures.size(); i++)
+    futures[i].get();
+   
+   
+   //hpx::when_all(futures);
 
 }
 

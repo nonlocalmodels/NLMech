@@ -211,11 +211,6 @@ tag="Stress_Tensor";
 if (d_input_p->getOutputDeck()->isTagInOutput(tag))
 writer.appendPointData("Stress_Tensor",  d_dataManager_p->getStressTensorP() );
 
-
-
-
-
-
   writer.close();
 
 }
