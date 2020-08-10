@@ -111,9 +111,6 @@ protected:
    */
   /**@{*/
 
-  /*! @brief Energy of the nodes */
-  std::vector<float> d_e;
-
   /*! @brief Work done on each of the nodes */
   std::vector<float> d_w;
 

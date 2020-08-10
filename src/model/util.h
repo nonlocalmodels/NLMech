@@ -19,12 +19,14 @@
 #include "data/DataManager.h"
 #include "fe/mesh.h"
 #include "util/point.h"
+#include "inp/policy.h"
 
 namespace inp {
 struct ModelDeck;
 struct OutputDeck;
 struct MeshDeck;
 struct PolicyDeck;
+class Policy;
 } // namespace inp
 
 namespace fe {
@@ -126,13 +128,13 @@ auto writer = rw::writer::Writer(filename,d_input_p->getOutputDeck()->d_outForma
     writer.appendFieldData("Total_Reaction_Force", sum * area);
   }
 
+  auto d_policy_p = inp::Policy::getInstance(d_input_p->getPolicyDeck());
 
-/*
   tag = "Strain_Energy";
   if (d_input_p->getOutputDeck()->isTagInOutput(tag) &&
-      d_policy_p->populateData("Model_d_e"))
-    writer.appendPointData(tag, &d_e);
-*/
+    d_policy_p->populateData("Model_d_e"))
+    writer.appendPointData(tag, d_dataManager_p->getStrainEnergyP());
+
 
 /*
   tag = "Work_Done";

@@ -139,10 +139,6 @@ public:
 	std::vector<std::vector<double>>* getExtensionP();
 
 
-	void setStrainEnergyP(std::vector<float>* pointer);
-
-	std::vector<float>* getStrainEnergyP();
-
 	void setStressTensorP(std::vector<util::Matrix33>* pointer);
 
 	std::vector<util::Matrix33>* getStressTensorP();
@@ -158,6 +154,10 @@ public:
 	void setTotalReactionForceP(std::vector<double>* pointer);
 
 	std::vector<double>* getTotalReactionForceP();
+
+	void setStrainEnergyP(std::vector<float>* pointer);
+
+	std::vector<float>* getStrainEnergyP();
 
 private:
 

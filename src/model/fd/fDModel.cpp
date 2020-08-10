@@ -209,7 +209,7 @@ void model::FDModel::init() {
       // this data is asked in output file
       // but check if policy allows its population
       if (d_policy_p->populateData("Model_d_e"))
-        d_e = std::vector<float>(nnodes, 0.0);
+        d_dataManager_p->setStrainEnergyP(new std::vector<float>(nnodes, 0.0));
     } else {
       // this data is not asked in output thus we disable it
       d_policy_p->addToTags(0, "Model_d_e");
@@ -810,7 +810,7 @@ void model::FDModel::computePostProcFields() {
         //          this->d_material_p->getStateEnergy(this->d_hS[i]);
 
         if (this->d_policy_p->populateData("Model_d_e"))
-          this->d_e[i] = (energy_i + hydro_energy_i) * voli;
+          (*d_dataManager_p->getStrainEnergyP())[i] = (energy_i + hydro_energy_i) * voli;
 
         if (this->d_policy_p->populateData("Model_d_w"))
           this->d_w[i] = ui.dot(f_ext[i]);
@@ -840,7 +840,7 @@ void model::FDModel::computePostProcFields() {
 
   // add energies to get total energy
   if (this->d_policy_p->populateData("Model_d_e"))
-    d_te = util::methods::add(d_e);
+    d_te = util::methods::add((*d_dataManager_p->getStrainEnergyP()));
   if (this->d_policy_p->populateData("Model_d_w"))
     d_tw = util::methods::add(d_w);
   if (this->d_policy_p->populateData("Model_d_eF"))
@@ -931,8 +931,8 @@ void model::FDModel::output() {
   //   writer.appendPointData(tag, d_dampingGeom_p->getCoefficientDataP());
   // }
 
-  tag = "time";
-  writer.addTimeStep(d_time);
+  //tag = "time";
+  //writer.addTimeStep(d_time);
 
   //
   // minor simulation data
@@ -945,23 +945,25 @@ void model::FDModel::output() {
   //tag = "Force_Density";
   //if (d_outputDeck_p->isTagInOutput(tag)) writer.appendPointData(tag, &d_f);
 
+  /*
   tag = "Strain_Energy";
   if (d_outputDeck_p->isTagInOutput(tag) &&
       d_policy_p->populateData("Model_d_e"))
     writer.appendPointData(tag, &d_e);
+  *
 
   tag = "Work_Done";
   if (d_outputDeck_p->isTagInOutput(tag) &&
       d_policy_p->populateData("Model_d_w"))
     writer.appendPointData(tag, &d_w);
 
-  tag = "Fixity";
-  if (d_outputDeck_p->isTagInOutput(tag))
-    writer.appendPointData(tag, d_dataManager_p->getMeshP()->getFixityP());
+  //tag = "Fixity";
+  //if (d_outputDeck_p->isTagInOutput(tag))
+  //  writer.appendPointData(tag, d_dataManager_p->getMeshP()->getFixityP());
 
-  tag = "Node_Volume";
-  if (d_outputDeck_p->isTagInOutput(tag))
-    writer.appendPointData(tag, d_dataManager_p->getMeshP()->getNodalVolumesP());
+  //tag = "Node_Volume";
+  //if (d_outputDeck_p->isTagInOutput(tag))
+  //  writer.appendPointData(tag, d_dataManager_p->getMeshP()->getNodalVolumesP());
 
   tag = "Damage_Phi";
   if (d_outputDeck_p->isTagInOutput(tag) &&
@@ -999,6 +1001,7 @@ void model::FDModel::output() {
       d_policy_p->populateData("Model_d_eF"))
     writer.appendFieldData(tag, d_teF);
 
+  /*
   tag = "Neighbors";
   if (d_outputDeck_p->isTagInOutput(tag)) {
     std::vector<size_t> amountNeighbors;
@@ -1007,7 +1010,7 @@ void model::FDModel::output() {
       amountNeighbors.push_back(d_dataManager_p->getNeighborP()->getNeighbors(i).size());
     writer.appendPointData(tag, &amountNeighbors);
   }
-
+*/
   writer.close();
 }
 
