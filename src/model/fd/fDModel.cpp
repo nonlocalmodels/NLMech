@@ -40,6 +40,7 @@
 #include "material/materialUtil.h"
 #include "material/pdMaterial.h"
 #include "material/materials.h"
+#include "model/util.h"
 
 
 // standard lib
@@ -302,7 +303,7 @@ void model::FDModel::integrate() {
   if (d_n == 0) {
     if (d_policy_p->enablePostProcessing()) computePostProcFields();
 
-    output();
+    model::Output(d_input_p, d_dataManager_p,d_n,d_time);
   }
 
   // start time integration
@@ -318,7 +319,7 @@ void model::FDModel::integrate() {
         (d_n >= d_outputDeck_p->d_dtOut)) {
       if (d_policy_p->enablePostProcessing()) computePostProcFields();
 
-      output();
+      model::Output(d_input_p, d_dataManager_p,d_n,d_time);
 
       // exit early if output criteria has changed the d_stop flag to true
       if (d_stop) return;
@@ -851,168 +852,6 @@ void model::FDModel::computePostProcFields() {
 
   if (this->d_policy_p->populateData("Model_d_e"))
     d_tk = util::methods::add(vec_ke);
-}
-
-void model::FDModel::output() {
-  std::cout << "Output: time step = " << d_n << "\n";
-
-  // write out % completion of simulation at 10% interval
-  {
-    float p = float(d_n) * 100. / d_modelDeck_p->d_Nt;
-    int m = std::max(1, int(d_modelDeck_p->d_Nt / 10));
-    if (d_n % m == 0 && int(p) > 0)
-      std::cout << "Message: Simulation " << int(p) << "% complete.\n";
-  }
-
-  // filename
-  // use smaller dt_out as the tag for files
-  size_t dt_out = d_outputDeck_p->d_dtOutCriteria;
-  std::string filename =
-      d_outputDeck_p->d_path + "output_" + std::to_string(d_n / dt_out);
-
-  // open
-  auto writer = rw::writer::Writer(filename, d_outputDeck_p->d_outFormat,
-                                   d_outputDeck_p->d_compressType);
-
-  // write mesh
-  //if (d_dataManager_p->getMeshP()->getNumElements() != 0 && d_outputDeck_p->d_performFEOut)
-   // writer.appendMesh(d_dataManager_p->getMeshP()->getNodesP(), d_dataManager_p->getMeshP()->getElementType(),
-   //                   d_dataManager_p->getMeshP()->getElementConnectivitiesP(), &d_u);
-  //else
-  //  writer.appendNodes(d_dataManager_p->getMeshP()->getNodesP(), &d_u);
-
-  //
-  // major simulation data
-  //
-  std::string tag = "Displacement";
-  //if (d_outputDeck_p->isTagInOutput(tag)) writer.appendPointData(tag, &d_u);
-
-  //tag = "Velocity";
-  //if (d_outputDeck_p->isTagInOutput(tag)) writer.appendPointData(tag, &d_v);
-
-/*
-  tag = "Force";
-  if (d_outputDeck_p->isTagInOutput(tag)) {
-    std::vector<util::Point3> force(d_dataManager_p->getMeshP()->getNumNodes(), util::Point3());
-
-    for (size_t i = 0; i < (*this->d_dataManager_p->getForceP()).size(); i++)
-      force[i] = (*this->d_dataManager_p->getForceP())[i] * d_dataManager_p->getMeshP()->getNodalVolume(i);
-
-    writer.appendPointData(tag, &force);
-  }
-  */
-
-  //tag = "Reaction_Force";
-  //if (d_outputDeck_p->isTagInOutput(tag)) {
-  //  writer.appendPointData(tag, &d_reaction_force);
-  // }
-  //tag = "Total_Reaction_Force";
-  //if (d_outputDeck_p->isTagInOutput(tag)) {
-  //  double sum = std::accumulate((*d_dataManager_p->getTotalReactionForceP()).begin(),
-   //                              (*d_dataManager_p->getTotalReactionForceP()).end(), 0);
-
-    // Computation of the area
-    //auto delta = d_modelDeck_p->d_horizon;
-    //auto min_x = this->d_dataManager_p->getMeshP()->getBoundingBox().first[0];
-    //auto max_x = this->d_dataManager_p->getMeshP()->getBoundingBox().second[0];
-    //auto max_y = this->d_dataManager_p->getMeshP()->getBoundingBox().second[1];
-    //auto min_y = this->d_dataManager_p->getMeshP()->getBoundingBox().first[1];
-
-    //double area =
-    //    (std::abs(max_x - min_x) - delta) * (std::abs(max_y - min_y) - delta);
-
-    //writer.appendFieldData("Total_Reaction_Force", sum * area);
-  //}
-
-  // //
-  // // debug
-  // //
-  // if (d_dampingGeom_p->isDampingActive()) {
-  //   tag = "Damping_Coefficients";
-  //   writer.appendPointData(tag, d_dampingGeom_p->getCoefficientDataP());
-  // }
-
-  //tag = "time";
-  //writer.addTimeStep(d_time);
-
-  //
-  // minor simulation data
-  //
-  if (!d_policy_p->enablePostProcessing()) {
-    writer.close();
-    return;
-  }
-
-  //tag = "Force_Density";
-  //if (d_outputDeck_p->isTagInOutput(tag)) writer.appendPointData(tag, &d_f);
-
-  /*
-  tag = "Strain_Energy";
-  if (d_outputDeck_p->isTagInOutput(tag) &&
-      d_policy_p->populateData("Model_d_e"))
-    writer.appendPointData(tag, &d_e);
-  *
-
-  tag = "Work_Done";
-  if (d_outputDeck_p->isTagInOutput(tag) &&
-      d_policy_p->populateData("Model_d_w"))
-    writer.appendPointData(tag, &d_w);
-
-  //tag = "Fixity";
-  //if (d_outputDeck_p->isTagInOutput(tag))
-  //  writer.appendPointData(tag, d_dataManager_p->getMeshP()->getFixityP());
-
-  //tag = "Node_Volume";
-  //if (d_outputDeck_p->isTagInOutput(tag))
-  //  writer.appendPointData(tag, d_dataManager_p->getMeshP()->getNodalVolumesP());
-
-  tag = "Damage_Phi";
-  if (d_outputDeck_p->isTagInOutput(tag) &&
-      d_policy_p->populateData("Model_d_phi"))
-    writer.appendPointData(tag, &d_phi);
-
-  tag = "Damage_Z";
-  if (d_outputDeck_p->isTagInOutput(tag) &&
-      d_policy_p->populateData("Model_d_Z"))
-    writer.appendPointData(tag, &d_Z);
-
-  tag = "Fracture_Perienergy_Bond";
-  if (d_outputDeck_p->isTagInOutput(tag) &&
-      d_policy_p->populateData("Model_d_eFB"))
-    writer.appendPointData(tag, &d_eFB);
-
-  tag = "Fracture_Perienergy_Total";
-  if (d_outputDeck_p->isTagInOutput(tag) &&
-      d_policy_p->populateData("Model_d_eF"))
-    writer.appendPointData(tag, &d_eF);
-
-  tag = "Total_Energy";
-  double te = d_te - d_tw + d_tk;
-  if (d_outputDeck_p->isTagInOutput(tag) &&
-      d_policy_p->populateData("Model_d_e"))
-    writer.appendFieldData(tag, te);
-
-  tag = "Total_Fracture_Perienergy_Bond";
-  if (d_outputDeck_p->isTagInOutput(tag) &&
-      d_policy_p->populateData("Model_d_eFB"))
-    writer.appendFieldData(tag, d_teFB);
-
-  tag = "Total_Fracture_Perienergy_Total";
-  if (d_outputDeck_p->isTagInOutput(tag) &&
-      d_policy_p->populateData("Model_d_eF"))
-    writer.appendFieldData(tag, d_teF);
-
-  /*
-  tag = "Neighbors";
-  if (d_outputDeck_p->isTagInOutput(tag)) {
-    std::vector<size_t> amountNeighbors;
-    size_t nodes = d_dataManager_p->getMeshP()->getNumNodes();
-    for (size_t i = 0; i < nodes; i++)
-      amountNeighbors.push_back(d_dataManager_p->getNeighborP()->getNeighbors(i).size());
-    writer.appendPointData(tag, &amountNeighbors);
-  }
-*/
-  writer.close();
 }
 
 void model::FDModel::checkOutputCriteria() {

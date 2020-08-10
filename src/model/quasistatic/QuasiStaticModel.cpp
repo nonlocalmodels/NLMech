@@ -548,7 +548,7 @@ void model::QuasiStaticModel<T>::solver() {
   double delta_t = d_dataManager_p->getModelDeckP()->d_dt;
 
   // Write the initial data
-  model::output(d_input_p, d_dataManager_p, d_n-1, d_time);
+  model::Output(d_input_p, d_dataManager_p, d_n-1, d_time);
 
   for (; d_n < d_input_p->getModelDeck()->d_Nt + 1; d_n++) {
     d_time = d_n * delta_t;
@@ -608,7 +608,7 @@ void model::QuasiStaticModel<T>::solver() {
     this->computeForces(true);
     
     // Do the output after one successful iteration
-   model::output(d_input_p, d_dataManager_p, d_n, d_time);
+   model::Output(d_input_p, d_dataManager_p, d_n, d_time);
   }
 }
 
