@@ -165,5 +165,18 @@ void data::DataManager::setReactionForceP(std::vector<util::Point3> *pointer){
 
   }
 
-  
+
+	void data::DataManager::setTotalReactionForceP(std::vector<double>* pointer){
+
+
+    d_total_reaction_force_p = pointer;
+  }
+
+	std::vector<double>* data::DataManager::getTotalReactionForceP()
+{
+    return d_total_reaction_force_p;
+
+}
+
+
 

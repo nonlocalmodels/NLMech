@@ -155,6 +155,10 @@ public:
 
 	std::vector<double> * getDilatationP();
 
+	void setTotalReactionForceP(std::vector<double>* pointer);
+
+	std::vector<double>* getTotalReactionForceP();
+
 private:
 
 	/**
@@ -200,6 +204,9 @@ private:
 
 	/*! @brief Pointer to the strain energy vector */
 	std::vector<float>* d_e_p = nullptr;
+
+	/*! @brief Pointer to the total reaction force vector */
+	std::vector<double>* d_total_reaction_force_p = nullptr;
 
 	/*! @brief Pointer to the strain tensor vector */
 	std::vector<util::Matrix33>* d_strain_p = nullptr;

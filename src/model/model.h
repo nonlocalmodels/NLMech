@@ -88,11 +88,6 @@ protected:
   /*! @brief Total force on the nodes */
   std::vector<util::Point3> d_f;
   
-
-  /*! @brief Total reaction force */
-  std::vector<double> d_total_reaction_force;
-
-
   /*! @brief Dilation
    *
    * In case of Rob's state based model, this will give the spherical

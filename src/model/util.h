@@ -109,25 +109,25 @@ auto writer = rw::writer::Writer(filename,d_input_p->getOutputDeck()->d_outForma
     writer.appendPointData(tag, d_dataManager_p->getReactionForceP());
   }
 
-  /*
+  
   tag = "Total_Reaction_Force";
-  if (d_outputDeck_p->isTagInOutput(tag)) {
-    double sum = std::accumulate(d_total_reaction_force.begin(),
-                                 d_total_reaction_force.end(), 0);
+  if (d_input_p->getOutputDeck()->isTagInOutput(tag)) {
+    double sum = std::accumulate((*d_dataManager_p->getTotalReactionForceP()).begin(),
+                                 (*d_dataManager_p->getTotalReactionForceP()).end(), 0);
 
     // Computation of the area
-    auto delta = d_modelDeck_p->d_horizon;
-    auto min_x = this->d_mesh_p->getBoundingBox().first[0];
-    auto max_x = this->d_mesh_p->getBoundingBox().second[0];
-    auto max_y = this->d_mesh_p->getBoundingBox().second[1];
-    auto min_y = this->d_mesh_p->getBoundingBox().first[1];
+    auto delta = d_input_p->getModelDeck()->d_horizon;
+    auto min_x = d_dataManager_p->getMeshP()->getBoundingBox().first[0];
+    auto max_x = d_dataManager_p->getMeshP()->getBoundingBox().second[0];
+    auto max_y = d_dataManager_p->getMeshP()->getBoundingBox().second[1];
+    auto min_y = d_dataManager_p->getMeshP()->getBoundingBox().first[1];
 
     double area =
         (std::abs(max_x - min_x) - delta) * (std::abs(max_y - min_y) - delta);
 
     writer.appendFieldData("Total_Reaction_Force", sum * area);
   }
-*/
+
 
 /*
   tag = "Strain_Energy";

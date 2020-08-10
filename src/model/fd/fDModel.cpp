@@ -179,7 +179,7 @@ void model::FDModel::init() {
       d_outputDeck_p->isTagInOutput("Total_Reaction_Force")) {
 
     d_dataManager_p->setReactionForceP(new std::vector<util::Point3>(nnodes, util::Point3()));
-    d_total_reaction_force = std::vector<double>(nnodes, 0.);
+    d_dataManager_p->setTotalReactionForceP(new std::vector<double>(nnodes, 0.));
   }
 
   // check material type and if needed update policy
@@ -514,7 +514,7 @@ std::pair<double, util::Point3> model::FDModel::computeForce(const size_t &i) {
   if (d_outputDeck_p->isTagInOutput("Reaction_Force") or
       d_outputDeck_p->isTagInOutput("Total_Reaction_Force")) {
     (*d_dataManager_p->getReactionForceP())[i] = util::Point3();
-    d_total_reaction_force[i] = 0.;
+    (*d_dataManager_p->getTotalReactionForceP())[i] = 0.;
   }
 
   // reference coordinate and displacement at the node
@@ -581,7 +581,7 @@ std::pair<double, util::Point3> model::FDModel::computeForce(const size_t &i) {
   }  // loop over neighboring nodes
 
   if (d_outputDeck_p->isTagInOutput("Total_Reaction_Force"))
-    d_total_reaction_force[i] = (*d_dataManager_p->getReactionForceP())[i].length();
+    (*d_dataManager_p->getTotalReactionForceP())[i] = (*d_dataManager_p->getReactionForceP())[i].length();
 
   return std::make_pair(energy_i, force_i);
 }
@@ -902,23 +902,23 @@ void model::FDModel::output() {
   //if (d_outputDeck_p->isTagInOutput(tag)) {
   //  writer.appendPointData(tag, &d_reaction_force);
   // }
-  tag = "Total_Reaction_Force";
-  if (d_outputDeck_p->isTagInOutput(tag)) {
-    double sum = std::accumulate(d_total_reaction_force.begin(),
-                                 d_total_reaction_force.end(), 0);
+  //tag = "Total_Reaction_Force";
+  //if (d_outputDeck_p->isTagInOutput(tag)) {
+  //  double sum = std::accumulate((*d_dataManager_p->getTotalReactionForceP()).begin(),
+   //                              (*d_dataManager_p->getTotalReactionForceP()).end(), 0);
 
     // Computation of the area
-    auto delta = d_modelDeck_p->d_horizon;
-    auto min_x = this->d_dataManager_p->getMeshP()->getBoundingBox().first[0];
-    auto max_x = this->d_dataManager_p->getMeshP()->getBoundingBox().second[0];
-    auto max_y = this->d_dataManager_p->getMeshP()->getBoundingBox().second[1];
-    auto min_y = this->d_dataManager_p->getMeshP()->getBoundingBox().first[1];
+    //auto delta = d_modelDeck_p->d_horizon;
+    //auto min_x = this->d_dataManager_p->getMeshP()->getBoundingBox().first[0];
+    //auto max_x = this->d_dataManager_p->getMeshP()->getBoundingBox().second[0];
+    //auto max_y = this->d_dataManager_p->getMeshP()->getBoundingBox().second[1];
+    //auto min_y = this->d_dataManager_p->getMeshP()->getBoundingBox().first[1];
 
-    double area =
-        (std::abs(max_x - min_x) - delta) * (std::abs(max_y - min_y) - delta);
+    //double area =
+    //    (std::abs(max_x - min_x) - delta) * (std::abs(max_y - min_y) - delta);
 
-    writer.appendFieldData("Total_Reaction_Force", sum * area);
-  }
+    //writer.appendFieldData("Total_Reaction_Force", sum * area);
+  //}
 
   // //
   // // debug
