@@ -225,7 +225,7 @@ void model::FDModel::init() {
     tag = "Damage_Phi";
     if (d_outputDeck_p->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_phi"))
-        d_phi = std::vector<float>(nnodes, 0.0);
+        d_dataManager_p->setPhiP(new std::vector<float>(nnodes, 0.0));
     } else
       d_policy_p->addToTags(0, "Model_d_phi");
 
@@ -824,7 +824,7 @@ void model::FDModel::computePostProcFields() {
           this->d_eF[i] = (energy_i + hydro_energy_i) * voli;
 
         if (this->d_policy_p->populateData("Model_d_phi"))
-          this->d_phi[i] = 1. - a / b;
+          (*d_dataManager_p->getPhiP())[i] = 1. - a / b;
 
         if (this->d_policy_p->populateData("Model_d_Z")) this->d_Z[i] = z;
 

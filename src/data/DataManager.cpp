@@ -189,4 +189,14 @@ void data::DataManager::setReactionForceP(std::vector<util::Point3> *pointer){
 
   }
 
+  void data::DataManager::setPhiP(std::vector<float>* pointer){
+
+    d_phi_p = pointer;
+  }
+
+	std::vector<float>* data::DataManager::getPhiP(){
+
+    return d_phi_p;
+  }
+
 

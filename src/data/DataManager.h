@@ -163,6 +163,10 @@ public:
 
 	std::vector<float>* getWorkDoneP();
 
+	void setPhiP(std::vector<float>* pointer);
+
+	std::vector<float>* getPhiP();
+
 private:
 
 	/**
@@ -215,11 +219,15 @@ private:
 	/*! @brief Pointer to the Work done on each of the nodes */
   	std::vector<float>* d_w_p = nullptr;
 
+	 /*! @brief Damage function \f$ \phi \f$ at the nodes */
+  	std::vector<float>* d_phi_p;
+
 	/*! @brief Pointer to the strain tensor vector */
 	std::vector<util::Matrix33>* d_strain_p = nullptr;
 
 	/*! @brief Pointer to the stress tensor vector */
     std::vector<util::Matrix33>* d_stress_p = nullptr;
+
 
 	
 

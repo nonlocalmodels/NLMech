@@ -111,9 +111,6 @@ protected:
    */
   /**@{*/
 
-  /*! @brief Damage function \f$ \phi \f$ at the nodes */
-  std::vector<float> d_phi;
-
   /*! @brief Damage function \f$ Z \f$ at the nodes */
   std::vector<float> d_Z;
 

@@ -150,12 +150,12 @@ auto writer = rw::writer::Writer(filename,d_input_p->getOutputDeck()->d_outForma
   if (d_input_p->getOutputDeck()->isTagInOutput(tag))
     writer.appendPointData(tag, d_dataManager_p->getMeshP()->getNodalVolumesP());
 
-    /*
   tag = "Damage_Phi";
   if (d_input_p->getOutputDeck()->isTagInOutput(tag) &&
       d_policy_p->populateData("Model_d_phi"))
-    writer.appendPointData(tag, &d_phi);
+    writer.appendPointData(tag, d_dataManager_p->getPhiP());
 
+  /*
   tag = "Damage_Z";
   if (d_input_p->getOutputDeck()->isTagInOutput(tag) &&
       d_policy_p->populateData("Model_d_Z"))
