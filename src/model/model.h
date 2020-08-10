@@ -78,9 +78,6 @@ protected:
    *
    */
   /**@{*/
-
-  /*! @brief Velocity of the nodes */
-  std::vector<util::Point3> d_v;
   
   /*! @brief Dilation
    *
