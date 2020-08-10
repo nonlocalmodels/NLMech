@@ -232,7 +232,7 @@ void model::FDModel::init() {
     tag = "Damage_Z";
     if (d_outputDeck_p->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_Z"))
-        d_Z = std::vector<float>(nnodes, 0.0);
+      d_dataManager_p->setDamageFunctionP(new std::vector<float>(nnodes, 0.0));
     } else
       d_policy_p->addToTags(0, "Model_d_Z");
 
@@ -273,9 +273,9 @@ void model::FDModel::init() {
       d_outputDeck_p->d_outCriteria.clear();
     } else {
       // check if damage data is allocated
-      if (d_Z.size() != d_dataManager_p->getMeshP()->getNumNodes()) {
+      if ((*d_dataManager_p->getDamageFunctionP()).size() != d_dataManager_p->getMeshP()->getNumNodes()) {
         // allocate data
-        d_Z = std::vector<float>(nnodes, 0.0);
+        d_dataManager_p->setDamageFunctionP(new std::vector<float>(nnodes, 0.0));
 
         // check if damage data is allowed in policy class (if not, need to
         // allow it by removing the tag related to damage function Z)
@@ -826,7 +826,7 @@ void model::FDModel::computePostProcFields() {
         if (this->d_policy_p->populateData("Model_d_phi"))
           (*d_dataManager_p->getPhiP())[i] = 1. - a / b;
 
-        if (this->d_policy_p->populateData("Model_d_Z")) this->d_Z[i] = z;
+        if (this->d_policy_p->populateData("Model_d_Z")) (*d_dataManager_p->getDamageFunctionP())[i] = z;
 
         // compute kinetic energy
         if (this->d_policy_p->populateData("Model_d_e"))
@@ -1040,7 +1040,7 @@ void model::FDModel::checkOutputCriteria() {
     if (d_outputDeck_p->d_dtOut > d_outputDeck_p->d_dtOutCriteria &&
         !changed_to_small) {
       // get maximum from the damage data
-      auto max = util::methods::max(d_Z);
+      auto max = util::methods::max((*d_dataManager_p->getDamageFunctionP()));
 
       // check if it is desired range and change output frequency
       if (util::compare::definitelyGreaterThan(
@@ -1101,7 +1101,7 @@ void model::FDModel::checkOutputCriteria() {
             for (size_t i = ibegin; i < iend; i++) {
               if (util::geometry::isPointInsideRectangle(
                       d_dataManager_p->getMeshP()->getNode(i), rect.first, rect.second))
-                if (util::compare::definitelyGreaterThan(d_Z[i], refZ))
+                if (util::compare::definitelyGreaterThan((*d_dataManager_p->getDamageFunctionP())[i], refZ))
                   rect_ids[I].emplace_back(i);
             }  // loop over chunk of I
           }    // loop over chunks

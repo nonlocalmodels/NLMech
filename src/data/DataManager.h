@@ -167,6 +167,10 @@ public:
 
 	std::vector<float>* getPhiP();
 
+	void setDamageFunctionP(std::vector<float>* pointer);
+
+	std::vector<float>* getDamageFunctionP();
+
 private:
 
 	/**
@@ -220,7 +224,10 @@ private:
   	std::vector<float>* d_w_p = nullptr;
 
 	 /*! @brief Damage function \f$ \phi \f$ at the nodes */
-  	std::vector<float>* d_phi_p;
+  	std::vector<float>* d_phi_p = nullptr;
+
+	  /*! @brief Damage function \f$ Z \f$ at the nodes */
+  	std::vector<float>* d_Z_p = nullptr;
 
 	/*! @brief Pointer to the strain tensor vector */
 	std::vector<util::Matrix33>* d_strain_p = nullptr;

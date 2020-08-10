@@ -111,8 +111,7 @@ protected:
    */
   /**@{*/
 
-  /*! @brief Damage function \f$ Z \f$ at the nodes */
-  std::vector<float> d_Z;
+
 
   /*! @brief Fracture energy of the nodes */
   std::vector<float> d_eF;

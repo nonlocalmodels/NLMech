@@ -200,3 +200,13 @@ void data::DataManager::setReactionForceP(std::vector<util::Point3> *pointer){
   }
 
 
+	void data::DataManager::setDamageFunctionP(std::vector<float>* pointer){
+
+    d_Z_p = pointer;
+  }
+
+	std::vector<float>* data::DataManager::getDamageFunctionP(){
+
+    return d_Z_p;
+
+  }
