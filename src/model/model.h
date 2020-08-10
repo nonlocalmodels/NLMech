@@ -111,9 +111,6 @@ protected:
    */
   /**@{*/
 
-  /*! @brief Work done on each of the nodes */
-  std::vector<float> d_w;
-
   /*! @brief Damage function \f$ \phi \f$ at the nodes */
   std::vector<float> d_phi;
 

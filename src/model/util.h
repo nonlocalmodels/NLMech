@@ -136,12 +136,11 @@ auto writer = rw::writer::Writer(filename,d_input_p->getOutputDeck()->d_outForma
     writer.appendPointData(tag, d_dataManager_p->getStrainEnergyP());
 
 
-/*
   tag = "Work_Done";
   if (d_input_p->getOutputDeck()->isTagInOutput(tag) &&
       d_policy_p->populateData("Model_d_w"))
-    writer.appendPointData(tag, &d_w);
-*/
+    writer.appendPointData(tag, d_dataManager_p->getWorkDoneP());
+
 
   tag = "Fixity";
   if (d_input_p->getOutputDeck()->isTagInOutput(tag))

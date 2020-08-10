@@ -159,6 +159,10 @@ public:
 
 	std::vector<float>* getStrainEnergyP();
 
+	void setWorkDoneP(std::vector<float>* pointer);
+
+	std::vector<float>* getWorkDoneP();
+
 private:
 
 	/**
@@ -208,11 +212,16 @@ private:
 	/*! @brief Pointer to the total reaction force vector */
 	std::vector<double>* d_total_reaction_force_p = nullptr;
 
+	/*! @brief Pointer to the Work done on each of the nodes */
+  	std::vector<float>* d_w_p = nullptr;
+
 	/*! @brief Pointer to the strain tensor vector */
 	std::vector<util::Matrix33>* d_strain_p = nullptr;
 
 	/*! @brief Pointer to the stress tensor vector */
     std::vector<util::Matrix33>* d_stress_p = nullptr;
+
+	
 
 
 	/**@{*/

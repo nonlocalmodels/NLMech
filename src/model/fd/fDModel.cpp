@@ -218,7 +218,7 @@ void model::FDModel::init() {
     tag = "Work_Done";
     if (d_outputDeck_p->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_w"))
-        d_w = std::vector<float>(nnodes, 0.0);
+        d_dataManager_p->setWorkDoneP(new std::vector<float>(nnodes, 0.0));
     } else
       d_policy_p->addToTags(0, "Model_d_w");
 
@@ -813,7 +813,7 @@ void model::FDModel::computePostProcFields() {
           (*d_dataManager_p->getStrainEnergyP())[i] = (energy_i + hydro_energy_i) * voli;
 
         if (this->d_policy_p->populateData("Model_d_w"))
-          this->d_w[i] = ui.dot(f_ext[i]);
+          (*d_dataManager_p->getWorkDoneP())[i] = ui.dot(f_ext[i]);
 
         if (this->d_policy_p->populateData("Model_d_eFB") &&
             util::compare::definitelyGreaterThan(z, 1.0 - 1.0E-10))
@@ -842,7 +842,7 @@ void model::FDModel::computePostProcFields() {
   if (this->d_policy_p->populateData("Model_d_e"))
     d_te = util::methods::add((*d_dataManager_p->getStrainEnergyP()));
   if (this->d_policy_p->populateData("Model_d_w"))
-    d_tw = util::methods::add(d_w);
+    d_tw = util::methods::add((*d_dataManager_p->getWorkDoneP()));
   if (this->d_policy_p->populateData("Model_d_eF"))
     d_teF = util::methods::add(d_eF);
   if (this->d_policy_p->populateData("Model_d_eFB"))

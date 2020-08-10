@@ -178,6 +178,15 @@ void data::DataManager::setReactionForceP(std::vector<util::Point3> *pointer){
 
 }
 
+	void data::DataManager::setWorkDoneP(std::vector<float>* pointer){
 
+    d_w_p = pointer;
+  }
+
+	std::vector<float>* data::DataManager::getWorkDoneP()
+  {
+    return d_w_p;
+
+  }
 
 
