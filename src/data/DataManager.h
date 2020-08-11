@@ -178,6 +178,10 @@ public:
 
     std::vector<float>* getFractureEnergyP();
 
+	void setKineticEnergyP(std::vector<float>* pointer);
+
+	std::vector<float>* getKineticEnergyP();
+
 	/** @}*/
 
 private:
@@ -243,6 +247,9 @@ private:
 
 	/*! @brief Pointer to fracture energy of the nodes */
   	std::vector<float>* d_eF_p = nullptr;
+
+	/*! @brief Pointer to the kinetic energy of the nodes */
+	std::vector<float>* d_ke_p = nullptr;
 
 	/*! @brief Pointer to the strain tensor vector */
 	std::vector<util::Matrix33>* d_strain_p = nullptr;

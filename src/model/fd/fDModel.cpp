@@ -200,6 +200,10 @@ void model::FDModel::init() {
   }
 
   // initialize minor simulation data
+  if (this->d_policy_p->populateData("Model_d_e"))
+  d_dataManager_p->setKineticEnergyP(new std::vector<float>(d_dataManager_p->getMeshP()->getNumNodes(), 0.));
+
+
   if (d_policy_p->enablePostProcessing()) {
     std::string tag = "Strain_Energy";
     if (d_outputDeck_p->isTagInOutput(tag)) {
@@ -729,7 +733,7 @@ void model::FDModel::computePostProcFields() {
   // local data for kinetic energy
   std::vector<float> vec_ke;
   if (this->d_policy_p->populateData("Model_d_e"))
-    vec_ke = std::vector<float>(d_dataManager_p->getMeshP()->getNumNodes(), 0.);
+    vec_ke = (*d_dataManager_p->getKineticEnergyP());
 
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
@@ -828,7 +832,7 @@ void model::FDModel::computePostProcFields() {
 
         // compute kinetic energy
         if (this->d_policy_p->populateData("Model_d_e"))
-          vec_ke[i] = 0.5 * this->d_material_p->getDensity() *
+          (*d_dataManager_p->getKineticEnergyP())[i] = 0.5 * this->d_material_p->getDensity() *
                       (*d_dataManager_p->getVelocityP())[i].dot((*d_dataManager_p->getVelocityP())[i]) * voli;
       }  // loop over nodes
 
@@ -847,7 +851,7 @@ void model::FDModel::computePostProcFields() {
     d_teFB = util::methods::add((*d_dataManager_p->getBBFractureEnergyP()));
 
   if (this->d_policy_p->populateData("Model_d_e"))
-    d_tk = util::methods::add(vec_ke);
+    d_tk = util::methods::add((*d_dataManager_p->getKineticEnergyP()));
 }
 
 void model::FDModel::checkOutputCriteria() {

@@ -234,3 +234,14 @@ void data::DataManager::setReactionForceP(std::vector<util::Point3> *pointer){
     return d_eF_p;
 
   }
+
+  void data::DataManager::setKineticEnergyP(std::vector<float>* pointer){
+
+    d_ke_p = pointer;
+
+  }
+
+	std::vector<float>* data::DataManager::getKineticEnergyP()
+  {
+    return d_ke_p;
+  }
