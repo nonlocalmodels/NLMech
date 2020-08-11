@@ -97,12 +97,6 @@ public:
    */
   size_t currentStep() override;
 
-  /*!
-   * @brief Return the total energy
-   * @return Total energy
-   */
-  float getEnergy() override;
-
   /** @}*/
 
 private:

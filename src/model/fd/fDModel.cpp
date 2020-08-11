@@ -69,7 +69,6 @@ model::FDModel::FDModel(inp::Input *deck)
 
 size_t model::FDModel::currentStep() { return d_n; }
 
-float model::FDModel::getEnergy() { return d_te - d_tw + d_tk; }
 
 void model::FDModel::run(inp::Input *deck) {
   // first initialize all the high level data

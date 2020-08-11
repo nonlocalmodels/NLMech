@@ -51,11 +51,6 @@ public:
    */
   virtual size_t currentStep();
 
-  /*!
-   * @brief Return the total energy
-   * @return Total energy
-   */
-  virtual float getEnergy();
 
   /** @}*/
 
