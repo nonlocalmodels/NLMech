@@ -78,7 +78,7 @@ public:
 	/** @}*/
 
 	/**
-	 * @name Major simulation data
+	 * @name Access methods
 	 *
 	 */
 	/**@{*/
@@ -105,7 +105,6 @@ public:
 
 	std::vector<util::Point3>* getDisplacementP();
 
-	/** @}*/
 
 	void setMeshP(fe::Mesh *d_mesh_p);
 
@@ -179,6 +178,8 @@ public:
 
     std::vector<float>* getFractureEnergyP();
 
+	/** @}*/
+
 private:
 
 	/**
@@ -249,9 +250,7 @@ private:
 	/*! @brief Pointer to the stress tensor vector */
     std::vector<util::Matrix33>* d_stress_p = nullptr;
 
-
-	
-
+	/** @}*/
 
 	/**@{*/
 
@@ -273,6 +272,8 @@ private:
 
 	/*! @brief Pointer to force Loading object */
 	loading::FLoading *d_fLoading_p = nullptr;
+
+	/** @}*/
 
 };
 
