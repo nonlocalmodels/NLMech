@@ -67,9 +67,6 @@ model::FDModel::FDModel(inp::Input *deck)
     run(deck);
 }
 
-size_t model::FDModel::currentStep() { return d_n; }
-
-
 void model::FDModel::run(inp::Input *deck) {
   // first initialize all the high level data
   initHObjects();

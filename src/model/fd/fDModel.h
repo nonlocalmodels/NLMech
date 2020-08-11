@@ -86,18 +86,6 @@ public:
    */
   explicit FDModel(inp::Input *deck);
 
-  /**
-   * @name Common methods
-   */
-  /**@{*/
-
-  /*!
-   * @brief Return the current time step
-   * @return Time step
-   */
-  size_t currentStep() override;
-
-  /** @}*/
 
 private:
   /*!

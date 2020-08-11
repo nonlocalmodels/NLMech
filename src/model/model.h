@@ -40,20 +40,6 @@ public:
   /*! @brief Constructor */
   Model();
 
-  /**
-   * @name Common methods
-   */
-  /**@{*/
-
-  /*!
-   * @brief Return the current time step
-   * @return Time step
-   */
-  virtual size_t currentStep();
-
-
-  /** @}*/
-
 protected:
   /**
    * @name Major simulation data
