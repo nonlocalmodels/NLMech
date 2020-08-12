@@ -41,7 +41,7 @@ material::pd::Material::Material(inp::MaterialDeck *deck, const size_t &dim,
   }
 
   // create material class
-  if (d_deck_p->d_materialType == "PDBond") {
+  if (d_deck_p->d_materialType == "RNPBond") {
     d_stateActive = false;
     d_baseMaterial_p =
         new material::pd::RNPBond(d_deck_p, d_dimension, d_horizon,
@@ -56,7 +56,7 @@ material::pd::Material::Material(inp::MaterialDeck *deck, const size_t &dim,
 
   else {
     std::cerr << "Error: Material type = " << d_deck_p->d_materialType
-              << ". Currently only PDBond and PDState is implemented.\n";
+              << ". Currently only RNPBond and PDState is implemented.\n";
     exit(1);
   }
 }
