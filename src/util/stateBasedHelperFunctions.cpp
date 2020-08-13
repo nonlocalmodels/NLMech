@@ -14,12 +14,9 @@
 
 util::StateBasedHelperFunctions::StateBasedHelperFunctions(
     data::DataManager *dataManager, double factor) {
-
-
-  
   if (dataManager->getExtensionP() != nullptr)
     delete dataManager->getExtensionP();
-    
+
   dataManager->setExtensionP(new std::vector<std::vector<double>>(
       dataManager->getMeshP()->getNodesP()->size()));
 
@@ -28,10 +25,9 @@ util::StateBasedHelperFunctions::StateBasedHelperFunctions(
 
 void util::StateBasedHelperFunctions::dilatation(data::DataManager *dataManager,
                                                  size_t dim, double factor) {
-  
   if (dataManager->getDilatationP() != nullptr)
     delete dataManager->getDilatationP();
-    
+
   dataManager->setDilatationP(new std::vector<double>(
       dataManager->getMeshP()->getNodesP()->size(), 0.));
 
@@ -47,8 +43,6 @@ void util::StateBasedHelperFunctions::dilatation(data::DataManager *dataManager,
                             (*dataManager->getDisplacementP())[i]);
           util::Point3 X = (*dataManager->getMeshP()->getNodesP())[j] -
                            (*dataManager->getMeshP()->getNodesP())[i];
-
-          
 
           (*dataManager->getExtensionP())[i].push_back(Y.length() - X.length());
 

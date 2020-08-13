@@ -422,7 +422,6 @@ util::Point3 getDisplacementAtQuadPoint(
           theta_01 >= M_PI - 1.0E-4 or theta_02 >= M_PI - 1.0E-4) {
         // Line 0 is either parallel to Line 1 or Line 2
 
-       
         // we now eliminate the other possibility
         double area_T0 = std::abs(util::geometry::getTriangleArea(nodes));
         double area_T1 = std::abs(util::geometry::getTriangleArea(nodes));

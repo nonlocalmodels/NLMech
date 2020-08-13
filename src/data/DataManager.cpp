@@ -154,94 +154,56 @@ std::vector<double>* data::DataManager::getDilatationP() {
   return d_dilatation_p;
 }
 
-void data::DataManager::setReactionForceP(std::vector<util::Point3> *pointer){
-    d_reaction_force_p = pointer;
-
+void data::DataManager::setReactionForceP(std::vector<util::Point3>* pointer) {
+  d_reaction_force_p = pointer;
 }
 
-	std::vector<util::Point3>* data::DataManager::getReactionForceP(){
-
-    return d_reaction_force_p;
-
-  }
-
-
-	void data::DataManager::setTotalReactionForceP(std::vector<double>* pointer){
-
-
-    d_total_reaction_force_p = pointer;
-  }
-
-	std::vector<double>* data::DataManager::getTotalReactionForceP()
-{
-    return d_total_reaction_force_p;
-
+std::vector<util::Point3>* data::DataManager::getReactionForceP() {
+  return d_reaction_force_p;
 }
 
-	void data::DataManager::setWorkDoneP(std::vector<float>* pointer){
+void data::DataManager::setTotalReactionForceP(std::vector<double>* pointer) {
+  d_total_reaction_force_p = pointer;
+}
 
-    d_w_p = pointer;
-  }
+std::vector<double>* data::DataManager::getTotalReactionForceP() {
+  return d_total_reaction_force_p;
+}
 
-	std::vector<float>* data::DataManager::getWorkDoneP()
-  {
-    return d_w_p;
+void data::DataManager::setWorkDoneP(std::vector<float>* pointer) {
+  d_w_p = pointer;
+}
 
-  }
+std::vector<float>* data::DataManager::getWorkDoneP() { return d_w_p; }
 
-  void data::DataManager::setPhiP(std::vector<float>* pointer){
+void data::DataManager::setPhiP(std::vector<float>* pointer) {
+  d_phi_p = pointer;
+}
 
-    d_phi_p = pointer;
-  }
+std::vector<float>* data::DataManager::getPhiP() { return d_phi_p; }
 
-	std::vector<float>* data::DataManager::getPhiP(){
+void data::DataManager::setDamageFunctionP(std::vector<float>* pointer) {
+  d_Z_p = pointer;
+}
 
-    return d_phi_p;
-  }
+std::vector<float>* data::DataManager::getDamageFunctionP() { return d_Z_p; }
 
+void data::DataManager::setBBFractureEnergyP(std::vector<float>* pointer) {
+  d_eFB_p = pointer;
+}
 
-	void data::DataManager::setDamageFunctionP(std::vector<float>* pointer){
+std::vector<float>* data::DataManager::getBBFractureEnergyP() {
+  return d_eFB_p;
+}
 
-    d_Z_p = pointer;
-  }
+void data::DataManager::setFractureEnergyP(std::vector<float>* pointer) {
+  d_eF_p = pointer;
+}
 
-	std::vector<float>* data::DataManager::getDamageFunctionP(){
+std::vector<float>* data::DataManager::getFractureEnergyP() { return d_eF_p; }
 
-    return d_Z_p;
+void data::DataManager::setKineticEnergyP(std::vector<float>* pointer) {
+  d_ke_p = pointer;
+}
 
-  }
-
-	void data::DataManager::setBBFractureEnergyP(std::vector<float>* pointer){
-
-    d_eFB_p = pointer;
-
-  }
-
-  std::vector<float>* data::DataManager::getBBFractureEnergyP(){
-
-    return d_eFB_p;
-
-  }
-
-  void data::DataManager::setFractureEnergyP(std::vector<float>* pointer){
-
-    d_eF_p = pointer;
-
-  }
-
-  std::vector<float>* data::DataManager::getFractureEnergyP(){
-
-    return d_eF_p;
-
-  }
-
-  void data::DataManager::setKineticEnergyP(std::vector<float>* pointer){
-
-    d_ke_p = pointer;
-
-  }
-
-	std::vector<float>* data::DataManager::getKineticEnergyP()
-  {
-    return d_ke_p;
-  }
+std::vector<float>* data::DataManager::getKineticEnergyP() { return d_ke_p; }
