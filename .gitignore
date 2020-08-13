@@ -46,6 +46,8 @@ build_2
 .idea/workspace.xml
 .vscode
 .project
+cmake-build-debug
+cmake-build_release
 
 # docs directory
 docs/doxy
