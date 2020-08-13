@@ -60,9 +60,7 @@ struct Point3 {
 
   /*!
    *  @brief Constructor
-   *  @param x The x coordinate
-   *  @param y The y coordinate
-   *  @param z The z coordinate
+   *  @param p Point 
    */
   explicit Point3(const std::vector<double> &p) {
 
@@ -82,6 +80,7 @@ struct Point3 {
 
   /*!
    *  @brief Copy constructor
+   * @param p Point
    */
   Point3(const Point3 &p) : d_x(p.d_x), d_y(p.d_y), d_z(p.d_z) {};
 
@@ -90,6 +89,7 @@ struct Point3 {
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
+   * @return Manipulated string
    */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
@@ -103,6 +103,13 @@ struct Point3 {
     return oss.str();
   }
 
+
+  /*!
+   * @brief Prints the information
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
   /*!
@@ -175,6 +182,7 @@ struct Point3 {
   /*!
    * @brief Computes projection of vector on this vector
    * @param b Another vector
+   * @param is_unit Is a unit vector
    * @return Vector Projection vector
    */
   Point3 project(const Point3 &b, bool is_unit = false) const {
@@ -186,6 +194,7 @@ struct Point3 {
   /*!
    * @brief Computes projection of vector on plane with normal as this vector
    * @param b Another vector
+   * @param is_unit Is a unit vector
    * @return Vector Projection vector
    */
   Point3 projectNormal(const Point3 &b, bool is_unit = false) const {
@@ -268,51 +277,117 @@ struct Point3 {
    */
   /**@{*/
 
+
+  /*!
+  * @brief Adds two points
+  * @param lhs Left-hand side
+  * @param rhs Left-hand side
+  * @return Sum of the two points
+  */
   friend Point3 operator+(Point3 lhs, const Point3 &rhs) {
     lhs += rhs;
     return lhs;
   }
 
+  /*!
+  * @brief Substracts two points
+  * @param lhs Left-hand side
+  * @param rhs Left-hand side
+  * @return Difference of the two points
+  */
   friend Point3 operator-(Point3 lhs, const Point3 &rhs) {
     lhs -= rhs;
     return lhs;
   }
 
+  /*!
+  * @brief Multiplies a constant to the point
+  * @param lhs Left-hand side
+  * @param rhs Left-hand side
+  * @return Scaled point
+  */
   friend double operator*(Point3 lhs, const Point3 rhs) {
     return lhs.d_x * rhs.d_x + lhs.d_y * rhs.d_y + lhs.d_z * rhs.d_z;
   }
 
+  /*!
+  * @brief Adds two points
+  * @param lhs Left-hand side
+  * @param rhs Left-hand side
+  * @return Sum of the two points
+  */
   friend Point3 operator*(Point3 lhs, const double rhs) {
     lhs *= rhs;
     return lhs;
   }
 
+  /*!
+  * @brief Adds a scalar to the point
+  * @param lhs Left-hand side
+  * @param rhs Left-hand side
+  * @return Shifted point
+  */
   friend Point3 operator+(Point3 lhs, const double rhs) {
     return {lhs.d_x + rhs, lhs.d_y + rhs, lhs.d_z + rhs};
   }
 
+    /*!
+  * @brief Adds two points
+  * @param lhs Left-hand side
+  * @param rhs Left-hand side
+  * @return Sum of the two points
+  */
   friend Point3 operator+(const double lhs, Point3 rhs) {
     return {lhs + rhs.d_x, lhs + rhs.d_y, lhs + rhs.d_z};
   }
 
+  /*!
+  * @brief Substracts a scalar to the point
+  * @param lhs Left-hand side
+  * @param rhs Left-hand side
+  * @return Shifted point
+  */
   friend Point3 operator-(Point3 lhs, const double rhs) {
     return {lhs.d_x - rhs, lhs.d_y - rhs, lhs.d_z - rhs};
   }
 
+  /*!
+  * @brief Substracts a scalar to the point
+  * @param lhs Left-hand side
+  * @param rhs Left-hand side
+  * @return Shifted point
+  */
   friend Point3 operator-(const double lhs, Point3 rhs) {
     return {lhs - rhs.d_x, lhs - rhs.d_y, lhs - rhs.d_z};
   }
 
+  /*!
+  * @brief Substracts a scalar to the point
+  * @param lhs Left-hand side
+  * @param rhs Left-hand side
+  * @return Shifted point
+  */
   friend Point3 operator*(const double lhs, Point3 rhs) {
     rhs *= lhs;
     return rhs;
   }
 
+  /*!
+  * @brief Divedes a scalar to the point
+  * @param lhs Left-hand side
+  * @param rhs Left-hand side
+  * @return Scaled point
+  */
   friend Point3 operator/(Point3 lhs, const double rhs) {
     lhs /= rhs;
     return lhs;
   }
 
+  /*!
+  * @brief Add a scalar to the point
+  * @param b Scalar factor
+  * @return Scaled point
+  */
   Point3 &operator+=(const double b) {
 
     d_x += b;
@@ -321,6 +396,11 @@ struct Point3 {
     return *this;
   }
 
+  /*!
+  * @brief Substracts a scalar to the point
+  * @param b Scalar factor
+  * @return Shifted point
+  */
   Point3 &operator-=(const double b) {
 
     d_x -= b;
@@ -329,6 +409,11 @@ struct Point3 {
     return *this;
   }
 
+  /*!
+  * @brief Multiplies a scalar to the point
+  * @param b Scalar factor
+  * @return Scaled point
+  */
   Point3 &operator*=(const double b) {
 
     d_x *= b;
@@ -337,6 +422,11 @@ struct Point3 {
     return *this;
   }
 
+  /*!
+  * @brief Adds a point 
+  * @param b Point
+  * @return Sum of the two points
+  */
   Point3 &operator+=(const Point3 &b) {
 
     d_x += b.d_x;
@@ -345,6 +435,11 @@ struct Point3 {
     return *this;
   }
 
+  /*!
+  * @brief Substracts a point 
+  * @param b Point
+  * @return Difference of the two points
+  */
   Point3 &operator-=(const Point3 &b) {
 
     d_x -= b.d_x;
@@ -353,6 +448,11 @@ struct Point3 {
     return *this;
   }
 
+  /*!
+  * @brief Multilpies a point 
+  * @param b Point
+  * @return Point-wise product of the two points
+  */
   Point3 &operator*=(const Point3 &b) {
 
     d_x *= b.d_x;
@@ -361,6 +461,11 @@ struct Point3 {
     return *this;
   }
 
+  /*!
+  * @brief Divides a point by a scalr 
+  * @param b Scalar factor
+  * @return Scaled point
+  */
   Point3 &operator/=(const double b) {
 
     d_x /= b;
@@ -369,6 +474,11 @@ struct Point3 {
     return *this;
   }
 
+  /*!
+  * @brief Access the 0th componnent of a point
+  * @param i Index
+  * @return The i-th index of the point
+  */
   double &operator[](size_t i) {
 
     if (i == 0)
@@ -379,6 +489,11 @@ struct Point3 {
       return d_z;
   }
 
+  /*!
+  * @brief Access the 0th componnent of a point
+  * @param i Index
+  * @return The i-th index of the point
+  */
   const double &operator[](size_t i) const {
 
     if (i == 0)
@@ -389,6 +504,12 @@ struct Point3 {
       return d_z;
   }
   
+  /*!
+  * @brief Print the point's vlaue to the standard output stream
+  * @param os Standard output stream
+  * @param p Point
+  * @return The standard out stream
+  */ 
   friend std::ostream &operator<<(std::ostream &os, const Point3 p);
 
   /** @}*/

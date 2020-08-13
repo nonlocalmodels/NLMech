@@ -179,6 +179,10 @@ public:
 
 private:
   /*! @brief utility function
+   * @param name 
+   * @param field_type
+   * @param num_data
+   * @param is_node_data
    *
    * field_type:
    * - 1 - scalar with 1 component

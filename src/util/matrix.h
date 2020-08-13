@@ -292,6 +292,12 @@ struct SymMatrix3 {
     d_data[4] = 0.5 * (m[0][2] + m[2][0]);
     d_data[5] = 0.5 * (m[0][1] + m[1][0]);
   }
+
+  /*!
+   * @brief Constructor
+   *
+   * @param m Matrix in vector template
+   */
   SymMatrix3(const std::vector<double> &m) {
 
     d_data[0] = m[0];
@@ -316,6 +322,12 @@ struct SymMatrix3 {
     d_data[4] = 0.5 * (m(0,2) + m(2,0));
     d_data[5] = 0.5 * (m(0,1) + m(1,0));
   }
+
+  /*!
+   * @brief Constructor
+   *
+   * @param m Matrix in vector template
+   */
   SymMatrix3(const SymMatrix3 &m) {
 
     for (size_t i=0; i<6; i++)
@@ -343,6 +355,8 @@ struct SymMatrix3 {
     return oss.str();
   }
 
+
+
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
   Point3 operator()(size_t i) {
@@ -355,19 +369,30 @@ struct SymMatrix3 {
   float &operator()(size_t i, size_t j) {
     return d_data[i == j ? i : 6 - i - j];
   }
+
+
+
   const float &operator()(size_t i, size_t j) const {
     return d_data[i == j ? i : 6 - i - j];
   }
 
+/*! @brief Return the i-th element
+@param i Index
+*/
   const float &get(size_t i) const {
     return d_data[i];
   }
+
+/*! @brief Return the i-th element
+@param i Index
+*/
   float &get(size_t i) {
     return d_data[i];
   }
 
   /*!
  * @brief Copy
+ * @param m Matrix
  */
   void copy(double m[6]) const {
 
@@ -377,7 +402,7 @@ struct SymMatrix3 {
 
   /*!
    * @brief Computes the dot product of this matrix with another vector
-   * @param b A vector
+   * @param v A vector
    * @return Vector Resulting vector
    */
   std::vector<double> dot(const std::vector<double> &v) const {

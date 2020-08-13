@@ -122,6 +122,7 @@ std::vector<std::string> readVtuFileCellTags(const std::string &filename);
  * @param filename Name of mesh file
  * @param dim Dimension
  * @param element_type Type of element
+ * @param num_elem Number of elements
  * @param enc Element-node connectivity
  * @param nec Node-element connectivity
  */

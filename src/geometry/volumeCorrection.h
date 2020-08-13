@@ -52,7 +52,7 @@ public:
 
 	/*!
 	 * @brief Constructor
-	 * @param DataManager Pointer to the data manager object
+	 * @param dataManager Pointer to the data manager object
 	 */
 	VolumeCorrection(data::DataManager* dataManager);
 

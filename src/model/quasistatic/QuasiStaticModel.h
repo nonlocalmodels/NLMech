@@ -110,24 +110,24 @@ private:
 
 	/*!
 	 * @brief Computes the forces of all nodes
+	 * @param full If true the Strain and Stress tensors are computed
 	 */
 	void computeForces(bool full=false);
 
 	/*!
 	 * @brief Computes the forces of all nodes using the pertubated displacement
+	 * @param thread The thread which is doing the acutal computation
 	 */
 	void computePertubatedForces(size_t thread); 
 
 	/*! @brief Assembles the Jacobian matrix
-	 * @return Jacobian matrix
 	 */
 	void assembly_jacobian_matrix();
 
 	/*! @brief Assembles the Jacobian matrix
-	 * @brief begin First node of the chunk
-	 * @brief end Last node of the chunk
-	 * @brief thread Id of the thread handling this chunk
-	 * @return Jacobian matrix
+	 * @param begin First node of the chunk
+	 * @param end Last node of the chunk
+	 * @param thread Id of the thread handling this chunk
 	 */
 	void assembly_jacobian_matrix_part(size_t begin, size_t end, size_t thread);
 
@@ -143,6 +143,7 @@ private:
 
 	/*!
 	 * @brief Computes the residual for the Newton step
+	 * @return The residual vector
 	 */
 	util::VectorXi computeResidual();
 
@@ -152,21 +153,21 @@ private:
 	 */
 	/**@{*/
 
-	/*
+	/*!
 	 * @brief Removes the i-th row of a matrix
 	 * @param matrix The matrix
 	 * @param rowToRemove Id of the row to remove
 	 */
 	void removeRow(util::Matrixij &matrix, size_t rowToRemove);
 
-	/*
+	/*!
 	 * @brief Removes the i-th column of a matrix
 	 * @param matrix The matrix
 	 * @param colToRemove Id of the column to remove
 	 */
 	void removeCol(util::Matrixij &matrix, size_t colToRemove);
 
-	/*
+	/*!
 	 * @brief Removes the i-th row of a vector
 	 * @param vector The vector
 	 * @param rowToRemove Id of the row to remove
@@ -187,7 +188,7 @@ private:
 	/*! @brief Number of available os threads */
 	size_t d_osThreads;
 
-	/* Jacobian matrix */
+	/*! Jacobian matrix */
 	util::Matrixij jacobian;
 
 	/*! @brief Data manager objects for the assembly of the stiffness matrix */

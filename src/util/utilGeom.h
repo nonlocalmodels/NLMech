@@ -63,6 +63,7 @@ bool isPointInsideAngledRectangle(util::Point3 x, double x_min, double x_max,
 
 /*!
  * @brief Checks if point is inside a cuboid (rectangle in 2-d, line in 1-d)
+ * @param dim Dimension
  * @param x Point
  * @param x_lbb Coordinate of left-bottom-back corner point
  * @param x_rtf Coordinate of right-top-front corner point
@@ -75,6 +76,7 @@ bool isPointInsideCuboid(size_t dim, util::Point3 x, util::Point3 x_lbb,
  * @brief Computes angle between two vectors
  * @param vec_1 Vector 1
  * @param vec_2 Vector 2
+ * @param dim Dimension
  * @param anticlock Angle convention
  * @return angle Angle between vector 1 and 2
  */

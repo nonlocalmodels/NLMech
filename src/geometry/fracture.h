@@ -48,6 +48,7 @@ public:
 
   /*!
    * @brief Sets fracture state according to the crack data
+   * @param time Actual simulation time
    * @param nodes Pointer to nodal coordinates
    * @param neighbor_list Pointer to neighbor list
    * @return True if one of the crack is applied at given time

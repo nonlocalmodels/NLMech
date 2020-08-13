@@ -13,6 +13,8 @@
 
 namespace inp {
 
+
+/*! Struct for the damping geometry */
 struct DampingGeomData {
   std::string d_relativeLoc;
 

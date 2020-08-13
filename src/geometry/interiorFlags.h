@@ -77,8 +77,8 @@ public:
   /*!
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
-   * @param bbox Bounding box to determine the location of nodes relative to
-   * the boundary
+   * @param bbox Bounding box to determine the location of nodes relative to the boundary
+   * @param no_fail_regions No fail regions other than the boundary of domain
    */
   ComputeInterior(inp::InteriorFlagsDeck *deck,
       std::pair<std::vector<double>, std::vector<double>> bbox,
@@ -110,6 +110,7 @@ public:
    * @param nodes Pointer to the list of nodal coordinates
    * @param bbox Bounding box to determine the location of nodes relative to
    * the boundary
+   * @param no_fail_regions No fail regions other than the boundary of domain
    */
   DataInterior(inp::InteriorFlagsDeck *deck,
                const std::vector<util::Point3> *nodes,
