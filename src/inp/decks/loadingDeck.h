@@ -74,6 +74,12 @@ struct BCData {
   /*! @brief Angle of the rectangle (for angled rectangle) */
   double d_theta;
 
+   /*! @brief Radius (for circle and outer for torus) */
+  double d_r1;
+
+  /*! @brief Inner radius (for torus) */
+  double d_r2;
+
   /*!
    * @brief List of dofs on which this bc will be applied
    *
@@ -92,8 +98,7 @@ struct BCData {
   /*!
    * @brief Constructor
    */
-  BCData() : d_x1(0.), d_y1(0.), d_z1(0.), d_x2(0.), d_y2(0.), d_z2(0.),
-  d_theta(0.){};
+  BCData() : d_x1(0.), d_y1(0.), d_x2(0.), d_y2(0.), d_theta(0.),d_r1(0.),d_r2(0.){};
 };
 
 /**

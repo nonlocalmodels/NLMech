@@ -31,11 +31,46 @@ geometry::Fracture::Fracture(
         if (s * 8 < ns.size()) s++;
         d_fracture[i] = std::vector<uint8_t>(s, uint8_t(0));
 
-        for (auto crack : d_fractureDeck_p->d_cracks)
-          this->computeFracturedBondFd(i, &crack, nodes, &ns);
-      });  // end of parallel for loop
+        for (auto &crack : d_fractureDeck_p->d_cracks)
+          if (crack.d_activationTime < 0.) {
+            this->computeFracturedBondFd(i, &crack, nodes, &ns);
+            crack.d_crackAcrivated = true;
+          }
+      }); // end of parallel for loop
 
   f.get();
+}
+
+bool geometry::Fracture::addCrack(const double &time, const
+                               std::vector<util::Point3> *nodes,
+    const std::vector<std::vector<size_t>> *neighbor_list) {
+
+  for (auto &crack : d_fractureDeck_p->d_cracks) {
+    if (!crack.d_crackAcrivated) {
+
+      if (util::compare::definitelyLessThan(crack.d_activationTime, time)) {
+
+        std::cout << "Fracture: Adding crack to system\n";
+
+        auto f = hpx::parallel::for_loop(
+            hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+            neighbor_list->size(),
+            [this, nodes, neighbor_list, &crack](boost::uint64_t i) {
+              auto ns = (*neighbor_list)[i];
+
+              this->computeFracturedBondFd(i, &crack, nodes, &ns);
+            }); // end of parallel for loop
+
+        f.get();
+
+        crack.d_crackAcrivated = true;
+
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 void geometry::Fracture::computeFracturedBondFd(
@@ -138,11 +173,22 @@ void geometry::Fracture::setBondState(const size_t &i, const size_t &j,
         : (d_fracture[i][j / 8] &= ~(1UL << (j % 8)));
 }
 
-bool geometry::Fracture::getBondState(const size_t &i, const size_t &j) {
+bool geometry::Fracture::getBondState(const size_t &i, const size_t &j) const {
+
+//  if (d_fracture.size() <= i) {
+//    std::cerr << "Error: Size of fracture data is invalid\n";
+//    exit(1);
+//  }
+//
+//  if (d_fracture[i].size() <= j / 8) {
+//    std::cerr << "Error: Size of fracture data at node " << i << " is invalid\n";
+//    exit(1);
+//  }
+
   auto bond = d_fracture[i][j / 8];
   return bond >> (j % 8) & 1UL;
 }
 
-const std::vector<uint8_t> geometry::Fracture::getBonds(const size_t &i) {
+const std::vector<uint8_t> geometry::Fracture::getBonds(const size_t &i) const {
   return d_fracture[i];
 }

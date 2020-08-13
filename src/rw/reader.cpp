@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "reader.h"
-
 #include "csv.h"
 #include "mshReader.h"
 #include "vtkReader.h"
@@ -95,6 +94,24 @@ void rw::reader::readVtuFileNodes(const std::string &filename, size_t dim,
   }
 
   rdr.close();
+}
+
+bool rw::reader::vtuHasPointData(const std::string &filename,
+                                 const std::string &tag) {
+  // call vtk reader
+  auto rdr = rw::reader::VtkReader(filename);
+  auto has_data = rdr.vtuHasPointData(tag);
+  rdr.close();
+  return has_data;
+}
+
+bool rw::reader::vtuHasCellData(const std::string &filename,
+                                const std::string &tag) {
+  // call vtk reader
+  auto rdr = rw::reader::VtkReader(filename);
+  auto has_data = rdr.vtuHasCellData(tag);
+  rdr.close();
+  return has_data;
 }
 
 std::vector<std::string> rw::reader::readVtuFilePointTags(

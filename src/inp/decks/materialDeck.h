@@ -9,6 +9,7 @@
 #ifndef INP_MATERIALDECK_H
 #define INP_MATERIALDECK_H
 
+#include "util/utilIO.h"
 #include <cmath>
 #include <string>
 #include <vector>
@@ -63,6 +64,26 @@ struct MatData {
       : d_E(-1.), d_G(-1.), d_K(-1.), d_nu(-1.), d_lambda(-1.), d_mu(-1.),
         d_KIc(-1.), d_Gc(-1.){};
 
+  std::string printStr(int nt = 0, int lvl = 0) const {
+
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- MatData --------" << std::endl << std::endl;
+    oss << tabS << "Young's modulus = " << d_E << std::endl;
+    oss << tabS << "Shear modulus = " << d_G << std::endl;
+    oss << tabS << "Bulk modulus = " << d_K << std::endl;
+    oss << tabS << "Poisson ratio = " << d_nu << std::endl;
+    oss << tabS << "Lame parameter Lambda = " << d_lambda << std::endl;
+    oss << tabS << "Lame parameter Mu = " << d_mu << std::endl;
+    oss << tabS << "Critical stress intensity factor = " << d_KIc << std::endl;
+    oss << tabS << "Critical energy release rate = " << d_Gc << std::endl;
+    oss << tabS << std::endl;
+
+    return oss.str();
+  }
+
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
+
   /**
    * @name Conversion methods
    */
@@ -75,6 +96,14 @@ struct MatData {
    * @return nu Poisson's ratio
    */
   double toNu(double lambda, double mu) { return lambda * 0.5 / (lambda + mu); }
+
+    /*!
+   * @brief Compute Poisson's ratio from Bulk modulus and Shear modulus
+   * @param lambda Lame first parameter
+   * @param mu Lame second parameter
+   * @return nu Poisson's ratio
+   */
+  double toNuClassical(double K, double G) { return (3*K - 2*G) / (2*(3*K+G)); }
 
   /*!
    * @brief Compute Young's modulus E from Bulk modulus K and Poisson's ratio nu
@@ -240,6 +269,50 @@ struct MaterialDeck {
         d_stateContributionFromBrokenBond(true), d_checkScFactor(1.),
         d_computeParamsFromElastic(true), d_matData(inp::MatData()),
         d_density(1.){};
+
+  /*!
+   * @brief Prints the information
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- MaterialDeck --------" << std::endl << std::endl;
+    oss << tabS << "Is plain strain = " << d_isPlaneStrain << std::endl;
+    oss << tabS << "Material type = " << d_materialType << std::endl;
+    oss << tabS << "Bond potential type = " << d_bondPotentialType << std::endl;
+    oss << tabS << "Bond potential params = ["
+        << util::io::printStr<double>(d_bondPotentialParams, 0) << "]"
+        << std::endl;
+    oss << tabS << "State potential type = " << d_statePotentialType
+        << std::endl;
+    oss << tabS << "State potential params = ["
+        << util::io::printStr<double>(d_statePotentialParams, 0) << "]"
+        << std::endl;
+    oss << tabS << "Influence function type = " << d_influenceFnType
+        << std::endl;
+    oss << tabS << "Influence function params = ["
+        << util::io::printStr<double>(d_influenceFnParams, 0) << "]"
+        << std::endl;
+    oss << tabS
+        << "Irreversible bond breaking enabled = " << d_irreversibleBondBreak
+        << std::endl;
+    oss << tabS << "State contribution from broken bond enabled = "
+        << d_stateContributionFromBrokenBond << std::endl;
+    oss << tabS << "Check Sc factor = " << d_checkScFactor << std::endl;
+    oss << tabS << "Compute parameters from elastic properties = "
+        << d_computeParamsFromElastic << std::endl;
+    oss << d_matData.printStr(nt + 1, lvl);
+    oss << tabS << "Density = " << d_density << std::endl;
+    oss << tabS << std::endl;
+
+    return oss.str();
+  }
+
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 };
 
 /** @}*/

@@ -57,6 +57,11 @@ public:
 
   /*!
    * @brief Constructor
+   */
+  explicit Mesh(size_t dim = 0);
+
+  /*!
+   * @brief Constructor
    *
    * The constructor initializes the data using input deck, performs checks
    * on input data, and reads mesh file and populates the mesh related data.
@@ -76,80 +81,93 @@ public:
    * @brief Get the dimension of the domain
    * @return N Dimension
    */
-  size_t getDimension();
-  size_t getDimension() const;
+  size_t getDimension() const { return d_dim; };
 
   /*!
    * @brief Get the number of nodes
    * @return N number of nodes
    */
-  size_t getNumNodes();
-  size_t getNumNodes() const;
+  size_t getNumNodes() const { return d_numNodes; };
 
   /*!
    * @brief Get the number of elements
    * @return N Number of elements
    */
-  size_t getNumElements();
-  size_t getNumElements() const;
+  size_t getNumElements() const { return d_enc.size()/d_eNumVertex; };
 
   /*!
    * @brief Get the number of dofs
    * @return N Number of dofs
    */
-  size_t getNumDofs();
-  size_t getNumDofs() const;
+  size_t getNumDofs() const { return d_numDofs; };
 
   /*!
    * @brief Get the type of element in mesh
    * @return type Element type (using VTK convention)
    */
-  size_t getElementType();
-  size_t getElementType() const;
+  size_t getElementType() const { return d_eType; };
 
   /*!
    * @brief Get the mesh size
    * @return h Mesh size
    */
-  double getMeshSize();
-  double getMeshSize() const;
+  double getMeshSize() const { return d_h; };
 
   /*!
    * @brief Get coordinates of node i
    * @param i Id of the node
    * @return coords Coordinates
    */
-  util::Point3 getNode(const size_t &i);
-  util::Point3 getNode(const size_t &i) const;
+  util::Point3 getNode(const size_t &i) const { return d_nodes[i]; };
 
   /*!
    * @brief Get nodal volume of node i
    * @param i Id of the node
    * @return vol Volume
    */
-  double getNodalVolume(const size_t &i);
-  double getNodalVolume(const size_t &i) const;
+  double getNodalVolume(const size_t &i) const { return d_vol[i]; };
+
+  /*!
+   * @brief Get the nodes data
+   * @return nodes Nodes data
+   */
+  const std::vector<util::Point3> &getNodes() const { return d_nodes; };
+  std::vector<util::Point3> &getNodes() { return d_nodes; };
 
   /*!
    * @brief Get the pointer to nodes data
    * @return pointer Pointer to nodes data
    */
-  const std::vector<util::Point3> *getNodesP();
-  const std::vector<util::Point3> *getNodesP() const;
+  const std::vector<util::Point3> *getNodesP() const { return &d_nodes; };
+  std::vector<util::Point3> *getNodesP() { return &d_nodes; };
 
   /*!
    * @brief Get the pointer to fixity data
    * @return pointer Pointer to fixity data
    */
-  const std::vector<uint8_t> *getFixityP();
-  const std::vector<uint8_t> *getFixityP() const;
+   const std::vector<uint8_t> *getFixityP() const { return &d_fix; };
+  std::vector<uint8_t> *getFixityP() { return &d_fix; };
+
+  /*!
+   * @brief Get the reference to fixity data
+   * @return reference Reference to fixity data
+   */
+  const std::vector<uint8_t> &getFixity() const { return d_fix; };
+  std::vector<uint8_t> &getFixity() { return d_fix; };
+
+  /*!
+   * @brief Get the nodal volume data
+   * @return Vector Vector of nodal volume
+   */
+  const std::vector<double> &getNodalVolumes() const { return d_vol; };
+  std::vector<double> &getNodalVolumes() { return d_vol; };
 
   /*!
    * @brief Get the pointer to nodal volume data
    * @return pointer Pointer to nodal volume data
    */
-  const std::vector<double> *getNodalVolumeP();
-  const std::vector<double> *getNodalVolumeP() const;
+  const std::vector<double> *getNodalVolumesP() const { return &d_vol; };
+  std::vector<double> *getNodalVolumesP() { return &d_vol; };
 
   /*!
    * @brief Return true if node is free
@@ -157,8 +175,13 @@ public:
    * @param dof Dof to check for
    * @return bool True if dof is free else false
    */
-  bool isNodeFree(const size_t &i, const unsigned int &dof);
-  bool isNodeFree(const size_t &i, const unsigned int &dof) const;
+  bool isNodeFree(const size_t &i, const unsigned int &dof) const {
+
+    // below checks if d_fix has 1st bit (if dof=0), 2nd bit (if dof=1), 3rd
+    // bit (if dof=2) is set to 1 or 0. If set to 1, then it means it is fixed,
+    // and therefore it returns false
+    return !(d_fix[i] >> dof & 1UL);
+  };
 
   /*!
    * @brief Get the connectivity of element
@@ -174,8 +197,10 @@ public:
    * @param i Id of an element
    * @return vector Vector of nodal ids
    */
-  const std::vector<size_t> getElementConnectivity(const size_t &i);
-  const std::vector<size_t> getElementConnectivity(const size_t &i) const;
+  std::vector<size_t> getElementConnectivity(const size_t &i) const {
+    return std::vector<size_t>(d_enc.begin() + d_eNumVertex * i,
+                               d_enc.begin() + d_eNumVertex * i + d_eNumVertex);
+  };
 
   /*!
    * @brief Get the vertices of element
@@ -183,32 +208,45 @@ public:
    * @param i Id of an element
    * @return vector Vector of vertices
    */
-  const std::vector<util::Point3> getElementConnectivityNodes(const size_t &i);
-  const std::vector<util::Point3> getElementConnectivityNodes(const size_t
-                                                              &i) const;
+  std::vector<util::Point3> getElementConnectivityNodes(const size_t
+                                                              &i) const {
+    std::vector<util::Point3> nds;
+    for (size_t k = 0; k < d_eNumVertex; k++)
+      nds.emplace_back(d_nodes[d_enc[d_eNumVertex * i + k]]);
+    return nds;
+  };
 
   /*!
-   * @brief Get the pointer to nodes data
-   * @return pointer Pointer to nodes data
+   * @brief Get the reference to element-node connectivity data
+   * @return reference Reference
    */
-  const std::vector<size_t> *getElementConnectivitiesP();
-  const std::vector<size_t> *getElementConnectivitiesP() const;
+  const std::vector<size_t> &getElementConnectivities() const {
+    return d_enc;
+  };
+  std::vector<size_t> &getElementConnectivities() {
+    return d_enc;
+  };
 
   /*!
-   * @brief Get the list of element with given node i
-   *
-   * @param i Id of a node
-   * @return vector Vector of element ids
+   * @brief Get the pointer to element-node connectivity data
+   * @return pointer Pointer
    */
-  const std::vector<size_t> getNodeElementConnectivity(const size_t &i);
-  const std::vector<size_t> getNodeElementConnectivity(const size_t &i) const;
+  const std::vector<size_t> *getElementConnectivitiesP() const {
+    return &d_enc;
+  };
+  std::vector<size_t> *getElementConnectivitiesP() {
+    return &d_enc;
+  };
 
   /*!
    * @brief Get the bounding box of the mesh
    * @return box Bounding box
    */
-  std::pair<std::vector<double>, std::vector<double>> getBoundingBox();
-  std::pair<std::vector<double>, std::vector<double>> getBoundingBox() const;
+  const std::pair<std::vector<double>, std::vector<double>> &getBoundingBox()
+  const {
+    return d_bbox;
+  };
+
 
   /** @}*/
 
@@ -274,6 +312,10 @@ public:
 
   /** @}*/
 
+  std::string printStr(int nt = 0, int lvl = 0) const;
+
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
+
 private:
   /**
    * @name Utility methods
@@ -291,9 +333,15 @@ private:
    * **.msh** file with element-node connectivity data.
    *
    * @param filename Name of the mesh file
-   * */
-  void createData(const std::string &filename, bool
-  ref_config = false);
+   * @param is_centroid_based Specify if we create node at the center of element
+   */
+  void createData(const std::string &filename, bool ref_config, bool is_centroid_based);
+
+  /*!
+   * @brief Converts standard fem mesh to particle mesh with nodes at the
+   * center of element
+   */
+  void nodesAtCentroid();
 
   /*!
    * @brief Compute the nodal volume
@@ -433,7 +481,10 @@ private:
    */
   std::vector<int> d_gInvMap;
 
-  /*! @brief Bounding box */
+  /*! @brief Bounding box 
+  * @return (xmin,ymin,zmin) and (xmax,ymax,zmax)
+  */
+  
   std::pair<std::vector<double>, std::vector<double>> d_bbox;
 
   /*! @brief Mesh size */

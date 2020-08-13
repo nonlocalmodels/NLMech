@@ -11,6 +11,7 @@
 #include "../inp/decks/loadingDeck.h"
 #include "fe/mesh.h"
 #include "util/compare.h"
+#include "util/utilFunction.h"
 #include "util/utilGeom.h"
 
 loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
@@ -20,11 +21,15 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
   // nodes
   for (const auto &bc : d_bcData) {
     // check bc first
-    if (bc.d_regionType != "line" and bc.d_regionType != "rectangle" and
-        bc.d_regionType != "angled_rectangle" and bc.d_regionType != "cuboid") {
+    if (bc.d_regionType != "rectangle" and
+        bc.d_regionType != "angled_rectangle" and
+        bc.d_regionType != "circle" and
+        bc.d_regionType != "torus" and
+        bc.d_regionType != "line"
+        ) {
       std::cerr
           << "Error: Displacement bc region type = " << bc.d_regionType
-          << " not recognized. Should be rectangle or angled_rectangle. \n";
+          << " not recognised. Should be rectangle or angled_rectangle or circle or torus. \n";
       exit(1);
     }
 
@@ -39,7 +44,9 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     }
 
     if (bc.d_timeFnType != "constant" and bc.d_timeFnType != "linear" and
-        bc.d_timeFnType != "quadratic" and bc.d_timeFnType != "sin") {
+        bc.d_timeFnType != "quadratic" and bc.d_timeFnType != "linear_step" and
+        bc.d_timeFnType != "linear_slow_fast" and bc.d_timeFnType != "sin") {
+
       std::cerr << "Error: Displacement bc space function type = "
                 << bc.d_timeFnType << " not recognised. "
                 << "Currently constant, linear, quadratic, sin functions are "
@@ -50,6 +57,10 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
     size_t time_num_params = 1;
     if (bc.d_timeFnType == "quadratic" or bc.d_timeFnType == "sin")
       time_num_params = 2;
+    if (bc.d_timeFnType == "linear_step")
+      time_num_params = 3;
+    else if (bc.d_timeFnType == "linear_slow_fast")
+      time_num_params = 4;
     if (bc.d_timeFnParams.size() != time_num_params) {
       std::cerr << "Error: Displacement bc insufficient parameters for time "
                    "function. Need "
@@ -76,31 +87,73 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
     // now loop over nodes
     for (size_t i = 0; i < mesh->getNumNodes(); i++) {
-      bool fix = false;
-      auto xi = mesh->getNode(i);
 
-      if (bc.d_regionType == "line")
-        fix = util::compare::definitelyGreaterThan(xi.d_x, bc.d_x1) &&
-              util::compare::definitelyLessThan(mesh->getNode(i).d_x, bc.d_x2);
-      else if (bc.d_regionType == "rectangle")
-        fix = util::geometry::isPointInsideRectangle(xi, bc.d_x1, bc.d_x2,
-                                                     bc.d_y1, bc.d_y2);
-      else if (bc.d_regionType == "angled_rectangle")
-        fix = util::geometry::isPointInsideAngledRectangle(
-            xi, bc.d_x1, bc.d_x2, bc.d_y1, bc.d_y2, bc.d_theta);
-      else if (bc.d_regionType == "cuboid")
-        fix = util::geometry::isPointInsideCuboid(xi, bc.d_x1, bc.d_x2, bc.d_y1,
-                                                  bc.d_y2, bc.d_z1, bc.d_z2);
+      bool node_fixed = false;
 
-      if (!fix) continue;
+      if (bc.d_regionType == "rectangle" &&
+          util::geometry::isPointInsideRectangle(mesh->getNode(i), bc.d_x1,
+                                                 bc.d_x2, bc.d_y1, bc.d_y2)) {
 
-      // loop over direction and set fixity
-      for (auto dof : bc.d_direction) {
-        // pass 0 for x, 1 for y, and 2 for z dof
-        mesh->setFixity(i, dof - 1, true);
+        node_fixed = true;
+
+        // loop over direction and set fixity
+        for (auto dof : bc.d_direction) {
+          // pass 0 for x, 1 for y, and 2 for z dof
+          mesh->setFixity(i, dof - 1, true);
+        }
+
+      } else if (bc.d_regionType == "angled_rectangle" &&
+                 util::geometry::isPointInsideAngledRectangle(
+                     mesh->getNode(i), bc.d_x1, bc.d_x2, bc.d_y1, bc.d_y2,
+                     bc.d_theta)) {
+
+        node_fixed = true;
+
+        // loop over direction and set fixity
+        for (auto dof : bc.d_direction) {
+          // pass 0 for x, 1 for y, and 2 for z dof
+          mesh->setFixity(i, dof - 1, true);
+        }
+ 
+ 
+      } else if (bc.d_regionType == "circle" &&
+          util::geometry::isPointinCircle(mesh->getNode(i), util::Point3(bc.d_x1,bc.d_y1,0.), bc.d_r1)) {
+
+        node_fixed = true;
+
+        // loop over direction and set fixity
+        for (auto dof : bc.d_direction) {
+          // pass 0 for x, 1 for y, and 2 for z dof
+          mesh->setFixity(i, dof - 1, true);
+        }
+      }
+      else if (bc.d_regionType == "torus" &&
+          util::geometry::isPointinCircle(mesh->getNode(i), util::Point3(bc.d_x1,bc.d_y1,0.), bc.d_r1) && 
+          ! util::geometry::isPointinCircle(mesh->getNode(i), util::Point3(bc.d_x1,bc.d_y1,0.), bc.d_r2 )) {
+
+        node_fixed = true;
+
+        // loop over direction and set fixity
+        for (auto dof : bc.d_direction) {
+          // pass 0 for x, 1 for y, and 2 for z dof
+          mesh->setFixity(i, dof - 1, true);
+        }
+      }
+       else if (bc.d_regionType == "line" &&
+          util::compare::definitelyGreaterThan(mesh->getNode(i).d_x, bc.d_x1) &&
+          util::compare::definitelyLessThan(mesh->getNode(i).d_x, bc.d_x2)) {
+
+        node_fixed = true;
+
+        // loop over direction and set fixity
+        for (auto dof : bc.d_direction) {
+          // pass 0 for x, 1 for y, and 2 for z dof
+          mesh->setFixity(i, dof - 1, true);
+        }
       }
 
       // store the id of this node
+      if (node_fixed)
       fix_nodes.push_back(i);
     }  // loop over nodes
 
@@ -153,6 +206,22 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
         double a = M_PI * bc.d_timeFnParams[1];
         du = umax * std::sin(a * time);
         dv = umax * a * std::cos(a * time);
+      } else if (bc.d_timeFnType == "linear_step") {
+
+        du = umax * util::function::linearStepFunc(time, bc.d_timeFnParams[1],
+                                                   bc.d_timeFnParams[2]);
+        dv = umax * util::function::derLinearStepFunc(
+                        time, bc.d_timeFnParams[1], bc.d_timeFnParams[2]);
+      }
+      else if (bc.d_timeFnType == "linear_slow_fast") {
+        if (util::compare::definitelyGreaterThan(time, bc.d_timeFnParams[1])) {
+          du = umax * bc.d_timeFnParams[3] * time;
+          dv = umax * bc.d_timeFnParams[3];
+        }
+        else {
+          du = umax * bc.d_timeFnParams[2] * time;
+          dv = umax * bc.d_timeFnParams[2];
+        }
       }
 
       for (auto d : bc.d_direction) {

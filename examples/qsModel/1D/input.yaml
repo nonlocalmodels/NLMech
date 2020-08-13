@@ -20,7 +20,7 @@ Displacement_BC:
   Sets: 1 
   Set_1:  
     Location:   
-      Line: [-0.1, 0.3]
+      Line: [-0.1, 0.3 ]
     Direction: [1] 
     Time_Function: 
       Type: constant 
@@ -32,7 +32,7 @@ Force_BC:
   Sets: 1
   Set_1:
     Location:
-      Line: [15.9, 16.5]
+      Line: [15.8, 16.5]
     Direction: [1]
     Time_Function:
       Type: linear
@@ -41,10 +41,10 @@ Force_BC:
     Spatial_Function:
       Type: constant
       Parameters:
-        - 160
+        - 40
 Solver:
   Type: ConjugateGradient
-  Max_Iteration: 1000
+  Max_Iteration: 100
   Tolerance: 1e-9
   Perturbation: 1e-7
 Output: 

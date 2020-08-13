@@ -11,6 +11,7 @@
 
 #include <hpx/config.hpp>
 #include "model/model.h"
+#include "inp/decks/modelDeck.h"
 
 // forward declaration of class
 namespace fe {
@@ -120,7 +121,7 @@ private:
 	/*! @brief Assembles the Jacobian matrix
 	 * @return Jacobian matrix
 	 */
-	util::Matrixij assembly_jacobian_matrix();
+	void assembly_jacobian_matrix();
 
 	/*! @brief Assembles the Jacobian matrix
 	 * @brief begin First node of the chunk
@@ -207,8 +208,6 @@ private:
 	/*! @brief Data Manager */
 	data::DataManager *d_dataManager_p;
 
-	/*! @brief Output handling*/
-	rw::writer::Writer* d_writer_p;
 };
 
 }

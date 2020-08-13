@@ -33,6 +33,31 @@ rw::reader::VtkReader::VtkReader(const std::string &filename) {
   d_reader_p->Update();
 }
 
+bool rw::reader::VtkReader::vtuHasPointData(const std::string &data_tag) {
+  // read point field data
+  d_grid_p = d_reader_p->GetOutput();
+  vtkPointData *p_field = d_grid_p->GetPointData();
+  for (size_t i = 0; i < p_field->GetNumberOfArrays(); i++) {
+    auto tag = p_field->GetArrayName(i);
+
+    if (tag == data_tag) return true;
+  }
+
+  return false;
+}
+
+bool rw::reader::VtkReader::vtuHasCellData(const std::string &data_tag) {
+  // read point field data
+  d_grid_p = d_reader_p->GetOutput();
+  vtkCellData *c_field = d_grid_p->GetCellData();
+  for (size_t i = 0; i < c_field->GetNumberOfArrays(); i++) {
+    auto tag = c_field->GetArrayName(i);
+    if (tag == data_tag) return true;
+  }
+
+  return false;
+}
+
 std::vector<std::string> rw::reader::VtkReader::readVtuFilePointTags() {
   // read point field data
   d_grid_p = d_reader_p->GetOutput();
@@ -441,9 +466,9 @@ bool rw::reader::VtkReader::readPointData(const std::string &name,
   (*data).resize(array->GetNumberOfTuples());
   for (size_t i = 0; i < array->GetNumberOfTuples(); i++) {
     array->GetTuples(i, i, data_a);
-    (*data)[i] = util::SymMatrix3(data_a->GetValue(0), data_a->GetValue(1),
-                                  data_a->GetValue(2), data_a->GetValue(3),
-                                  data_a->GetValue(4), data_a->GetValue(5));
+    (*data)[i] = util::SymMatrix3({data_a->GetValue(0), data_a->GetValue(1),
+                                   data_a->GetValue(2), data_a->GetValue(3),
+                                   data_a->GetValue(4), data_a->GetValue(5)});
   }
 
   return true;
@@ -589,9 +614,9 @@ bool rw::reader::VtkReader::readCellData(const std::string &name,
   (*data).resize(array->GetNumberOfTuples());
   for (size_t i = 0; i < array->GetNumberOfTuples(); i++) {
     array->GetTuples(i, i, data_a);
-    (*data)[i] = util::SymMatrix3(data_a->GetValue(0), data_a->GetValue(1),
-                                  data_a->GetValue(2), data_a->GetValue(3),
-                                  data_a->GetValue(4), data_a->GetValue(5));
+    (*data)[i] = util::SymMatrix3({data_a->GetValue(0), data_a->GetValue(1),
+                                   data_a->GetValue(2), data_a->GetValue(3),
+                                   data_a->GetValue(4), data_a->GetValue(5)});
   }
 
   return true;

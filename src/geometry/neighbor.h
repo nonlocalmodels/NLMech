@@ -54,7 +54,15 @@ public:
    * @brief Get the pointer to full neighbor list
    * @return pointer Pointer of neighbor list data
    */
-  const std::vector<std::vector<size_t>> *getNeighborsP();
+  std::vector<std::vector<size_t>> *getNeighborsListP();
+  const std::vector<std::vector<size_t>> *getNeighborsListP() const;
+
+  /*!
+   * @brief Get the pointer to full neighbor list
+   * @return pointer Pointer of neighbor list data
+   */
+  std::vector<std::vector<size_t>> &getNeighborsList();
+  const std::vector<std::vector<size_t>> &getNeighborsList() const;
 
 private:
   /*! @brief Interior flags deck */

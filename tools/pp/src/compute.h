@@ -105,7 +105,8 @@ public:
    * @param data Pointer to data where crack tip data will be stored
    */
   void readCrackTipData(const std::string &filename, int crack_id,
-                        std::vector<tools::pp::CrackTipData> *data);
+                        std::vector<tools::pp::CrackTipData> *data, bool
+                        is_inclined = false);
 
   /*!
    * @brief Create new writer object if it is not already done so
@@ -242,17 +243,22 @@ public:
    *                         + + + + + + + + + + +
    *                        A                    B
    *
-   * Note: contour is formed by lines A-B, B-C, C-D, D-A
+   * Note: Contour is formed by lines A-B, B-C, C-D, D-A
    *
    * Let contour is denoted as \f$ \Gamma(t) \f$, where \f$ t \f$ indicates
    * contour moves with crack tip. Let domain inside contour is defined as
    * \f$ A(t) \f$. Let the outward normal to the domain \f$ A(t) \f$ is \f$ n
-   * \f$ and the crack velocity is \f$ v \f$. Then the energy associated to
-   * crack is given by
-   * \f[ E(t) = \frac{1}{|B_\epsilon(0)|}
-   * \int_{A^c(t)} \int_{A(t) \cap B_\epsilon(x)} \partial_S W(S(y,x;
-   * u(t))) \frac{y-x}{|y-x|} \cdot (\dot{u}(x,t) + \dot{u}(y,t)) dy dx. \f]
-   * Here \f$ \bar{W}(x;u(t)) \f$ is the energy density at point \f$ x\f$ given
+   * \f$, crack velocity direction is \f$ n_c\f$, and the crack velocity is \f$
+   * v_c \f$. Since \f$ n_c\f$ is the crack velocity direction, we have crack
+   * velocity \f$ v_c = V n_c\f$, where \f$V \f$ is the magnitude of crack
+   * velocity.
+   *
+   * We compute following seven kinds of energy associated to crack tip:
+   *
+   * 1. \b Strain \b energy \b on \b contour: \f[ E_{strain, \Gamma} :=
+   * \int_{\Gamma(t)} \bar{W}(x) n \cdot n_c dx,
+   * \f]
+   * where \f$ \bar{W}(x;u(t)) \f$ is the energy density at point \f$ x\f$ given
    * by \f[ \bar{W}(x;u(t)) = \frac{1}{|B_\epsilon(0)|} \int_{B_\epsilon(x)}
    * |y-x| W(S(y,x;u(t))) dy.\f] \f$ W(S(y,x;u)) \f$ is the pairwise energy
    * density. For regularized bond based model (see material::pd::RNPBond), it
@@ -263,6 +269,53 @@ public:
    * \f[\partial_S W(S(y,x;u)) = \frac{2J^\epsilon(|y-x|) S(y,x;u)}{\epsilon}
    * \psi'(|y-x| S(y,x;u)^2). \f]
    * See material::pd::RNPBond for complete details about the material model.
+   *
+   * 2. \b Strain \b energy \b rate \b on \b contour: \f[ E_{strain rate,
+   * \Gamma} := \int_{\Gamma(t)}\bar{W}(x) n \cdot v_c dx = V E_{strain,
+   * \Gamma}, \f]
+   * where \f$ V\f$ is the magnitude of crack velocity, \f$ v_c\f$ is the
+   * crack velocity.
+   *
+   * 3. \b Kinetic \b energy \b rate \b on \b contour: \f[ E_{kinetic rate,
+   * \Gamma} := \int_{\Gamma(t)} \frac{\rho}{2} |\dot{u}(x)|^2 n \cdot
+   * v_c dx, \f]
+   * where \f$ \dot{u}(x)\f$ is velocity of material point \f$ x \in \Gamma
+   * (t) \f$.
+   *
+   * 4. \b Elastic \b internal \b work \b rate \b on \b contour: \f[
+   * E_{elastic work rate, \Gamma} := \int_{\Gamma(t)} \frac{C}{2} [\nabla u
+   * (x) + \nabla u(x)^T]n \cdot \dot{u}(x) dx , \f]
+   * where \f$ C \f$ is the elasticity tensor.
+   *
+   * 5. \b Peridynamic \b internal \b work: \f[
+   * E_{pd work} = \frac{1}{|B_\epsilon(0)|}
+   * \int_{A^c(t)} \int_{A(t) \cap B_\epsilon(x)} \partial_S W(S(y,x;
+   * u(t))) \frac{y-x}{|y-x|} \cdot [(\nabla {u}(x,t) + \nabla {u}(y,t)) n_c] dy
+   * dx. \f]
+   * Here \f$ W(S(y,x; u(t))) \f$ is the internal pairwise strain energy
+   * density as described above. \f$ \nabla u(x) n_c\f$ is the derivative of
+   * displacement along the crack velocity direction.
+   *
+   * 6. \b Peridynamic \b internal \b work: \f[
+   * E_{pd work rate} = \frac{1}{|B_\epsilon(0)|}
+   * \int_{A^c(t)} \int_{A(t) \cap B_\epsilon(x)} \partial_S W(S(y,x;
+   * u(t))) \frac{y-x}{|y-x|} \cdot (\dot{u}(x,t) + \dot{u}(y,t)) dy dx. \f]
+   *
+   * 7. \b LEFM \b energy \b rate: \f[
+   * E_{lefm} = V G_c, \f]
+   * where \f$ G_c\f$ is the critical energy release rate.
+   *
+   * 8. \b Strain \b energy \b within \b contour \b domain: \f[
+   * E_{strain, A} = \int_{A(t)} W(x) dx. \f]
+   *
+   * 9. \b Kinetic \b energy \b within \b contour \b domain: \f[
+   * E_{kinetic, A} = \int_{A(t)} \frac{\rho}{2} |\dot{u}(x)|^2 dx. \f]
+   *
+   * 10. \b Peridynamic \b fracture \b energy:
+   * \f[
+   * E_{pd,fracture} = \int_{x, Z(x) > 1} \bar{W}(x;u(t)) dx \f]
+   * where \f$ Z(x) \f$ is the damage at node x and \f$\bar{W}\f$ is the
+   * peridynamic energy density at point x.
    *
    * Method:
    *
@@ -289,8 +342,20 @@ public:
    * \f$ A^c(t) \f$. We compute the contribution of each node in \f$ A^c(t)
    * \f$ using pdForceWork.
    *
+   * @todo At present not computing \f$ E_{elastic work, \Gamma}\f$ as we
+   * require gradient of displacement along the normal to contour.
+   *
+   * @todo At present not computing \f$ E_{pd internal work}\f$ as we
+   * require gradient of displacement at nodes.
+   *
    */
   void computeJIntegral();
+
+  /*!
+   * @brief Compute J integral where crack line is angled as opposed to
+   * either horizontal or verticle line
+   */
+  void computeJIntegralAngledCrack();
 
   /** @}*/
 
@@ -338,12 +403,14 @@ private:
    * @param tol_elem Thickness for element list search
    * @param nodes Pointer to ids of nodes
    * @param elements Pointer to ids of elements
+   * @param calc_in_ref Calculate in reference configuration
    */
   void
   listElemsAndNodesInDomain(const std::pair<util::Point3, util::Point3> &cd,
                             const double &tol, const double &tol_elem,
                             std::vector<size_t> *nodes,
-                            std::vector<size_t> *elements);
+                            std::vector<size_t> *elements,
+                            bool calc_in_ref);
 
   /*!
    * @brief Decompose node list into two lists
@@ -375,14 +442,16 @@ private:
    * @param up Displacement at the point p
    * @param vp Velocity at the point p
    * @param ids Global ids of vertices of triangle
+   * @param calc_in_ref Calculate in reference configuration
    * @param check_only True if only interested in whether the point belongs
    * to triangle
    * @return status True if point is found in the triangle. Otherwise false.
    */
   bool triCheckAndInterpolateUV(const util::Point3 &p, util::Point3 &up,
                                 util::Point3 &vp,
-                                const std::vector<size_t> &ids, bool
-                                check_only = false);
+                                const std::vector<size_t> &ids,
+                                bool calc_in_ref,
+                                bool check_only = false);
 
   /*!
    * @brief Interpolates displacement and velocity at given point
@@ -411,10 +480,15 @@ private:
    * @param vp Velocity at the point p
    * @param nodes Pointer to ids of nodes to perform search
    * @param elements Pointer to ids of elements to perform search
+   * @param calc_in_ref Calculate in reference configuration
    */
   void interpolateUV(const util::Point3 &p, util::Point3 &up, util::Point3 &vp,
                      const std::vector<size_t> *nodes,
-                     const std::vector<size_t> *elements);
+                     const std::vector<size_t> *elements, bool calc_in_ref);
+
+  size_t interpolateUVNodes(const util::Point3 &p, util::Point3 &up,
+                           util::Point3 &vp,
+                     const std::vector<size_t> *nodes, bool calc_in_ref);
 
   /*!
    * @brief Computes contribution to energy into crack from the quadrature
@@ -426,11 +500,24 @@ private:
    * @param p Point
    * @param nodes Pointer to ids of nodes to perform search
    * @param elements Pointer to ids of elements to perform search
-   * @return energy Energy contribution
+   * @param normal Normal to the edge of contour
+   * @param pd_energy Peridynamic energy density
+   * @param kinetic_energy Kinetic energy density
+   * @param elastic_energy Elastic energy density
+   * @param dot_u Material velocity at the quadrature point
+   * @param calc_in_ref Calculate in reference configuration
+   * @param ctip Current crack tip data
    */
-  double getContourContribJInt(const util::Point3 &p,
+  void getContourContribJInt(const util::Point3 &p,
                      const std::vector<size_t> *nodes,
-                     const std::vector<size_t> *elements);
+                     const std::vector<size_t> *elements,
+                             const util::Point3 &normal,
+                     double &pd_energy,
+                     double &kinetic_energy,
+                     double &elastic_energy,
+                     util::Point3 &dot_u,
+                             bool calc_in_ref,
+                             const tools::pp::CrackTipData &ctip);
 
   /*!
    * @brief Updates crack tip location and crack velocity
@@ -541,6 +628,14 @@ private:
       const std::vector<std::vector<double>> &Zs, const std::vector<double> *Z,
       bool is_top);
 
+  /*!
+   * @brief Exits code safely in the event there is error
+   *
+   * @param err_message Error message
+   * @param writer Writer object
+   */
+  void safeExit(const std::string &err_message, rw::writer::Writer *writer = nullptr);
+
   /** @}*/
 
   /*! @brief Input filename for compute instruction */
@@ -620,11 +715,39 @@ private:
    */
   size_t d_dtEnd;
 
+  /*!
+   * @brief Save success/failur of function
+   */
+  bool d_fnSuccess;
+  std::string d_fnErrMsg;
+
+  /*! @brief Need damage at nodes */
+  bool d_needDamageZ;
+
+  /*! @brief Need neighbor list */
+  bool d_needNeighborList;
+
   /*! @brief Displacement of nodes */
   std::vector<util::Point3> d_u;
 
   /*! @brief Velocity of nodes */
   std::vector<util::Point3> d_v;
+
+  /*! @brief Damage of nodes */
+  std::vector<double> d_Z;
+
+  /*! @brief Dilation
+   *
+   * In case of Rob's state based model, this will give the spherical
+   * (hydrostatic) strain
+   */
+  std::vector<double> d_thetaX;
+
+  /*! @brief Weighted volume
+   *
+   * In case of Rob's state based model, this data is not required
+   */
+  std::vector<double> d_mX;
 
   /*! @brief Model deck */
   inp::ModelDeck *d_modelDeck_p;

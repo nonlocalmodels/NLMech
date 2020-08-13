@@ -7,22 +7,76 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "tetElem.h"
-
-#include <util/compare.h>
-
+#include "util/compare.h"
+#include "util/matrix.h"
 #include <iostream>
+#include <util/utilIO.h>
 
 #include "util/feElementDefs.h"  // global definition of elements
 
+namespace {
+
+bool checkPoint(const std::vector<double> &p,
+                const std::vector<util::Point3> &nodes) {
+  // check to see if p is in reference tet element
+  bool check = false;
+  if (util::compare::definitelyLessThan(p[0], -1.0E-5) ||
+      util::compare::definitelyLessThan(p[1], -1.0E-5) ||
+      util::compare::definitelyLessThan(p[2], -1.0E-5) ||
+      util::compare::definitelyGreaterThan(p[0], 1. + 1.0E-5) ||
+      util::compare::definitelyGreaterThan(p[1], 1. + 1.0E-5) ||
+      util::compare::definitelyGreaterThan(p[2], 1. + 1.0E-5)) {
+    check = true;
+  }
+
+  if (!check) {
+    // check if projection of point in x, y, z plane is within the limit
+    if (util::compare::definitelyGreaterThan(p[0], 1. + 1.0E-5 - p[1]))
+      check = true;
+
+    if (util::compare::definitelyGreaterThan(p[1], 1. + 1.0E-5 - p[2]))
+      check = true;
+
+    if (util::compare::definitelyGreaterThan(p[2], 1. + 1.0E-5 - p[0]))
+      check = true;
+  }
+
+  if (check) {
+    std::cerr << "Error: Point p = (" << p[0] << ", " << p[1] << ", " << p[2]
+              << ") does not belong to reference tet element = {("
+              << nodes[0].d_x << ", " << nodes[0].d_y << ", " << nodes[0].d_z
+              << "), (" << nodes[1].d_x << "," << nodes[1].d_y << ", "
+              << nodes[1].d_z << "), (" << nodes[2].d_x << "," << nodes[2].d_y
+              << ", " << nodes[2].d_z << "), (" << nodes[3].d_x << ","
+              << nodes[3].d_y << ", " << nodes[3].d_z << ")}.\n"
+              << "Coordinates in reference element are: "
+              << "xi = " << p[0] << ", eta = " << p[1] << ", zeta = " << p[2]
+              << "\n";
+    exit(1);
+  }
+}
+
+}  // anonymous namespace
+
 fe::TetElem::TetElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_triangle) {
+  if (d_quadOrder > 3) {
+    std::cout << "Error: For linear tet element, we only support upto 3 quad "
+                 "order approximation.\n";
+    exit(1);
+  }
+
   // compute quad data
   this->init();
 }
 
 double fe::TetElem::elemSize(const std::vector<util::Point3> &nodes) {
-  return 0.5 * ((nodes[1].d_x - nodes[0].d_x) * (nodes[2].d_y - nodes[0].d_y) -
-                (nodes[2].d_x - nodes[0].d_x) * (nodes[1].d_y - nodes[0].d_y));
+  // volume of tet element is (1/6) a * (b x c),
+  // where a = v2 - v1, b = v3 - v1, c = v4 - v1
+  auto a = nodes[1] - nodes[0];
+  auto b = nodes[2] - nodes[0];
+  auto c = nodes[3] - nodes[0];
+  return (1. / 6.) * a * (b.cross(c));
 }
 
 std::vector<double> fe::TetElem::getShapes(
@@ -32,22 +86,21 @@ std::vector<double> fe::TetElem::getShapes(
 
 std::vector<std::vector<double>> fe::TetElem::getDerShapes(
     const util::Point3 &p, const std::vector<util::Point3> &nodes) {
-  // get derivatives of shape function in reference triangle
+  // get derivatives of shape function in reference tet element
   auto ders_ref = getDerShapes(mapPointToRefElem(p, nodes));
 
   // get Jacobian and its determinant
   std::vector<std::vector<double>> J;
   auto detJ = getJacobian(p, nodes, &J);
 
-  // to hold derivatives
-  auto ders = ders_ref;
+  auto J_inv = util::inv(J);
 
-  for (size_t i = 0; i < 3; i++) {
-    // partial N_i/ partial x
-    ders[i][0] = (ders_ref[i][0] * J[1][1] - ders_ref[i][1] * J[0][1]) / detJ;
-    // partial N_i/ partial y
-    ders[i][1] = (-ders_ref[i][0] * J[1][0] + ders_ref[i][1] * J[0][0]) / detJ;
-  }
+  // to hold derivatives
+  std::vector<std::vector<double>> ders(ders_ref.size(),
+                                        std::vector<double>(3, 0.));
+
+  // grad N_i = J_inv * grad N_i^ref
+  for (size_t i = 0; i < 4; i++) ders[i] = util::dot(J_inv, ders_ref[i]);
 
   return ders;
 }
@@ -66,26 +119,24 @@ std::vector<fe::QuadData> fe::TetElem::getQuadDatas(
     qd.d_w *= qd.d_detJ;
 
     // map point to triangle
-    qd.d_p.d_x = qd.d_shapes[0] * nodes[0].d_x + qd.d_shapes[1] * nodes[1].d_x +
-                 qd.d_shapes[2] * nodes[2].d_x;
-    qd.d_p.d_y = qd.d_shapes[0] * nodes[0].d_y + qd.d_shapes[1] * nodes[1].d_y +
-                 qd.d_shapes[2] * nodes[2].d_y;
-
-    // derivatives of shape function
-    std::vector<std::vector<double>> ders;
-
-    for (size_t i = 0; i < 3; i++) {
-      // partial N_i/ partial x
-      auto d1 = (qd.d_derShapes[i][0] * qd.d_J[1][1] -
-                 qd.d_derShapes[i][1] * qd.d_J[0][1]) /
-                qd.d_detJ;
-      // partial N_i/ partial y
-      auto d2 = (-qd.d_derShapes[i][0] * qd.d_J[1][0] +
-                 qd.d_derShapes[i][1] * qd.d_J[0][0]) /
-                qd.d_detJ;
-
-      ders.push_back(std::vector<double>{d1, d2});
+    qd.d_p = util::Point3();
+    for (size_t i = 0; i < 4; i++) {
+      qd.d_p.d_x += qd.d_shapes[i] * nodes[i].d_x;
+      qd.d_p.d_y += qd.d_shapes[i] * nodes[i].d_y;
+      qd.d_p.d_z += qd.d_shapes[i] * nodes[i].d_z;
     }
+
+    // get inverse of Jacobian
+    auto J_inv = util::inv(qd.d_J);
+
+    // to hold derivatives
+    std::vector<std::vector<double>> ders(qd.d_derShapes.size(),
+                                          std::vector<double>(3, 0.));
+
+    // grad N_i = J_inv * grad N_i^ref
+    for (size_t i = 0; i < 4; i++)
+      ders[i] = util::dot(J_inv, qd.d_derShapes[i]);
+
     qd.d_derShapes = ders;
   }
 
@@ -103,77 +154,100 @@ std::vector<fe::QuadData> fe::TetElem::getQuadPoints(
     qd.d_w *= getJacobian(qd.d_p, nodes, nullptr);
 
     // map point to triangle
-    qd.d_p.d_x = qd.d_shapes[0] * nodes[0].d_x + qd.d_shapes[1] * nodes[1].d_x +
-                 qd.d_shapes[2] * nodes[2].d_x;
-    qd.d_p.d_y = qd.d_shapes[0] * nodes[0].d_y + qd.d_shapes[1] * nodes[1].d_y +
-                 qd.d_shapes[2] * nodes[2].d_y;
+    qd.d_p = util::Point3();
+    for (size_t i = 0; i < 4; i++) {
+      qd.d_p.d_x += qd.d_shapes[i] * nodes[i].d_x;
+      qd.d_p.d_y += qd.d_shapes[i] * nodes[i].d_y;
+      qd.d_p.d_z += qd.d_shapes[i] * nodes[i].d_z;
+    }
   }
 
   return qds;
 }
 
 std::vector<double> fe::TetElem::getShapes(const util::Point3 &p) {
-  // N1 = 1 - xi - eta, N2 = xi, N3 = eta
-  return std::vector<double>{1. - p.d_x - p.d_y, p.d_x, p.d_y};
+  // N1 = 1 - xi - eta - zeta, N2 = xi, N3 = eta, N4 = zeta
+  return std::vector<double>{1. - p.d_x - p.d_y - p.d_z, p.d_x, p.d_y, p.d_z};
 }
 
 std::vector<std::vector<double>> fe::TetElem::getDerShapes(
     const util::Point3 &p) {
-  // d N1/d xi = -1, d N1/d eta = -1, d N2/ d xi = 1, d N2/d eta = 0,
-  // d N3/ d xi = 0, d N3/d eta = 1
+  // d N1/d xi = -1, d N1/d eta = -1, d N1/d zeta = -1,
+  // d N2/ d xi = 1, d N2/d eta = 0, d N2/d zeta = 0,
+  // d N3/ d xi = 0, d N3/d eta = 1, d N3/d zeta = 0,
+  // d N4/ d xi = 0, d N4/d eta = 0, d N4/d zeta = 1,
   std::vector<std::vector<double>> r;
-  r.push_back(std::vector<double>{-1., -1.});
-  r.push_back(std::vector<double>{1., 0.});
-  r.push_back(std::vector<double>{0., 1.});
+  r.push_back(std::vector<double>{-1., -1., -1.});
+  r.push_back(std::vector<double>{1., 0., 0.});
+  r.push_back(std::vector<double>{0., 1., 0.});
+  r.push_back(std::vector<double>{0., 0., 1.});
 
   return r;
 }
 
 util::Point3 fe::TetElem::mapPointToRefElem(
     const util::Point3 &p, const std::vector<util::Point3> &nodes) {
-  auto detB = 2. * elemSize(nodes);
-  auto xi = ((nodes[2].d_y - nodes[0].d_y) * (p.d_x - nodes[0].d_x) -
-             (nodes[2].d_x - nodes[0].d_x) * (p.d_y - nodes[0].d_y)) /
-            detB;
-  auto eta = (-(nodes[1].d_y - nodes[0].d_y) * (p.d_x - nodes[0].d_x) +
-              (nodes[1].d_x - nodes[0].d_x) * (p.d_y - nodes[0].d_y)) /
-             detB;
+  // get Jacobian matrix and compute its transpose
+  std::vector<std::vector<double>> J;
+  auto detJ = getJacobian(p, nodes, &J);
 
-  if (util::compare::definitelyLessThan(xi, -1.0E-5) ||
-      util::compare::definitelyLessThan(eta, -1.0E-5) ||
-      util::compare::definitelyGreaterThan(xi, 1. + 1.0E-5 - eta)) {
-    std::cerr << "Error: Trying to map point p = (" << p.d_x << ", " << p.d_y
-              << ") in triangle to reference triangle.\n"
-              << "But the point p does not belong to triangle = {("
-              << nodes[0].d_x << ", " << nodes[0].d_y << "), (" << nodes[1].d_x
-              << "," << nodes[1].d_y << "), (" << nodes[2].d_x << ","
-              << nodes[2].d_y << ")}.\n"
-              << "Coordinates in reference triangle are: xi = " << xi
-              << ", eta = " << eta << "\n";
-    exit(1);
-  }
+  // get transpose of Jacobian
+  auto B = util::transpose(J);
+  auto detB = detJ;
 
-  if (util::compare::definitelyLessThan(xi, 0.)) xi = 0.;
-  if (util::compare::definitelyLessThan(eta, 0.)) eta = 0.;
+  // get inverse of B
+  auto B_inv = util::inv(B);
 
-  return {xi, eta, 0.};
+  // get vector from first vertex to point p
+  std::vector<double> vec_p = {p.d_x - nodes[0].d_x, p.d_y - nodes[0].d_y,
+                               p.d_z - nodes[0].d_z};
+  // multiply B_inv to vector to transform point
+  auto p_ref = util::dot(B_inv, vec_p);
+
+  // check point
+  checkPoint(p_ref, nodes);
+
+  if (util::compare::definitelyLessThan(p_ref[0], 0.)) p_ref[0] = 0.;
+  if (util::compare::definitelyLessThan(p_ref[1], 0.)) p_ref[1] = 0.;
+  if (util::compare::definitelyLessThan(p_ref[2], 0.)) p_ref[2] = 0.;
+  if (util::compare::definitelyGreaterThan(p_ref[0], 1.)) p_ref[0] = 1.;
+  if (util::compare::definitelyGreaterThan(p_ref[1], 1.)) p_ref[1] = 1.;
+  if (util::compare::definitelyGreaterThan(p_ref[2], 1.)) p_ref[2] = 1.;
+
+  return util::Point3(p_ref);
 }
 
 double fe::TetElem::getJacobian(const util::Point3 &p,
                                 const std::vector<util::Point3> &nodes,
                                 std::vector<std::vector<double>> *J) {
   if (J != nullptr) {
-    J->resize(2);
+    J->resize(3);
     (*J)[0] = std::vector<double>{nodes[1].d_x - nodes[0].d_x,
-                                  nodes[1].d_y - nodes[0].d_y};
+                                  nodes[1].d_y - nodes[0].d_y,
+                                  nodes[1].d_z - nodes[0].d_z};
     (*J)[1] = std::vector<double>{nodes[2].d_x - nodes[0].d_x,
-                                  nodes[2].d_y - nodes[0].d_y};
+                                  nodes[2].d_y - nodes[0].d_y,
+                                  nodes[2].d_z - nodes[0].d_z};
+    (*J)[2] = std::vector<double>{nodes[3].d_x - nodes[0].d_x,
+                                  nodes[3].d_y - nodes[0].d_y,
+                                  nodes[3].d_z - nodes[0].d_z};
 
-    return (*J)[0][0] * (*J)[1][1] - (*J)[0][1] * (*J)[1][0];
+    return util::det(*J);
+  } else {
+    std::vector<std::vector<double>> J_local;
+    J_local.resize(3);
+    J_local[0] = std::vector<double>{nodes[1].d_x - nodes[0].d_x,
+                                     nodes[1].d_y - nodes[0].d_y,
+                                     nodes[1].d_z - nodes[0].d_z};
+    J_local[1] = std::vector<double>{nodes[2].d_x - nodes[0].d_x,
+                                     nodes[2].d_y - nodes[0].d_y,
+                                     nodes[2].d_z - nodes[0].d_z};
+    J_local[2] = std::vector<double>{nodes[3].d_x - nodes[0].d_x,
+                                     nodes[3].d_y - nodes[0].d_y,
+                                     nodes[3].d_z - nodes[0].d_z};
+
+    return util::det(J_local);
   }
-
-  return (nodes[1].d_x - nodes[0].d_x) * (nodes[2].d_y - nodes[0].d_y) -
-         (nodes[1].d_y - nodes[0].d_y) * (nodes[2].d_x - nodes[0].d_x);
 }
 
 void fe::TetElem::init() {
@@ -189,10 +263,15 @@ void fe::TetElem::init() {
     d_quads.resize(0);
   }
 
-  // 2x2 identity matrix
+  // 3x3 identity matrix
   std::vector<std::vector<double>> ident_mat;
-  ident_mat.push_back(std::vector<double>{1., 0.});
-  ident_mat.push_back(std::vector<double>{0., 1.});
+  ident_mat.push_back(std::vector<double>{1., 0., 0.});
+  ident_mat.push_back(std::vector<double>{0., 1., 0.});
+  ident_mat.push_back(std::vector<double>{0., 0., 1.});
+
+  //
+  // These datas are from LibMesh code
+  // See: https://libmesh.github.io/doxygen/quadrature__gauss__3D_8C_source.html
 
   //
   // first order quad points for triangle
@@ -200,8 +279,8 @@ void fe::TetElem::init() {
   if (d_quadOrder == 1) {
     d_quads.clear();
     fe::QuadData qd;
-    qd.d_w = 0.5;
-    qd.d_p = util::Point3(1. / 3., 1. / 3., 0.);
+    qd.d_w = 1. / 6.;
+    qd.d_p = util::Point3(1. / 4., 1. / 4., 1. / 4.);
     // N1 = 1 - xi - eta, N2 = xi, N3 = eta
     qd.d_shapes = getShapes(qd.d_p);
     // d N1/d xi = -1, d N1/d eta = -1, d N2/ d xi = 1, d N2/d eta = 0,
@@ -218,25 +297,37 @@ void fe::TetElem::init() {
   if (d_quadOrder == 2) {
     d_quads.clear();
     fe::QuadData qd;
+
+    double w = 1. / 24.;
+    double a = 0.585410196624969;
+    double b = 0.138196601125011;
     // point 1
-    qd.d_w = 1. / 6.;
-    qd.d_p = util::Point3(1. / 6., 1. / 6., 0.);
+    qd.d_w = w;
+    qd.d_p = util::Point3(a, b, b);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     qd.d_J = ident_mat;
     qd.d_detJ = 1.;
     d_quads.push_back(qd);
     // point 2
-    qd.d_w = 1. / 6.;
-    qd.d_p = util::Point3(2. / 3., 1. / 6., 0.);
+    qd.d_w = w;
+    qd.d_p = util::Point3(b, a, b);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     qd.d_J = ident_mat;
     qd.d_detJ = 1.;
     d_quads.push_back(qd);
     // point 3
-    qd.d_w = 1. / 6.;
-    qd.d_p = util::Point3(1. / 6., 2. / 3., 0.);
+    qd.d_w = w;
+    qd.d_p = util::Point3(b, b, a);
+    qd.d_shapes = getShapes(qd.d_p);
+    qd.d_derShapes = getDerShapes(qd.d_p);
+    qd.d_J = ident_mat;
+    qd.d_detJ = 1.;
+    d_quads.push_back(qd);
+    // point 4
+    qd.d_w = w;
+    qd.d_p = util::Point3(b, b, b);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     qd.d_J = ident_mat;
@@ -250,153 +341,49 @@ void fe::TetElem::init() {
   if (d_quadOrder == 3) {
     d_quads.clear();
     fe::QuadData qd;
-    // point 1
-    qd.d_w = -27. / 96.;
-    qd.d_p = util::Point3(1. / 3., 1. / 3., 0.);
-    qd.d_shapes = getShapes(qd.d_p);
-    qd.d_derShapes = getDerShapes(qd.d_p);
-    qd.d_J = ident_mat;
-    qd.d_detJ = 1.;
-    d_quads.push_back(qd);
-    // point 2
-    qd.d_w = 25. / 96.;
-    qd.d_p = util::Point3(1. / 5., 3. / 5., 0.);
-    qd.d_shapes = getShapes(qd.d_p);
-    qd.d_derShapes = getDerShapes(qd.d_p);
-    qd.d_J = ident_mat;
-    qd.d_detJ = 1.;
-    d_quads.push_back(qd);
-    // point 3
-    qd.d_w = 25. / 96.;
-    qd.d_p = util::Point3(1. / 5., 1. / 5., 0.);
-    qd.d_shapes = getShapes(qd.d_p);
-    qd.d_derShapes = getDerShapes(qd.d_p);
-    qd.d_J = ident_mat;
-    qd.d_detJ = 1.;
-    d_quads.push_back(qd);
-    // point 4
-    qd.d_w = 25. / 96.;
-    qd.d_p = util::Point3(3. / 5., 1. / 5., 0.);
-    qd.d_shapes = getShapes(qd.d_p);
-    qd.d_derShapes = getDerShapes(qd.d_p);
-    qd.d_J = ident_mat;
-    qd.d_detJ = 1.;
-    d_quads.push_back(qd);
-  }
 
-  //
-  // fourth order quad points for triangle
-  //
-  if (d_quadOrder == 4) {
-    d_quads.clear();
-    fe::QuadData qd;
+    double w1 = -2. / 15.;
+    double w2 = 0.075;
+
+    double a = 0.25;
+    double b = 0.5;
+    double c = 1. / 6.;
+
     // point 1
-    qd.d_w = 0.5 * 0.22338158967801;
-    qd.d_p = util::Point3(0.44594849091597, 0.44594849091597, 0.);
+    qd.d_w = w1;
+    qd.d_p = util::Point3(a, a, a);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     qd.d_J = ident_mat;
     qd.d_detJ = 1.;
     d_quads.push_back(qd);
     // point 2
-    qd.d_w = 0.5 * 0.22338158967801;
-    qd.d_p = util::Point3(0.44594849091597, 0.10810301816807, 0.);
+    qd.d_w = w2;
+    qd.d_p = util::Point3(b, c, c);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     qd.d_J = ident_mat;
     qd.d_detJ = 1.;
     d_quads.push_back(qd);
     // point 3
-    qd.d_w = 0.5 * 0.22338158967801;
-    qd.d_p = util::Point3(0.10810301816807, 0.44594849091597, 0.);
+    qd.d_w = w2;
+    qd.d_p = util::Point3(c, b, c);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     qd.d_J = ident_mat;
     qd.d_detJ = 1.;
     d_quads.push_back(qd);
     // point 4
-    qd.d_w = 0.5 * 0.10995174365532;
-    qd.d_p = util::Point3(0.09157621350977, 0.09157621350977, 0.);
+    qd.d_w = w2;
+    qd.d_p = util::Point3(c, c, b);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     qd.d_J = ident_mat;
     qd.d_detJ = 1.;
     d_quads.push_back(qd);
     // point 5
-    qd.d_w = 0.5 * 0.10995174365532;
-    qd.d_p = util::Point3(0.09157621350977, 0.81684757298046, 0.);
-    qd.d_shapes = getShapes(qd.d_p);
-    qd.d_derShapes = getDerShapes(qd.d_p);
-    qd.d_J = ident_mat;
-    qd.d_detJ = 1.;
-    d_quads.push_back(qd);
-    // point 6
-    qd.d_w = 0.5 * 0.10995174365532;
-    qd.d_p = util::Point3(0.81684757298046, 0.09157621350977, 0.);
-    qd.d_shapes = getShapes(qd.d_p);
-    qd.d_derShapes = getDerShapes(qd.d_p);
-    qd.d_J = ident_mat;
-    qd.d_detJ = 1.;
-    d_quads.push_back(qd);
-  }
-
-  //
-  // fifth order quad points for triangle
-  //
-  if (d_quadOrder == 5) {
-    d_quads.clear();
-    fe::QuadData qd;
-    // point 1
-    qd.d_w = 0.5 * 0.22500000000000;
-    qd.d_p = util::Point3(0.33333333333333, 0.33333333333333, 0.);
-    qd.d_shapes = getShapes(qd.d_p);
-    qd.d_derShapes = getDerShapes(qd.d_p);
-    qd.d_J = ident_mat;
-    qd.d_detJ = 1.;
-    d_quads.push_back(qd);
-    // point 2
-    qd.d_w = 0.5 * 0.13239415278851;
-    qd.d_p = util::Point3(0.47014206410511, 0.47014206410511, 0.);
-    qd.d_shapes = getShapes(qd.d_p);
-    qd.d_derShapes = getDerShapes(qd.d_p);
-    qd.d_J = ident_mat;
-    qd.d_detJ = 1.;
-    d_quads.push_back(qd);
-    // point 3
-    qd.d_w = 0.5 * 0.13239415278851;
-    qd.d_p = util::Point3(0.47014206410511, 0.05971587178977, 0.);
-    qd.d_shapes = getShapes(qd.d_p);
-    qd.d_derShapes = getDerShapes(qd.d_p);
-    qd.d_J = ident_mat;
-    qd.d_detJ = 1.;
-    d_quads.push_back(qd);
-    // point 4
-    qd.d_w = 0.5 * 0.13239415278851;
-    qd.d_p = util::Point3(0.05971587178977, 0.47014206410511, 0.);
-    qd.d_shapes = getShapes(qd.d_p);
-    qd.d_derShapes = getDerShapes(qd.d_p);
-    qd.d_J = ident_mat;
-    qd.d_detJ = 1.;
-    d_quads.push_back(qd);
-    // point 5
-    qd.d_w = 0.5 * 0.12593918054483;
-    qd.d_p = util::Point3(0.10128650732346, 0.10128650732346, 0.);
-    qd.d_shapes = getShapes(qd.d_p);
-    qd.d_derShapes = getDerShapes(qd.d_p);
-    qd.d_J = ident_mat;
-    qd.d_detJ = 1.;
-    d_quads.push_back(qd);
-    // point 6
-    qd.d_w = 0.5 * 0.12593918054483;
-    qd.d_p = util::Point3(0.10128650732346, 0.79742698535309, 0.);
-    qd.d_shapes = getShapes(qd.d_p);
-    qd.d_derShapes = getDerShapes(qd.d_p);
-    qd.d_J = ident_mat;
-    qd.d_detJ = 1.;
-    d_quads.push_back(qd);
-    // point 7
-    qd.d_w = 0.5 * 0.12593918054483;
-    qd.d_p = util::Point3(0.79742698535309, 0.10128650732346, 0.);
+    qd.d_w = w2;
+    qd.d_p = util::Point3(c, c, c);
     qd.d_shapes = getShapes(qd.d_p);
     qd.d_derShapes = getDerShapes(qd.d_p);
     qd.d_J = ident_mat;

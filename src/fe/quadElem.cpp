@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "quadElem.h"
-
 #include "util/feElementDefs.h"  // global definition of elements
 
 fe::QuadElem::QuadElem(size_t order)

@@ -96,6 +96,16 @@ double hatFunctionQuick(const double &x, const double &x_min,
 double linearStepFunc(const double &x, const double &x1, const double &x2);
 
 /*!
+ * @brief Compute derivative of linear step function
+ *
+ * @param x  Point in real line
+ * @param x1 Point such that function is linear with slope 1 in [0, x1)
+ * @param x2 Point such that function is constant in [x1, x1 + x2)
+ * @return value Derivative of step function at x
+ */
+double derLinearStepFunc(const double &x, const double &x1, const double &x2);
+
+/*!
  * @brief Compute gaussian function in 1-d
  *
  * Guassian (1-d) function: \f$ f(r) = a \exp(-\frac{r^2}{\beta}). \f$
@@ -146,6 +156,23 @@ double gaussian2d(const util::Point3 &x, const size_t &dof,
  */
 double doubleGaussian2d(const util::Point3 &x, const size_t &dof,
                         const std::vector<double> &params);
+
+/*!
+ * @brief Get vector with plus or minus 1 depending on the sign of component
+ * of another vectory
+ *
+ * @param v Vector from which a new vector is created
+ * @return vec Vector
+ */
+util::Point3 signVector(const util::Point3 &v);
+
+/*!
+ * @brief Get determinant of 3-d matrix
+ *
+ * @param rows Three rows of matrix
+ * @return det Determinant
+ */
+double getDeterminant(const std::vector<util::Point3> &rows);
 
 } // namespace function
 

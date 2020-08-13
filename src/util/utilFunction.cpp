@@ -7,11 +7,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "utilFunction.h"
-
-#include <cmath>     // definition of sin, cosine etc
-#include <iostream>  // cerr
-
 #include "compare.h"  // compare functions
+#include <cmath>      // definition of sin, cosine etc
+#include <iostream>   // cerr
 
 double util::function::hatFunction(const double &x, const double &x_min,
                                    const double &x_max) {
@@ -47,26 +45,22 @@ double util::function::hatFunctionQuick(const double &x, const double &x_min,
 
 double util::function::linearStepFunc(const double &x, const double &x1,
                                       const double &x2) {
-  //
-  // a = floor(x/(x1+x2))
-  // xl = a * (x1 + x2), xm = xl + x1, xr = xm + x2
-  // fl = a * x1
-  //
-  // At xl, value of the function is = period number \times x1
-  //
-  // From xl to xm, the function grows linear with slope 1
-  // so the value in between [xl, xm) will be
-  // fl + (x - xl) = a*x1 + (x - a*(x1+x2)) = x - a*x2
-  //
-  // In [xm, xr) function is constant and the value is
-  // fl + (xm - xl) = a*x1 + (xl + x1 - xl) = (a+1)*x1
-
   double period = std::floor(x / (x1 + x2));
 
   if (util::compare::definitelyLessThan(x, period * (x1 + x2) + x1))
     return x - period * x2;
   else
     return (period + 1.) * x1;
+}
+
+double util::function::derLinearStepFunc(const double &x, const double &x1,
+                                         const double &x2) {
+  double period = std::floor(x / (x1 + x2));
+
+  if (util::compare::definitelyLessThan(x, period * (x1 + x2) + x1))
+    return 1.;
+  else
+    return 0.;
 }
 
 double util::function::gaussian(const double &r, const double &a,
@@ -105,4 +99,24 @@ double util::function::doubleGaussian2d(const util::Point3 &x,
              x.dist(util::Point3(params[2], params[3], 0.)), params[9],
              params[8]) *
              params[6 + dof];
+}
+
+util::Point3 util::function::signVector(const util::Point3 &v) {
+  auto r = util::Point3(1., 1., 1.);
+  if (util::compare::definitelyLessThan(v.d_x, 0.)) r.d_x = -1.;
+  if (util::compare::definitelyLessThan(v.d_y, 0.)) r.d_y = -1.;
+  if (util::compare::definitelyLessThan(v.d_z, 0.)) r.d_z = -1.;
+
+  return r;
+}
+
+double util::function::getDeterminant(const std::vector<util::Point3> &rows) {
+  double a =
+      rows[0].d_x * (rows[1].d_y * rows[2].d_z - rows[1].d_z * rows[2].d_y);
+  double b =
+      rows[0].d_y * (rows[1].d_x * rows[2].d_z - rows[1].d_z * rows[2].d_x);
+  double c =
+      rows[0].d_z * (rows[1].d_x * rows[2].d_y - rows[1].d_y * rows[2].d_x);
+
+  return a - b + c;
 }

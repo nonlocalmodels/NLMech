@@ -26,15 +26,17 @@ namespace geometry {
  */
 class BaseInterior {
 public:
+
   /*!
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
-   * @param dim Dimension of the domain
    * @param bbox Bounding box to determine the location of nodes relative to
    * the boundary
+   * @param no_fail_regions No fail regions other than the boundary of domain
    */
-  BaseInterior(inp::InteriorFlagsDeck *deck, const size_t dim,
-               std::pair<std::vector<double>, std::vector<double>> bbox);
+  BaseInterior(inp::InteriorFlagsDeck *deck,
+               std::pair<std::vector<double>, std::vector<double>> bbox,
+               std::vector<std::pair<std::string, std::vector<double>>> no_fail_regions);
 
   /*!
    * @brief Get interior flag of node
@@ -57,11 +59,11 @@ protected:
   /*! @brief Bounding box */
   std::pair<std::vector<double>, std::vector<double>> d_bbox;
 
+  /*! @brief Specify multiple regions in which we set no-fail flag to true */
+  std::vector<std::pair<std::string, std::vector<double>>> d_noFailRegions;
+
   /*! @brief Tolerance to check if the point is in interior/exterior */
   double d_noFailTol;
-
-  /*! @brief Dimension of the domain */
-  double d_dim;
 };
 
 /*!
@@ -75,12 +77,12 @@ public:
   /*!
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
-   * @param dim Dimension of the domain
    * @param bbox Bounding box to determine the location of nodes relative to
    * the boundary
    */
-  ComputeInterior(inp::InteriorFlagsDeck *deck, const size_t dim,
-      std::pair<std::vector<double>, std::vector<double>> bbox);
+  ComputeInterior(inp::InteriorFlagsDeck *deck,
+      std::pair<std::vector<double>, std::vector<double>> bbox,
+                  std::vector<std::pair<std::string, std::vector<double>>> no_fail_regions);
 
   /*!
    * @brief Returns true if node is in interior, false otherwise
@@ -105,14 +107,14 @@ public:
   /*!
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
-   * @param dim Dimension of the domain
    * @param nodes Pointer to the list of nodal coordinates
    * @param bbox Bounding box to determine the location of nodes relative to
    * the boundary
    */
-  DataInterior(inp::InteriorFlagsDeck *deck, const size_t dim,
+  DataInterior(inp::InteriorFlagsDeck *deck,
                const std::vector<util::Point3> *nodes,
-               std::pair<std::vector<double>, std::vector<double>> bbox);
+               std::pair<std::vector<double>, std::vector<double>> bbox,
+               std::vector<std::pair<std::string, std::vector<double>>> no_fail_regions);
 
   /*!
    * @brief Returns true if node is in interior, false otherwise
@@ -138,13 +140,12 @@ public:
   /*!
    * @brief Constructor
    * @param deck Input deck which contains user-specified information
-   * @param dim Dimension of the domain
    * @param nodes Pointer to the list of nodal coordinates
    * @param bbox Bounding box to determine the location of nodes relative to
    * the boundary
    */
   InteriorFlags(
-      inp::InteriorFlagsDeck *deck, const size_t dim, const std::vector<util::Point3> *nodes,
+      inp::InteriorFlagsDeck *deck, const std::vector<util::Point3> *nodes,
       const std::pair<std::vector<double>, std::vector<double>> &bbox);
 
   /*!

@@ -11,12 +11,78 @@
 
 #include "inp/decks/fractureDeck.h" // definition of EdgeCrack
 #include "util/point.h"             // definition of Point3
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace tools {
 
 namespace pp {
+
+/*!
+ * @brief Datatype for storing different components of J-integral energy
+ */
+struct JEnergy {
+
+  /*!
+   * @brief Contour integral of peridynamic strain energy along the direction
+   * of crack propagation
+   */
+  double d_contourPdStrainEnergy;
+
+  /*!
+   * @brief Contour integral of peridynamic strain energy and crack velocity
+   * product
+   */
+  double d_contourPdStrainEnergyRate;
+
+  /*!
+   * @brief Contour integral of kinetic energy and crack velocity
+   * product
+   */
+  double d_contourKineticEnergyRate;
+
+  /*!
+   * @brief Contour integral of product of elastic force and material
+   * velocity
+   */
+  double d_contourElasticInternalWorkRate;
+
+  /*!
+   * @brief Integral of  product of work done by internal peridynamic force and
+   * derivative of displacement along the crack tip over region inside and
+   * outside crack tip contour
+   */
+  double d_pdInternalWork;
+
+  /*!
+   * @brief Integral of  product of work done by internal peridynamic force and
+   * material velocity over region inside and outside crack tip contour
+   */
+  double d_pdInternalWorkRate;
+
+  /*!
+   * @brief LEFM fractur energy (Gc times crack velocity)
+   */
+  double d_lefmEnergyRate;
+
+  /*!
+   * @brief Strain energy and kinetic energy within contour
+   */
+  double d_pdStrainEnergyInsideContour;
+  double d_kineticEnergyInsideContour;
+
+  /*!
+   * @brief Peridynamic fracture energy
+   */
+  double d_pdFractureEnergy;
+
+  JEnergy()
+      : d_contourPdStrainEnergy(0.), d_contourPdStrainEnergyRate(0.),
+        d_contourKineticEnergyRate(0.), d_contourElasticInternalWorkRate(0.),
+        d_pdInternalWork(0.), d_pdInternalWorkRate(0.), d_lefmEnergyRate(0.),
+        d_pdStrainEnergyInsideContour(0.), d_kineticEnergyInsideContour(0.),
+        d_pdFractureEnergy(0.) {};
+};
 
 /*!
  * @brief Datatype used in sorting rectangles for crack tip search
@@ -49,10 +115,14 @@ struct CrackTipData {
   /*! @brief Crack tip velocity */
   util::Point3 d_v;
 
+  /*! @brief Crack direction */
+  util::Point3 d_d;
+
   /*!
    * @brief Constructor
    */
-  CrackTipData() : d_n(0), d_p(util::Point3()), d_v(util::Point3()){};
+  CrackTipData() : d_n(0), d_p(util::Point3()), d_v(util::Point3()), d_d
+  (util::Point3()){};
 
   /*!
    * @brief Constructor
@@ -60,9 +130,11 @@ struct CrackTipData {
    * @param n Output time step
    * @param p Crack tip location
    * @param v Crack tip velocity
+   * @param d Crack direction
    */
-  CrackTipData(size_t n, util::Point3 p, util::Point3 v)
-      : d_n(n), d_p(p), d_v(v){};
+  CrackTipData(size_t n, util::Point3 p, util::Point3 v, util::Point3 d =
+      util::Point3())
+      : d_n(n), d_p(p), d_v(v), d_d(d){};
 };
 
 /*!
@@ -75,7 +147,7 @@ struct TransformU {
   /*!
    * @brief Constructor
    */
-  TransformU() : d_scale(1.) {};
+  TransformU() : d_scale(1.){};
 };
 
 /*!
@@ -118,7 +190,7 @@ struct TransformVelocity {
   TransformVelocity()
       : d_markVAsZero(false), d_markVInRectGiven(false),
         d_markVPtsAreInCurrentConfig(false), d_symmetrizeV(false),
-        d_combineMarkV(false), d_symmLine(0.) {};
+        d_combineMarkV(false), d_symmLine(0.){};
 };
 
 /*!
@@ -146,7 +218,7 @@ struct ComputeStrain {
   /*!
    * @brief Constructor
    */
-  ComputeStrain() : d_computeStrain(false), d_magStrainTensor(false) {};
+  ComputeStrain() : d_computeStrain(false), d_magStrainTensor(false){};
 };
 
 /*!
@@ -182,9 +254,8 @@ struct FindCrackTip {
    * @brief Constructor
    */
   FindCrackTip()
-      : d_timet(0.), d_timeb(0.), d_updateCount(0),
-        d_minZAllowed(1.), d_maxZAllowed(50.), d_filet(nullptr),
-        d_fileb(nullptr){};
+      : d_timet(0.), d_timeb(0.), d_updateCount(0), d_minZAllowed(1.),
+        d_maxZAllowed(50.), d_filet(nullptr), d_fileb(nullptr){};
 };
 
 /*!
@@ -200,14 +271,14 @@ struct ComputeJIntegral {
   /*! @brief Specify file from which crack tip information is to be read */
   std::string d_crackTipFile;
 
-  /*! @brief Factor of horizon for defining contour */
-  std::vector<double> d_contourFactor;
-
   /*! @brief Data to hold crack tip information */
   std::vector<tools::pp::CrackTipData> d_crackTipData;
 
   /*! @brief File to write J integral data */
   FILE *d_file;
+
+  /*! @brief File to write J integral data */
+  FILE *d_fileNew;
 
   /*! @brief Set lateral component of velocity of crack tip as zero */
   bool d_setLateralCompVZero;
@@ -221,13 +292,24 @@ struct ComputeJIntegral {
    */
   double d_setLateralCompX;
 
+  /*! @brief Specify if we inclined crack */
+  bool d_isCrackInclined;
+
+  /*! @brief Factor of horizon for defining contour */
+  std::vector<double> d_contourFactor;
+
+  /*! @brief Contour given by rectangle */
+  bool d_contourGiven;
+  std::pair<util::Point3, util::Point3> d_contour;
+
   /*!
    * @brief Constructor
    */
   ComputeJIntegral()
-      : d_crackOrient(0), d_crackId(1), d_file(nullptr),
+      : d_crackOrient(0), d_crackId(1), d_file(nullptr), d_fileNew(nullptr),
         d_setLateralCompVZero(false), d_setLateralCompUZero(false),
-        d_setLateralCompX(0.){};
+        d_setLateralCompX(0.), d_isCrackInclined(false), d_contourGiven(false),
+        d_contour({util::Point3(), util::Point3()}){};
 };
 
 /*!
@@ -293,16 +375,19 @@ struct InstructionData {
   /*! @brief J-integral calculation operation */
   tools::pp::ComputeJIntegral *d_computeJInt_p;
 
+  /*! @brief Calculate in reference configuration */
+  bool d_calculateInRefConfig;
+
   InstructionData()
       : d_outFormat("vtu"), d_start(-1), d_end(-1), d_interval(1),
         d_outOnlyNodes(true), d_removeElements(false), d_transformU_p(nullptr),
         d_transformV_p(nullptr), d_compStrain_p(nullptr),
         d_findCrackTip_p(nullptr), d_damageAtNodes(false),
-        d_computeJInt_p(nullptr){};
+        d_computeJInt_p(nullptr), d_calculateInRefConfig(false) {};
 };
 
 } // namespace pp
 
 } // namespace tools
 
-#endif //TOOLS_PP_UTIL_H
+#endif // TOOLS_PP_UTIL_H

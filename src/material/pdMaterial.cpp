@@ -41,7 +41,7 @@ material::pd::Material::Material(inp::MaterialDeck *deck, const size_t &dim,
   }
 
   // create material class
-  if (d_deck_p->d_materialType == "PDBond") {
+  if (d_deck_p->d_materialType == "RNPBond") {
     d_stateActive = false;
     d_baseMaterial_p =
         new material::pd::RNPBond(d_deck_p, d_dimension, d_horizon,
@@ -56,14 +56,13 @@ material::pd::Material::Material(inp::MaterialDeck *deck, const size_t &dim,
 
   else {
     std::cerr << "Error: Material type = " << d_deck_p->d_materialType
-              << ". Currently only PDBond and PDState is implemented.\n";
+              << ". Currently only RNPBond and PDState is implemented.\n";
     exit(1);
   }
 }
 
 bool material::pd::Material::isStateActive() { return d_stateActive; }
 
-/*
 std::pair<double, double>
 material::pd::Material::getBondEF(const double &r, const double &s, bool &fs,
                                   const bool &break_bonds) {
@@ -74,7 +73,6 @@ material::pd::Material::getBondEF(const double &r, const double &s, bool &fs,
     return d_baseMaterial_p->getBondEFNoFail(
         r, s, d_baseInfluenceFn_p->getInfFn(r / d_horizon));
 }
-*/
 
 std::pair<util::Point3, double> material::pd::Material::getBondEF(size_t i,
                                                                   size_t j) {
@@ -131,4 +129,12 @@ double material::pd::Material::getMoment(const size_t &i) {
 
 inp::MaterialDeck *material::pd::Material::getMaterialDeck() {
   return d_deck_p;
+}
+
+std::string material::pd::Material::name() { return d_deck_p->d_materialType; }
+
+util::Point3 material::pd::Material::getBondForceDirection(const util::Point3 &dx,
+                                   const util::Point3 &du) const {
+
+  return d_baseMaterial_p->getBondForceDirection(dx, du);
 }

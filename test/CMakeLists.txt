@@ -31,6 +31,14 @@ set_tests_properties(quasistatic.1D.elastic PROPERTIES
 set_tests_properties(quasistatic.1D.elastic.compare PROPERTIES
   FIXTURES_SETUP quasistatic.1D.elastic)
 
+
+# 2D
+add_test(NAME quasistatic.2D.elastic.mesh 
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/mesh -i input_mesh.yaml -d 2
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/qsModel/2D
+)
+
+
 ##############################################################################
 # Tools
 ##############################################################################

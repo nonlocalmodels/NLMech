@@ -340,7 +340,7 @@ util::Point3 getDisplacementAtQuadPoint(
 
     auto xi = mesh2->getNode(i_found);
     auto yi = sim2->d_y[i_found];
-    auto i_elems = mesh2->getNodeElementConnectivity(i_found);
+    auto i_elems = mesh2->getElementConnectivity(i_found);
     int e_found = -1;
     for (unsigned long e_id : i_elems) {
       auto e_nodes = mesh2->getElementConnectivity(e_id);
@@ -416,13 +416,16 @@ util::Point3 getDisplacementAtQuadPoint(
       double theta_01 = (xip1 - xi).angle(x1 - xi);
       double theta_02 = (x1 - xi).angle(xim1 - xi);
 
+      std::vector<util::Point3> nodes = {x1, xip1, xim1};
+
       if (theta_01 <= 1.0E-4 or theta_02 <= 1.0E-4 or
           theta_01 >= M_PI - 1.0E-4 or theta_02 >= M_PI - 1.0E-4) {
         // Line 0 is either parallel to Line 1 or Line 2
 
+       
         // we now eliminate the other possibility
-        double area_T0 = std::abs(util::geometry::triangleArea(x1, xip1, xim1));
-        double area_T1 = std::abs(util::geometry::triangleArea(xi, xip1, xim1));
+        double area_T0 = std::abs(util::geometry::getTriangleArea(nodes));
+        double area_T1 = std::abs(util::geometry::getTriangleArea(nodes));
 
         if (area_T0 <= area_T1) {
           // we have found the element
@@ -436,8 +439,8 @@ util::Point3 getDisplacementAtQuadPoint(
       if (util::compare::definitelyLessThan(theta_01 - theta_12, 0.0) and
           util::compare::definitelyLessThan(theta_02 - theta_12, 0.0)) {
         // we now eliminate the other possibility
-        double area_T0 = std::abs(util::geometry::triangleArea(x1, xip1, xim1));
-        double area_T1 = std::abs(util::geometry::triangleArea(xi, xip1, xim1));
+        double area_T0 = std::abs(util::geometry::getTriangleArea(nodes));
+        double area_T1 = std::abs(util::geometry::getTriangleArea(nodes));
 
         if (util::compare::definitelyLessThan(area_T0 - area_T1, 0.0) or
             util::compare::essentiallyEqual(area_T0 - area_T1, 0.0)) {

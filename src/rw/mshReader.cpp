@@ -45,7 +45,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
   volumes->clear();
 
   // specify type of element to read
-  if (dim != 2 or dim != 3) {
+  if (dim != 2 and dim != 3) {
     std::cerr << "Error: MshReader currently only supports reading of "
                  "triangle/quadrangle elements in dimension 2 and tetragonal "
                  "elements in 3.\n";
@@ -134,19 +134,19 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
           // read element type we desire and for other element type
           // perform dummy read
-          if (type == util::msh_type_triangle) {
+          if (type == util::msh_type_triangle and dim == 2) {
             read_this_element = true;
             found_tri = true;
             element_type = util::vtk_type_triangle;
             num_nodes_con =
                 util::msh_map_element_to_num_nodes[util::msh_type_triangle];
-          } else if (type == util::msh_type_quadrangle) {
+          } else if (type == util::msh_type_quadrangle and dim == 2) {
             read_this_element = true;
             found_quad = true;
             element_type = util::vtk_type_quad;
             num_nodes_con =
                 util::msh_map_element_to_num_nodes[util::msh_type_quadrangle];
-          } else if (type == util::msh_type_tetrahedron) {
+          } else if (type == util::msh_type_tetrahedron and dim == 3) {
             read_this_element = true;
             found_tet = true;
             element_type = util::vtk_type_tetra;
@@ -154,6 +154,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
                 util::msh_map_element_to_num_nodes[util::msh_type_tetrahedron];
           }
 
+          // std::vector<size_t> e_nodes;
           if (read_this_element) {
             // read vertex of this element
             for (unsigned int i = 0; i < num_nodes_con; i++) {
@@ -162,9 +163,20 @@ void rw::reader::MshReader::readMesh(size_t dim,
               // substract 1 to correct the numbering convention
               enc->push_back(node_id - 1);
 
+              // e_nodes.push_back(node_id - 1);
+
               // fill the node-element connectivity table
               (*nec)[node_id - 1].push_back(elem_counter);
             }
+
+            // debug
+            //            std::cout << "(" << id << ", " << type << ", " <<
+            //            elem_counter
+            //                      << ") = ";
+            //            for (auto enode: e_nodes)
+            //              std::cout << enode << ";";
+            //            std::cout << "\n";
+
             // increment the element counter
             elem_counter++;
           } else {

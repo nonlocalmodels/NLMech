@@ -10,6 +10,7 @@
 #define MATERIAL_PD_MATERIAL_H
 
 #include "util/point.h" // definition of Point3
+#include "util/utilIO.h"
 #include <string>
 #include <vector>
 
@@ -80,8 +81,8 @@ public:
    * modified (needed to implement \a no-fail region
    * @return pair Pair of energy and force
    */
-  //std::pair<double, double> getBondEF(const double &r, const double &s,
-   //                                   bool &fs, const bool &break_bonds);
+  std::pair<double, double> getBondEF(const double &r, const double &s,
+                                     bool &fs, const bool &break_bonds);
 
   std::pair<util::Point3, double> getBondEF(size_t i , size_t j);
 
@@ -169,6 +170,51 @@ public:
    * @return deck Material deck
    */
   inp::MaterialDeck *getMaterialDeck();
+
+
+  /*!
+   * @brief Returns horizon
+   *
+   * @return horizon Horizon
+   */
+  const double getHorizon() const {
+    return d_horizon;
+  }
+
+  double getHorizon() {
+    return d_horizon;
+  }
+
+  /*!
+   * @brief Returns name of the material
+   * @return string Name
+   */
+  std::string name();
+
+
+  /*!
+   * @brief Get direction of bond force
+   * @return vector Unit vector along the bond force
+   */
+  util::Point3 getBondForceDirection(const util::Point3 &dx,
+                                             const util::Point3 &du) const;
+
+
+  std::string printStr(int nt, int lvl) const {
+
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- material::pd::Material --------" << std::endl
+        << std::endl;
+    oss << tabS << "Abstract class of peridynamic materials" << std::endl;
+    oss << tabS << "See RnpMaterial and PmbMaterial for implementation"
+        << std::endl;
+    oss << tabS << std::endl;
+
+    return oss.str();
+  }
+  void print(int nt, int lvl) const { std::cout << printStr(nt, lvl); }
+  void print() const { print(0, 0); }
 
 private:
 

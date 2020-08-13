@@ -103,7 +103,17 @@ public:
 
 	void update();
 
-private:
+        /*!
+         * @brief Get direction of bond force
+         * @return vector Unit vector along the bond force
+         */
+        util::Point3
+        getBondForceDirection(const util::Point3 &dx,
+                              const util::Point3 &du) const override {
+          return dx / dx.length();
+        }
+
+      private:
 	/*!
 	 * @brief Computes elastic state-based material parameters from elastic constants
 	 *

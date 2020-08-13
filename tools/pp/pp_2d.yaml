@@ -31,6 +31,13 @@ Compute:
   # some calculation such as Damage and crack tip may give better result with
   # u(n+1)
   Take_U_Plus: true
+  # set true if compute crack tip in reference configuration
+  # can be overridden by the set
+  # This makes the value default for all sets so if for some sets this is
+  # not desired, override it in the set
+  # Or if this is desired in only few sets, then remove this from here
+  # and just declare in the sets where this flag is required to be true
+  Calculate_In_Ref_Config: true
   Sets: 4
   Set_1:
     # Provide unique tag for filename for this set
@@ -96,6 +103,8 @@ Compute:
     Dt_Start: 70
     Dt_End: 100
     Output_Only_Nodes: true
+    # set true if compute crack tip in reference configuration
+    Calculate_In_Ref_Config: true
     # compute crack tip location and velocity
     Crack_Tip:
       # specify the max value of damage to be considered in searching for tip
@@ -137,5 +146,30 @@ Compute:
     # compute damage function Z
     Damage_Z: true
     Compress_Type: zlib
+  Set_6:
+    Tag_Filename: crack_energy
+    Dt_Start: 70
+    Dt_End: 100
+    # specify number of simulation files to skip.
+    Output_Only_Nodes: true
+    J_Integral:
+      # if below is set to true then the crack file must also provide the
+      # direction of crack.
+      # This forces compute to use J_integral function which takes dot product
+      # of arbitrary inclined crack line
+      Is_Crack_Inclined: true
+      # specify the orientation (initial) of crack
+      # -1 for vertical and 1 for horizontal
+      Crack_Orient: 1
+      # specify the id of crack (crack data file may have data for multiple
+      # cracks, so we need the id of crack for which J integral is computed)
+      Crack_Id: 1
+      # file which contains crack tip location and velocity
+      # format: <crack id>, <output step>, <tip x>, <tip y>, <tip vx>, <tip vy>,
+      # <tip dx> , <tip dy>
+      # Note that file must also provide direction of crack tip
+      Crack_Tip_File: crack_tip_data.csv
+      # factor (for x and y direction) to compute the contour around crack tip
+      Contour_Size: [4.0, 4.0]
 HPX:
   Partitions: 1

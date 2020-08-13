@@ -9,7 +9,7 @@ AUX_SOURCE_DIRECTORY(./src/2d SOURCES)
 
 # build Mesh library
 add_library(Mesh ${SOURCES})
-target_link_libraries(Mesh PUBLIC RW Util -lpthread)
+target_link_libraries(Mesh Util RW ${YAML_CPP_LIB} ${VTK_LIBRARIES})
 
 # Build mesh executible
 add_hpx_executable(mesh SOURCES mesh.cpp DEPENDENCIES Mesh)

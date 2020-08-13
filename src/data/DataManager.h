@@ -78,7 +78,7 @@ public:
 	/** @}*/
 
 	/**
-	 * @name Major simulation data
+	 * @name Access methods
 	 *
 	 */
 	/**@{*/
@@ -91,6 +91,12 @@ public:
 
 	std::vector<util::Point3>* getForceP();
 
+
+	void setReactionForceP(std::vector<util::Point3> *pointer);
+
+	std::vector<util::Point3>* getReactionForceP();
+
+
 	void setVelocityP(std::vector<util::Point3> *pointer);
 
 	std::vector<util::Point3>* getVelocityP();
@@ -99,7 +105,6 @@ public:
 
 	std::vector<util::Point3>* getDisplacementP();
 
-	/** @}*/
 
 	void setMeshP(fe::Mesh *d_mesh_p);
 
@@ -133,10 +138,6 @@ public:
 	std::vector<std::vector<double>>* getExtensionP();
 
 
-	void setStrainEnergyP(std::vector<float>* pointer);
-
-	std::vector<float>* getStrainEnergyP();
-
 	void setStressTensorP(std::vector<util::Matrix33>* pointer);
 
 	std::vector<util::Matrix33>* getStressTensorP();
@@ -148,6 +149,40 @@ public:
 	void setDilatationP(std::vector<double> * pointer);
 
 	std::vector<double> * getDilatationP();
+
+	void setTotalReactionForceP(std::vector<double>* pointer);
+
+	std::vector<double>* getTotalReactionForceP();
+
+	void setStrainEnergyP(std::vector<float>* pointer);
+
+	std::vector<float>* getStrainEnergyP();
+
+	void setWorkDoneP(std::vector<float>* pointer);
+
+	std::vector<float>* getWorkDoneP();
+
+	void setPhiP(std::vector<float>* pointer);
+
+	std::vector<float>* getPhiP();
+
+	void setDamageFunctionP(std::vector<float>* pointer);
+
+	std::vector<float>* getDamageFunctionP();
+
+	void setBBFractureEnergyP(std::vector<float>*pointer);
+
+    std::vector<float>* getBBFractureEnergyP();
+
+	void setFractureEnergyP(std::vector<float>*pointer);
+
+    std::vector<float>* getFractureEnergyP();
+
+	void setKineticEnergyP(std::vector<float>* pointer);
+
+	std::vector<float>* getKineticEnergyP();
+
+	/** @}*/
 
 private:
 
@@ -183,8 +218,11 @@ private:
 	/*! @brief Pointer to the force vector */
 	std::vector<util::Point3> *d_f_p = nullptr;
 
+	/*! @brief Pointer to the reaction force */
+	std::vector<util::Point3> *d_reaction_force_p = nullptr;
+
 	/*! @brief Extension for the neighborhood of each node */
-	std::vector<std::vector<double>>* d_extension_p;
+	std::vector<std::vector<double>>* d_extension_p = nullptr;
 
 	/*! @brief Dilatation of nodes */
 	std::vector<double> *d_dilatation_p = nullptr;
@@ -192,12 +230,34 @@ private:
 	/*! @brief Pointer to the strain energy vector */
 	std::vector<float>* d_e_p = nullptr;
 
+	/*! @brief Pointer to the total reaction force vector */
+	std::vector<double>* d_total_reaction_force_p = nullptr;
+
+	/*! @brief Pointer to the Work done on each of the nodes */
+  	std::vector<float>* d_w_p = nullptr;
+
+	/*! @brief Pointer to damage function \f$ \phi \f$ at the nodes */
+  	std::vector<float>* d_phi_p = nullptr;
+
+	/*! @brief Pointer to damage function \f$ Z \f$ at the nodes */
+  	std::vector<float>* d_Z_p = nullptr;
+
+	/*! @brief Pointer to bond-based fracture energy of the nodes */
+  	std::vector<float>* d_eFB_p = nullptr;
+
+	/*! @brief Pointer to fracture energy of the nodes */
+  	std::vector<float>* d_eF_p = nullptr;
+
+	/*! @brief Pointer to the kinetic energy of the nodes */
+	std::vector<float>* d_ke_p = nullptr;
+
 	/*! @brief Pointer to the strain tensor vector */
 	std::vector<util::Matrix33>* d_strain_p = nullptr;
 
 	/*! @brief Pointer to the stress tensor vector */
     std::vector<util::Matrix33>* d_stress_p = nullptr;
 
+	/** @}*/
 
 	/**@{*/
 
@@ -220,6 +280,7 @@ private:
 	/*! @brief Pointer to force Loading object */
 	loading::FLoading *d_fLoading_p = nullptr;
 
+	/** @}*/
 
 };
 

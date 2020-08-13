@@ -6,15 +6,11 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <Config.h>
-
-#include <algorithm>
-#include <hpx/config.hpp>
-#include <boost/program_options.hpp>
-#include <iostream>
-
 #include "src/1d/fe1D.h"
 #include "src/2d/fe2D.h"
+#include <algorithm>
+#include <boost/program_options.hpp>
+#include <iostream>
 
 int main(int argc, char *argv[]) {
   boost::program_options::options_description desc("Allowed options");
@@ -48,9 +44,7 @@ int main(int argc, char *argv[]) {
   }
 
   if (found != 2) {
-    std::cerr << argv[0] << " (Version " << MAJOR_VERSION << "."
-              << MINOR_VERSION << "." << UPDATE_VERSION << ")"
-              << " -i input.yaml -d 1" << std::endl;
+    std::cerr << argv[0] << " -i input.yaml -d 1" << std::endl;
     exit(1);
   }
 

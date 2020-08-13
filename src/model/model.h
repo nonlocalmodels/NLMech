@@ -12,6 +12,7 @@
 #include "util/matrix.h"    // definition of SymMatrix3
 #include "util/point.h"     // definition of Point3
 #include <vector>
+#include <atomic>
 
 /*!
  * @brief Collection of Peridynamic models
@@ -39,25 +40,6 @@ public:
   /*! @brief Constructor */
   Model();
 
-  /**
-   * @name Common methods
-   */
-  /**@{*/
-
-  /*!
-   * @brief Return the current time step
-   * @return Time step
-   */
-  virtual size_t currentStep();
-
-  /*!
-   * @brief Return the total energy
-   * @return Total energy
-   */
-  virtual float getEnergy();
-
-  /** @}*/
-
 protected:
   /**
    * @name Major simulation data
@@ -77,18 +59,19 @@ protected:
    *
    */
   /**@{*/
+  
+  /*! @brief Dilation
+   *
+   * In case of Rob's state based model, this will give the spherical
+   * (hydrostatic) strain
+   */
+  std::vector<double> d_thetaX;
 
-  /*! @brief Displacement of the nodes */
-  std::vector<util::Point3> d_u;
-
-  /*! @brief Velocity of the nodes */
-  std::vector<util::Point3> d_v;
-
-  /*! @brief Total force on the nodes */
-  std::vector<util::Point3> d_f;
-
-  /*! @brief Hydrostatic strains at the nodes */
-  std::vector<double> d_hS;
+  /*! @brief Weighted volume
+   *
+   * In case of Rob's state based model, this data is not required
+   */
+  std::vector<double> d_mX;
 
   /*! @brief Current time step */
   size_t d_n;
@@ -109,23 +92,6 @@ protected:
    */
   /**@{*/
 
-  /*! @brief Energy of the nodes */
-  std::vector<float> d_e;
-
-  /*! @brief Work done on each of the nodes */
-  std::vector<float> d_w;
-
-  /*! @brief Damage function \f$ \phi \f$ at the nodes */
-  std::vector<float> d_phi;
-
-  /*! @brief Damage function \f$ Z \f$ at the nodes */
-  std::vector<float> d_Z;
-
-  /*! @brief Fracture energy of the nodes */
-  std::vector<float> d_eF;
-
-  /*! @brief Bond-based fracture energy of the nodes */
-  std::vector<float> d_eFB;
 
   /*! @brief Strains of the nodes */
   std::vector<util::SymMatrix3> d_strain;

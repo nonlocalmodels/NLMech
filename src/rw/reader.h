@@ -10,7 +10,9 @@
 #define RW_READER_H
 
 #include "util/point.h"           // definition of Point3
-#include "util/matrix.h"           // definition of matrices
+#include "util/matrix.h"           // definition of
+#include "util/matrixBlaze.h"
+
 #include <vector>
 
 /*!
@@ -83,6 +85,22 @@ void readVtuFile(const std::string &filename, size_t dim,
 void readVtuFileNodes(const std::string &filename, size_t dim,
                  std::vector<util::Point3> *nodes, bool
                      ref_config = false);
+
+/*!
+ * @brief Checks if file has needed data
+ * @param filename Name of mesh file
+ * @param tag Tag name of data
+ * @return True If file has data otherwise false
+ */
+bool vtuHasPointData(const std::string &filename, const std::string &tag);
+
+/*!
+ * @brief Checks if file has needed data
+ * @param filename Name of mesh file
+ * @param tag Tag name of data
+ * @return True If file has data otherwise false
+ */
+bool vtuHasCellData(const std::string &filename, const std::string &tag);
 
 /*!
  * @brief Reads all point data tags

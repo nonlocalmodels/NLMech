@@ -7,15 +7,13 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "testGeomLib.h"
-
-#include <bitset>
-#include <fstream>
-#include <iostream>
-
 #include "../../external/csv.h"
 #include "geometry/fracture.h"
 #include "inp/decks/fractureDeck.h"
 #include "util/point.h"
+#include <bitset>
+#include <fstream>
+#include <iostream>
 
 static void readNodes(const std::string &filename,
                       std::vector<util::Point3> &nodes) {

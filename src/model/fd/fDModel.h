@@ -9,8 +9,9 @@
 #ifndef MODEL_FDMODEL_H
 #define MODEL_FDMODEL_H
 
+#include <model/model.h>
+#include <geometry/dampingGeom.h>
 #include <hpx/config.hpp>
-#include "../model.h"
 #include <vector>
 
 // forward declaration of class
@@ -24,6 +25,7 @@ namespace geometry {
 class Fracture;
 class InteriorFlags;
 class Neighbor;
+class DampingGeom;
 } // namespace geometry
 
 namespace inp {
@@ -45,6 +47,10 @@ namespace pd {
 class Material;
 }
 } // namespace material
+
+namespace data {
+class DataManager;
+} // namespace data
 
 namespace model {
 
@@ -80,24 +86,8 @@ public:
    */
   explicit FDModel(inp::Input *deck);
 
-  /**
-   * @name Common methods
-   */
-  /**@{*/
+  ~FDModel();
 
-  /*!
-   * @brief Return the current time step
-   * @return Time step
-   */
-  size_t currentStep() override;
-
-  /*!
-   * @brief Return the total energy
-   * @return Total energy
-   */
-  float getEnergy() override;
-
-  /** @}*/
 
 private:
   /*!
@@ -116,11 +106,21 @@ private:
    * @brief Computes peridynamic forces
    */
   void computeForces();
+  std::pair<double, util::Point3> computeForce(const size_t &i);
+  std::pair<double, util::Point3> computeForceState(const size_t &i);
 
   /*!
-   * @brief Computes hydrostatic strains for force calculation
+   * @brief Validates if there is a reaction force between node i and node j
+   * @param i id of node i 
+   * @param j id of node j
+   * @return is reaction force 
    */
-  void computeHydrostaticStrains();
+  bool is_reaction_force(size_t i, size_t j);
+
+  /*!
+   * @brief Computes damping force in absorbing layers
+   */
+  void computeDampingForces();
 
   /*!
    * @brief Computes postprocessing quantities
@@ -186,43 +186,6 @@ private:
    */
   /**@{*/
 
-  /*!
-   * @brief Output the snapshot of data at current time step
-   *
-   * Name of data in the output simulation file and the name of data they
-   * refer to
-   *
-   * Major simulation data
-   * | Name in output file          | Data name             |
-   * | ---------------------------- | --------------------- |
-   * | Displacement                 | model::Model::d_u     |
-   * | Velocity                     | model::Model::d_v     |
-   * | Force                        | model::Model::d_f * nodal volume |
-   * | time                         | model::Model::d_time  |
-   *
-   * Minor simulation data (if these are populated and computed). Calculation
-   * and population of post-processing data can be controlled by specifying
-   * memory control level in inp::PolicyDeck::d_memControlFlag or by
-   * enabling/disabling post-processing calculation in
-   * inp::PolicyDeck::d_enablePostProcessing.
-   * | Name in output file          | Data name             |
-   * | ---------------------------- | --------------------- |
-   * | Force_Density                | model::Model::d_f     |
-   * | Strain_Energy                | model::Model::d_e    |
-   * | Work_Done                    | model::Model::d_w     |
-   * | Fixity                       | fe::Mesh::getFixityP() |
-   * | Node_Volume                  | fe::Mesh::getNodalVolumeP() |
-   * | Damage_Phi                   | model::Model::d_phi    |
-   * | Damage_Z                     | model::Model::d_Z      |
-   * | Fracture_Perienergy_Bond     | model::Model::d_eFB    |
-   * | Fracture_Perienergy_Total    | model::Model::d_eF     |
-   * | Total_Energy                 | model::Model::d_Z      |
-   * | Total_Fracture_Perienergy_Bond   | model::Model::d_teFB   |
-   * | Total_Fracture_Perienergy_Total  | model::Model::d_teF    |
-   *
-   */
-  void output();
-
   /*! @brief Checks if output frequency is to be modified
    *
    * 1. If valid criteria is specified, this method modifes the current output
@@ -265,6 +228,9 @@ private:
    */
   void checkOutputCriteria();
 
+
+
+
   /** @}*/
 
 private:
@@ -277,6 +243,9 @@ private:
   /*! @brief Output deck */
   inp::OutputDeck *d_outputDeck_p;
 
+  /*! @brief Absorbing condition deck */
+  inp::AbsorbingCondDeck *d_absorbingCondDeck_p;
+
   /*! @brief flag to stop the simulation midway */
   bool d_stop;
 
@@ -288,14 +257,8 @@ private:
   /*! @brief Pointer to Mass matrix object containing mass matrix (if any) */
   fe::MassMatrix *d_massMatrix_p;
 
-  /*! @brief Pointer to Mesh object */
-  fe::Mesh *d_mesh_p;
-
   /*! @brief Pointer to Fracture object */
   geometry::Fracture *d_fracture_p;
-
-  /*! @brief Pointer to Neighbor object */
-  geometry::Neighbor *d_neighbor_p;
 
   /*! @brief Pointer to InteriorFlags object */
   geometry::InteriorFlags *d_interiorFlags_p;
@@ -309,14 +272,14 @@ private:
   /*! @brief Pointer to InitialCondition object */
   loading::InitialCondition *d_initialCondition_p;
 
-  /*! @brief Pointer to displacement Loading object */
-  loading::ULoading *d_uLoading_p;
-
-  /*! @brief Pointer to force Loading object */
-  loading::FLoading *d_fLoading_p;
-
   /*! @brief Pointer to Material object */
   material::pd::Material *d_material_p;
+
+  /*! @brief Pointer to Material object */
+  geometry::DampingGeom *d_dampingGeom_p;
+
+  /*! @brief Data Manager */
+	data::DataManager *d_dataManager_p;
 
   /** @}*/
 };

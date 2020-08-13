@@ -7,10 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "baseElem.h"
-
-#include <iostream>  // for std::cerr
-
 #include "util/feElementDefs.h"  // global definition of elements
+#include <iostream>              // for std::cerr
 
 fe::BaseElem::BaseElem(size_t order, size_t element_type)
     : d_quadOrder(order),

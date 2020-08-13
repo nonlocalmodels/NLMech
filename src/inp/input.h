@@ -43,6 +43,7 @@ struct PolicyDeck;
 struct QuadratureDeck;
 struct RestartDeck;
 struct SolverDeck;
+struct AbsorbingCondDeck;
 
 /**
  * \defgroup Input Input
@@ -156,6 +157,12 @@ public:
   inp::SolverDeck *getSolverDeck();
 
   /*!
+   * @brief Get the pointer to absorbing condition deck
+   * @return Pointer to AbsorbingCondDeck
+   */
+  inp::AbsorbingCondDeck *getAbsorbingCondDeck();
+
+  /*!
    * @brief Get the name of spatial discretization
    *
    * Return value can be of four kind:
@@ -243,6 +250,11 @@ private:
    * @brief Read data into restart deck and store its pointer
    */
   void setRestartDeck();
+
+  /*!
+   * @brief Read data into absorbing condition deck and store its pointer
+   */
+  void setAbsorbingCondDeck();
 
   /*!
    * @brief Read data into solver deck and store its pointer
@@ -367,6 +379,11 @@ private:
    * etc
    */
   inp::SolverDeck *d_solverDeck_p;
+
+  /*!
+   * @brief Pointer to deck holding absorbing condition related data
+   */
+  inp::AbsorbingCondDeck *d_absorbingCondDeck_p;
 
   /** @}*/
 };

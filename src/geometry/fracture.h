@@ -47,6 +47,15 @@ public:
   explicit Fracture(inp::FractureDeck *deck);
 
   /*!
+   * @brief Sets fracture state according to the crack data
+   * @param nodes Pointer to nodal coordinates
+   * @param neighbor_list Pointer to neighbor list
+   * @return True if one of the crack is applied at given time
+   */
+  bool addCrack(const double &time, const std::vector<util::Point3> *nodes,
+            const std::vector<std::vector<size_t>> *neighbor_list);
+
+  /*!
    * @brief Sets the bond state
    *
    * @param i Nodal id
@@ -62,7 +71,7 @@ public:
    * @param j Local id of bond in neighbor list of i
    * @return bool True if bond is fractured otherwise false
    */
-  bool getBondState(const size_t &i, const size_t &j);
+  bool getBondState(const size_t &i, const size_t &j) const;
 
   /*!
    * @brief Returns the list of bonds of node i
@@ -70,7 +79,7 @@ public:
    * @param i Nodal id
    * @return list Bonds of node i
    */
-  const std::vector<uint8_t> getBonds(const size_t &i);
+  const std::vector<uint8_t> getBonds(const size_t &i) const;
 
 private:
   /*!

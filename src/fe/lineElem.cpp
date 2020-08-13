@@ -7,12 +7,9 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "lineElem.h"
-
-#include <util/compare.h>
-
-#include <iostream>
-
 #include "util/feElementDefs.h"  // global definition of elements
+#include <iostream>
+#include <util/compare.h>
 
 fe::LineElem::LineElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_line) {

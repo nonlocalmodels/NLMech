@@ -19,9 +19,9 @@
 #include "loading/uLoading.h"
 #include "material/materials.h"
 #include "material/pdMaterial.h"
-#include "rw/writer.h"
 #include "util/parallel.h"
 #include "util/stateBasedHelperFunctions.h"
+#include "model/util.h"
 
 template <class T>
 model::QuasiStaticModel<T>::QuasiStaticModel(inp::Input *deck)
@@ -59,12 +59,20 @@ model::QuasiStaticModel<T>::QuasiStaticModel(inp::Input *deck)
 
 template <class T>
 model::QuasiStaticModel<T>::~QuasiStaticModel() {
-  delete d_dataManager_p;
+
+  delete d_dataManager_p->getMeshP();
+  delete d_dataManager_p->getDisplacementLoadingP();
+  delete d_dataManager_p->getForceLoadingP();
+  delete d_dataManager_p->getNeighborP();
+  delete d_dataManager_p->getVolumeCorrectionP();
+  delete d_dataManager_p->getBodyForceP();
+  delete d_dataManager_p->getDisplacementP();
+  delete d_dataManager_p->getVelocityP();
 
   for (size_t i = 0; i < d_osThreads; i++) delete d_dataManagers[i];
 
-  delete d_writer_p;
   delete d_material_p;
+  delete d_dataManager_p;
 }
 
 template <class T>
@@ -115,7 +123,15 @@ void model::QuasiStaticModel<T>::initHObjects() {
 
   // initialize material class
   std::cout << d_name << ": Initializing material object." << std::endl;
+  
   d_material_p = new T(d_input_p->getMaterialDeck(), d_dataManager_p);
+
+  // initialize jacobian matrix
+  size_t dim = d_dataManager_p->getModelDeckP()->d_dim;
+  size_t matrixSize = d_nnodes * dim;
+  std::cout << d_name << ": Initializing Jacobian matrix ("<< matrixSize << "x" << matrixSize << ")." << std::endl;
+  jacobian = util::Matrixij(matrixSize, matrixSize, 0.);
+
 
   for (size_t i = 0; i < d_osThreads; i++) {
     d_dataManagers[i]->setMeshP(d_dataManager_p->getMeshP());
@@ -136,11 +152,6 @@ void model::QuasiStaticModel<T>::initHObjects() {
     d_dataManagers[i]->setNeighborP(d_dataManager_p->getNeighborP());
   }
 
-  // Initialize writer class
-
-  d_writer_p =
-      new rw::writer::Writer(d_dataManager_p->getOutputDeckP()->d_outFormat,
-                             d_dataManager_p->getOutputDeckP()->d_compressType);
 
   if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Strain_Energy")) {
     d_dataManager_p->setStrainEnergyP(new std::vector<float>(d_nnodes, 0.));
@@ -159,6 +170,7 @@ void model::QuasiStaticModel<T>::initHObjects() {
 
 template <class T>
 void model::QuasiStaticModel<T>::computeForces(bool full) {
+  
   d_material_p->update();
 
   // Clear the vector
@@ -187,11 +199,11 @@ void model::QuasiStaticModel<T>::computeForces(bool full) {
           auto res = d_material_p->getBondEF(size_t(i), size_t(j_id));
 
           force_i += res.first *
-                     (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j_id];
+                     (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j_id];
 
           m.lock();
           (*d_dataManager_p->getForceP())[j_id] -=
-              res.first * (*d_dataManager_p->getMeshP()->getNodalVolumeP())[i];
+              res.first * (*d_dataManager_p->getMeshP()->getNodalVolumesP())[i];
           m.unlock();
 
           if (full) {
@@ -263,11 +275,11 @@ inline void model::QuasiStaticModel<T>::computePertubatedForces(size_t thread) {
           auto res = material->getBondEF(size_t(i), size_t(j_id));
 
           force_i += res.first *
-                     (*d_dataManager_p->getMeshP()->getNodalVolumeP())[j_id];
+                     (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j_id];
 
           m.lock();
           (*d_dataManagers[thread]->getForceP())[j_id] -=
-              res.first * (*d_dataManager_p->getMeshP()->getNodalVolumeP())[i];
+              res.first * (*d_dataManager_p->getMeshP()->getNodalVolumesP())[i];
           m.unlock();
         }
         // update force and energy
@@ -278,6 +290,8 @@ inline void model::QuasiStaticModel<T>::computePertubatedForces(size_t thread) {
       }  // loop over nodes
 
   );  // end of parallel for loop
+
+    delete material;
 }
 
 template <class T>
@@ -318,15 +332,16 @@ void model::QuasiStaticModel<T>::removeRow(util::VectorXi &vector,
 }
 
 template <class T>
-util::Matrixij model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
+void model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
   size_t dim = d_dataManager_p->getModelDeckP()->d_dim;
   size_t matrixSize = d_nnodes * dim;
 
-  jacobian = util::Matrixij(matrixSize, matrixSize, 0.);
+  jacobian.resize(matrixSize, matrixSize);
+  reset(jacobian);
 
   size_t slice = int(d_nnodes / d_osThreads);
 
-  // std::vector<hpx::future<void>> futures;
+  std::vector<hpx::future<void>> futures;
 
   for (size_t thread = 0; thread < d_osThreads; thread++) {
     size_t start = thread * slice;
@@ -337,16 +352,19 @@ util::Matrixij model::QuasiStaticModel<T>::assembly_jacobian_matrix() {
     else
       end = d_nnodes;
 
-    // futures.push_back(hpx::async([this,start,end,thread](){
+    futures.push_back(hpx::async([this,start,end,thread](){
 
     this->assembly_jacobian_matrix_part(start, end, thread);
 
-    //}));
+    }));
   }
 
-  // hpx::when_all(futures);
+   for(size_t i = 0; i < futures.size(); i++)
+    futures[i].get();
+   
+   
+   //hpx::when_all(futures);
 
-  return jacobian;
 }
 
 template <class T>
@@ -362,7 +380,30 @@ inline void model::QuasiStaticModel<T>::assembly_jacobian_matrix_part(
   util::parallel::copy<std::vector<util::Point3>>(
       *d_dataManager_p->getDisplacementP(), backup);
 
+  std::vector<size_t> removeId;
+
+  // get instance of ULoading class (d_uLoading_p)
+  auto bcD = d_dataManager_p->getDisplacementLoadingP()->d_bcData;
+  auto bcN = d_dataManager_p->getDisplacementLoadingP()->d_bcNodes;
+
+  // get fixed nodes
+  size_t k = 0;
+  for (auto bc : bcD) {
+    auto direction = bc.d_direction;
+
+    for (auto d : direction) {
+      for (auto n : bcN[k]) {
+        removeId.push_back(n);
+        
+      }
+    }
+    k++;
+  }
+
   for (size_t i = begin; i < end; i++) {
+
+    if (!(std::find(removeId.begin(), removeId.end(), i) != removeId.end())){
+
     std::vector<size_t> *traversal_list = new std::vector<size_t>;
 
     traversal_list->push_back(i);
@@ -410,6 +451,8 @@ inline void model::QuasiStaticModel<T>::assembly_jacobian_matrix_part(
 
         util::Point3 f_diff = force_p - force_m;
 
+        delete tmp;
+
         for (size_t s = 0; s < dim; s++) {
           if (r == s)
             jacobian(i * dim + r, j * dim + s) = f_diff[r] / (2. * eps);
@@ -417,13 +460,15 @@ inline void model::QuasiStaticModel<T>::assembly_jacobian_matrix_part(
       }
     }
 
-    traversal_list->clear();
+    delete traversal_list;
+  }
   }
 }
 
 template <class T>
 util::VectorXi model::QuasiStaticModel<T>::newton_step(util::VectorXi &res) {
-  util::Matrixij jacobian = this->assembly_jacobian_matrix();
+  
+  this->assembly_jacobian_matrix();
 
   std::vector<size_t> removeId;
 
@@ -441,6 +486,7 @@ util::VectorXi model::QuasiStaticModel<T>::newton_step(util::VectorXi &res) {
     for (auto d : direction) {
       for (auto n : bcN[k]) {
         removeId.push_back(n * dim + d - 1);
+        
       }
     }
     k++;
@@ -449,7 +495,10 @@ util::VectorXi model::QuasiStaticModel<T>::newton_step(util::VectorXi &res) {
   std::sort(removeId.begin(), removeId.end());
   std::reverse(removeId.begin(), removeId.end());
 
+
+
   for (auto id : removeId) {
+    
     this->removeRow(jacobian, id);
     this->removeCol(jacobian, id);
     this->removeRow(res, id);
@@ -500,7 +549,7 @@ void model::QuasiStaticModel<T>::solver() {
   double delta_t = d_dataManager_p->getModelDeckP()->d_dt;
 
   // Write the initial data
-  d_writer_p->write(d_input_p, d_dataManager_p, d_n, d_time);
+  model::Output(d_input_p, d_dataManager_p, d_n-1, d_time);
 
   for (; d_n < d_input_p->getModelDeck()->d_Nt + 1; d_n++) {
     d_time = d_n * delta_t;
@@ -526,11 +575,12 @@ void model::QuasiStaticModel<T>::solver() {
 
     while (residual >= d_input_p->getSolverDeck()->d_tol and
            iteration < d_input_p->getSolverDeck()->d_maxIters) {
+      
       auto new_disp = this->newton_step(res);
 
       hpx::parallel::for_loop(
           hpx::parallel::execution::par, 0, d_nnodes, [&](boost::uint64_t i) {
-            // for (size_t i = 0; i < d_nnodes; i++) {
+          
             size_t id = i * dim;
 
             (*d_dataManager_p->getDisplacementP())[i].d_x =
@@ -544,7 +594,7 @@ void model::QuasiStaticModel<T>::solver() {
                   (*d_dataManager_p->getDisplacementP())[i].d_z +
                   new_disp[id + 2];
           });
-      //}
+      
 
       this->computeForces();
 
@@ -557,8 +607,9 @@ void model::QuasiStaticModel<T>::solver() {
     }
 
     this->computeForces(true);
+    
     // Do the output after one successful iteration
-    d_writer_p->write(d_input_p, d_dataManager_p, d_n, d_time);
+   model::Output(d_input_p, d_dataManager_p, d_n, d_time);
   }
 }
 
@@ -571,31 +622,59 @@ util::VectorXi model::QuasiStaticModel<T>::computeResidual() {
   auto bcD = d_dataManager_p->getDisplacementLoadingP()->d_bcData;
 
   for (size_t i = 0; i < d_nnodes; i++) {
-    bool found = false;
+
+
+  std::vector<size_t> dimensions(dim);
+  std::iota (std::begin(dimensions), std::end(dimensions), 0);
 
     size_t k = 0;
     for (auto bc : bcD) {
-      for (auto d : bcN[k])
+      auto direction = bc.d_direction;
+
+      for (auto d : direction){
+      for (auto n : bcN[k])
 
         if (std::find(bcN[k].begin(), bcN[k].end(), i) != bcN[k].end()) {
-          found = true;
+          
+          //dimensions.erase(dimensions.begin()+d-1);
+          dimensions[d-1] = std::numeric_limits<std::size_t>::max();
+          
         }
-
+      }
       k++;
     }
+ 
 
-    if (found == false) {
+    
       size_t id = i * dim;
 
-      res[id] = (*d_dataManager_p->getForceP())[i][0] +
-                (*d_dataManager_p->getBodyForceP())[i][0];
-      if (dim >= 2)
+          for (auto e : dimensions){
+
+            
+
+      switch(e){
+
+        case 0:
+          res[id] = (*d_dataManager_p->getForceP())[i][0] +
+                (*d_dataManager_p->getBodyForceP())[i][0] / (*d_dataManager_p->getMeshP()->getNodalVolumesP())[i];
+          //std::cout << res[id] << std::endl;
+        break;
+        case 1:
         res[id + 1] = (*d_dataManager_p->getForceP())[i][1] +
-                      (*d_dataManager_p->getBodyForceP())[i][1];
-      if (dim == 3)
+                      (*d_dataManager_p->getBodyForceP())[i][1]  / (*d_dataManager_p->getMeshP()->getNodalVolumesP())[i];
+        //std::cout << res[id+1] << std::endl;
+        break;
+        case 2:
         res[id + 2] = (*d_dataManager_p->getForceP())[i][2] +
-                      (*d_dataManager_p->getBodyForceP())[i][2];
+                      (*d_dataManager_p->getBodyForceP())[i][2]  / (*d_dataManager_p->getMeshP()->getNodalVolumesP())[i];
+        break;
+        default:
+        break;
+
+      }
+
     }
+
   }
 
   return res;
