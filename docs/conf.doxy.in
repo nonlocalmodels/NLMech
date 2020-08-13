@@ -798,11 +798,13 @@ WARN_LOGFILE           =
 
 INPUT                  = ../src/main.cpp \
                          ../src/fe \
+                         ../src/data \
                          ../src/geometry \
                          ../src/inp \
                          ../src/loading \
                          ../src/material \
                          ../src/model \
+                         ../src/Config.h \
                          ../src/rw \
                          ../src/util \
                          ../src/test \
