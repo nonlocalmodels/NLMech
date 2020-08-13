@@ -33,6 +33,7 @@
 #include "inp/decks/restartDeck.h"
 #include "inp/decks/materialDeck.h"
 #include "inp/input.h"
+#include "inp/decks/loadingDeck.h"
 #include "inp/policy.h"
 #include "loading/fLoading.h"
 #include "loading/initialCondition.h"
@@ -65,6 +66,22 @@ model::FDModel::FDModel(inp::Input *deck)
     restart(deck);
   else
     run(deck);
+}
+
+model::FDModel::~FDModel(){
+
+  delete d_dataManager_p->getMeshP();
+  delete d_dataManager_p->getDisplacementLoadingP();
+  delete d_dataManager_p->getForceLoadingP();
+  delete d_dataManager_p->getNeighborP();
+
+  delete d_material_p;
+  delete d_fracture_p;
+  delete d_interiorFlags_p;
+  delete d_initialCondition_p;
+  delete d_dampingGeom_p;
+
+  delete d_dataManager_p;
 }
 
 void model::FDModel::run(inp::Input *deck) {

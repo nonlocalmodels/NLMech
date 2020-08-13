@@ -323,8 +323,6 @@ int util::geometry::direction(util::Point3 A, util::Point3 B, util::Point3 C) {
 
 bool util::geometry::isPointinCircle(util::Point3 A, util::Point3 center,
                                      double radius) {
-  std::cout << A.d_x << " " << A.d_y << " " << center.d_x << " " << center.d_y
-            << " " << radius << " " << (A - center).length() << std::endl;
 
   if ((A - center).length() <= radius) return true;
 

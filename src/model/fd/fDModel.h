@@ -86,6 +86,8 @@ public:
    */
   explicit FDModel(inp::Input *deck);
 
+  ~FDModel();
+
 
 private:
   /*!

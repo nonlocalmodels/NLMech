@@ -22,17 +22,10 @@ struct BCData {
    *
    * List of allowed values are:
    *
-<<<<<<< HEAD
-   * - \a rectangle
-   * - \a angled_rectangle
-   * - \a circle
-   * - \a torus
-=======
    * - \a line (1d)
    * - \a rectangle (2d)
    * - \a angled_rectangle (2d)
    * - \a cuboid (3d)
->>>>>>> master
    */
   std::string d_regionType;
 
