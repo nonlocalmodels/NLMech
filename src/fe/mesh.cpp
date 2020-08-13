@@ -32,8 +32,13 @@
 #include "util/utilIO.h"
 
 fe::Mesh::Mesh(size_t dim)
-    : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
-      d_h(0.), d_dim(dim) {}
+    : d_numNodes(0),
+      d_numElems(0),
+      d_eType(1),
+      d_eNumVertex(0),
+      d_numDofs(0),
+      d_h(0.),
+      d_dim(dim) {}
 
 fe::Mesh::Mesh(inp::MeshDeck *deck)
     : d_numNodes(0),
@@ -74,18 +79,14 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
   createData(d_filename, false, deck->d_isCentroidBasedDiscretization);
 
   // check if we need to compute mesh size
-  if (deck->d_computeMeshSize)
-    computeMeshSize();
+  if (deck->d_computeMeshSize) computeMeshSize();
 
   // check nodal volume
   size_t counter = 0;
   for (const auto &v : d_vol) {
-
     if (v < 0.01 * std::pow(d_h, d_dim)) {
-
-      std::cerr << "Error: Check nodal volume " << v
-                << " is less than " <<  0.01 * std::pow(d_h, d_dim)
-                << ", Node = " << counter
+      std::cerr << "Error: Check nodal volume " << v << " is less than "
+                << 0.01 * std::pow(d_h, d_dim) << ", Node = " << counter
                 << " at position = " << d_nodes[counter].printStr() << "\n";
 
       exit(1);
@@ -98,18 +99,14 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
 //
 // Utility functions
 //
-void fe::Mesh::createData(const std::string &filename, bool ref_config, bool
-is_centroid_based) {
-
+void fe::Mesh::createData(const std::string &filename, bool ref_config,
+                          bool is_centroid_based) {
   int file_type = -1;
 
   // find the extension of file and call correct reader
-  if (filename.substr(filename.find_last_of(".") + 1) == "csv")
-    file_type = 0;
-  if (filename.substr(filename.find_last_of(".") + 1) == "msh")
-    file_type = 1;
-  if (filename.substr(filename.find_last_of(".") + 1) == "vtu")
-    file_type = 2;
+  if (filename.substr(filename.find_last_of(".") + 1) == "csv") file_type = 0;
+  if (filename.substr(filename.find_last_of(".") + 1) == "msh") file_type = 1;
+  if (filename.substr(filename.find_last_of(".") + 1) == "vtu") file_type = 2;
 
   if (d_spatialDiscretization != "finite_difference" and file_type == 0) {
     std::cerr << "Error: For discretization = " << d_spatialDiscretization
@@ -180,7 +177,6 @@ is_centroid_based) {
 
   // see if we want to create nodes at the centroid of each element
   if (d_numElems > 0 and is_centroid_based and is_fd) {
-
     nodesAtCentroid();
 
     // above also computes the vol so we do need to compute again
@@ -283,15 +279,13 @@ void fe::Mesh::computeVol() {
           // get volume of element
           double vol = quads->elemSize(e_nodes);
           double factor = 1.;
-          if (vol < 0.)
-            factor = -1.;
+          if (vol < 0.) factor = -1.;
 
           std::vector<fe::QuadData> qds = quads->getQuadDatas(e_nodes);
 
           // compute V_e and add it to volume
-          for (auto qd : qds)
-            v += qd.d_shapes[loc_i] * factor * qd.d_w;
-        } // loop over elements
+          for (auto qd : qds) v += qd.d_shapes[loc_i] * factor * qd.d_w;
+        }  // loop over elements
 
         // update
         this->d_vol[i] = v;
@@ -301,28 +295,21 @@ void fe::Mesh::computeVol() {
 }
 
 void fe::Mesh::computeBBox() {
-  std::vector<double> p1(3,0.);
-  std::vector<double> p2(3,0.);
-  for (const auto& x : d_nodes) {
-    if (util::compare::definitelyLessThan(x.d_x, p1[0]))
-      p1[0] = x.d_x;
-    if (util::compare::definitelyLessThan(x.d_y, p1[1]))
-      p1[1] = x.d_y;
-    if (util::compare::definitelyLessThan(x.d_z, p1[2]))
-      p1[2] = x.d_z;
-    if (util::compare::definitelyLessThan(p2[0], x.d_x))
-      p2[0] = x.d_x;
-    if (util::compare::definitelyLessThan(p2[1], x.d_y))
-      p2[1] = x.d_y;
-    if (util::compare::definitelyLessThan(p2[2], x.d_z))
-      p2[2] = x.d_z;
+  std::vector<double> p1(3, 0.);
+  std::vector<double> p2(3, 0.);
+  for (const auto &x : d_nodes) {
+    if (util::compare::definitelyLessThan(x.d_x, p1[0])) p1[0] = x.d_x;
+    if (util::compare::definitelyLessThan(x.d_y, p1[1])) p1[1] = x.d_y;
+    if (util::compare::definitelyLessThan(x.d_z, p1[2])) p1[2] = x.d_z;
+    if (util::compare::definitelyLessThan(p2[0], x.d_x)) p2[0] = x.d_x;
+    if (util::compare::definitelyLessThan(p2[1], x.d_y)) p2[1] = x.d_y;
+    if (util::compare::definitelyLessThan(p2[2], x.d_z)) p2[2] = x.d_z;
   }
 
   d_bbox = std::make_pair(p1, p2);
 }
 
 void fe::Mesh::computeMeshSize() {
-
   double guess = 0.;
   if (d_nodes.size() < 2) {
     d_h = 0.;
@@ -336,15 +323,13 @@ void fe::Mesh::computeMeshSize() {
         double val = d_nodes[i].dist(d_nodes[j]);
 
         if (util::compare::definitelyLessThan(val, 1.0E-12)) {
-
           std::cout << "Check nodes are too close = "
-                    << util::io::printStr<util::Point3>({d_nodes[i],
-                                                         d_nodes[j]})
+                    << util::io::printStr<util::Point3>(
+                           {d_nodes[i], d_nodes[j]})
                     << "\n";
           std::cout << "Distance = " << val << ", guess = " << guess << "\n";
         }
-        if (util::compare::definitelyLessThan(val, guess))
-          guess = val;
+        if (util::compare::definitelyLessThan(val, guess)) guess = val;
       }
 
   d_h = guess;
@@ -426,12 +411,12 @@ void fe::Mesh::readFromFile(inp::MeshDeck *deck, const std::string &filename) {
 }
 
 std::string fe::Mesh::printStr(int nt, int lvl) const {
-
   auto tabS = util::io::getTabS(nt);
   std::ostringstream oss;
   oss << tabS << "------- Mesh --------" << std::endl << std::endl;
   oss << tabS << "Dimension = " << d_dim << std::endl;
-  oss << tabS << "Spatial discretization type = " << d_spatialDiscretization << std::endl;
+  oss << tabS << "Spatial discretization type = " << d_spatialDiscretization
+      << std::endl;
   oss << tabS << "Mesh size = " << d_h << std::endl;
   oss << tabS << "Num nodes = " << d_numNodes << std::endl;
   oss << tabS << "Num elements = " << d_numElems << std::endl;
@@ -446,7 +431,6 @@ std::string fe::Mesh::printStr(int nt, int lvl) const {
 }
 
 void fe::Mesh::nodesAtCentroid() {
-
   // store node data temporarily
   auto fe_nodes = std::vector<util::Point3>(d_numElems, util::Point3());
 
@@ -454,8 +438,7 @@ void fe::Mesh::nodesAtCentroid() {
   d_vol = std::vector<double>(d_numElems, 0.);
 
   // loop over all elements
-  for (size_t i=0; i<d_numElems; i++) {
-
+  for (size_t i = 0; i < d_numElems; i++) {
     // get nodes of this element
     auto el_nodes = getElementConnectivityNodes(i);
 

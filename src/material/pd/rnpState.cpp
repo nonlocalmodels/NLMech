@@ -155,7 +155,6 @@ std::pair<double, double> material::pd::RNPState::getBondEF(const double &r,
                                                             const double &s,
                                                             const double &J,
                                                             bool &fs) {
-
   // check if fracture state of the bond need to be updated
   if (d_irrevBondBreak && !fs &&
       util::compare::definitelyGreaterThan(std::abs(s), d_factorSc * getSc(r)))
@@ -164,10 +163,10 @@ std::pair<double, double> material::pd::RNPState::getBondEF(const double &r,
   // if bond is not fractured, return energy and force from nonlinear potential
   // otherwise return energy of fractured bond, and zero force
   if (!fs)
-    return std::make_pair(J * d_C * (1. - std::exp(-d_beta * r * s * s)) /
-                              d_invFactor,
-                          J * 4. * s * d_C * d_beta *
-                              std::exp(-d_beta * r * s * s) / d_invFactor);
+    return std::make_pair(
+        J * d_C * (1. - std::exp(-d_beta * r * s * s)) / d_invFactor,
+        J * 4. * s * d_C * d_beta * std::exp(-d_beta * r * s * s) /
+            d_invFactor);
   else
     return std::make_pair(J * d_C / d_invFactor, 0.);
 }

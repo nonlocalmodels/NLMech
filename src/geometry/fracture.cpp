@@ -36,20 +36,17 @@ geometry::Fracture::Fracture(
             this->computeFracturedBondFd(i, &crack, nodes, &ns);
             crack.d_crackAcrivated = true;
           }
-      }); // end of parallel for loop
+      });  // end of parallel for loop
 
   f.get();
 }
 
-bool geometry::Fracture::addCrack(const double &time, const
-                               std::vector<util::Point3> *nodes,
+bool geometry::Fracture::addCrack(
+    const double &time, const std::vector<util::Point3> *nodes,
     const std::vector<std::vector<size_t>> *neighbor_list) {
-
   for (auto &crack : d_fractureDeck_p->d_cracks) {
     if (!crack.d_crackAcrivated) {
-
       if (util::compare::definitelyLessThan(crack.d_activationTime, time)) {
-
         std::cout << "Fracture: Adding crack to system\n";
 
         auto f = hpx::parallel::for_loop(
@@ -59,7 +56,7 @@ bool geometry::Fracture::addCrack(const double &time, const
               auto ns = (*neighbor_list)[i];
 
               this->computeFracturedBondFd(i, &crack, nodes, &ns);
-            }); // end of parallel for loop
+            });  // end of parallel for loop
 
         f.get();
 
@@ -174,16 +171,15 @@ void geometry::Fracture::setBondState(const size_t &i, const size_t &j,
 }
 
 bool geometry::Fracture::getBondState(const size_t &i, const size_t &j) const {
-
-//  if (d_fracture.size() <= i) {
-//    std::cerr << "Error: Size of fracture data is invalid\n";
-//    exit(1);
-//  }
-//
-//  if (d_fracture[i].size() <= j / 8) {
-//    std::cerr << "Error: Size of fracture data at node " << i << " is invalid\n";
-//    exit(1);
-//  }
+  //  if (d_fracture.size() <= i) {
+  //    std::cerr << "Error: Size of fracture data is invalid\n";
+  //    exit(1);
+  //  }
+  //
+  //  if (d_fracture[i].size() <= j / 8) {
+  //    std::cerr << "Error: Size of fracture data at node " << i << " is
+  //    invalid\n"; exit(1);
+  //  }
 
   auto bond = d_fracture[i][j / 8];
   return bond >> (j % 8) & 1UL;

@@ -60,22 +60,20 @@ int main(int argc, char *argv[]) {
   // check which model to run
   if (deck->getSpatialDiscretization() == "finite_difference") {
     if (deck->getModelDeck()->d_timeDiscretization == "quasi_static") {
-      
       if (deck->getMaterialDeck()->d_materialType == "ElasticState") {
         model::QuasiStaticModel<material::pd::ElasticState> QuasiStaticModel(
             deck);
-    }
-    }
-    else if (deck->getModelDeck()->d_timeDiscretization ==
+      }
+    } else if (deck->getModelDeck()->d_timeDiscretization ==
                "central_difference") {
       model::FDModel fdModel(deck);
 
     }
-    
+
     else {
-    std::cerr << "Warning no model for the spatial discretization specified!"
-              << std::endl;
-              exit(1);
+      std::cerr << "Warning no model for the spatial discretization specified!"
+                << std::endl;
+      exit(1);
     }
   }
 
