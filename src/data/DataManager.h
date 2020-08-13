@@ -51,14 +51,15 @@ namespace util {
 class StateBasedHelperFunctions;
 } // namespace material
 
+/*! @brief Data mamanger to share the global simulation data between the classes */
 namespace data {
 
-static size_t instances = 0;
-
+/*! @brief Data manager to collect the global simulation data */
 class DataManager {
 
 public:
 
+	/*! @brief Constructor */
 	DataManager();
 
 	/**
