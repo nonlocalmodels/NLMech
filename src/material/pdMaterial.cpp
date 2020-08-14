@@ -63,9 +63,8 @@ material::pd::Material::Material(inp::MaterialDeck *deck, const size_t &dim,
 
 bool material::pd::Material::isStateActive() { return d_stateActive; }
 
-std::pair<double, double>
-material::pd::Material::getBondEF(const double &r, const double &s, bool &fs,
-                                  const bool &break_bonds) {
+std::pair<double, double> material::pd::Material::getBondEF(
+    const double &r, const double &s, bool &fs, const bool &break_bonds) {
   if (break_bonds)
     return d_baseMaterial_p->getBondEF(
         r, s, d_baseInfluenceFn_p->getInfFn(r / d_horizon), fs);
@@ -133,8 +132,7 @@ inp::MaterialDeck *material::pd::Material::getMaterialDeck() {
 
 std::string material::pd::Material::name() { return d_deck_p->d_materialType; }
 
-util::Point3 material::pd::Material::getBondForceDirection(const util::Point3 &dx,
-                                   const util::Point3 &du) const {
-
+util::Point3 material::pd::Material::getBondForceDirection(
+    const util::Point3 &dx, const util::Point3 &du) const {
   return d_baseMaterial_p->getBondForceDirection(dx, du);
 }

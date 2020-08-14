@@ -17,15 +17,13 @@
 material::pd::ElasticState::ElasticState(inp::MaterialDeck *deck,
                                          data::DataManager *dataManager)
     : BaseMaterial(dim, horizon) {
-
-
   d_dataManager_p = dataManager;
 
   horizon = dataManager->getModelDeckP()->d_horizon;
 
   dim = dataManager->getModelDeckP()->d_dim;
 
-  if(dataManager->getStateBasedHelperFunctionsP() != nullptr)
+  if (dataManager->getStateBasedHelperFunctionsP() != nullptr)
     delete dataManager->getStateBasedHelperFunctionsP();
 
   // Compute the PD properties from CCM
@@ -36,8 +34,7 @@ material::pd::ElasticState::ElasticState(inp::MaterialDeck *deck,
                  "to compute the elastic state-based peridynamic properties."
               << std::endl;
     exit(1);
-  }
-;
+  };
   dataManager->setStateBasedHelperFunctionsP(
       new util::StateBasedHelperFunctions(d_dataManager_p, this->d_factor2D));
   d_deck = deck;
@@ -64,40 +61,36 @@ void material::pd::ElasticState::computeParameters(inp::MaterialDeck *deck,
     exit(1);
   }
 
-
   // Check for the 2D case (We need the shear modulus and the Bulk modulus)
 
-  //Check if Young's moduls and Bulk modulus are provided
+  // Check if Young's moduls and Bulk modulus are provided
   if (util::compare::definitelyGreaterThan(deck->d_matData.d_E, 0.) &&
-      util::compare::definitelyGreaterThan(deck->d_matData.d_K, 0.) && dim == 2 )  {
-         std::cout << "Warning: Both Young's modulus E and Bulk modulus K are "
+      util::compare::definitelyGreaterThan(deck->d_matData.d_K, 0.) &&
+      dim == 2) {
+    std::cout << "Warning: Both Young's modulus E and Bulk modulus K are "
                  "provided.\n";
-        std::cout << "Warning: To compute the elastic state-based peridynamic "
+    std::cout << "Warning: To compute the elastic state-based peridynamic "
                  "parameters, we only require the Bulk modulus K.\n";
 
-      exit(1);
+    exit(1);
+  }
 
-      }
-
-  if (util::compare::approximatelyEqual(deck->d_matData.d_K,-1.) && dim == 2 ){
-      std::cout << "Warning: To compute the elastic state-based peridynamic "
+  if (util::compare::approximatelyEqual(deck->d_matData.d_K, -1.) && dim == 2) {
+    std::cout << "Warning: To compute the elastic state-based peridynamic "
                  "parameters, we require the Bulk modulus K.\n";
-      exit(1);
-
+    exit(1);
   }
 
-  if (util::compare::approximatelyEqual(deck->d_matData.d_G,-1.) && dim == 2 ){
-      std::cout << "Warning: To compute the elastic state-based peridynamic "
+  if (util::compare::approximatelyEqual(deck->d_matData.d_G, -1.) && dim == 2) {
+    std::cout << "Warning: To compute the elastic state-based peridynamic "
                  "parameters, we require the Shear modulus G.\n";
-      exit(1);
-
+    exit(1);
   }
 
-
-  deck->d_matData.d_nu = deck->d_matData.toNuClassical(deck->d_matData.d_K,deck->d_matData.d_G);
+  deck->d_matData.d_nu =
+      deck->d_matData.toNuClassical(deck->d_matData.d_K, deck->d_matData.d_G);
 
   deck->d_matData.d_mu = deck->d_matData.d_G;
-
 
   // Compute the correction for 2D plain strain
   if (deck->d_isPlaneStrain == false and dim == 2)
@@ -105,12 +98,10 @@ void material::pd::ElasticState::computeParameters(inp::MaterialDeck *deck,
     this->d_factor2D =
         (2. * deck->d_matData.d_nu - 1.) / (deck->d_matData.d_nu - 1.);
 
-  else
-  {
-     this->d_factor2D = 1;
+  else {
+    this->d_factor2D = 1;
   }
-  
- 
+
   /* Todo Add damage to elastic model
    if (util::compare::definitelyLessThan(deck->d_matData.d_Gc, 0.) &&
    util::compare::definitelyLessThan(deck->d_matData.d_KIc, 0.)) {
@@ -483,7 +474,6 @@ util::Matrix33 material::pd::ElasticState::getStress(size_t i) {
 double material::pd::ElasticState::getFactor2D() { return d_factor2D; }
 
 void material::pd::ElasticState::update() {
-
   if (d_dataManager_p->getStateBasedHelperFunctionsP() != nullptr)
     delete d_dataManager_p->getStateBasedHelperFunctionsP();
 

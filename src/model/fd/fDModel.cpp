@@ -43,11 +43,10 @@
 #include "material/materials.h"
 #include "model/util.h"
 
-
 // standard lib
 #include <fstream>
 
-model::FDModel::FDModel(inp::Input *deck) 
+model::FDModel::FDModel(inp::Input *deck)
     : d_massMatrix_p(nullptr),
       d_fracture_p(nullptr),
       d_interiorFlags_p(nullptr),
@@ -68,8 +67,7 @@ model::FDModel::FDModel(inp::Input *deck)
     run(deck);
 }
 
-model::FDModel::~FDModel(){
-
+model::FDModel::~FDModel() {
   delete d_dataManager_p->getMeshP();
   delete d_dataManager_p->getDisplacementLoadingP();
   delete d_dataManager_p->getForceLoadingP();
@@ -111,10 +109,14 @@ void model::FDModel::restart(inp::Input *deck) {
   // read displacement and velocity from restart file
 
   if (d_outputDeck_p->d_outFormat == "vtu")
-    rw::reader::readVtuFileRestart(d_restartDeck_p->d_file, d_dataManager_p->getDisplacementP(), d_dataManager_p->getVelocityP(),
+    rw::reader::readVtuFileRestart(d_restartDeck_p->d_file,
+                                   d_dataManager_p->getDisplacementP(),
+                                   d_dataManager_p->getVelocityP(),
                                    d_dataManager_p->getMeshP()->getNodesP());
   else if (d_outputDeck_p->d_outFormat == "msh")
-    rw::reader::readMshFileRestart(d_restartDeck_p->d_file, d_dataManager_p->getDisplacementP(), d_dataManager_p->getVelocityP(),
+    rw::reader::readMshFileRestart(d_restartDeck_p->d_file,
+                                   d_dataManager_p->getDisplacementP(),
+                                   d_dataManager_p->getVelocityP(),
                                    d_dataManager_p->getMeshP()->getNodesP());
 
   // integrate in time
@@ -129,27 +131,30 @@ void model::FDModel::initHObjects() {
   d_dataManager_p->setMeshP(new fe::Mesh(d_input_p->getMeshDeck()));
   d_dataManager_p->getMeshP()->clearElementData();
 
-  std::cout << "number of nodes = " << d_dataManager_p->getMeshP()->getNumNodes()
-            << " number of elements = " << d_dataManager_p->getMeshP()->getNumElements() << "\n";
+  std::cout << "number of nodes = "
+            << d_dataManager_p->getMeshP()->getNumNodes()
+            << " number of elements = "
+            << d_dataManager_p->getMeshP()->getNumElements() << "\n";
 
   // create neighbor list
   std::cout << "FDModel: Creating neighbor list.\n";
 
-  d_dataManager_p->setNeighborP(new geometry::Neighbor(d_modelDeck_p->d_horizon,
-                                        d_input_p->getNeighborDeck(),
-                                        d_dataManager_p->getMeshP()->getNodesP()));
+  d_dataManager_p->setNeighborP(new geometry::Neighbor(
+      d_modelDeck_p->d_horizon, d_input_p->getNeighborDeck(),
+      d_dataManager_p->getMeshP()->getNodesP()));
 
   // create fracture data
   std::cout << "FDModel: Creating edge crack if any and modifying the "
                "fracture state of bonds.\n";
-  d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck(),
-                                        d_dataManager_p->getMeshP()->getNodesP(),
-                                        d_dataManager_p->getNeighborP()->getNeighborsListP());
+  d_fracture_p = new geometry::Fracture(
+      d_input_p->getFractureDeck(), d_dataManager_p->getMeshP()->getNodesP(),
+      d_dataManager_p->getNeighborP()->getNeighborsListP());
 
   // create interior flags
   std::cout << "FDModel: Creating interior flags for nodes.\n";
   d_interiorFlags_p = new geometry::InteriorFlags(
-      d_input_p->getInteriorFlagsDeck(), d_dataManager_p->getMeshP()->getNodesP(),
+      d_input_p->getInteriorFlagsDeck(),
+      d_dataManager_p->getMeshP()->getNodesP(),
       d_dataManager_p->getMeshP()->getBoundingBox());
 
   // initialize initial condition class
@@ -159,9 +164,11 @@ void model::FDModel::initHObjects() {
 
   // initialize loading class
   std::cout << "FDModel: Initializing displacement loading object.\n";
-  d_dataManager_p->setDisplacementLoadingP(new loading::ULoading(d_input_p->getLoadingDeck(), d_dataManager_p->getMeshP()));
+  d_dataManager_p->setDisplacementLoadingP(new loading::ULoading(
+      d_input_p->getLoadingDeck(), d_dataManager_p->getMeshP()));
   std::cout << "FDModel: Initializing force loading object.\n";
-  d_dataManager_p->setForceLoadingP(new loading::FLoading(d_input_p->getLoadingDeck(), d_dataManager_p->getMeshP()));
+  d_dataManager_p->setForceLoadingP(new loading::FLoading(
+      d_input_p->getLoadingDeck(), d_dataManager_p->getMeshP()));
 
   // initialize material class
   std::cout << "FDModel: Initializing material object.\n";
@@ -171,7 +178,8 @@ void model::FDModel::initHObjects() {
 
   // initialize damping geometry class
   std::cout << "FDModel: Initializing damping object.\n";
-  d_dampingGeom_p = new geometry::DampingGeom(d_absorbingCondDeck_p, d_dataManager_p->getMeshP());
+  d_dampingGeom_p = new geometry::DampingGeom(d_absorbingCondDeck_p,
+                                              d_dataManager_p->getMeshP());
 }
 
 void model::FDModel::init() {
@@ -184,16 +192,20 @@ void model::FDModel::init() {
   size_t nnodes = d_dataManager_p->getMeshP()->getNumNodes();
 
   // initialize major simulation data
-  d_dataManager_p->setDisplacementP(new std::vector<util::Point3>(nnodes, util::Point3()));
-  d_dataManager_p->setVelocityP(new std::vector<util::Point3>(nnodes, util::Point3()));
-  d_dataManager_p->setForceP(new std::vector<util::Point3>(nnodes, util::Point3()));
+  d_dataManager_p->setDisplacementP(
+      new std::vector<util::Point3>(nnodes, util::Point3()));
+  d_dataManager_p->setVelocityP(
+      new std::vector<util::Point3>(nnodes, util::Point3()));
+  d_dataManager_p->setForceP(
+      new std::vector<util::Point3>(nnodes, util::Point3()));
 
   // Allocate the reaction force vector
   if (d_outputDeck_p->isTagInOutput("Reaction_Force") or
       d_outputDeck_p->isTagInOutput("Total_Reaction_Force")) {
-
-    d_dataManager_p->setReactionForceP(new std::vector<util::Point3>(nnodes, util::Point3()));
-    d_dataManager_p->setTotalReactionForceP(new std::vector<double>(nnodes, 0.));
+    d_dataManager_p->setReactionForceP(
+        new std::vector<util::Point3>(nnodes, util::Point3()));
+    d_dataManager_p->setTotalReactionForceP(
+        new std::vector<double>(nnodes, 0.));
   }
 
   // check material type and if needed update policy
@@ -204,22 +216,25 @@ void model::FDModel::init() {
 
   // check if we need to compute and store hydrostatic strain
   if (d_material_p->isStateActive()) {
-    d_thetaX = std::vector<double>(d_dataManager_p->getMeshP()->getNumNodes(), 0.);
+    d_thetaX =
+        std::vector<double>(d_dataManager_p->getMeshP()->getNumNodes(), 0.);
 
     if (d_material_p->name() == "PDState") {
-      d_mX = std::vector<double>(d_dataManager_p->getMeshP()->getNumNodes(), 0.);
+      d_mX =
+          std::vector<double>(d_dataManager_p->getMeshP()->getNumNodes(), 0.);
 
       material::computeStateMx(
-          d_dataManager_p->getMeshP()->getNodes(), d_dataManager_p->getMeshP()->getNodalVolumes(),
-          d_dataManager_p->getNeighborP()->getNeighborsList(), d_dataManager_p->getMeshP()->getMeshSize(),
-          d_material_p, d_mX, true);
+          d_dataManager_p->getMeshP()->getNodes(),
+          d_dataManager_p->getMeshP()->getNodalVolumes(),
+          d_dataManager_p->getNeighborP()->getNeighborsList(),
+          d_dataManager_p->getMeshP()->getMeshSize(), d_material_p, d_mX, true);
     }
   }
 
   // initialize minor simulation data
   if (this->d_policy_p->populateData("Model_d_e"))
-  d_dataManager_p->setKineticEnergyP(new std::vector<float>(d_dataManager_p->getMeshP()->getNumNodes(), 0.));
-
+    d_dataManager_p->setKineticEnergyP(
+        new std::vector<float>(d_dataManager_p->getMeshP()->getNumNodes(), 0.));
 
   if (d_policy_p->enablePostProcessing()) {
     std::string tag = "Strain_Energy";
@@ -250,7 +265,8 @@ void model::FDModel::init() {
     tag = "Damage_Z";
     if (d_outputDeck_p->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_Z"))
-      d_dataManager_p->setDamageFunctionP(new std::vector<float>(nnodes, 0.0));
+        d_dataManager_p->setDamageFunctionP(
+            new std::vector<float>(nnodes, 0.0));
     } else
       d_policy_p->addToTags(0, "Model_d_Z");
 
@@ -258,14 +274,16 @@ void model::FDModel::init() {
     if (d_outputDeck_p->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_eF"))
 
-      d_dataManager_p->setFractureEnergyP(new std::vector<float>(nnodes, 0.0));
+        d_dataManager_p->setFractureEnergyP(
+            new std::vector<float>(nnodes, 0.0));
     } else
       d_policy_p->addToTags(0, "Model_d_eF");
 
     tag = "Fracture_Perienergy_Bond";
     if (d_outputDeck_p->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_eFB"))
-      d_dataManager_p->setBBFractureEnergyP(new std::vector<float>(nnodes, 0.0));
+        d_dataManager_p->setBBFractureEnergyP(
+            new std::vector<float>(nnodes, 0.0));
     } else
       d_policy_p->addToTags(0, "Model_d_eFB");
   }
@@ -292,9 +310,11 @@ void model::FDModel::init() {
       d_outputDeck_p->d_outCriteria.clear();
     } else {
       // check if damage data is allocated
-      if ((*d_dataManager_p->getDamageFunctionP()).size() != d_dataManager_p->getMeshP()->getNumNodes()) {
+      if ((*d_dataManager_p->getDamageFunctionP()).size() !=
+          d_dataManager_p->getMeshP()->getNumNodes()) {
         // allocate data
-        d_dataManager_p->setDamageFunctionP(new std::vector<float>(nnodes, 0.0));
+        d_dataManager_p->setDamageFunctionP(
+            new std::vector<float>(nnodes, 0.0));
 
         // check if damage data is allowed in policy class (if not, need to
         // allow it by removing the tag related to damage function Z)
@@ -307,11 +327,17 @@ void model::FDModel::init() {
 
 void model::FDModel::integrate() {
   // apply initial loading
-  if (d_n == 0) d_initialCondition_p->apply(d_dataManager_p->getDisplacementP(), d_dataManager_p->getVelocityP(), d_dataManager_p->getMeshP());
+  if (d_n == 0)
+    d_initialCondition_p->apply(d_dataManager_p->getDisplacementP(),
+                                d_dataManager_p->getVelocityP(),
+                                d_dataManager_p->getMeshP());
 
   // apply loading
-  d_dataManager_p->getDisplacementLoadingP()->apply(d_time, d_dataManager_p->getDisplacementP(), d_dataManager_p->getVelocityP(), d_dataManager_p->getMeshP());
-  d_dataManager_p->getForceLoadingP()->apply(d_time, d_dataManager_p->getForceP(), d_dataManager_p->getMeshP());
+  d_dataManager_p->getDisplacementLoadingP()->apply(
+      d_time, d_dataManager_p->getDisplacementP(),
+      d_dataManager_p->getVelocityP(), d_dataManager_p->getMeshP());
+  d_dataManager_p->getForceLoadingP()->apply(
+      d_time, d_dataManager_p->getForceP(), d_dataManager_p->getMeshP());
 
   // internal forces
   computeForces();
@@ -320,7 +346,7 @@ void model::FDModel::integrate() {
   if (d_n == 0) {
     if (d_policy_p->enablePostProcessing()) computePostProcFields();
 
-    model::Output(d_input_p, d_dataManager_p,d_n,d_time);
+    model::Output(d_input_p, d_dataManager_p, d_n, d_time);
   }
 
   // start time integration
@@ -336,7 +362,7 @@ void model::FDModel::integrate() {
         (d_n >= d_outputDeck_p->d_dtOut)) {
       if (d_policy_p->enablePostProcessing()) computePostProcFields();
 
-      model::Output(d_input_p, d_dataManager_p,d_n,d_time);
+      model::Output(d_input_p, d_dataManager_p, d_n, d_time);
 
       // exit early if output criteria has changed the d_stop flag to true
       if (d_stop) return;
@@ -346,8 +372,9 @@ void model::FDModel::integrate() {
     }
 
     // check for crack application
-    if (d_fracture_p->addCrack(d_time, d_dataManager_p->getMeshP()->getNodesP(),
-                               d_dataManager_p->getNeighborP()->getNeighborsListP())) {
+    if (d_fracture_p->addCrack(
+            d_time, d_dataManager_p->getMeshP()->getNodesP(),
+            d_dataManager_p->getNeighborP()->getNeighborsListP())) {
       // check if we need to modify the output frequency
       checkOutputCriteria();
     }
@@ -367,19 +394,24 @@ void model::FDModel::integrateCD() {
           auto u_old = (*d_dataManager_p->getDisplacementP())[i].d_x;
 
           (*d_dataManager_p->getDisplacementP())[i].d_x +=
-              fact * (*this->d_dataManager_p->getForceP())[i].d_x + delta_t * (*d_dataManager_p->getVelocityP())[i].d_x;
+              fact * (*this->d_dataManager_p->getForceP())[i].d_x +
+              delta_t * (*d_dataManager_p->getVelocityP())[i].d_x;
 
-          (*d_dataManager_p->getVelocityP())[i].d_x = ((*d_dataManager_p->getDisplacementP())[i].d_x - u_old) / delta_t;
+          (*d_dataManager_p->getVelocityP())[i].d_x =
+              ((*d_dataManager_p->getDisplacementP())[i].d_x - u_old) / delta_t;
         }
 
         if (dim > 1)
           if (this->d_dataManager_p->getMeshP()->isNodeFree(i, 1)) {
             auto u_old = (*d_dataManager_p->getDisplacementP())[i].d_y;
 
-           (*d_dataManager_p->getDisplacementP())[i].d_y +=
-                fact * (*this->d_dataManager_p->getForceP())[i].d_y + delta_t * (*d_dataManager_p->getVelocityP())[i].d_y;
+            (*d_dataManager_p->getDisplacementP())[i].d_y +=
+                fact * (*this->d_dataManager_p->getForceP())[i].d_y +
+                delta_t * (*d_dataManager_p->getVelocityP())[i].d_y;
 
-            (*d_dataManager_p->getVelocityP())[i].d_y = ((*d_dataManager_p->getDisplacementP())[i].d_y - u_old) / delta_t;
+            (*d_dataManager_p->getVelocityP())[i].d_y =
+                ((*d_dataManager_p->getDisplacementP())[i].d_y - u_old) /
+                delta_t;
           }
 
         if (dim > 2)
@@ -387,9 +419,12 @@ void model::FDModel::integrateCD() {
             auto u_old = (*d_dataManager_p->getDisplacementP())[i].d_z;
 
             (*d_dataManager_p->getDisplacementP())[i].d_z +=
-                fact * (*this->d_dataManager_p->getForceP())[i].d_z + delta_t * (*d_dataManager_p->getVelocityP())[i].d_z;
+                fact * (*this->d_dataManager_p->getForceP())[i].d_z +
+                delta_t * (*d_dataManager_p->getVelocityP())[i].d_z;
 
-            (*d_dataManager_p->getVelocityP())[i].d_z = ((*d_dataManager_p->getDisplacementP())[i].d_z - u_old) / delta_t;
+            (*d_dataManager_p->getVelocityP())[i].d_z =
+                ((*d_dataManager_p->getDisplacementP())[i].d_z - u_old) /
+                delta_t;
           }
 
         // reset force
@@ -404,8 +439,11 @@ void model::FDModel::integrateCD() {
   d_time += d_modelDeck_p->d_dt;
 
   // boundary condition
-  d_dataManager_p->getDisplacementLoadingP()->apply(d_time, d_dataManager_p->getDisplacementP(), d_dataManager_p->getVelocityP(), d_dataManager_p->getMeshP());
-  d_dataManager_p->getForceLoadingP()->apply(d_time, d_dataManager_p->getForceP(), d_dataManager_p->getMeshP());
+  d_dataManager_p->getDisplacementLoadingP()->apply(
+      d_time, d_dataManager_p->getDisplacementP(),
+      d_dataManager_p->getVelocityP(), d_dataManager_p->getMeshP());
+  d_dataManager_p->getForceLoadingP()->apply(
+      d_time, d_dataManager_p->getForceP(), d_dataManager_p->getMeshP());
 
   // internal forces
   computeForces();
@@ -422,24 +460,30 @@ void model::FDModel::integrateVerlet() {
 
         // modify dofs which are not marked fixed
         if (this->d_dataManager_p->getMeshP()->isNodeFree(i, 0)) {
-          (*d_dataManager_p->getVelocityP())[i].d_x += fact * (*this->d_dataManager_p->getForceP())[i].d_x;
-          (*d_dataManager_p->getDisplacementP())[i].d_x += delta_t * (*d_dataManager_p->getVelocityP())[i].d_x;
+          (*d_dataManager_p->getVelocityP())[i].d_x +=
+              fact * (*this->d_dataManager_p->getForceP())[i].d_x;
+          (*d_dataManager_p->getDisplacementP())[i].d_x +=
+              delta_t * (*d_dataManager_p->getVelocityP())[i].d_x;
         }
 
         if (dim > 1)
           if (this->d_dataManager_p->getMeshP()->isNodeFree(i, 1)) {
-            (*d_dataManager_p->getVelocityP())[i].d_y += fact * (*this->d_dataManager_p->getForceP())[i].d_y;
-            (*d_dataManager_p->getDisplacementP())[i].d_y += delta_t * (*d_dataManager_p->getVelocityP())[i].d_y;
+            (*d_dataManager_p->getVelocityP())[i].d_y +=
+                fact * (*this->d_dataManager_p->getForceP())[i].d_y;
+            (*d_dataManager_p->getDisplacementP())[i].d_y +=
+                delta_t * (*d_dataManager_p->getVelocityP())[i].d_y;
           }
 
         if (dim > 2)
           if (this->d_dataManager_p->getMeshP()->isNodeFree(i, 2)) {
-            (*d_dataManager_p->getVelocityP())[i].d_z += fact * (*this->d_dataManager_p->getForceP())[i].d_z;
-            (*d_dataManager_p->getDisplacementP())[i].d_z += delta_t * (*d_dataManager_p->getVelocityP())[i].d_z;
+            (*d_dataManager_p->getVelocityP())[i].d_z +=
+                fact * (*this->d_dataManager_p->getForceP())[i].d_z;
+            (*d_dataManager_p->getDisplacementP())[i].d_z +=
+                delta_t * (*d_dataManager_p->getVelocityP())[i].d_z;
           }
 
         // reset force
-       (*this->d_dataManager_p->getForceP())[i] = util::Point3();
+        (*this->d_dataManager_p->getForceP())[i] = util::Point3();
       });  // end of parallel for loop
 
   f.get();
@@ -450,8 +494,11 @@ void model::FDModel::integrateVerlet() {
   d_time += d_modelDeck_p->d_dt;
 
   // boundary condition
-  d_dataManager_p->getDisplacementLoadingP()->apply(d_time, d_dataManager_p->getDisplacementP(), d_dataManager_p->getVelocityP(), d_dataManager_p->getMeshP());
-  d_dataManager_p->getForceLoadingP()->apply(d_time, d_dataManager_p->getForceP(), d_dataManager_p->getMeshP());
+  d_dataManager_p->getDisplacementLoadingP()->apply(
+      d_time, d_dataManager_p->getDisplacementP(),
+      d_dataManager_p->getVelocityP(), d_dataManager_p->getMeshP());
+  d_dataManager_p->getForceLoadingP()->apply(
+      d_time, d_dataManager_p->getForceP(), d_dataManager_p->getMeshP());
 
   // internal forces
   computeForces();
@@ -466,15 +513,18 @@ void model::FDModel::integrateVerlet() {
 
         // modify dofs which are not marked fixed
         if (this->d_dataManager_p->getMeshP()->isNodeFree(i, 0))
-          (*d_dataManager_p->getVelocityP())[i].d_x += fact * (*this->d_dataManager_p->getForceP())[i].d_x;
+          (*d_dataManager_p->getVelocityP())[i].d_x +=
+              fact * (*this->d_dataManager_p->getForceP())[i].d_x;
 
         if (dim > 1)
           if (this->d_dataManager_p->getMeshP()->isNodeFree(i, 1))
-            (*d_dataManager_p->getVelocityP())[i].d_y += fact * (*this->d_dataManager_p->getForceP())[i].d_y;
+            (*d_dataManager_p->getVelocityP())[i].d_y +=
+                fact * (*this->d_dataManager_p->getForceP())[i].d_y;
 
         if (dim > 2)
           if (this->d_dataManager_p->getMeshP()->isNodeFree(i, 2))
-            (*d_dataManager_p->getVelocityP())[i].d_z += fact * (*this->d_dataManager_p->getForceP())[i].d_z;
+            (*d_dataManager_p->getVelocityP())[i].d_z +=
+                fact * (*this->d_dataManager_p->getForceP())[i].d_z;
       });  // end of parallel for loop
 
   f.get();
@@ -488,19 +538,22 @@ void model::FDModel::computeForces() {
   if (d_material_p->isStateActive()) {
     if (d_material_p->name() == "RNPState")
       material::computeHydrostaticStrain(
-          nodes,(*d_dataManager_p->getDisplacementP()), volumes, d_dataManager_p->getNeighborP()->getNeighborsList(),
-          d_dataManager_p->getMeshP()->getMeshSize(), d_material_p, d_fracture_p, d_thetaX,
-          d_modelDeck_p->d_dim, true);
+          nodes, (*d_dataManager_p->getDisplacementP()), volumes,
+          d_dataManager_p->getNeighborP()->getNeighborsList(),
+          d_dataManager_p->getMeshP()->getMeshSize(), d_material_p,
+          d_fracture_p, d_thetaX, d_modelDeck_p->d_dim, true);
     else if (d_material_p->name() == "PDState") {
       // need to update the fracture state of bonds
-      material::updateBondFractureData(nodes, (*d_dataManager_p->getDisplacementP()),
-                                       d_dataManager_p->getNeighborP()->getNeighborsList(),
-                                       d_material_p, d_fracture_p, true);
+      material::updateBondFractureData(
+          nodes, (*d_dataManager_p->getDisplacementP()),
+          d_dataManager_p->getNeighborP()->getNeighborsList(), d_material_p,
+          d_fracture_p, true);
 
-      material::computeStateThetax(nodes, (*d_dataManager_p->getDisplacementP()), volumes,
-                                   d_dataManager_p->getNeighborP()->getNeighborsList(),
-                                   d_dataManager_p->getMeshP()->getMeshSize(), d_material_p,
-                                   d_fracture_p, d_mX, d_thetaX, true);
+      material::computeStateThetax(
+          nodes, (*d_dataManager_p->getDisplacementP()), volumes,
+          d_dataManager_p->getNeighborP()->getNeighborsList(),
+          d_dataManager_p->getMeshP()->getMeshSize(), d_material_p,
+          d_fracture_p, d_mX, d_thetaX, true);
     }
   }
 
@@ -509,7 +562,8 @@ void model::FDModel::computeForces() {
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
         d_dataManager_p->getMeshP()->getNumNodes(),
         [this](boost::uint64_t i) {
-          (*this->d_dataManager_p->getForceP())[i] += this->computeForceState(i).second;
+          (*this->d_dataManager_p->getForceP())[i] +=
+              this->computeForceState(i).second;
         }  // loop over nodes
     );     // end of parallel for loop
     f.get();
@@ -518,7 +572,8 @@ void model::FDModel::computeForces() {
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
         d_dataManager_p->getMeshP()->getNumNodes(),
         [this](boost::uint64_t i) {
-          (*this->d_dataManager_p->getForceP())[i] += this->computeForce(i).second;
+          (*this->d_dataManager_p->getForceP())[i] +=
+              this->computeForce(i).second;
         }  // loop over nodes
     );     // end of parallel for loop
     f.get();
@@ -593,14 +648,15 @@ std::pair<double, util::Point3> model::FDModel::computeForce(const size_t &i) {
     if (is_reaction_force(i, j_id) and
         (d_outputDeck_p->isTagInOutput("Reaction_Force") or
          d_outputDeck_p->isTagInOutput("Total_Reaction_Force")))
-          (*d_dataManager_p->getReactionForceP())[i] +=
+      (*d_dataManager_p->getReactionForceP())[i] +=
           (this->d_dataManager_p->getMeshP()->getNodalVolume(i) * scalar_f *
            this->d_material_p->getBondForceDirection(xj - xi, uj - ui));
 
   }  // loop over neighboring nodes
 
   if (d_outputDeck_p->isTagInOutput("Total_Reaction_Force"))
-    (*d_dataManager_p->getTotalReactionForceP())[i] = (*d_dataManager_p->getReactionForceP())[i].length();
+    (*d_dataManager_p->getTotalReactionForceP())[i] =
+        (*d_dataManager_p->getReactionForceP())[i].length();
 
   return std::make_pair(energy_i, force_i);
 }
@@ -718,7 +774,8 @@ void model::FDModel::computeDampingForces() {
           force_i =
               util::Point3(coeff * v_i.d_x, coeff * v_i.d_y, coeff * v_i.d_z);
         } else {
-          coeff *= delta_t * delta_t * (*this->d_dataManager_p->getForceP())[i].length();
+          coeff *= delta_t * delta_t *
+                   (*this->d_dataManager_p->getForceP())[i].length();
           auto sv = util::function::signVector(v_i);
 
           force_i.d_x = -coeff * sv.d_x;
@@ -729,7 +786,7 @@ void model::FDModel::computeDampingForces() {
         }
 
         // add to the force
-       (*this->d_dataManager_p->getForceP())[i] += force_i;
+        (*this->d_dataManager_p->getForceP())[i] += force_i;
       }  // loop over nodes
 
   );  // end of parallel for loop
@@ -743,8 +800,10 @@ void model::FDModel::computePostProcFields() {
   // if work done is to be computed, get the external forces
   std::vector<util::Point3> f_ext;
   if (d_policy_p->populateData("Model_d_w")) {
-    f_ext = std::vector<util::Point3>(d_dataManager_p->getMeshP()->getNumNodes(), util::Point3());
-    d_dataManager_p->getForceLoadingP()->apply(d_time, &f_ext, d_dataManager_p->getMeshP());
+    f_ext = std::vector<util::Point3>(
+        d_dataManager_p->getMeshP()->getNumNodes(), util::Point3());
+    d_dataManager_p->getForceLoadingP()->apply(d_time, &f_ext,
+                                               d_dataManager_p->getMeshP());
   }
 
   // local data for kinetic energy
@@ -779,7 +838,8 @@ void model::FDModel::computePostProcFields() {
         auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
 
         // inner loop over neighbors
-        const auto &i_neighs = this->d_dataManager_p->getNeighborP()->getNeighbors(i);
+        const auto &i_neighs =
+            this->d_dataManager_p->getNeighborP()->getNeighbors(i);
         for (size_t j = 0; j < i_neighs.size(); j++) {
           auto j_id = i_neighs[j];
 
@@ -829,7 +889,8 @@ void model::FDModel::computePostProcFields() {
         //          this->d_material_p->getStateEnergy(this->d_hS[i]);
 
         if (this->d_policy_p->populateData("Model_d_e"))
-          (*d_dataManager_p->getStrainEnergyP())[i] = (energy_i + hydro_energy_i) * voli;
+          (*d_dataManager_p->getStrainEnergyP())[i] =
+              (energy_i + hydro_energy_i) * voli;
 
         if (this->d_policy_p->populateData("Model_d_w"))
           (*d_dataManager_p->getWorkDoneP())[i] = ui.dot(f_ext[i]);
@@ -840,17 +901,22 @@ void model::FDModel::computePostProcFields() {
 
         if (this->d_policy_p->populateData("Model_d_eF") &&
             util::compare::definitelyGreaterThan(z, 1.0 - 1.0E-10))
-          (*d_dataManager_p->getFractureEnergyP())[i] = (energy_i + hydro_energy_i) * voli;
+          (*d_dataManager_p->getFractureEnergyP())[i] =
+              (energy_i + hydro_energy_i) * voli;
 
         if (this->d_policy_p->populateData("Model_d_phi"))
           (*d_dataManager_p->getPhiP())[i] = 1. - a / b;
 
-        if (this->d_policy_p->populateData("Model_d_Z")) (*d_dataManager_p->getDamageFunctionP())[i] = z;
+        if (this->d_policy_p->populateData("Model_d_Z"))
+          (*d_dataManager_p->getDamageFunctionP())[i] = z;
 
         // compute kinetic energy
         if (this->d_policy_p->populateData("Model_d_e"))
-          (*d_dataManager_p->getKineticEnergyP())[i] = 0.5 * this->d_material_p->getDensity() *
-                      (*d_dataManager_p->getVelocityP())[i].dot((*d_dataManager_p->getVelocityP())[i]) * voli;
+          (*d_dataManager_p->getKineticEnergyP())[i] =
+              0.5 * this->d_material_p->getDensity() *
+              (*d_dataManager_p->getVelocityP())[i].dot(
+                  (*d_dataManager_p->getVelocityP())[i]) *
+              voli;
       }  // loop over nodes
 
   );  // end of parallel for loop
@@ -946,7 +1012,8 @@ void model::FDModel::checkOutputCriteria() {
       // we divide the total number of nodes in parts and check in parallel
       std::vector<std::vector<size_t>> rect_ids;
       size_t N = 1000;
-      if (N > d_dataManager_p->getMeshP()->getNumNodes()) N = d_dataManager_p->getMeshP()->getNumNodes();
+      if (N > d_dataManager_p->getMeshP()->getNumNodes())
+        N = d_dataManager_p->getMeshP()->getNumNodes();
       rect_ids.resize(N);
 
       auto f = hpx::parallel::for_loop(
@@ -954,11 +1021,14 @@ void model::FDModel::checkOutputCriteria() {
           [this, N, rect, refZ, &rect_ids](boost::uint64_t I) {
             size_t ibegin = I * N;
             size_t iend = (I + 1) * N;
-            if (iend > d_dataManager_p->getMeshP()->getNumNodes()) iend = d_dataManager_p->getMeshP()->getNumNodes();
+            if (iend > d_dataManager_p->getMeshP()->getNumNodes())
+              iend = d_dataManager_p->getMeshP()->getNumNodes();
             for (size_t i = ibegin; i < iend; i++) {
               if (util::geometry::isPointInsideRectangle(
-                      d_dataManager_p->getMeshP()->getNode(i), rect.first, rect.second))
-                if (util::compare::definitelyGreaterThan((*d_dataManager_p->getDamageFunctionP())[i], refZ))
+                      d_dataManager_p->getMeshP()->getNode(i), rect.first,
+                      rect.second))
+                if (util::compare::definitelyGreaterThan(
+                        (*d_dataManager_p->getDamageFunctionP())[i], refZ))
                   rect_ids[I].emplace_back(i);
             }  // loop over chunk of I
           }    // loop over chunks

@@ -143,10 +143,8 @@ void material::pd::RNPBond::computeMaterialProperties(inp::MaterialDeck *deck,
       deck->d_matData.d_Gc, deck->d_matData.d_nu, deck->d_matData.d_E);
 }
 
-std::pair<double, double>
-material::pd::RNPBond::getBondEF(const double &r, const double &s,
-                                 const double &influence, bool &fs) {
-
+std::pair<double, double> material::pd::RNPBond::getBondEF(
+    const double &r, const double &s, const double &influence, bool &fs) {
   // check if fracture state of the bond need to be updated
   if (d_irrevBondBreak && !fs &&
       util::compare::definitelyGreaterThan(std::abs(s), d_factorSc * getSc(r)))

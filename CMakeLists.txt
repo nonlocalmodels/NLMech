@@ -115,13 +115,7 @@ endif ()
 #####################################################################
 
 # include important directories
-#include_directories(src/external/)
-#include_directories(${VTK_INCLUDE_DIRS})
-#include_directories(${HPX_INCLUDE_DIRS})
 include_directories(src)
-
-# blaze include directory (via -Dblaze_INCLUDE_DIR)
-#include_directories(${blaze_INCLUDE_DIR})
 
 # Enable HPX inside blaze
 add_definitions(-DBLAZE_USE_HPX_THREADS)
