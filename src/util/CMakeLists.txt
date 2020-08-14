@@ -6,5 +6,6 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(Util ${SOURCES})
-#target_link_libraries(Util PUBLIC Data ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+add_hpx_library(Util 
+    DEPENDENCIES ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} Geometry 
+    SOURCES  ${SOURCES})
