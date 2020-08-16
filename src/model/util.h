@@ -42,6 +42,13 @@ class Output{
 
 public:  
 
+/*!
+* @brief Outputs the iteration d_n to the file system
+* @param d_input_p Pointer to the input deck
+* @param d_dataManager_p Pointer to the data mamanger
+* @param d_n Actual iteration
+* @param d_time Actual simulation time
+*/
 Output(inp::Input *d_input_p,data::DataManager *d_dataManager_p, size_t d_n, double d_time);
 
 };

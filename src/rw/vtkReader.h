@@ -40,14 +40,14 @@ public:
 
   /*!
    * @brief Checks if file has needed data
-   * @param tag Tag name of data
+   * @param data_tag Tag name of data
    * @return True If file has data otherwise false
    */
   bool vtuHasPointData(const std::string &data_tag);
 
   /*!
    * @brief Checks if file has needed data
-   * @param tag Tag name of data
+   * @param data_tag Tag name of data
    * @return True If file has data otherwise false
    */
   bool vtuHasCellData(const std::string &data_tag);
@@ -93,9 +93,9 @@ public:
   /*!
    * @brief Reads cell data, i.e. element-node connectivity and node-element
    * connectivity
-   * @param filename Name of mesh file
    * @param dim Dimension
    * @param element_type Type of element
+   * @param num_elem Number of elements
    * @param enc Element-node connectivity
    * @param nec Node-element connectivity
    */

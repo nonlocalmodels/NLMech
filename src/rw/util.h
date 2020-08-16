@@ -15,6 +15,12 @@
 
 namespace rw {
 
+
+/*!
+* @brief Returnd the data type
+* @param  data_name Name of the data element
+* @return The data type
+*/
 std::string getDataType(const std::string &data_name);
 
 } // namespace rw

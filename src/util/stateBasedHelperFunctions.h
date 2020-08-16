@@ -53,7 +53,8 @@ public:
 
 	/*!
 	 * @brief Constructor
-	 * @param DataManager Pointer to the data manager object
+	 * @param dataManager Pointer to the data manager object
+	 * @param factor Sclaing factor for 2D case
 	 */
 	StateBasedHelperFunctions(data::DataManager* dataManager,
 			double factor);
@@ -61,7 +62,7 @@ private:
 	/*!
 	 * @brief Computes the extension \f$ e_i = \vert \eta + \xi \vert - \vert \xi \vert \f$ and
 	 * dilatation \f$ \sum\limits_{B_\delta(x_i)} \frac{3}{m_i} \vert \xi \vert e_i V_j \f$ for each node where $m_i$ is the weighted volume.
-	 * @param dataMamager Class holding all the global simulaiton data
+	 * @param dataManager Class holding all the global simulaiton data
 	 * @param dim Dimension of the problem
 	 * @param factor Dimensional depended material property
 	 */

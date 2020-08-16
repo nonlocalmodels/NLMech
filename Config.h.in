@@ -8,8 +8,13 @@
 
 #include<cstddef>
 
+/*! @brief Major version */
 size_t const MAJOR_VERSION = @VERSION_MAJOR@;
+
+/*! @brief Minor version */
 size_t const MINOR_VERSION = @VERSION_MINOR@;
+
+/*! @brief Update version */
 size_t const UPDATE_VERSION = @VERSION_UPDATE@;
 
 #endif

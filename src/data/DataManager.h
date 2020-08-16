@@ -51,14 +51,15 @@ namespace util {
 class StateBasedHelperFunctions;
 } // namespace material
 
+/*! @brief Data mamanger to share the global simulation data between the classes */
 namespace data {
 
-static size_t instances = 0;
-
+/*! @brief Data manager to collect the global simulation data */
 class DataManager {
 
 public:
 
+	/*! @brief Constructor */
 	DataManager();
 
 	/**
@@ -83,103 +84,245 @@ public:
 	 */
 	/**@{*/
 
+	/*! Sets the body force pointer 
+	* @param pointer Pointer
+	*/
 	void setBodyForceP(std::vector<util::Point3> *pointer);
 
+	/*! Get the pointer to the body force
+	 * @return pointer
+	 */
 	std::vector<util::Point3>* getBodyForceP();
 
+	/*! Sets the force pointer 
+	* @param pointer Pointer
+	*/
 	void setForceP(std::vector<util::Point3> *pointer);
 
+	/*! Get the pointer to force
+	 * @return pointer
+	 */
 	std::vector<util::Point3>* getForceP();
 
-
+	/*! Sets the body reaction force pointer 
+	* @param pointer Pointer
+	*/
 	void setReactionForceP(std::vector<util::Point3> *pointer);
 
+	/*! Get the pointer to reaction force
+	 * @return pointer
+	 */
 	std::vector<util::Point3>* getReactionForceP();
 
-
+	/*! Sets the  velocity pointer 
+	* @param pointer Pointer
+	*/
 	void setVelocityP(std::vector<util::Point3> *pointer);
 
+    /*! Get the pointer to velocity 
+    *@return pointer
+    */
 	std::vector<util::Point3>* getVelocityP();
 
+	/*! Sets the displacement pointer 
+	 * @param pointer Pointer
+	 */
 	void setDisplacementP(std::vector<util::Point3> *pointer);
 
+
+	/*! Get the pointer to displacement
+	 * @return pointer
+	 */
 	std::vector<util::Point3>* getDisplacementP();
 
-
+	/*! Sets the mesh pointer 
+	 * @param pointer Pointer
+	 */
 	void setMeshP(fe::Mesh *d_mesh_p);
 
+
+	/*! Get the pointer to the mesh object
+	 * @return pointer
+	 */
 	fe::Mesh* getMeshP();
 
+	/*! Sets the neighborhood pointer
+	* @param pointer Pointer
+	*/
 	void setNeighborP(geometry::Neighbor *d_neighbor_p);
 
+	/*! Get the pointer to neighborhood object
+	 * @return pointer
+	 */
 	geometry::Neighbor* getNeighborP();
 
+	/*! Sets the volume correction pointer 
+	* @param pointer Pointer
+	*/
 	void setVolumeCorrectionP(geometry::VolumeCorrection* pointer);
 
+
+	/*! Get the pointer to volume correction
+	 * @return pointer
+	 */
 	geometry::VolumeCorrection* getVolumeCorrectionP();
 
-
+	/*! Sets the pointer to the state-based helper
+	 * @param pointer Pointer
+	 */
 	void setStateBasedHelperFunctionsP(util::StateBasedHelperFunctions* pointer);
 
+	/*! Get the pointer to state-nased helper functions
+	 * @return pointer
+	 */
 	util::StateBasedHelperFunctions* getStateBasedHelperFunctionsP();
 
+	/*! Sets the pointer to the displacement loading object
+	 * @param pointer Pointer
+	 */
 	void setDisplacementLoadingP(loading::ULoading * pointer);
 
+
+	/*! Get the pointer to displacement loading object
+	 * @return pointer
+	 */
 	loading::ULoading* getDisplacementLoadingP();
 
-
+	/*! Sets the pointer to the force loading object
+	 * @param pointer Pointer
+	 */
 	void setForceLoadingP(loading::FLoading * pointer);
 
+	/*! Get the pointer to force loading object
+	 * @return pointer
+	 */
 	loading::FLoading* getForceLoadingP();
 
-
+	/*! Sets the pointer to the extension state
+	 * @param pointer Pointer
+	 */
 	void setExtensionP(std::vector<std::vector<double>>* pointer);
 
+
+	/*! Get the pointer to extension state
+	 * @return pointer
+	 */
 	std::vector<std::vector<double>>* getExtensionP();
 
-
+	/*! Sets the pointer to the stress tensor
+	 * @param pointer Pointer
+	 */
 	void setStressTensorP(std::vector<util::Matrix33>* pointer);
 
+
+	/*! Get the pointer to stress tensor
+	 * @return pointer
+	 */
 	std::vector<util::Matrix33>* getStressTensorP();
 
+	/*! Sets the pointer to the strain tensor
+	 * @param pointer Pointer
+	 */
 	void setStrainTensorP(std::vector<util::Matrix33>* pointer);
 
+	/*! Get the pointer to strain tensor
+	 * @return pointer
+	 */
 	std::vector<util::Matrix33>* getStrainTensorP();
 
+	/*! Sets the pointer to the dilatation state
+	 * @param pointer Pointer
+	 */
 	void setDilatationP(std::vector<double> * pointer);
 
+	/*! Get the pointer to dilatation
+	 * @return pointer
+	 */
 	std::vector<double> * getDilatationP();
 
+	/*! Sets the pointer to the total reaction force 
+	 * @param pointer Pointer
+	 */
 	void setTotalReactionForceP(std::vector<double>* pointer);
 
+
+	/*! Get the pointer to total reaction force
+	 * @return pointer
+	 */ 
 	std::vector<double>* getTotalReactionForceP();
 
+	/*! Sets the pointer to the strain energy
+	 * @param pointer Pointer
+	 */
 	void setStrainEnergyP(std::vector<float>* pointer);
 
+	/*! Get the pointer to strain energy
+	 * @return pointer
+	 */
 	std::vector<float>* getStrainEnergyP();
 
+	/*! Sets the pointer to the work done vector
+	 * @param pointer Pointer
+	 */
 	void setWorkDoneP(std::vector<float>* pointer);
 
+	/*! Get the pointer to work done
+	 * @return pointer
+	 */
 	std::vector<float>* getWorkDoneP();
 
+	/*! Sets the pointer to the phi vector
+	 * @param pointer Pointer
+	 */
 	void setPhiP(std::vector<float>* pointer);
 
+
+
+	/*! Get the pointer to phi
+ 	 * @return pointer
+	 */
 	std::vector<float>* getPhiP();
 
+	/*! Sets the pointer to damage function
+	 * @param pointer Pointer
+	 */
 	void setDamageFunctionP(std::vector<float>* pointer);
 
+
+	/*! Get the pointer to damage function
+	 * @return pointer
+	 */
 	std::vector<float>* getDamageFunctionP();
 
+	/*! Sets the pointer to the bond-based fracture energy
+	 * @param pointer Pointer
+	 */
 	void setBBFractureEnergyP(std::vector<float>*pointer);
 
+
+	/*! Get the pointer to bond-based fracture energy
+	 * @return pointer
+	 */
     std::vector<float>* getBBFractureEnergyP();
 
+	/*! Sets the pointer to the fracture energy
+	* @param pointer Pointer
+	*/
 	void setFractureEnergyP(std::vector<float>*pointer);
 
+	/*! Get the pointer to fracture energy
+	 * @return pointer
+	 */
     std::vector<float>* getFractureEnergyP();
 
+	/*! Sets the pointer to the kinetic energy
+	* @param pointer Pointer
+	*/
 	void setKineticEnergyP(std::vector<float>* pointer);
 
+	/*! Get the pointer to kinetic energy
+	 * @return pointer
+	 */
 	std::vector<float>* getKineticEnergyP();
 
 	/** @}*/

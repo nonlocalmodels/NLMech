@@ -64,6 +64,13 @@ struct MatData {
       : d_E(-1.), d_G(-1.), d_K(-1.), d_nu(-1.), d_lambda(-1.), d_mu(-1.),
         d_KIc(-1.), d_Gc(-1.){};
 
+ /*!
+   * @brief Prints the information
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @returns The string to be printed
+   */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
     auto tabS = util::io::getTabS(nt);
@@ -82,6 +89,13 @@ struct MatData {
     return oss.str();
   }
 
+ /*!
+   * @brief Prints the information
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @returns The string to be printed
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
   /**
@@ -99,8 +113,8 @@ struct MatData {
 
     /*!
    * @brief Compute Poisson's ratio from Bulk modulus and Shear modulus
-   * @param lambda Lame first parameter
-   * @param mu Lame second parameter
+   * @param K Bulk modulus 
+   * @param G Shear modulus
    * @return nu Poisson's ratio
    */
   double toNuClassical(double K, double G) { return (3*K - 2*G) / (2*(3*K+G)); }
@@ -275,6 +289,7 @@ struct MaterialDeck {
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
+   * @returns The string to be printed
    */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
@@ -312,6 +327,12 @@ struct MaterialDeck {
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 };
 

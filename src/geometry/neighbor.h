@@ -55,6 +55,12 @@ public:
    * @return pointer Pointer of neighbor list data
    */
   std::vector<std::vector<size_t>> *getNeighborsListP();
+
+
+   /*!
+   * @brief Get the pointer to full neighbor list
+   * @return pointer Pointer of neighbor list data
+   */
   const std::vector<std::vector<size_t>> *getNeighborsListP() const;
 
   /*!
@@ -62,6 +68,11 @@ public:
    * @return pointer Pointer of neighbor list data
    */
   std::vector<std::vector<size_t>> &getNeighborsList();
+
+    /*!
+   * @brief Get the pointer to full neighbor list
+   * @return pointer Pointer of neighbor list data
+   */
   const std::vector<std::vector<size_t>> &getNeighborsList() const;
 
 private:
