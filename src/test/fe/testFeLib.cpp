@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "testFeLib.h"
+#include <hpx/timing/high_resolution_clock.hpp>
 
 #include "../../external/csv.h"
 #include "fe/massMatrix.h"

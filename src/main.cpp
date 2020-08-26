@@ -10,7 +10,7 @@
 
 #include <hpx/hpx_main.hpp>           // Need main source file
 #include <boost/program_options.hpp>  // program options
-#include <hpx/util/high_resolution_clock.hpp>
+#include <hpx/timing/high_resolution_clock.hpp>
 #include <iostream>
 
 #include "inp/decks/materialDeck.h"

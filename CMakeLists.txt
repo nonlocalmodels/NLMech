@@ -5,11 +5,21 @@
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 cmake_minimum_required(VERSION 3.10)
 
-project(NLMech CXX)
+#####################################################################
+# Setup 
+#####################################################################
+
+# Set the version 
 set (VERSION_MAJOR 0)
 set (VERSION_MINOR 1)
 set (VERSION_UPDATE 0)
 
+project(NLMech 
+    VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_UPDATE}
+    DESCRIPTION "Framework for non-local mechanics"
+    LANGUAGES CXX)
+
+# Provide the configuration file to get the version
 configure_file (
   "${PROJECT_SOURCE_DIR}/Config.h.in"
   "${PROJECT_SOURCE_DIR}/src/Config.h"
@@ -32,10 +42,6 @@ set(LIBRARY_OUTPUT_PATH "${PROJECT_BINARY_DIR}/lib${LIBSUFFIX}")
 # Add a postfix if the libraries are build in the debug mode
 set(CMAKE_DEBUG_POSTFIX d)
 
-#Enable ctest
-enable_testing()
-add_subdirectory(test)
-
 # Add own cmake scripts
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake/")
 
@@ -44,7 +50,17 @@ if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
 endif()
 
+
+#####################################################################
+# Setup the ctests
+#####################################################################
+
+enable_testing()
+add_subdirectory(test)
+
+#####################################################################
 # Find dependencies
+#####################################################################
 
 # HPX
 find_package(HPX REQUIRED)
@@ -74,36 +90,41 @@ find_package(BlazeIterative REQUIRED)
 find_package(LAPACK REQUIRED)
 find_package(BLAS REQUIRED)
 
+#####################################################################
+# Set the compiler flags
+#####################################################################
+
 # Add flags to compiler
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lpthread")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lpthread -fPIC")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread ")
 endif ()
 
 # Set gnu standard to 14
 if (CMAKE_VERSION VERSION_LESS "3.1")
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        set(CMAKE_CXX_FLAGS "--std=gnu++14 ${CMAKE_CXX_FLAGS}")
+        set(CMAKE_CXX_FLAGS "--std=gnu++14 ${CMAKE_CXX_FLAGS} -fPIC")
     endif ()
 else ()
     set(CMAKE_CXX_STANDARD 17)
 endif ()
 
-# include important directories
-include_directories(src/external/)
-include_directories(${VTK_INCLUDE_DIRS})
-include_directories(${HPX_INCLUDE_DIRS})
-include_directories(src)
-link_directories(${HPX_LIBRARY_DIR})
+#####################################################################
+# Set the include directories
+#####################################################################
 
-# blaze include directory (via -Dblaze_INCLUDE_DIR)
-include_directories(${blaze_INCLUDE_DIR})
+# include important directories
+include_directories(src)
 
 # Enable HPX inside blaze
 add_definitions(-DBLAZE_USE_HPX_THREADS)
 
-# subdirectories
+
+#####################################################################
+# Set the subdirectories
+#####################################################################
+
 add_subdirectory(src/util)
 add_subdirectory(src/rw)
 add_subdirectory(src/inp)
@@ -117,19 +138,28 @@ add_subdirectory(src/data)
 # add test directory
 add_subdirectory(src/test)
 
-# Build documentation
+##############################################################################
+# Tools
+##############################################################################
 set(Enable_Tools FALSE CACHE BOOL "Enables the tools to the build target")
 if(${Enable_Tools})
 add_subdirectory(tools)
 endif()
 
-# Build executable
-add_hpx_executable(NLMech SOURCES src/main.cpp 
-				   DEPENDENCIES Inp Model ${LAPACK_LIBRARIES})
-
-# Build documentation
+##############################################################################
+# Documentation
+##############################################################################
 set(Enable_Documentation FALSE CACHE BOOL "Generates target for generating the documentation")
 if(${Enable_Documentation})
 add_subdirectory(docs)
 endif()
+
+##############################################################################
+# Build NLMech
+##############################################################################
+add_hpx_executable(NLMech SOURCES src/main.cpp 
+                   DEPENDENCIES Inp Model ${LAPACK_LIBRARIES})
+
+
+
 

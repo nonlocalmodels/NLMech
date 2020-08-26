@@ -8,8 +8,10 @@ AUX_SOURCE_DIRECTORY(./src/1d SOURCES)
 AUX_SOURCE_DIRECTORY(./src/2d SOURCES)
 
 # build Mesh library
-add_library(Mesh ${SOURCES})
-target_link_libraries(Mesh Util RW ${YAML_CPP_LIB} ${VTK_LIBRARIES})
+add_hpx_library(Mesh 
+    DEPENDENCIES ${YAML_CPP_LIB} RW Util Data 
+    SOURCES ${SOURCES})
+#target_link_libraries(Mesh Util RW ${YAML_CPP_LIB} ${VTK_LIBRARIES} Data FE)
 
 # Build mesh executible
-add_hpx_executable(mesh SOURCES mesh.cpp DEPENDENCIES Mesh)
+add_hpx_executable(mesh SOURCES mesh.cpp DEPENDENCIES Mesh FE)

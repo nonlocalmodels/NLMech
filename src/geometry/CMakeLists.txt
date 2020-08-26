@@ -6,4 +6,5 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(Geometry ${SOURCES})
+add_hpx_library(Geometry 
+    SOURCES ${SOURCES})

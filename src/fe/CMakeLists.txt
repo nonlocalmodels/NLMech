@@ -6,7 +6,8 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(FE ${SOURCES})
-target_link_libraries(FE PUBLIC Inp Util RW)
+add_hpx_library(FE 
+    SOURCES ${SOURCES}
+   )
 
 

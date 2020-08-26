@@ -6,7 +6,9 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(Data ${SOURCES})
-target_link_libraries(Data PUBLIC Inp Util RW)
+add_hpx_library(Data
+    DEPENDENCIES Inp Util RW
+    SOURCES ${SOURCES}
+)
 
 

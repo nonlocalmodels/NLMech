@@ -6,4 +6,5 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(Loading ${SOURCES})
+add_hpx_library(Loading 
+    SOURCES ${SOURCES})

@@ -11,7 +11,7 @@ AUX_SOURCE_DIRECTORY(./src SOURCES)
 
 # build DC library
 add_library(DC ${SOURCES})
-target_link_libraries(DC PUBLIC FE RW Util -lpthread)
+target_link_libraries(DC PUBLIC FE RW Util ${YAML_CPP_LIB} Data -lpthread)
 
 # Build dc executible
 add_hpx_executable(dc SOURCES dc.cpp DEPENDENCIES DC)
