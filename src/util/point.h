@@ -125,7 +125,7 @@ struct Point3 {
   double lengthSq() const { return d_x * d_x + d_y * d_y + d_z *
   d_z; }
 
-  /*
+  /*!
    * @brief Returns the unit vector
    * @return Vector Unit vector
    */

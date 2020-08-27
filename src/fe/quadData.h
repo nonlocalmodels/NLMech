@@ -66,6 +66,14 @@ struct QuadData {
    */
   QuadData() : d_w(0.), d_p(util::Point3()), d_detJ(0.){};
 
+
+  /*!
+   * @brief Prints the information
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return The resulting string
+   */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
     auto tabS = util::io::getTabS(nt);
@@ -84,6 +92,12 @@ struct QuadData {
     return oss.str();
   };
 
+  /*!
+   * @brief Prints the information
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 

@@ -68,11 +68,25 @@ public:
 	 */
 	/**@{*/
 
+	/*! Sets the model deck pointer
+	* @param pointer Pointer
+	*/
 	void setModelDeckP(inp::ModelDeck *pointer);
+
+	/*! Get the pointer to the model deck
+	 * @return pointer
+	 */
 
 	inp::ModelDeck* getModelDeckP();
 
+	/*! Sets the output deck pointer
+	* @param pointer Pointer
+	*/
 	void setOutputDeckP(inp::OutputDeck *pointer);
+
+	/*! Get the pointer to the output deck
+	 * @return pointer
+	 */
 
 	inp::OutputDeck* getOutputDeckP();
 
@@ -136,7 +150,7 @@ public:
 	std::vector<util::Point3>* getDisplacementP();
 
 	/*! Sets the mesh pointer 
-	 * @param pointer Pointer
+	 * @param d_mesh_p Pointer to the mesh object
 	 */
 	void setMeshP(fe::Mesh *d_mesh_p);
 
@@ -147,7 +161,7 @@ public:
 	fe::Mesh* getMeshP();
 
 	/*! Sets the neighborhood pointer
-	* @param pointer Pointer
+	* @param d_neighbor_p Pointer to the neighborhood object
 	*/
 	void setNeighborP(geometry::Neighbor *d_neighbor_p);
 

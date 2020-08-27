@@ -18,6 +18,11 @@ namespace util {
 /*! @brief Provides geometrical methods such as point inside rectangle */
 namespace io {
 
+
+/*! @brief Generate a string contaning nt tabs
+* @param nt Number of tabs
+* @return String contaning nt tabs
+*/
 inline std::string getTabS(int nt) {
   std::string tabS = "";
   for (int i = 0; i < nt; i++)
@@ -26,6 +31,12 @@ inline std::string getTabS(int nt) {
   return tabS;
 };
 
+/*!
+ * @brief Concatenates the elements of the vector separated with a comma
+ * @param list Teh vector with the elements
+ * @param nt NUmber of tabs prepend to the contactenated vector
+ * @return Resulting string
+ */
 template <class T> inline std::string printStr(const std::vector<T> &list,
     int nt =
     0) {
@@ -44,6 +55,12 @@ template <class T> inline std::string printStr(const std::vector<T> &list,
   return oss.str();
 };
 
+/*!
+ * @brief Concatenates the elements of the vector separated with a comma
+ * @param list Teh vector with the elements
+ * @param nt NUmber of tabs prepend to the contactenated vector
+ * @return Resulting string
+ */
 template <> inline std::string printStr(const std::vector<util::Point3> &list,
                                                int nt) {
 
@@ -61,11 +78,23 @@ template <> inline std::string printStr(const std::vector<util::Point3> &list,
   return oss.str();
 };
 
+/*!
+ * @brief Concatenates the elements of the vector separated with a comma and
+ * prints them to the standard output stream
+ * @param list Teh vector with the elements
+ * @param nt NUmber of tabs prepend to the contactenated vector
+ */
 template <class T> inline void print(const std::vector<T> &list, int nt = 0) {
 
   std::cout << printStr(list, nt);
 };
 
+/*!
+ * @brief Concatenates the elements of the vector separated with a comma
+ * @param list Teh vector with the elements
+ * @param nt NUmber of tabs prepend to the contactenated vector
+ * @return Resulting string
+ */
 template <class T>
 inline std::string printStr(const std::vector<std::vector<T>> &list,
                             int nt = 0) {
@@ -91,15 +120,22 @@ inline std::string printStr(const std::vector<std::vector<T>> &list,
   return oss.str();
 }
 
+/*!
+ * @brief Concatenates the elements of the vector separated with a comma
+ * @param list Teh vector with the elements
+ * @param nt Number of tabs prepend to the contactenated vector
+ */
 template <class T> inline void print(const std::vector<std::vector<T>> &list, int nt = 0) {
 
   std::cout << printStr(list, nt);
 };
 
 /*!
- * @brief Prints box to std::cout
+ * @brief Prints the corner points of the to the output stream
+ * @param box Corner point of the box
+ * @param nt Number of tabs at the beginning of the string
+ * @return Resulting string
  */
-
 inline std::string printBoxStr(const std::pair<util::Point3, util::Point3>
     &box, int nt =
 0) {
@@ -111,11 +147,22 @@ inline std::string printBoxStr(const std::pair<util::Point3, util::Point3>
   return oss.str();
 };
 
+/*!
+ * @brief Prints the corner points of the to the output stream
+ * @param box Corner point of the box
+ * @param nt Number of tabs at the beginning of the string
+ */
 inline void printBox(const std::pair<util::Point3, util::Point3> &box, int nt
 = 0) {
   std::cout << printBoxStr(box, nt);
 };
 
+/*!
+ * @brief Prints the corner points of the output stream
+ * @param box Corner point of the box
+ * @param nt Number of tabs at the beginning of the string
+ * @return Resulting string
+ */
 inline std::string printBoxStr(const std::pair<std::vector<double>, std::vector<double>>
                                &box, int nt =
 0) {
@@ -129,6 +176,11 @@ inline std::string printBoxStr(const std::pair<std::vector<double>, std::vector<
   return oss.str();
 };
 
+/*!
+ * @brief Prints the corner points of the to the output stream
+ * @param box Corner point of the box
+ * @param nt Number of tabs at the beginning of the string
+ */
 inline void printBox(const std::pair<std::vector<double>, std::vector<double>> &box, int nt
 = 0) {
   std::cout << printBoxStr(box, nt);
