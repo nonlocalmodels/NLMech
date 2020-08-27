@@ -810,6 +810,7 @@ INPUT                  = ../src/main.cpp \
                          ../src/test \
                          ../tools/pp \
                          ../tools/mesh \
+                         ../docs/content/cmake-options.md \
                          ../README.md 
                          
 
