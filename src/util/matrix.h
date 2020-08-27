@@ -111,6 +111,7 @@ struct Matrix3 {
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
+   * @return The resulting string
    */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
@@ -127,24 +128,52 @@ struct Matrix3 {
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
+  /*!
+   * @brief Access operator of the i-th element
+   * @param i Index i
+   * @return The i-th element
+   */
   Point3 operator()(size_t i) {
     return Point3(d_data[i]);
   }
+
+  /*!
+   * @brief Access operator of the i-th element
+   * @param i Index i
+   * @return The i-th element
+   */
   Point3 operator()(size_t i) const {
     return Point3(d_data[i]);
   }
 
+  /*!
+   * @brief Access operator of the Matrix element M(i,j)
+   * @param i Index i
+   * @param j Index j
+   * @return Matrix element M(i,j)
+   */
   float &operator()(size_t i, size_t j) { return d_data[i][j]; }
+
+  /*!
+   * @brief Access operator of the Matrix element M(i,j)
+   * @param i Index i
+   * @param j Index j
+   * @return Matrix element M(i,j)
+   */
   const float &operator()(size_t i, size_t j) const { return d_data[i][j]; }
 
   /*!
  * @brief Computes the dot product between matrix and vector
- *
- * @param m Matrix
  * @param v vector
- * @return vector Dot produc
+ * @return vector Dot product
  */
   std::vector<double> dot(const std::vector<double> &v) const {
 
@@ -155,6 +184,13 @@ struct Matrix3 {
 
     return r;
   }
+
+  /*!
+   * @brief Computes the dot product of the matrix and the vector v
+   * @param v The vector
+   * @return The evaluation of the dot product
+   * 
+   */
   util::Point3 dot(const util::Point3 &v) {
 
     return {(*this)(0) * v, (*this)(1) * v, (*this)(2) * v};
@@ -339,6 +375,7 @@ struct SymMatrix3 {
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
+   * @return resulting string
    */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
@@ -356,41 +393,71 @@ struct SymMatrix3 {
   }
 
 
-
+    /*!
+   * @brief Prints the information
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
+
+  /*!
+   * @brief Access operator of the i-th element
+   * @param i Index i
+   * @return The i-th element
+   */
   Point3 operator()(size_t i) {
     return {(*this)(i, 0), (*this)(i, 1), (*this)(i, 2)};
   }
+
+  /*!
+   * @brief Access operator of the i-th element
+   * @param i Index i
+   * @return The i-th element
+   */
   Point3 operator()(size_t i) const {
     return {(*this)(i, 0), (*this)(i, 1), (*this)(i, 2)};
   }
 
+  /*!
+   * @brief Access operator of the Matrix element M(i,j)
+   * @param i Index i
+   * @param j Index j
+   * @return Matrix element M(i,j)
+   */
   float &operator()(size_t i, size_t j) {
     return d_data[i == j ? i : 6 - i - j];
   }
 
 
-
+  /*!
+   * @brief Access operator of the Matrix element M(i,j)
+   * @param i Index i
+   * @param j Index j
+   * @return Matrix element M(i,j)
+   */
   const float &operator()(size_t i, size_t j) const {
     return d_data[i == j ? i : 6 - i - j];
   }
 
 /*! @brief Return the i-th element
-@param i Index
+ *@param i Index
+ *@return the i-th element
 */
   const float &get(size_t i) const {
     return d_data[i];
   }
 
 /*! @brief Return the i-th element
-@param i Index
+ *@param i Index
+ *@return The i-ith element
 */
   float &get(size_t i) {
     return d_data[i];
   }
 
-  /*!
+  /*!warning
  * @brief Copy
  * @param m Matrix
  */
@@ -414,6 +481,12 @@ struct SymMatrix3 {
 
     return r;
   }
+
+  /*!
+   * @brief Computes the dot product of this matrix with another vector
+   * @param v A vector
+   * @return Vector Resulting vector
+   */
   util::Point3 dot(const util::Point3 &v) {
 
     return {(*this)(0) * v, (*this)(1) * v, (*this)(2) * v};

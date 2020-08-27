@@ -69,6 +69,11 @@ struct JEnergy {
    * @brief Strain energy and kinetic energy within contour
    */
   double d_pdStrainEnergyInsideContour;
+
+
+  /*!
+   * @brief Kintec energy and kinetic energy within contour
+   */
   double d_kineticEnergyInsideContour;
 
   /*!
@@ -300,6 +305,8 @@ struct ComputeJIntegral {
 
   /*! @brief Contour given by rectangle */
   bool d_contourGiven;
+
+  /*! @brief Contour */
   std::pair<util::Point3, util::Point3> d_contour;
 
   /*!

@@ -18,14 +18,19 @@ namespace inp {
 struct DampingGeomData {
   std::string d_relativeLoc;
 
+  /*! @brief Boolean for checking the x-direction */
   bool d_checkX;
+  /*! @brief Boolean for checking the y-direction */
   bool d_checkY;
+  /*! @brief Boolean for checking the z-direction */
   bool d_checkZ;
 
+  /*! Thickness of the layer in x-direction */
   double d_layerThicknessX;
+  /*! Thickness of the layer in y-direction */
   double d_layerThicknessY;
+  /*! Thickness of the layer in z-direction */
   double d_layerThicknessZ;
-
 
   util::Point3 d_p1;
   util::Point3 d_p2;
