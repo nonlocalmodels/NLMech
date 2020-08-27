@@ -136,6 +136,7 @@ add_subdirectory(src/model)
 add_subdirectory(src/data)
 
 # add test directory
+set(Enable_Expensive_Tests FALSE CACHE BOOL "Enables the computation intense tests")
 add_subdirectory(src/test)
 
 ##############################################################################
