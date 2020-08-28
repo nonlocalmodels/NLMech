@@ -31,6 +31,9 @@ set_tests_properties(quasistatic.1D.elastic PROPERTIES
 set_tests_properties(quasistatic.1D.elastic.compare PROPERTIES
   FIXTURES_SETUP quasistatic.1D.elastic)
 
+# The implicit test tooks too long for circle-ci and can only be run
+# on desktops or clusters.
+if(Enable_Expensive_Tests)
 
 # 2D
 add_test(NAME quasistatic.2D.elastic.mesh 
@@ -38,6 +41,17 @@ add_test(NAME quasistatic.2D.elastic.mesh
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/qsModel/2D
 )
 
+add_test(NAME quasistatic.2D.elastic
+COMMAND ${EXECUTABLE_OUTPUT_PATH}/NLMech -i input.yaml --hpx:threads=5
+WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/qsModel/2D
+)
+
+add_test(NAME quasistatic.2D.elastic.compare
+COMMAND ${EXECUTABLE_OUTPUT_PATH}/dc -i input_compare.yaml -k fd_simple
+WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/qsModel/2D
+)
+
+endif()
 
 ##############################################################################
 # Tools
