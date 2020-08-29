@@ -83,7 +83,9 @@ if (VTK_VERSION VERSION_LESS "6")
 endif ()
 
 # BLAZE and BlazeIterative
-find_package(blaze REQUIRED)
+find_package(blaze REQUIRED NO_CMAKE_PACKAGE_REGISTRY)
+include("${blaze_DIR}/blaze-config-version.cmake")
+link_libraries(blaze::blaze)
 find_package(BlazeIterative REQUIRED)
 
 # BLAS and LAPACK
