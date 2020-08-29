@@ -167,9 +167,15 @@ struct LoadingDeck {
     std::ostringstream oss;
     oss << tabS << "------- LoadingDeck --------" << std::endl << std::endl;
     oss << tabS << "Displacement loading data " << std::endl;
-    oss << d_uBCData.printStr(nt+1, lvl);
+    for (size_t i=0; i<d_uBCData.size(); i++) {
+      oss << tabS << "Data " << i+1 << " information " << std::endl;
+      oss << d_uBCData[i].printStr(nt+1, lvl);
+    }
     oss << tabS << "Force loading data " << std::endl;
-    oss << d_fBCData.printStr(nt+1, lvl);
+    for (size_t i=0; i<d_fBCData.size(); i++) {
+      oss << tabS << "Data " << i+1 << " information " << std::endl;
+      oss << d_fBCData[i].printStr(nt+1, lvl);
+    }
     oss << tabS << std::endl;
 
     return oss.str();
