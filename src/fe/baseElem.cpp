@@ -9,6 +9,7 @@
 #include "baseElem.h"
 #include "util/feElementDefs.h"  // global definition of elements
 #include <iostream>              // for std::cerr
+#include "util/utilIO.h"
 
 fe::BaseElem::BaseElem(size_t order, size_t element_type)
     : d_quadOrder(order),
@@ -44,4 +45,16 @@ void fe::BaseElem::init() {
   std::cerr << "Error: init() of BaseElem must be implemented in inheriting "
                "class.\n";
   exit(1);
+}
+
+std::string fe::BaseElem::printStr(int nt, int lvl) const {
+  auto tabS = util::io::getTabS(nt);
+  std::ostringstream oss;
+  oss << tabS << "------- BaseElem --------" << std::endl << std::endl;
+  oss << tabS << "Quad order = " << d_quadOrder << std::endl;
+  oss << tabS << "Num quad points = " << d_numQuadPts << std::endl;
+  oss << tabS << "Element type = " << d_elemType << std::endl;
+  oss << tabS << std::endl;
+
+  return oss.str();
 }

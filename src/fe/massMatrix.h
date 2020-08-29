@@ -43,6 +43,26 @@ public:
    */
   explicit MassMatrix(inp::MassMatrixDeck *deck);
 
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const;
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
+
 private:
   /*! @brief Mass matrix deck
    *

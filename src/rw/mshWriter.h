@@ -179,16 +179,17 @@ public:
 
 private:
   /*! @brief utility function
-   * @param name 
-   * @param field_type
-   * @param num_data
-   * @param is_node_data
    *
    * field_type:
    * - 1 - scalar with 1 component
    * - 2 - vector with 2 component
    * - 3 - vector with 3 component
    * - 6 - symmetric tensor with 6 component
+   *
+   * @param name
+   * @param field_type
+   * @param num_data
+   * @param is_node_data
    */
   void writeMshDataHeader(const std::string &name, int field_type,
                           size_t num_data, bool is_node_data = true);

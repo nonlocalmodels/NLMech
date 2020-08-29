@@ -52,9 +52,10 @@ public:
   /*!
    * @brief Returns energy and force between bond
    *
+   * @param i Id of node 1
+   * @param j Id of node 2
    * @return pair Pair of energy and force
    */
-
   virtual std::pair<util::Point3,double> getBondEF(size_t i , size_t j){
 
 	  return std::make_pair(util::Point3(), 0.);
@@ -181,6 +182,8 @@ public:
   /*!
    * @brief Returns critical bond strain
    *
+   * @param i Id of node 1
+   * @param j Id of node 2
    * @return strain Critical strain
    */
   virtual double getSc(size_t i , size_t j) { return 0.; };
@@ -188,6 +191,7 @@ public:
   /*!
    * @brief Returns strain tensor
    *
+   * @param i Id of node
    * @return strain tensor
    */
   virtual util::Matrix33 getStrain(size_t i) {
@@ -198,6 +202,7 @@ public:
   /*!
    * @brief Returns stress tensor
    *
+   * @param i Id of node
    * @return stress tensor
    */
   virtual util::Matrix33 getStress(size_t i) {
@@ -213,6 +218,9 @@ public:
 
   /*!
    * @brief Get direction of bond force
+   *
+   * @param dx Relative vector of bond
+   * @param du Relative displacement vector of bond
    * @return vector Unit vector along the bond force
    */
   virtual util::Point3 getBondForceDirection(const util::Point3 &dx,

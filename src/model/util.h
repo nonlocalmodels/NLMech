@@ -38,6 +38,7 @@ class Mesh;
 
 namespace model {
 
+/*! @brief A class to handle model output */
 class Output{
 
 public:  

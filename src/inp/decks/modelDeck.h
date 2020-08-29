@@ -10,6 +10,7 @@
 #define INP_MODELDECK_H
 
 #include <string>
+#include "util/utilIO.h"
 
 namespace inp {
 
@@ -85,6 +86,43 @@ struct ModelDeck {
   ModelDeck()
       : d_dim(0), d_isRestartActive(false), d_tFinal(0.), d_dt(0.), d_Nt(0),
         d_horizon(0.), d_rh(0), d_h(0.){};
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- ModelDeck --------" << std::endl << std::endl;
+    oss << tabS << "Dimension = " << d_dim << std::endl;
+    oss << tabS << "Simulation type = " << d_simType << std::endl;
+    oss << tabS << "Spatial discretization type = " << d_spatialDiscretization << std::endl;
+    oss << tabS << "Time discretization type = " << d_timeDiscretization <<
+        std::endl;
+    oss << tabS << "Final time = " << d_tFinal << std::endl;
+    oss << tabS << "Number of time steps = " << d_Nt << std::endl;
+    oss << tabS << "Size time steps = " << d_dt << std::endl;
+    oss << tabS << "Mesh size = " << d_h << std::endl;
+    oss << tabS << "Horizon = " << d_horizon << std::endl;
+    oss << tabS << std::endl;
+
+    return oss.str();
+  };
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /** @}*/

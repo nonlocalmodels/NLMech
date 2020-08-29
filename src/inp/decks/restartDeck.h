@@ -10,6 +10,7 @@
 #define INP_RESTARTDECK_H
 
 #include <string>
+#include "util/utilIO.h"
 
 namespace inp {
 
@@ -31,6 +32,35 @@ struct RestartDeck {
    * @brief Constructor
    */
   RestartDeck() : d_step(0){};
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- RestartDeck --------" << std::endl << std::endl;
+    oss << tabS << "Restart file = " << d_file << std::endl;
+    oss << tabS << "Restart step = " << d_step << std::endl;
+    oss << tabS << std::endl;
+
+    return oss.str();
+  };
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /** @}*/

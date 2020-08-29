@@ -57,6 +57,8 @@ public:
 
   /*!
    * @brief Constructor
+   *
+   * @param dim Dimension of the problem
    */
   explicit Mesh(size_t dim = 0);
 
@@ -312,8 +314,24 @@ public:
 
   /** @}*/
 
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
   std::string printStr(int nt = 0, int lvl = 0) const;
 
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 
 private:
@@ -333,6 +351,8 @@ private:
    * **.msh** file with element-node connectivity data.
    *
    * @param filename Name of the mesh file
+   * @param ref_config Base the mesh on reference configuration (obtain
+   * reference configuration using point data and displacement data)
    * @param is_centroid_based Specify if we create node at the center of element
    */
   void createData(const std::string &filename, bool ref_config, bool is_centroid_based);

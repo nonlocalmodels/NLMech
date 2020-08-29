@@ -43,6 +43,15 @@ public:
    */
   virtual double getMoment(const size_t &i) const = 0;
 
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
   virtual std::string printStr(int nt, int lvl) const {
 
     auto tabS = util::io::getTabS(nt);
@@ -54,7 +63,20 @@ public:
 
     return oss.str();
   }
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
   virtual void print(int nt, int lvl) const { std::cout << printStr(nt, lvl); }
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * */
   virtual void print() const { print(0, 0); }
 };
 
@@ -96,8 +118,14 @@ public:
   }
 
   /*!
-   * @brief Print information about this object
-   */
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
   std::string printStr(int nt, int lvl) const override {
 
     auto tabS = util::io::getTabS(nt);
@@ -112,9 +140,21 @@ public:
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
   void print(int nt, int lvl) const override {
     std::cout << printStr(nt, lvl);
   }
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * */
   void print() const override { print(0, 0); }
 
 private:
@@ -182,8 +222,14 @@ public:
   }
 
   /*!
-   * @brief Print information about this object
-   */
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
   std::string printStr(int nt, int lvl) const override {
 
     auto tabS = util::io::getTabS(nt);
@@ -199,9 +245,21 @@ public:
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
   void print(int nt, int lvl) const override {
     std::cout << printStr(nt, lvl);
   }
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * */
   void print() const override { print(0, 0); }
 
 private:
@@ -294,8 +352,14 @@ public:
   }
 
   /*!
-   * @brief Print information about this object
-   */
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
   std::string printStr(int nt, int lvl) const override {
 
     auto tabS = util::io::getTabS(nt);
@@ -311,9 +375,21 @@ public:
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
   void print(int nt, int lvl) const override {
     std::cout << printStr(nt, lvl);
   }
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * */
   void print() const override { print(0, 0); }
 
 private:

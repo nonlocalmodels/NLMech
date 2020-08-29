@@ -49,6 +49,26 @@ public:
    */
   virtual bool getInteriorFlag(const size_t &i, const util::Point3 &x);
 
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const;
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
+
 protected:
   /*!
    * @brief Interior flags. For given node i the flag is d_intFlags[i%8]. We
@@ -94,6 +114,26 @@ public:
    * @return True/False If node is in interior or exterior
    */
   bool getInteriorFlag(const size_t &i, const util::Point3 &x) override;
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const;
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /*!
@@ -127,6 +167,26 @@ public:
    * @return True/False If node is in interior or exterior
    */
   bool getInteriorFlag(const size_t &i, const util::Point3 &x) override;
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const;
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /*! @brief A class to store interior/exterior flags of node
@@ -156,6 +216,26 @@ public:
    * @return Flag True if node is in interior otherwise false
    */
   bool getInteriorFlag(const size_t &i, const util::Point3 &x);
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const;
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 
 private:
   /*! @brief Class providing interior flags and method */

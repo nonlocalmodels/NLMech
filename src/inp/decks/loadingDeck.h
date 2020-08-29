@@ -11,6 +11,7 @@
 
 #include <iostream> // error handling
 #include <vector>
+#include "util/utilIO.h"
 
 namespace inp {
 
@@ -99,6 +100,38 @@ struct BCData {
    * @brief Constructor
    */
   BCData() : d_x1(0.), d_y1(0.), d_x2(0.), d_y2(0.), d_theta(0.),d_r1(0.),d_r2(0.){};
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- BCData --------" << std::endl << std::endl;
+    oss << tabS << "Region type = " << d_regionType << std::endl;
+    oss << tabS << "Time function type = " << d_timeFnType << std::endl;
+    oss << tabS << "Spatial function type = " << d_spatialFnType << std::endl;
+    oss << tabS << "DOFs affected = " << util::io::printStr(d_direction)
+        << std::endl;
+    oss << tabS << std::endl;
+
+    return oss.str();
+  };
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /**
@@ -119,6 +152,37 @@ struct LoadingDeck {
    * @brief Constructor
    */
   LoadingDeck() = default;
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- LoadingDeck --------" << std::endl << std::endl;
+    oss << tabS << "Displacement loading data " << std::endl;
+    oss << d_uBCData.printStr(nt+1, lvl);
+    oss << tabS << "Force loading data " << std::endl;
+    oss << d_fBCData.printStr(nt+1, lvl);
+    oss << tabS << std::endl;
+
+    return oss.str();
+  };
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /** @}*/

@@ -13,6 +13,7 @@
 #include "../inp/decks/initialConditionDeck.h"
 #include "fe/mesh.h"
 #include "util/utilFunction.h"
+#include "util/utilIO.h"
 
 loading::InitialCondition::InitialCondition(inp::InitialConditionDeck *deck)
     : d_deck_p(deck) {}
@@ -78,4 +79,15 @@ double loading::InitialCondition::getICFormula(
                  "type functions are supported in 2-d.\n";
     exit(1);
   }
+}
+
+std::string loading::InitialCondition::printStr(int nt, int lvl) const {
+  auto tabS = util::io::getTabS(nt);
+  std::ostringstream oss;
+  oss << tabS << "------- InitialCondition --------" << std::endl << std::endl;
+  oss << tabS << "Initial condition deck address = " << d_deck_p <<
+      std::endl;
+  oss << tabS << std::endl;
+
+  return oss.str();
 }

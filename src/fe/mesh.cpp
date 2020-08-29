@@ -25,10 +25,7 @@
 #include "tetElem.h"
 #include "util/compare.h"
 #include "util/feElementDefs.h"
-#include <hpx/include/parallel_algorithm.hpp>
-#include <iostream>
-#include <cstdint>
-#include <util/utilGeom.h>
+#include "util/utilGeom.h"
 #include "util/utilIO.h"
 
 fe::Mesh::Mesh(size_t dim)

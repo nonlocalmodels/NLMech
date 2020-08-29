@@ -12,6 +12,7 @@
 
 #include "inp/decks/neighborDeck.h"
 #include "util/compare.h"
+#include "util/utilIO.h"
 
 geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
                              const std::vector<util::Point3> *nodes)
@@ -59,4 +60,15 @@ std::vector<std::vector<size_t>> &geometry::Neighbor::getNeighborsList() {
 const std::vector<std::vector<size_t>> &geometry::Neighbor::getNeighborsList()
     const {
   return d_neighbors;
+}
+
+std::string geometry::Neighbor::printStr(int nt, int lvl) const {
+  auto tabS = util::io::getTabS(nt);
+  std::ostringstream oss;
+  oss << tabS << "------- Neighbor --------" << std::endl << std::endl;
+  oss << tabS << "Neighbor deck address = " << d_neighborDeck_p << std::endl;
+  oss << tabS << "Number of data = " << d_neighbors.size() << std::endl;
+  oss << tabS << std::endl;
+
+  return oss.str();
 }

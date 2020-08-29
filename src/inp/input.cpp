@@ -29,6 +29,7 @@
 #include "decks/solverDeck.h"
 #include "inp/decks/meshDeck.h"
 #include "inp/decks/absborbingCondDeck.h"
+#include "util/utilIO.h"
 #include <cmath>
 #include <iostream>
 #include <yaml-cpp/yaml.h>
@@ -880,3 +881,14 @@ void inp::Input::setAbsorbingCondDeck() {
     exit(1);
   }
 }  // setAbsorbingCondDeck
+
+
+std::string inp::Input::printStr(int nt, int lvl) const {
+  auto tabS = util::io::getTabS(nt);
+  std::ostringstream oss;
+  oss << tabS << "------- Input --------" << std::endl << std::endl;
+  oss << tabS << "Filename = " << d_inputFilename << std::endl;
+  oss << tabS << std::endl;
+
+  return oss.str();
+}
