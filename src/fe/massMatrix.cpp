@@ -12,6 +12,7 @@
 
 #include "inp/decks/massMatrixDeck.h"
 #include "inp/policy.h"  // to check for constraints
+#include "util/utilIO.h"
 
 fe::MassMatrix::MassMatrix(inp::MassMatrixDeck *deck) {
   d_massMatrixDeck_p = deck;
@@ -29,4 +30,15 @@ fe::MassMatrix::MassMatrix(inp::MassMatrixDeck *deck) {
   if (inp::Policy::getInstance()->getMemoryControlFlag() >= 2)
     if (d_massMatrixDeck_p->d_MApproxType != "lumped")
       d_massMatrixDeck_p->d_MApproxType = "lumped";
-};
+}
+
+std::string fe::MassMatrix::printStr(int nt, int lvl) const {
+  auto tabS = util::io::getTabS(nt);
+  std::ostringstream oss;
+  oss << tabS << "------- MassMatrix --------" << std::endl << std::endl;
+  oss << tabS << "Mass matrix deck address = " << d_massMatrixDeck_p << std::endl;
+  oss << tabS << "Size of diagonal matrix = " << d_invMDiag.size() << std::endl;
+  oss << tabS << std::endl;
+
+  return oss.str();
+}

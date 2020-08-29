@@ -54,14 +54,12 @@ public:
 
   /*!
    * @brief Reads all point data tags
-   * @param filename Name of mesh file
    * @return List List of point data tags
    */
   std::vector<std::string> readVtuFilePointTags();
 
   /*!
    * @brief Reads all cell data tags
-   * @param filename Name of mesh file
    * @return List List of point data tags
    */
   std::vector<std::string> readVtuFileCellTags();

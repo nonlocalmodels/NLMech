@@ -11,6 +11,7 @@
 #include "inp/decks/absborbingCondDeck.h"
 #include "util/compare.h"
 #include "util/utilGeom.h"
+#include "util/utilIO.h"
 #include <iostream>
 
 static double damping_geom_tol = 1.0e-8;
@@ -160,16 +161,23 @@ const std::vector<double> *geometry::DampingGeom::getCoefficientDataP() const {
   return &d_coefficients;
 }
 
-bool geometry::DampingGeom::isDampingActive() {
-  return d_absorbingDeck_p->d_dampingActive;
-}
 bool geometry::DampingGeom::isDampingActive() const {
   return d_absorbingDeck_p->d_dampingActive;
 }
 
-bool geometry::DampingGeom::isViscousDamping() {
-  return d_absorbingDeck_p->d_isViscousDamping;
-}
 bool geometry::DampingGeom::isViscousDamping() const {
   return d_absorbingDeck_p->d_isViscousDamping;
+}
+
+std::string geometry::DampingGeom::printStr(int nt, int lvl) const {
+  auto tabS = util::io::getTabS(nt);
+  std::ostringstream oss;
+  oss << tabS << "------- DampingGeom --------" << std::endl << std::endl;
+  oss << tabS << "Dimension = " << d_dim << std::endl;
+  oss << tabS << "Absorbing deck address = " << d_absorbingDeck_p << std::endl;
+  oss << tabS << "Number of coefficients = " << d_coefficients.size()
+      << std::endl;
+  oss << tabS << std::endl;
+
+  return oss.str();
 }

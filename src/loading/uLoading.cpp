@@ -13,6 +13,7 @@
 #include "util/compare.h"
 #include "util/utilFunction.h"
 #include "util/utilGeom.h"
+#include "util/utilIO.h"
 
 loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
   d_bcData = deck->d_uBCData;
@@ -230,4 +231,19 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
       }
     }  // loop over nodes
   }    // loop over bc sets
+}
+
+std::string loading::ULoading::printStr(int nt, int lvl) const {
+  auto tabS = util::io::getTabS(nt);
+  std::ostringstream oss;
+  oss << tabS << "------- FLoading --------" << std::endl << std::endl;
+  oss << tabS << "Number of loading data = " << d_bcData.size() << std::endl;
+  for (size_t i=0; i<d_bcData.size(); i++) {
+    oss << tabS << "Loading data " << i + 1 << " information" << std::endl;
+    oss << d_bcData[i].printStr(nt+1) << std::endl;
+    oss << "Number of nodes affected = " << d_bcNodes[i].size() << std::endl;
+  }
+  oss << tabS << std::endl;
+
+  return oss.str();
 }

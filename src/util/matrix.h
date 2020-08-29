@@ -219,7 +219,6 @@ struct Matrix3 {
   /*!
  * @brief Computes the determinant of matrix
  *
- * @param m Matrix
  * @return det Determinant
  */
   double det() const {
@@ -231,7 +230,6 @@ struct Matrix3 {
   /*!
  * @brief Computes the determinant of matrix
  *
- * @param m Matrix
  * @return inv Inverse of m
  */
   Matrix3 inv() const {
@@ -504,7 +502,6 @@ struct SymMatrix3 {
   /*!
  * @brief Computes the determinant of matrix
  *
- * @param m Matrix
  * @return det Determinant
  */
   double det() const {
@@ -516,7 +513,6 @@ struct SymMatrix3 {
   /*!
  * @brief Computes the determinant of matrix
  *
- * @param m Matrix
  * @return inv Inverse of m
  */
   SymMatrix3 inv() const {

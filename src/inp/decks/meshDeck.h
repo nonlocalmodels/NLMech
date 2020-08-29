@@ -10,6 +10,7 @@
 #define INP_MESHDECK_H
 
 #include <string>
+#include "util/utilIO.h"
 
 namespace inp {
 
@@ -55,6 +56,40 @@ struct MeshDeck {
   MeshDeck()
       : d_dim(0), d_computeMeshSize(false), d_h(0.),
         d_isCentroidBasedDiscretization(false){};
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- MeshDeck --------" << std::endl << std::endl;
+    oss << tabS << "Dimension = " << d_dim << std::endl;
+    oss << tabS << "Spatial discretization type = " << d_spatialDiscretization << std::endl;
+    oss << tabS << "Mesh filename = " << d_filename << std::endl;
+    oss << tabS << "Compute mesh size = " << d_computeMeshSize << std::endl;
+    oss << tabS << "Mesh size = " << d_h << std::endl;
+    oss << tabS << "Is this centroid-based particle mesh = " << d_isCentroidBasedDiscretization <<
+        std::endl;
+    oss << tabS << std::endl;
+
+    return oss.str();
+  };
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /** @}*/

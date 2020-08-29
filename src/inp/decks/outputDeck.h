@@ -11,6 +11,7 @@
 
 #include <string>
 #include <vector>
+#include "util/utilIO.h"
 
 namespace inp {
 
@@ -60,7 +61,7 @@ struct OutputDeck {
   /*! @brief Specify output criteria to change output frequency
    *
    * Choices are:
-   * - <none>
+   * - "none"
    * - max_Z
    * - max_Z_stop
    *
@@ -100,6 +101,38 @@ struct OutputDeck {
 
     return false;
   };
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- OutputDeck --------" << std::endl << std::endl;
+    oss << tabS << "Output format = " << d_outFormat << std::endl;
+    oss << tabS << "Output path = " << d_path << std::endl;
+    oss << tabS << "Output tags = " << util::io::printStr(d_outTags) << std::endl;
+    oss << tabS << "Output interval = " << d_dtOut << std::endl;
+    oss << tabS << "Debug level = " << d_debug << std::endl;
+    oss << tabS << std::endl;
+
+    return oss.str();
+  };
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /** @}*/

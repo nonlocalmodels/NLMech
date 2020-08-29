@@ -12,6 +12,7 @@
 
 #include "inp/decks/fractureDeck.h"
 #include "util/utilGeom.h"
+#include "util/utilIO.h"
 
 geometry::Fracture::Fracture(inp::FractureDeck *deck)
     : d_fractureDeck_p(deck) {}
@@ -185,6 +186,17 @@ bool geometry::Fracture::getBondState(const size_t &i, const size_t &j) const {
   return bond >> (j % 8) & 1UL;
 }
 
-const std::vector<uint8_t> geometry::Fracture::getBonds(const size_t &i) const {
+std::vector<uint8_t> geometry::Fracture::getBonds(const size_t &i) const {
   return d_fracture[i];
+}
+
+std::string geometry::Fracture::printStr(int nt, int lvl) const {
+  auto tabS = util::io::getTabS(nt);
+  std::ostringstream oss;
+  oss << tabS << "------- Fracture --------" << std::endl << std::endl;
+  oss << tabS << "Fracture deck address = " << d_fractureDeck_p << std::endl;
+  oss << tabS << "Number of data = " << d_fracture.size() << std::endl;
+  oss << tabS << std::endl;
+
+  return oss.str();
 }

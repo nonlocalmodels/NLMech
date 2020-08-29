@@ -10,12 +10,15 @@
 #define INP_ABSORBING_COND_DECK_H
 
 #include <string>
+#include "util/utilIO.h"
 
 namespace inp {
 
 
 /*! Struct for the damping geometry */
 struct DampingGeomData {
+
+  /*! @brief Relative location type */
   std::string d_relativeLoc;
 
   /*! @brief Boolean for checking the x-direction */
@@ -32,12 +35,42 @@ struct DampingGeomData {
   /*! Thickness of the layer in z-direction */
   double d_layerThicknessZ;
 
+  /*! Point 1 to define bounding box */
   util::Point3 d_p1;
+  /*! Point 2 to define bounding box */
   util::Point3 d_p2;
 
   DampingGeomData() : d_checkX(false), d_checkY(false), d_checkZ(false),
       d_layerThicknessX(0.), d_layerThicknessY(0.), d_layerThicknessZ(0.),
       d_p1(util::Point3()), d_p2(util::Point3()) {};
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- DampingGeomData --------" << std::endl << std::endl;
+    oss << tabS << "Relative loc = " << d_relativeLoc << std::endl;
+    oss << tabS << std::endl;
+
+    return oss.str();
+  };
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /**
@@ -73,6 +106,35 @@ struct AbsorbingCondDeck {
    * @brief Constructor
    */
   AbsorbingCondDeck() : d_isViscousDamping(false), d_dampingActive(false) {};
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- AbsorbingCondDeck --------" << std::endl << std::endl;
+    oss << tabS << "Is damping active = " << d_dampingActive << std::endl;
+    oss << tabS << "Is viscous damping = " << d_isViscousDamping << std::endl;
+    oss << tabS << std::endl;
+
+    return oss.str();
+  };
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /** @}*/

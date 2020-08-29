@@ -9,11 +9,12 @@
 #ifndef INP_FRACTUREDECK_H
 #define INP_FRACTUREDECK_H
 
-#include "../../util/compare.h"       // compare utility
-#include "../../util/point.h"         // definition of Point3
-#include "../../util/transfomation.h" // rotation of point
+#include "util/compare.h"       // compare utility
+#include "util/point.h"         // definition of Point3
+#include "util/transfomation.h" // rotation of point
 #include <cstdlib>                    // definition of siz_t
 #include <vector>
+#include "util/utilIO.h"
 
 namespace inp {
 
@@ -183,6 +184,38 @@ struct EdgeCrack {
 
     return !this->ptLeftside(p, pb, pt);
   }
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- EdgeCrack --------" << std::endl << std::endl;
+    oss << tabS << "Orientation = " << d_o << std::endl;
+    oss << tabS << "Point 1 = " << d_pb << std::endl;
+    oss << tabS << "Point 2 = " << d_pt << std::endl;
+    oss << tabS << "Length = " << d_l << std::endl;
+    oss << tabS << "Angle = " << d_theta << std::endl;
+    oss << tabS << std::endl;
+
+    return oss.str();
+  };
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /**
@@ -200,6 +233,39 @@ struct FractureDeck {
    * @brief Constructor
    */
   FractureDeck() {};
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- FractureDeck --------" << std::endl << std::endl;
+    oss << tabS << "Number of cracks = " << d_cracks.size() << std::endl;
+    for (size_t i=0; i<d_cracks.size(); i++) {
+      oss << tabS << "Crack " << i + 1 << " information" << std::endl;
+      oss << d_cracks[i].printStr(nt + 1, lvl);
+      oss << std::endl;
+    }
+    oss << tabS << std::endl;
+
+    return oss.str();
+  };
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /** @}*/

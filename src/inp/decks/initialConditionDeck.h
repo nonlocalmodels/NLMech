@@ -10,6 +10,7 @@
 
 #include <string>
 #include <vector>
+#include "util/utilIO.h"
 
 namespace inp {
 
@@ -36,6 +37,36 @@ struct ICData {
    * @brief Constructor
    */
   ICData() = default;
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- ICData --------" << std::endl << std::endl;
+    oss << tabS << "Initial condition file = " << d_file << std::endl;
+    oss << tabS << "Initial condition type = " << d_type << std::endl;
+    oss << tabS << "Number of parameters = " << d_params.size() << std::endl;
+    oss << tabS << std::endl;
+
+    return oss.str();
+  };
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /**
@@ -56,6 +87,37 @@ struct InitialConditionDeck {
    * @brief Constructor
    */
   InitialConditionDeck() : d_uICData(), d_vICData(){};
+
+  /*!
+   * @brief Returns the string containing information about the instance of
+   * the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * @return string String containing information about this object
+   * */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- InitialConditionDeck --------" << std::endl << std::endl;
+    oss << tabS << "Displacement initial condition data " << std::endl;
+    oss << d_uICData.printStr(nt+1, lvl);
+    oss << tabS << "Velocity initial condition data " << std::endl;
+    oss << d_vICData.printStr(nt+1, lvl);
+    oss << tabS << std::endl;
+
+    return oss.str();
+  };
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 };
 
 /** @}*/

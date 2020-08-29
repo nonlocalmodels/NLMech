@@ -10,7 +10,7 @@
 #include "util/compare.h"
 #include "util/matrix.h"
 #include <iostream>
-#include <util/utilIO.h>
+#include "util/utilIO.h"
 
 #include "util/feElementDefs.h"  // global definition of elements
 
@@ -390,4 +390,16 @@ void fe::TetElem::init() {
     qd.d_detJ = 1.;
     d_quads.push_back(qd);
   }
+}
+
+std::string fe::TetElem::printStr(int nt, int lvl) const {
+  auto tabS = util::io::getTabS(nt);
+  std::ostringstream oss;
+  oss << tabS << "------- TetElem --------" << std::endl << std::endl;
+  oss << tabS << "Quad order = " << d_quadOrder << std::endl;
+  oss << tabS << "Num quad points = " << d_numQuadPts << std::endl;
+  oss << tabS << "Element type = " << d_elemType << std::endl;
+  oss << tabS << std::endl;
+
+  return oss.str();
 }

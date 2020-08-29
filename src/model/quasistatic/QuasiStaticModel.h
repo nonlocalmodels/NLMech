@@ -132,6 +132,7 @@ private:
 	void assembly_jacobian_matrix_part(size_t begin, size_t end, size_t thread);
 
 	/*! @brief Computes the new displacement of Newton step
+	 * @param res Residual vector
 	 * @return The updated displacement
 	 */
 	util::VectorXi newton_step(util::VectorXi &res);

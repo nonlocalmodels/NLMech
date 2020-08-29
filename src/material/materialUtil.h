@@ -24,6 +24,7 @@ namespace material {
    *
    * @param nodes Reference configuration of nodes
    * @param nodal_vol Nodal volumes
+   * @param neighbor_list Node neighbor list
    * @param mesh_size Mesh size
    * @param material Material which provides influence function value,
    * horizon, etc
@@ -44,8 +45,11 @@ void computeStateMx(const std::vector<util::Point3> &nodes,
    * @param nodes Reference configuration of nodes
    * @param nodes_disp Current displacement of nodes
    * @param nodal_vol Nodal volumes
+   * @param neighbor_list Node neighbor list
+   * @param mesh_size Mesh size
    * @param material Material which provides influence function value,
    * horizon, etc
+   * @param fracture Fracture state of bonds
    * @param mx Moment mx data
    * @param thetax Data which will hold the computed values
    * @param compute_in_parallel Whether to compute in parallel
@@ -66,9 +70,11 @@ void computeStateThetax(const std::vector<util::Point3> &nodes,
    * @param nodes Reference configuration of nodes
    * @param nodes_disp Current displacement of nodes
    * @param nodal_vol Nodal volumes
+   * @param neighbor_list Node neighbor list
+   * @param mesh_size Mesh size
    * @param material Material which provides influence function value,
    * horizon, etc
-   * @param mx Moment mx data
+   * @param fracture Fracture state of bonds
    * @param thetax Data which will hold the computed values
    * @param dim Dimension
    * @param compute_in_parallel Whether to compute in parallel
@@ -88,8 +94,10 @@ void computeHydrostaticStrain(const std::vector<util::Point3> &nodes,
    *
    * @param nodes Reference configuration of nodes
    * @param nodes_disp Current displacement of nodes
+   * @param neighbor_list Node neighbor list
    * @param material Material which provides influence function value,
    * horizon, etc
+   * @param fracture Fracture state of bonds
    * @param compute_in_parallel Whether to compute in parallel
    */
 void updateBondFractureData(const std::vector<util::Point3> &nodes,

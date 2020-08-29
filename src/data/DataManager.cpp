@@ -24,6 +24,7 @@
 #include "material/pd/ElasticState.h"
 #include "material/pdMaterial.h"
 #include "util/stateBasedHelperFunctions.h"
+#include "util/utilIO.h"
 
 data::DataManager::DataManager() {
   // if (instances != 0)
@@ -207,3 +208,13 @@ void data::DataManager::setKineticEnergyP(std::vector<float>* pointer) {
 }
 
 std::vector<float>* data::DataManager::getKineticEnergyP() { return d_ke_p; }
+
+std::string data::DataManager::printStr(int nt, int lvl) const {
+  // TODO
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- DataManager --------" << std::endl << std::endl;
+  oss << tabS << std::endl;
+
+  return oss.str();
+}

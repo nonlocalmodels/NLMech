@@ -9,7 +9,8 @@
 #include "lineElem.h"
 #include "util/feElementDefs.h"  // global definition of elements
 #include <iostream>
-#include <util/compare.h>
+#include "util/compare.h"
+#include "util/utilIO.h"
 
 fe::LineElem::LineElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_line) {
@@ -310,4 +311,16 @@ void fe::LineElem::init() {
     qd.d_detJ = 1.;
     d_quads.push_back(qd);
   }
+}
+
+std::string fe::LineElem::printStr(int nt, int lvl) const {
+  auto tabS = util::io::getTabS(nt);
+  std::ostringstream oss;
+  oss << tabS << "------- LineElem --------" << std::endl << std::endl;
+  oss << tabS << "Quad order = " << d_quadOrder << std::endl;
+  oss << tabS << "Num quad points = " << d_numQuadPts << std::endl;
+  oss << tabS << "Element type = " << d_elemType << std::endl;
+  oss << tabS << std::endl;
+
+  return oss.str();
 }

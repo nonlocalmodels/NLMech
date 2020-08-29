@@ -106,7 +106,19 @@ private:
    * @brief Computes peridynamic forces
    */
   void computeForces();
+
+  /*!
+   * @brief Computes peridynamic force on node
+   * @param i Id of node
+   * @return pair Pair of energy and force
+   */
   std::pair<double, util::Point3> computeForce(const size_t &i);
+
+  /*!
+   * @brief Computes peridynamic force (state-based) on node
+   * @param i Id of node
+   * @return pair Pair of energy and force
+   */
   std::pair<double, util::Point3> computeForceState(const size_t &i);
 
   /*!

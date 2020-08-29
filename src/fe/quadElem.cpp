@@ -8,6 +8,7 @@
 
 #include "quadElem.h"
 #include "util/feElementDefs.h"  // global definition of elements
+#include "util/utilIO.h"
 
 fe::QuadElem::QuadElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_quad) {
@@ -297,4 +298,16 @@ void fe::QuadElem::init() {
         d_quads.push_back(qd);
       }
   }
+}
+
+std::string fe::QuadElem::printStr(int nt, int lvl) const {
+  auto tabS = util::io::getTabS(nt);
+  std::ostringstream oss;
+  oss << tabS << "------- QuadElem --------" << std::endl << std::endl;
+  oss << tabS << "Quad order = " << d_quadOrder << std::endl;
+  oss << tabS << "Num quad points = " << d_numQuadPts << std::endl;
+  oss << tabS << "Element type = " << d_elemType << std::endl;
+  oss << tabS << std::endl;
+
+  return oss.str();
 }
