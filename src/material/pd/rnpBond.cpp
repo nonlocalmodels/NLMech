@@ -21,7 +21,7 @@
 #include "geometry/interiorFlags.h"
 
 material::pd::RNPBond::RNPBond(inp::MaterialDeck *deck,
-                                     data::DataManager *dataManager)
+                               data::DataManager *dataManager)
     : BaseMaterial(0, 0.),
       d_C(0.),
       d_beta(0.),
@@ -29,6 +29,8 @@ material::pd::RNPBond::RNPBond(inp::MaterialDeck *deck,
       d_invFactor(0.),
       d_factorSc(1.),
       d_irrevBondBreak(true),
+      d_contact_Kn(0.),
+      d_contact_Rc(0.),
       d_deck(nullptr),
       d_dataManager_p(dataManager),
       d_baseInfluenceFn_p(nullptr) {
@@ -81,11 +83,25 @@ material::pd::RNPBond::RNPBond(inp::MaterialDeck *deck,
     computeMaterialProperties(deck, influence_moment);
   }
 
+  // initialize contact forces between nodes with broken bonds
+  if (deck->d_applyContact) {
+    // set contact radius
+    d_contact_Rc = 0.9 * d_dataManager_p->getMeshP()->getMeshSize();
+    // set contact force coefficient
+    d_contact_Kn = deck->d_matData.d_K * 18. /
+        (M_PI * std::pow(d_horizon, 5));
+
+    std::cout << "RNPBonc: Mesh size: "
+              << d_dataManager_p->getMeshP()->getMeshSize()
+              << ", Rc: " << d_contact_Rc
+              << ", Kn: " << d_contact_Kn << "\n";
+  }
+
   d_deck = deck;
 }
 
 void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
-                                                 const double &M) {
+                                              const double &M) {
   //
   // Need following elastic and fracture properties
   // 1. E or K
@@ -163,7 +179,7 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
 }
 
 void material::pd::RNPBond::computeMaterialProperties(inp::MaterialDeck *deck,
-                                                         const double &M) {
+                                                      const double &M) {
   // set Poisson's ratio to 1/4
   deck->d_matData.d_nu = 0.25;
 
@@ -226,6 +242,7 @@ std::pair<util::Point3, double> material::pd::RNPBond::getBondEF(
   auto check_low = d_horizon - 0.5 * h;
 
   // get corrected volume of node j
+  auto voli = d_dataManager_p->getMeshP()->getNodalVolume(i);
   auto volj = d_dataManager_p->getMeshP()->getNodalVolume(j_id);
   if (util::compare::definitelyGreaterThan(rji, check_low))
     volj *= (check_up - rji) / h;
@@ -252,7 +269,20 @@ std::pair<util::Point3, double> material::pd::RNPBond::getBondEF(
           Sji * Sji) / d_invFactor) * volj * eij;
       return {force, energy};
     } else {
+
+      // energy
       energy = influence * d_C / d_invFactor * volj;
+
+      // normal contact force between nodes of broken bond
+      auto yji = xj + uj - (xi + ui);
+      auto Rji = yji.length();
+      auto scalar_f =
+          d_contact_Kn * (voli * volj / (voli + volj)) * (d_contact_Rc - Rji) /
+              Rji;
+      if (scalar_f < 0.)
+        scalar_f = 0.;
+      force += -scalar_f * yji;
+
       return std::make_pair(force, energy);
     }
   } // if break_bonds
@@ -264,7 +294,7 @@ std::pair<util::Point3, double> material::pd::RNPBond::getBondEF(
 }
 
 double material::pd::RNPBond::getS(const util::Point3 &dx,
-                                      const util::Point3 &du) {
+                                   const util::Point3 &du) {
   return dx.dot(du) / dx.dot(dx);
 }
 
@@ -293,7 +323,7 @@ double material::pd::RNPBond::getSc(size_t i, size_t j) {
 }
 
 util::Point3 material::pd::RNPBond::getBondForceDirection(const util::Point3 &dx,
-                                                             const util::Point3 &du) const {
+                                                          const util::Point3 &du) const {
   return dx / dx.length();
 }
 

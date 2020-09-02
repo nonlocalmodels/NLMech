@@ -228,6 +228,12 @@ private:
   /*! @brief Flag which indicates if the breaking of bond is irreversible */
   bool d_irrevBondBreak;
 
+  /*! @brief Kn coefficient for normal contact force between broken bonds */
+  double d_contact_Kn = 0.;
+
+  /*! @brief Contact radius for normal contact force between broken bonds */
+  double d_contact_Rc = 0.;
+
   /*! @brief Pointer to the material deck */
   const inp::MaterialDeck *d_deck;
 
