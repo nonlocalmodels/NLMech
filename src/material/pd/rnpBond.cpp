@@ -41,6 +41,9 @@ material::pd::RNPBond::RNPBond(inp::MaterialDeck *deck,
 
   d_dimension = dataManager->getModelDeckP()->d_dim;
 
+//  std::cout << "RNPBond \n" << std::flush;
+//  exit(0);
+
 
   // create influence function class
   if (deck->d_influenceFnType == 0)

@@ -261,15 +261,6 @@ private:
    */
   /**@{*/
 
-  /*! @brief Pointer to Mass matrix object containing mass matrix (if any) */
-  fe::MassMatrix *d_massMatrix_p;
-
-  /*! @brief Pointer to Fracture object */
-  geometry::Fracture *d_fracture_p;
-
-  /*! @brief Pointer to InteriorFlags object */
-  geometry::InteriorFlags *d_interiorFlags_p;
-
   /*! @brief Pointer to Input object */
   inp::Input *d_input_p;
 

@@ -32,7 +32,8 @@ public:
    * @param horizon Horizon
    */
   BaseMaterial(const size_t &dim, const double &horizon)
-      : d_horizon(horizon), d_dimension(dim), d_stateActive(false), d_name(""){};
+      : d_horizon(horizon), d_dimension(dim), d_stateActive(false), d_density
+      (0.), d_name (""){};
 
   /*!
    * @brief Returns true if state-based potential is active
@@ -166,7 +167,7 @@ public:
 * */
   virtual std::string printStr(int nt = 0, int lvl = 0) const {
     // TODO implement
-    return "";
+    return "BaseMaterial";
   };
 
   /*!
