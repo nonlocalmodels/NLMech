@@ -8,4 +8,3 @@
 
 #include "pd/ElasticState.h"
 #include "pd/rnpBond.h"
-#include "pd/rnpState.h"

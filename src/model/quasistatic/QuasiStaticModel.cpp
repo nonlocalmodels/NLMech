@@ -18,7 +18,6 @@
 #include "loading/initialCondition.h"
 #include "loading/uLoading.h"
 #include "material/materials.h"
-#include "material/pdMaterial.h"
 #include "util/parallel.h"
 #include "util/stateBasedHelperFunctions.h"
 #include "model/util.h"
@@ -193,7 +192,7 @@ void model::QuasiStaticModel<T>::computeForces(bool full) {
         for (size_t j = 0; j < i_neighs.size(); j++) {
           size_t j_id = i_neighs[j];
 
-          auto res = d_material_p->getBondEF(size_t(i), size_t(j_id));
+          auto res = d_material_p->getBondEF(size_t(i), size_t(j));
 
           force_i += res.first *
                      (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j_id];
@@ -269,7 +268,7 @@ inline void model::QuasiStaticModel<T>::computePertubatedForces(size_t thread) {
         for (size_t j = 0; j < i_neighs.size(); j++) {
           size_t j_id = i_neighs[j];
 
-          auto res = material->getBondEF(size_t(i), size_t(j_id));
+          auto res = material->getBondEF(size_t(i), size_t(j));
 
           force_i += res.first *
                      (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j_id];

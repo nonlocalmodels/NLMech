@@ -181,6 +181,28 @@ public:
 	 */
 	geometry::VolumeCorrection* getVolumeCorrectionP();
 
+  /*! Sets the mesh pointer
+   * @param d_mesh_p Pointer to the mesh object
+   */
+  void setFractureP(geometry::Fracture *pointer);
+
+
+  /*! Get the pointer to volume correction
+	 * @return pointer
+	 */
+  geometry::InteriorFlags* getInteriorFlagsP();
+
+  /*! Sets the mesh pointer
+   * @param d_mesh_p Pointer to the mesh object
+   */
+  void setInteriorFlagsP(geometry::InteriorFlags *pointer);
+
+
+  /*! Get the pointer to the mesh object
+   * @return pointer
+   */
+  geometry::Fracture* getFractureP();
+
 	/*! Sets the pointer to the state-based helper
 	 * @param pointer Pointer
 	 */
@@ -253,6 +275,16 @@ public:
 	 * @return pointer
 	 */
 	std::vector<double> * getDilatationP();
+
+  /*! Sets the pointer to the weighted volume data
+   * @param pointer Pointer
+   */
+  void setWeightedVolP(std::vector<double> * pointer);
+
+  /*! Get the pointer to weighted volume data
+   * @return pointer
+   */
+  std::vector<double> * getWeightedVolP();
 
 	/*! Sets the pointer to the total reaction force 
 	 * @param pointer Pointer
@@ -404,6 +436,22 @@ private:
 	/*! @brief Dilatation of nodes */
 	std::vector<double> *d_dilatation_p = nullptr;
 
+  /*! @brief Weighted volume */
+  std::vector<double> *d_weighted_vol_p = nullptr;
+
+  /*! @brief Dilation
+ *
+ * In case of Regularized state based model, this will give the spherical
+ * (hydrostatic) strain
+ */
+  std::vector<double> d_thetaX;
+
+  /*! @brief Weighted volume
+   *
+   * In case of Regularized state based model, this data is not required
+   */
+  std::vector<double> d_mX;
+
 	/*! @brief Pointer to the strain energy vector */
 	std::vector<float>* d_e_p = nullptr;
 
@@ -446,6 +494,12 @@ private:
 
 	/*! @brief Pointer to Volume Correction object */
 	geometry::VolumeCorrection *d_volumeCorrection_p = nullptr;
+
+  /*! @brief Pointer to Fracture object */
+  geometry::Fracture *d_fracture_p = nullptr;
+
+  /*! @brief Pointer to InteriorFlags object */
+  geometry::InteriorFlags *d_interiorFlags_p = nullptr;
 
 	/*! @brief Pointer to StatebasedHelper function object */
 	util::StateBasedHelperFunctions* d_sbhelper_p = nullptr;

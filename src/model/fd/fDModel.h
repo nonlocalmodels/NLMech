@@ -45,6 +45,7 @@ class FLoading;
 namespace material {
 namespace pd {
 class Material;
+class BaseMaterial;
 }
 } // namespace material
 
@@ -77,6 +78,7 @@ namespace model {
  *
  * @note 3. Either triangle or quadrangle elements are supported.
  */
+template<class T>
 class FDModel : public Model {
 
 public:
@@ -113,13 +115,6 @@ private:
    * @return pair Pair of energy and force
    */
   std::pair<double, util::Point3> computeForce(const size_t &i);
-
-  /*!
-   * @brief Computes peridynamic force (state-based) on node
-   * @param i Id of node
-   * @return pair Pair of energy and force
-   */
-  std::pair<double, util::Point3> computeForceState(const size_t &i);
 
   /*!
    * @brief Validates if there is a reaction force between node i and node j
@@ -285,7 +280,7 @@ private:
   loading::InitialCondition *d_initialCondition_p;
 
   /*! @brief Pointer to Material object */
-  material::pd::Material *d_material_p;
+  T *d_material_p;
 
   /*! @brief Pointer to Material object */
   geometry::DampingGeom *d_dampingGeom_p;

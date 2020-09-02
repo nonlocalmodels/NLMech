@@ -14,6 +14,8 @@
 #include "fe/mesh.h"
 #include "geometry/neighbor.h"
 #include "geometry/volumeCorrection.h"
+#include "geometry/fracture.h"
+#include "geometry/interiorFlags.h"
 #include "inp/decks/materialDeck.h"
 #include "inp/decks/modelDeck.h"
 #include "inp/decks/outputDeck.h"
@@ -22,7 +24,6 @@
 #include "loading/initialCondition.h"
 #include "loading/uLoading.h"
 #include "material/pd/ElasticState.h"
-#include "material/pdMaterial.h"
 #include "util/stateBasedHelperFunctions.h"
 #include "util/utilIO.h"
 
@@ -90,6 +91,21 @@ geometry::VolumeCorrection* data::DataManager::getVolumeCorrectionP() {
   return d_volumeCorrection_p;
 }
 
+geometry::Fracture* data::DataManager::getFractureP() { return d_fracture_p; }
+
+void data::DataManager::setFractureP(
+    geometry::Fracture* pointer) {
+  d_fracture_p = pointer;
+}
+
+geometry::InteriorFlags* data::DataManager::getInteriorFlagsP() { return
+d_interiorFlags_p; }
+
+void data::DataManager::setInteriorFlagsP(
+    geometry::InteriorFlags* pointer) {
+  d_interiorFlags_p = pointer;
+}
+
 void data::DataManager::setStateBasedHelperFunctionsP(
     util::StateBasedHelperFunctions* pointer) {
   d_sbhelper_p = pointer;
@@ -154,6 +170,15 @@ void data::DataManager::setDilatationP(std::vector<double>* pointer) {
 std::vector<double>* data::DataManager::getDilatationP() {
   return d_dilatation_p;
 }
+
+void data::DataManager::setWeightedVolP(std::vector<double>* pointer) {
+  d_weighted_vol_p = pointer;
+}
+
+std::vector<double>* data::DataManager::getWeightedVolP() {
+  return d_weighted_vol_p;
+}
+
 
 void data::DataManager::setReactionForceP(std::vector<util::Point3>* pointer) {
   d_reaction_force_p = pointer;

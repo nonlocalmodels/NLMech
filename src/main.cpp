@@ -65,8 +65,11 @@ int main(int argc, char *argv[]) {
             deck);
       }
     } else if (deck->getModelDeck()->d_timeDiscretization ==
-               "central_difference") {
-      model::FDModel fdModel(deck);
+               "central_difference" or deck->getModelDeck()->d_timeDiscretization ==
+        "velocity_verlet") {
+      if (deck->getMaterialDeck()->d_materialType == "RNPBond") {
+        model::FDModel<material::pd::RNPBond> fdModel(deck);
+      }
 
     }
 
