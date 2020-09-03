@@ -19,6 +19,8 @@ material::pd::ElasticState::ElasticState(inp::MaterialDeck *deck,
     : BaseMaterial(dim, horizon) {
   d_dataManager_p = dataManager;
 
+  d_name = "ElasticState";
+  d_density = deck->d_density;
   horizon = dataManager->getModelDeckP()->d_horizon;
 
   dim = dataManager->getModelDeckP()->d_dim;
@@ -157,6 +159,11 @@ void material::pd::ElasticState::computeParameters(inp::MaterialDeck *deck,
 
 std::pair<util::Point3, double> material::pd::ElasticState::getBondEF(
     size_t i, size_t j) {
+
+  // j is the local id in the neighborlist of node i
+  // get global id of j
+  auto j_id = d_dataManager_p->getNeighborP()->getNeighbor(i, j);
+
   double w = 1;
 
   double t = 0.;
@@ -168,21 +175,14 @@ std::pair<util::Point3, double> material::pd::ElasticState::getBondEF(
   double t_s = 0.;
   double t_d = 0.;
 
-  util::Point3 Y = ((*d_dataManager_p->getMeshP()->getNodesP())[j] +
-                    (*d_dataManager_p->getDisplacementP())[j]) -
+  util::Point3 Y = ((*d_dataManager_p->getMeshP()->getNodesP())[j_id] +
+                    (*d_dataManager_p->getDisplacementP())[j_id]) -
                    ((*d_dataManager_p->getMeshP()->getNodesP())[i] +
                     (*d_dataManager_p->getDisplacementP())[i]);
-  util::Point3 X = (*d_dataManager_p->getMeshP()->getNodesP())[j] -
+  util::Point3 X = (*d_dataManager_p->getMeshP()->getNodesP())[j_id] -
                    (*d_dataManager_p->getMeshP()->getNodesP())[i];
 
   util::Point3 M = Y / Y.length();
-
-  auto it =
-      std::find(d_dataManager_p->getNeighborP()->getNeighbors(i).begin(),
-                d_dataManager_p->getNeighborP()->getNeighbors(i).end(), j);
-
-  size_t k = std::distance(
-      d_dataManager_p->getNeighborP()->getNeighbors(i).begin(), it);
 
   switch (dim) {
     case 1:
@@ -190,7 +190,7 @@ std::pair<util::Point3, double> material::pd::ElasticState::getBondEF(
       alpha = d_deck->d_matData.d_E /
               (*d_dataManager_p->getVolumeCorrectionP()->d_weightedVolume_p)[i];
       // Scalar force state
-      t = alpha * w * (*d_dataManager_p->getExtensionP())[i][k];
+      t = alpha * w * (*d_dataManager_p->getExtensionP())[i][j];
       break;
     case 2:
       // PD material parameter
@@ -216,7 +216,7 @@ std::pair<util::Point3, double> material::pd::ElasticState::getBondEF(
 
       // Scalar extension states
       e_s = (*d_dataManager_p->getDilatationP())[i] * X.length() / 3.;
-      e_d = (*d_dataManager_p->getExtensionP())[i][k] - e_s;
+      e_d = (*d_dataManager_p->getExtensionP())[i][j] - e_s;
 
       // Scalar force states
       t_s = (2. * d_factor2D * alpha_s - (3. - 2. * d_factor2D) * alpha_d) * w *
@@ -251,23 +251,23 @@ std::pair<util::Point3, double> material::pd::ElasticState::getBondEF(
   if (strainEnergy) {
     if (dim == 1)
 
-      strainE = 0.5 * alpha * w * (*d_dataManager_p->getExtensionP())[i][k] *
-                (*d_dataManager_p->getExtensionP())[i][k] *
+      strainE = 0.5 * alpha * w * (*d_dataManager_p->getExtensionP())[i][j] *
+                (*d_dataManager_p->getExtensionP())[i][j] *
                 (*d_dataManager_p->getVolumeCorrectionP()
-                      ->d_volumeCorrection_p)[i][k] *
-                (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j];
+                      ->d_volumeCorrection_p)[i][j] *
+                (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j_id];
 
     else
 
       strainE = 0.5 * w * (alpha_s * e_s * e_s + alpha_d * e_d * e_d) *
                 (*d_dataManager_p->getVolumeCorrectionP()
-                      ->d_volumeCorrection_p)[i][k] *
-                (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j];
+                      ->d_volumeCorrection_p)[i][j] *
+                (*d_dataManager_p->getMeshP()->getNodalVolumesP())[j_id];
   }
 
   return std::make_pair<util::Point3, double>(
       std::move(M * t) * (*d_dataManager_p->getVolumeCorrectionP()
-                               ->d_volumeCorrection_p)[i][k],
+                               ->d_volumeCorrection_p)[i][j],
       std::move(strainE));
 }
 

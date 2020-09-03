@@ -38,51 +38,58 @@
 #include "loading/fLoading.h"
 #include "loading/initialCondition.h"
 #include "loading/uLoading.h"
-#include "material/materialUtil.h"
-#include "material/pdMaterial.h"
 #include "material/materials.h"
 #include "model/util.h"
 
 // standard lib
 #include <fstream>
 
-model::FDModel::FDModel(inp::Input *deck)
-    : d_massMatrix_p(nullptr),
-      d_fracture_p(nullptr),
-      d_interiorFlags_p(nullptr),
-      d_input_p(deck),
+template <class T>
+model::FDModel<T>::FDModel(inp::Input *deck)
+    : d_input_p(deck),
       d_policy_p(nullptr),
       d_initialCondition_p(nullptr),
       d_material_p(nullptr),
       d_dampingGeom_p(nullptr),
       d_stop(false) {
-  d_modelDeck_p = deck->getModelDeck();
-  d_outputDeck_p = deck->getOutputDeck();
+
+  d_dataManager_p = new data::DataManager();
+
+  d_dataManager_p->setModelDeckP(deck->getModelDeck());
+  d_dataManager_p->setOutputDeckP(deck->getOutputDeck());
+
   d_policy_p = inp::Policy::getInstance(d_input_p->getPolicyDeck());
   d_absorbingCondDeck_p = deck->getAbsorbingCondDeck();
 
-  if (d_modelDeck_p->d_isRestartActive)
+  if (d_dataManager_p->getModelDeckP()->d_isRestartActive)
     restart(deck);
   else
     run(deck);
 }
 
-model::FDModel::~FDModel() {
+template <class T>
+model::FDModel<T>::~FDModel() {
   delete d_dataManager_p->getMeshP();
   delete d_dataManager_p->getDisplacementLoadingP();
   delete d_dataManager_p->getForceLoadingP();
   delete d_dataManager_p->getNeighborP();
+  delete d_dataManager_p->getFractureP();
+  delete d_dataManager_p->getInteriorFlagsP();
+  delete d_dataManager_p->getDisplacementP();
+  delete d_dataManager_p->getVelocityP();
+  delete d_dataManager_p->getForceP();
+  delete d_dataManager_p->getModelDeckP();
+  delete d_dataManager_p->getOutputDeckP();
 
   delete d_material_p;
-  delete d_fracture_p;
-  delete d_interiorFlags_p;
   delete d_initialCondition_p;
   delete d_dampingGeom_p;
 
   delete d_dataManager_p;
 }
 
-void model::FDModel::run(inp::Input *deck) {
+template <class T>
+void model::FDModel<T>::run(inp::Input *deck) {
   // first initialize all the high level data
   initHObjects();
 
@@ -93,7 +100,8 @@ void model::FDModel::run(inp::Input *deck) {
   integrate();
 }
 
-void model::FDModel::restart(inp::Input *deck) {
+template <class T>
+void model::FDModel<T>::restart(inp::Input *deck) {
   d_restartDeck_p = deck->getRestartDeck();
 
   // first initialize all the high level data
@@ -104,16 +112,16 @@ void model::FDModel::restart(inp::Input *deck) {
 
   // set time step to step specified in restart deck
   d_n = d_restartDeck_p->d_step;
-  d_time = double(d_n) * d_modelDeck_p->d_dt;
+  d_time = double(d_n) * d_dataManager_p->getModelDeckP()->d_dt;
 
   // read displacement and velocity from restart file
 
-  if (d_outputDeck_p->d_outFormat == "vtu")
+  if (d_dataManager_p->getOutputDeckP()->d_outFormat == "vtu")
     rw::reader::readVtuFileRestart(d_restartDeck_p->d_file,
                                    d_dataManager_p->getDisplacementP(),
                                    d_dataManager_p->getVelocityP(),
                                    d_dataManager_p->getMeshP()->getNodesP());
-  else if (d_outputDeck_p->d_outFormat == "msh")
+  else if (d_dataManager_p->getOutputDeckP()->d_outFormat == "msh")
     rw::reader::readMshFileRestart(d_restartDeck_p->d_file,
                                    d_dataManager_p->getDisplacementP(),
                                    d_dataManager_p->getVelocityP(),
@@ -123,7 +131,8 @@ void model::FDModel::restart(inp::Input *deck) {
   integrate();
 }
 
-void model::FDModel::initHObjects() {
+template <class T>
+void model::FDModel<T>::initHObjects() {
   std::cout << "FDModel: Initializing high level objects.\n";
   // read mesh data
   std::cout << "FDModel: Creating mesh.\n";
@@ -140,22 +149,22 @@ void model::FDModel::initHObjects() {
   std::cout << "FDModel: Creating neighbor list.\n";
 
   d_dataManager_p->setNeighborP(new geometry::Neighbor(
-      d_modelDeck_p->d_horizon, d_input_p->getNeighborDeck(),
+      d_dataManager_p->getModelDeckP()->d_horizon, d_input_p->getNeighborDeck(),
       d_dataManager_p->getMeshP()->getNodesP()));
 
   // create fracture data
   std::cout << "FDModel: Creating edge crack if any and modifying the "
                "fracture state of bonds.\n";
-  d_fracture_p = new geometry::Fracture(
+  d_dataManager_p->setFractureP(new geometry::Fracture(
       d_input_p->getFractureDeck(), d_dataManager_p->getMeshP()->getNodesP(),
-      d_dataManager_p->getNeighborP()->getNeighborsListP());
+      d_dataManager_p->getNeighborP()->getNeighborsListP()));
 
   // create interior flags
   std::cout << "FDModel: Creating interior flags for nodes.\n";
-  d_interiorFlags_p = new geometry::InteriorFlags(
+  d_dataManager_p->setInteriorFlagsP(new geometry::InteriorFlags(
       d_input_p->getInteriorFlagsDeck(),
       d_dataManager_p->getMeshP()->getNodesP(),
-      d_dataManager_p->getMeshP()->getBoundingBox());
+      d_dataManager_p->getMeshP()->getBoundingBox()));
 
   // initialize initial condition class
   std::cout << "FDModel: Initializing initial condition object.\n";
@@ -172,9 +181,7 @@ void model::FDModel::initHObjects() {
 
   // initialize material class
   std::cout << "FDModel: Initializing material object.\n";
-  d_material_p = new material::pd::Material(d_input_p->getMaterialDeck(),
-                                            d_modelDeck_p->d_dim,
-                                            d_modelDeck_p->d_horizon);
+  d_material_p = new T(d_input_p->getMaterialDeck(), d_dataManager_p);
 
   // initialize damping geometry class
   std::cout << "FDModel: Initializing damping object.\n";
@@ -182,7 +189,8 @@ void model::FDModel::initHObjects() {
                                               d_dataManager_p->getMeshP());
 }
 
-void model::FDModel::init() {
+template <class T>
+void model::FDModel<T>::init() {
   std::cout << "FDModel: Initializing basic datas.\n";
 
   d_n = 0;
@@ -200,35 +208,12 @@ void model::FDModel::init() {
       new std::vector<util::Point3>(nnodes, util::Point3()));
 
   // Allocate the reaction force vector
-  if (d_outputDeck_p->isTagInOutput("Reaction_Force") or
-      d_outputDeck_p->isTagInOutput("Total_Reaction_Force")) {
+  if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Reaction_Force") or
+      d_dataManager_p->getOutputDeckP()->isTagInOutput("Total_Reaction_Force")) {
     d_dataManager_p->setReactionForceP(
         new std::vector<util::Point3>(nnodes, util::Point3()));
     d_dataManager_p->setTotalReactionForceP(
         new std::vector<double>(nnodes, 0.));
-  }
-
-  // check material type and if needed update policy
-  if (!d_material_p->isStateActive()) {
-    d_policy_p->addToTags(0, "Model_d_hS");
-    d_policy_p->addToTags(0, "Model_d_eF");
-  }
-
-  // check if we need to compute and store hydrostatic strain
-  if (d_material_p->isStateActive()) {
-    d_thetaX =
-        std::vector<double>(d_dataManager_p->getMeshP()->getNumNodes(), 0.);
-
-    if (d_material_p->name() == "PDState") {
-      d_mX =
-          std::vector<double>(d_dataManager_p->getMeshP()->getNumNodes(), 0.);
-
-      material::computeStateMx(
-          d_dataManager_p->getMeshP()->getNodes(),
-          d_dataManager_p->getMeshP()->getNodalVolumes(),
-          d_dataManager_p->getNeighborP()->getNeighborsList(),
-          d_dataManager_p->getMeshP()->getMeshSize(), d_material_p, d_mX, true);
-    }
   }
 
   // initialize minor simulation data
@@ -238,7 +223,7 @@ void model::FDModel::init() {
 
   if (d_policy_p->enablePostProcessing()) {
     std::string tag = "Strain_Energy";
-    if (d_outputDeck_p->isTagInOutput(tag)) {
+    if (d_dataManager_p->getOutputDeckP()->isTagInOutput(tag)) {
       // this data is asked in output file
       // but check if policy allows its population
       if (d_policy_p->populateData("Model_d_e"))
@@ -249,21 +234,21 @@ void model::FDModel::init() {
     }
 
     tag = "Work_Done";
-    if (d_outputDeck_p->isTagInOutput(tag)) {
+    if (d_dataManager_p->getOutputDeckP()->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_w"))
         d_dataManager_p->setWorkDoneP(new std::vector<float>(nnodes, 0.0));
     } else
       d_policy_p->addToTags(0, "Model_d_w");
 
     tag = "Damage_Phi";
-    if (d_outputDeck_p->isTagInOutput(tag)) {
+    if (d_dataManager_p->getOutputDeckP()->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_phi"))
         d_dataManager_p->setPhiP(new std::vector<float>(nnodes, 0.0));
     } else
       d_policy_p->addToTags(0, "Model_d_phi");
 
     tag = "Damage_Z";
-    if (d_outputDeck_p->isTagInOutput(tag)) {
+    if (d_dataManager_p->getOutputDeckP()->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_Z"))
         d_dataManager_p->setDamageFunctionP(
             new std::vector<float>(nnodes, 0.0));
@@ -271,7 +256,7 @@ void model::FDModel::init() {
       d_policy_p->addToTags(0, "Model_d_Z");
 
     tag = "Fracture_Perienergy_Total";
-    if (d_outputDeck_p->isTagInOutput(tag)) {
+    if (d_dataManager_p->getOutputDeckP()->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_eF"))
 
         d_dataManager_p->setFractureEnergyP(
@@ -280,7 +265,7 @@ void model::FDModel::init() {
       d_policy_p->addToTags(0, "Model_d_eF");
 
     tag = "Fracture_Perienergy_Bond";
-    if (d_outputDeck_p->isTagInOutput(tag)) {
+    if (d_dataManager_p->getOutputDeckP()->isTagInOutput(tag)) {
       if (d_policy_p->populateData("Model_d_eFB"))
         d_dataManager_p->setBBFractureEnergyP(
             new std::vector<float>(nnodes, 0.0));
@@ -288,13 +273,13 @@ void model::FDModel::init() {
       d_policy_p->addToTags(0, "Model_d_eFB");
   }
 
-  if (d_outputDeck_p->d_outCriteria == "max_Z" or
-      d_outputDeck_p->d_outCriteria == "max_Z_stop") {
+  if (d_dataManager_p->getOutputDeckP()->d_outCriteria == "max_Z" or
+      d_dataManager_p->getOutputDeckP()->d_outCriteria == "max_Z_stop") {
     size_t num_params = 1;
-    if (d_outputDeck_p->d_outCriteria == "max_Z_stop") num_params = 6;
+    if (d_dataManager_p->getOutputDeckP()->d_outCriteria == "max_Z_stop") num_params = 6;
 
-    if (d_outputDeck_p->d_outCriteriaParams.size() < num_params) {
-      std::cerr << "Error: Output criteria " << d_outputDeck_p->d_outCriteria
+    if (d_dataManager_p->getOutputDeckP()->d_outCriteriaParams.size() < num_params) {
+      std::cerr << "Error: Output criteria " << d_dataManager_p->getOutputDeckP()->d_outCriteria
                 << " requires " << num_params << " parameters. \n";
       exit(1);
     }
@@ -302,12 +287,12 @@ void model::FDModel::init() {
     // issue warning when postprocessing is turned off as we need damage data
     // to compute output criteria
     if (!d_policy_p->enablePostProcessing()) {
-      std::cout << "Warning: Output criteria " << d_outputDeck_p->d_outCriteria
+      std::cout << "Warning: Output criteria " << d_dataManager_p->getOutputDeckP()->d_outCriteria
                 << " requires Damage data Z but either "
                    "postprocessing is set to off. "
                    "Therefore setting output criteria to "
                    "null.\n";
-      d_outputDeck_p->d_outCriteria.clear();
+      d_dataManager_p->getOutputDeckP()->d_outCriteria.clear();
     } else {
       // check if damage data is allocated
       if ((*d_dataManager_p->getDamageFunctionP()).size() !=
@@ -325,7 +310,8 @@ void model::FDModel::init() {
   }  // handle output criteria exceptions
 }
 
-void model::FDModel::integrate() {
+template <class T>
+void model::FDModel<T>::integrate() {
   // apply initial loading
   if (d_n == 0)
     d_initialCondition_p->apply(d_dataManager_p->getDisplacementP(),
@@ -351,15 +337,15 @@ void model::FDModel::integrate() {
 
   // start time integration
   size_t i = d_n;
-  for (i; i < d_modelDeck_p->d_Nt; i++) {
-    if (d_modelDeck_p->d_timeDiscretization == "central_difference")
+  for (i; i < d_dataManager_p->getModelDeckP()->d_Nt; i++) {
+    if (d_dataManager_p->getModelDeckP()->d_timeDiscretization == "central_difference")
       integrateCD();
-    else if (d_modelDeck_p->d_timeDiscretization == "velocity_verlet")
+    else if (d_dataManager_p->getModelDeckP()->d_timeDiscretization == "velocity_verlet")
       integrateVerlet();
 
     // handle general output
-    if ((d_n % d_outputDeck_p->d_dtOut == 0) &&
-        (d_n >= d_outputDeck_p->d_dtOut)) {
+    if ((d_n % d_dataManager_p->getOutputDeckP()->d_dtOut == 0) &&
+        (d_n >= d_dataManager_p->getOutputDeckP()->d_dtOut)) {
       if (d_policy_p->enablePostProcessing()) computePostProcFields();
 
       model::Output(d_input_p, d_dataManager_p, d_n, d_time);
@@ -372,7 +358,7 @@ void model::FDModel::integrate() {
     }
 
     // check for crack application
-    if (d_fracture_p->addCrack(
+    if (d_dataManager_p->getFractureP()->addCrack(
             d_time, d_dataManager_p->getMeshP()->getNodesP(),
             d_dataManager_p->getNeighborP()->getNeighborsListP())) {
       // check if we need to modify the output frequency
@@ -381,13 +367,14 @@ void model::FDModel::integrate() {
   }  // loop over time steps
 }
 
-void model::FDModel::integrateCD() {
+template <class T>
+void model::FDModel<T>::integrateCD() {
   // parallel for loop
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       d_dataManager_p->getMeshP()->getNumNodes(), [this](boost::uint64_t i) {
         auto dim = this->d_dataManager_p->getMeshP()->getDimension();
-        auto delta_t = this->d_modelDeck_p->d_dt;
+        auto delta_t = this->d_dataManager_p->getModelDeckP()->d_dt;
         auto fact = delta_t * delta_t / this->d_material_p->getDensity();
 
         if (this->d_dataManager_p->getMeshP()->isNodeFree(i, 0)) {
@@ -436,7 +423,7 @@ void model::FDModel::integrateCD() {
   // compute forces and energy due to new displacement field (this will be
   // used in next time step)
   d_n++;
-  d_time += d_modelDeck_p->d_dt;
+  d_time += d_dataManager_p->getModelDeckP()->d_dt;
 
   // boundary condition
   d_dataManager_p->getDisplacementLoadingP()->apply(
@@ -449,13 +436,15 @@ void model::FDModel::integrateCD() {
   computeForces();
 }
 
-void model::FDModel::integrateVerlet() {
+template <class T>
+void model::FDModel<T>::integrateVerlet() {
+
   // step 1 and 2 : Compute v_mid and u_new
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       d_dataManager_p->getMeshP()->getNumNodes(), [this](boost::uint64_t i) {
         auto dim = this->d_dataManager_p->getMeshP()->getDimension();
-        auto delta_t = this->d_modelDeck_p->d_dt;
+        auto delta_t = this->d_dataManager_p->getModelDeckP()->d_dt;
         auto fact = 0.5 * delta_t / this->d_material_p->getDensity();
 
         // modify dofs which are not marked fixed
@@ -491,7 +480,7 @@ void model::FDModel::integrateVerlet() {
   // compute forces and energy due to new displacement field (this will be
   // used in next time step)
   d_n++;
-  d_time += d_modelDeck_p->d_dt;
+  d_time += d_dataManager_p->getModelDeckP()->d_dt;
 
   // boundary condition
   d_dataManager_p->getDisplacementLoadingP()->apply(
@@ -509,7 +498,7 @@ void model::FDModel::integrateVerlet() {
       d_dataManager_p->getMeshP()->getNumNodes(), [this](boost::uint64_t i) {
         auto dim = this->d_dataManager_p->getMeshP()->getDimension();
         auto fact =
-            0.5 * this->d_modelDeck_p->d_dt / this->d_material_p->getDensity();
+            0.5 * this->d_dataManager_p->getModelDeckP()->d_dt / this->d_material_p->getDensity();
 
         // modify dofs which are not marked fixed
         if (this->d_dataManager_p->getMeshP()->isNodeFree(i, 0))
@@ -530,209 +519,65 @@ void model::FDModel::integrateVerlet() {
   f.get();
 }
 
-void model::FDModel::computeForces() {
+template <class T>
+void model::FDModel<T>::computeForces() {
   const auto &nodes = d_dataManager_p->getMeshP()->getNodes();
   const auto &volumes = d_dataManager_p->getMeshP()->getNodalVolumes();
 
-  // compute helper quantities for state-based model
-  if (d_material_p->isStateActive()) {
-    if (d_material_p->name() == "RNPState")
-      material::computeHydrostaticStrain(
-          nodes, (*d_dataManager_p->getDisplacementP()), volumes,
-          d_dataManager_p->getNeighborP()->getNeighborsList(),
-          d_dataManager_p->getMeshP()->getMeshSize(), d_material_p,
-          d_fracture_p, d_thetaX, d_modelDeck_p->d_dim, true);
-    else if (d_material_p->name() == "PDState") {
-      // need to update the fracture state of bonds
-      material::updateBondFractureData(
-          nodes, (*d_dataManager_p->getDisplacementP()),
-          d_dataManager_p->getNeighborP()->getNeighborsList(), d_material_p,
-          d_fracture_p, true);
-
-      material::computeStateThetax(
-          nodes, (*d_dataManager_p->getDisplacementP()), volumes,
-          d_dataManager_p->getNeighborP()->getNeighborsList(),
-          d_dataManager_p->getMeshP()->getMeshSize(), d_material_p,
-          d_fracture_p, d_mX, d_thetaX, true);
-    }
-  }
-
-  if (d_material_p->isStateActive()) {
-    auto f = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        d_dataManager_p->getMeshP()->getNumNodes(),
-        [this](boost::uint64_t i) {
-          (*this->d_dataManager_p->getForceP())[i] +=
-              this->computeForceState(i).second;
-        }  // loop over nodes
-    );     // end of parallel for loop
-    f.get();
-  } else {
-    auto f = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        d_dataManager_p->getMeshP()->getNumNodes(),
-        [this](boost::uint64_t i) {
-          (*this->d_dataManager_p->getForceP())[i] +=
-              this->computeForce(i).second;
-        }  // loop over nodes
-    );     // end of parallel for loop
-    f.get();
-  }
+  auto f = hpx::parallel::for_loop(
+      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      d_dataManager_p->getMeshP()->getNumNodes(),
+      [this](boost::uint64_t i) {
+        (*this->d_dataManager_p->getForceP())[i] +=
+            this->computeForce(i).second;
+      }  // loop over nodes
+  );     // end of parallel for loop
+  f.get();
 }
 
-std::pair<double, util::Point3> model::FDModel::computeForce(const size_t &i) {
+template <class T>
+std::pair<double, util::Point3> model::FDModel<T>::computeForce(const size_t &i) {
   // local variable to hold force
   auto force_i = util::Point3();
   double energy_i = 0.;
 
-  if (d_outputDeck_p->isTagInOutput("Reaction_Force") or
-      d_outputDeck_p->isTagInOutput("Total_Reaction_Force")) {
+  if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Reaction_Force") or
+      d_dataManager_p->getOutputDeckP()->isTagInOutput("Total_Reaction_Force")) {
     (*d_dataManager_p->getReactionForceP())[i] = util::Point3();
     (*d_dataManager_p->getTotalReactionForceP())[i] = 0.;
   }
-
-  // reference coordinate and displacement at the node
-  auto xi = this->d_dataManager_p->getMeshP()->getNode(i);
-  auto ui = (*d_dataManager_p->getDisplacementP())[i];
-
-  // get interior flag
-  auto node_i_interior = this->d_interiorFlags_p->getInteriorFlag(i, xi);
-
-  // upper and lower bound for volume correction
-  auto h = d_dataManager_p->getMeshP()->getMeshSize();
-  auto check_up = d_modelDeck_p->d_horizon + 0.5 * h;
-  auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
 
   // inner loop over neighbors
   const auto &i_neighs = this->d_dataManager_p->getNeighborP()->getNeighbors(i);
   for (size_t j = 0; j < i_neighs.size(); j++) {
     auto j_id = i_neighs[j];
 
-    // there are two contributions to force at node i
-    // 1. From bond j-i due to bond-based forces
-    // 2. From hydrostatic strains at node j and node i due to
-    // hydrostatic forces
-
-    // compute bond-based contribution
-    auto xj = this->d_dataManager_p->getMeshP()->getNode(j_id);
-    auto uj = (*d_dataManager_p->getDisplacementP())[j_id];
-    auto rji = xj.dist(xi);
-    auto Sji = this->d_material_p->getS(xj - xi, uj - ui);
-
-    // get corrected volume of node j
-    auto volj = this->d_dataManager_p->getMeshP()->getNodalVolume(j_id);
-    if (util::compare::definitelyGreaterThan(rji, check_low))
-      volj *= (check_up - rji) / h;
-
-    // check if bond is in no-fail region
-    bool break_bonds = true;
-    if (!node_i_interior || !this->d_interiorFlags_p->getInteriorFlag(j_id, xj))
-      break_bonds = false;
-
-    // get peridynamics force and energy density between bond i and j
-    auto fs = this->d_fracture_p->getBondState(i, j);
-    auto ef = this->d_material_p->getBondEF(rji, Sji, fs, break_bonds);
-
-    // update fracture state of bond
-    this->d_fracture_p->setBondState(i, j, fs);
-
-    // compute the contribution of bond force to force at i
-    auto scalar_f = ef.second * volj;
-
-    force_i +=
-        scalar_f * this->d_material_p->getBondForceDirection(xj - xi, uj - ui);
-
-    energy_i += ef.first * volj;
+    auto fe_pair = d_material_p->getBondEF(i, j);
+    force_i += fe_pair.first;
+    energy_i += fe_pair.second;
 
     // Todo: Add reaction force computation
     if (is_reaction_force(i, j_id) and
-        (d_outputDeck_p->isTagInOutput("Reaction_Force") or
-         d_outputDeck_p->isTagInOutput("Total_Reaction_Force")))
+        (d_dataManager_p->getOutputDeckP()->isTagInOutput("Reaction_Force") or
+         d_dataManager_p->getOutputDeckP()->isTagInOutput("Total_Reaction_Force")))
       (*d_dataManager_p->getReactionForceP())[i] +=
-          (this->d_dataManager_p->getMeshP()->getNodalVolume(i) * scalar_f *
-           this->d_material_p->getBondForceDirection(xj - xi, uj - ui));
+          (this->d_dataManager_p->getMeshP()->getNodalVolume(i) *
+            fe_pair.first);
 
   }  // loop over neighboring nodes
 
-  if (d_outputDeck_p->isTagInOutput("Total_Reaction_Force"))
+  if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Total_Reaction_Force"))
     (*d_dataManager_p->getTotalReactionForceP())[i] =
         (*d_dataManager_p->getReactionForceP())[i].length();
 
   return std::make_pair(energy_i, force_i);
 }
 
-std::pair<double, util::Point3> model::FDModel::computeForceState(
-    const size_t &i) {
-  // local variable to hold force
-  auto force_i = util::Point3();
-  double energy_i = 0.;
-
-  // reference coordinate and displacement at the node
-  auto xi = this->d_dataManager_p->getMeshP()->getNode(i);
-  auto ui = (*d_dataManager_p->getDisplacementP())[i];
-  auto thetai = d_thetaX[i];
-  auto mi = d_mX[i];
-
-  // get interior flag
-  auto node_i_interior = this->d_interiorFlags_p->getInteriorFlag(i, xi);
-
-  // upper and lower bound for volume correction
-  auto h = d_dataManager_p->getMeshP()->getMeshSize();
-  auto check_up = d_modelDeck_p->d_horizon + 0.5 * h;
-  auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
-
-  // inner loop over neighbors
-  const auto &i_neighs = this->d_dataManager_p->getNeighborP()->getNeighbors(i);
-  for (size_t j = 0; j < i_neighs.size(); j++) {
-    auto j_id = i_neighs[j];
-
-    // there are two contributions to force at node i
-    // 1. From bond j-i due to bond-based forces
-    // 2. From hydrostatic strains at node j and node i due to
-    // hydrostatic forces
-
-    // compute bond-based contribution
-    auto xj = this->d_dataManager_p->getMeshP()->getNode(j_id);
-    auto uj = (*d_dataManager_p->getDisplacementP())[j_id];
-    auto thetaj = d_thetaX[j];
-    auto mj = d_mX[j];
-    auto rji = xj.dist(xi);
-    auto Sji = this->d_material_p->getS(xj - xi, uj - ui);
-
-    // get corrected volume of node j
-    auto volj = this->d_dataManager_p->getMeshP()->getNodalVolume(j_id);
-    if (util::compare::definitelyGreaterThan(rji, check_low))
-      volj *= (check_up - rji) / h;
-
-    // check if bond is in no-fail region
-    bool break_bonds = true;
-    if (!node_i_interior || !this->d_interiorFlags_p->getInteriorFlag(j_id, xj))
-      break_bonds = false;
-
-    // get peridynamics force and energy density between bond i and j
-    auto fs = this->d_fracture_p->getBondState(i, j);
-    // auto ef_i = this->d_material_p->getBondEF(rji, Sji, fs, mi, thetai);
-    // auto ef_j = this->d_material_p->getBondEF(rji, Sji, fs, mj, thetaj);
-    auto ef_i = this->d_material_p->getBondEF(rji, Sji, fs, true);
-    auto ef_j = this->d_material_p->getBondEF(rji, Sji, fs, true);
-
-    // for state-based, we do not update bond-state as it is already updated
-    // this->d_fracture_p->setBondState(i, j, fs);
-
-    // compute the contribution of bond force to force at i
-    auto scalar_f = (ef_i.second + ef_j.second) * volj;
-
-    force_i +=
-        scalar_f * this->d_material_p->getBondForceDirection(xj - xi, uj - ui);
-  }  // loop over neighboring nodes
-
-  return std::make_pair(energy_i, force_i);
-}
-
-bool model::FDModel::is_reaction_force(size_t i, size_t j) {
+template <class T>
+bool model::FDModel<T>::is_reaction_force(size_t i, size_t j) {
   auto xi = this->d_dataManager_p->getMeshP()->getNode(i);
   auto xj = this->d_dataManager_p->getMeshP()->getNode(j);
-  auto delta = d_modelDeck_p->d_horizon;
+  auto delta = d_dataManager_p->getModelDeckP()->d_horizon;
   auto min_x = this->d_dataManager_p->getMeshP()->getBoundingBox().first[0];
   auto max_x = this->d_dataManager_p->getMeshP()->getBoundingBox().second[0];
   auto max_y = this->d_dataManager_p->getMeshP()->getBoundingBox().second[1];
@@ -751,11 +596,12 @@ bool model::FDModel::is_reaction_force(size_t i, size_t j) {
   return false;
 }
 
-void model::FDModel::computeDampingForces() {
+template <class T>
+void model::FDModel<T>::computeDampingForces() {
   if (!d_dampingGeom_p->isDampingActive()) return;
 
-  double delta_t = d_modelDeck_p->d_dt;
-  auto dim = d_modelDeck_p->d_dim;
+  double delta_t = d_dataManager_p->getModelDeckP()->d_dt;
+  auto dim = d_dataManager_p->getModelDeckP()->d_dim;
   bool is_viscous_damping = d_dampingGeom_p->isViscousDamping();
 
   auto f = hpx::parallel::for_loop(
@@ -794,7 +640,8 @@ void model::FDModel::computeDampingForces() {
   f.get();
 }
 
-void model::FDModel::computePostProcFields() {
+template <class T>
+void model::FDModel<T>::computePostProcFields() {
   std::cout << "Postprocessing\n";
 
   // if work done is to be computed, get the external forces
@@ -826,16 +673,14 @@ void model::FDModel::computePostProcFields() {
         auto xi = this->d_dataManager_p->getMeshP()->getNode(i);
         auto ui = (*d_dataManager_p->getDisplacementP())[i];
 
-        // get volume of node i
-        auto voli = this->d_dataManager_p->getMeshP()->getNodalVolume(i);
-
-        // get interior flag
-        auto node_i_interior = this->d_interiorFlags_p->getInteriorFlag(i, xi);
-
         // upper and lower bound for volume correction
         auto h = d_dataManager_p->getMeshP()->getMeshSize();
-        auto check_up = d_modelDeck_p->d_horizon + 0.5 * h;
-        auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
+        auto horizon = d_material_p->getHorizon();
+        auto check_up = horizon + 0.5 * h;
+        auto check_low = horizon - 0.5 * h;
+
+        // get volume of node i
+        auto voli = this->d_dataManager_p->getMeshP()->getNodalVolume(i);
 
         // inner loop over neighbors
         const auto &i_neighs =
@@ -843,34 +688,21 @@ void model::FDModel::computePostProcFields() {
         for (size_t j = 0; j < i_neighs.size(); j++) {
           auto j_id = i_neighs[j];
 
-          // there are two contributions to force at node i
-          // 1. From bond j-i due to bond-based forces
-          // 2. From hydrostatic strains at node j and node i due to
-          // hydrostatic forces
+          auto fe_pair = this->d_material_p->getBondEF(i, j);
+          auto fs = this->d_dataManager_p->getFractureP()->getBondState(i, j);
 
-          // compute bond-based contribution
-          auto xj = this->d_dataManager_p->getMeshP()->getNode(j_id);
+          // energy
+          energy_i += fe_pair.second;
+
+          auto xj = d_dataManager_p->getMeshP()->getNode(j_id);
           auto uj = (*d_dataManager_p->getDisplacementP())[j_id];
           auto rji = xj.dist(xi);
           auto Sji = this->d_material_p->getS(xj - xi, uj - ui);
 
           // get corrected volume of node j
-          auto volj = this->d_dataManager_p->getMeshP()->getNodalVolume(j_id);
+          auto volj = d_dataManager_p->getMeshP()->getNodalVolume(j_id);
           if (util::compare::definitelyGreaterThan(rji, check_low))
             volj *= (check_up - rji) / h;
-
-          // check if bond is in no-fail region
-          bool break_bonds = true;
-          if (!node_i_interior ||
-              !this->d_interiorFlags_p->getInteriorFlag(j_id, xj))
-            break_bonds = false;
-
-          // get peridynamics force and energy density between bond i and j
-          auto fs = this->d_fracture_p->getBondState(i, j);
-          auto ef = this->d_material_p->getBondEF(rji, Sji, fs, break_bonds);
-
-          // energy
-          energy_i += ef.first * volj;
 
           // parameters for damage function \phi
           if (!fs) a += volj;
@@ -937,22 +769,23 @@ void model::FDModel::computePostProcFields() {
     d_tk = util::methods::add((*d_dataManager_p->getKineticEnergyP()));
 }
 
-void model::FDModel::checkOutputCriteria() {
+template <class T>
+void model::FDModel<T>::checkOutputCriteria() {
   // if output criteria is empty then we do nothing
   // if we two output frequency specified by user is same then we do nothing
-  if (d_outputDeck_p->d_outCriteria.empty() ||
-      d_outputDeck_p->d_dtOutOld == d_outputDeck_p->d_dtOutCriteria)
+  if (d_dataManager_p->getOutputDeckP()->d_outCriteria.empty() ||
+      d_dataManager_p->getOutputDeckP()->d_dtOutOld == d_dataManager_p->getOutputDeckP()->d_dtOutCriteria)
     return;
 
   // perform checks every dt large intervals
-  if (d_n % d_outputDeck_p->d_dtOutOld != 0) return;
+  if (d_n % d_dataManager_p->getOutputDeckP()->d_dtOutOld != 0) return;
 
-  if (d_outputDeck_p->d_outCriteria == "max_Z" ||
-      d_outputDeck_p->d_outCriteria == "max_Z_stop") {
+  if (d_dataManager_p->getOutputDeckP()->d_outCriteria == "max_Z" ||
+      d_dataManager_p->getOutputDeckP()->d_outCriteria == "max_Z_stop") {
     // since damage function will not reduce once attaining desired maximum
     // value, we do not check if the criteria was met in the past
-    if (d_outputDeck_p->d_outCriteria == "max_Z" &&
-        d_outputDeck_p->d_dtOut == d_outputDeck_p->d_dtOutCriteria)
+    if (d_dataManager_p->getOutputDeckP()->d_outCriteria == "max_Z" &&
+        d_dataManager_p->getOutputDeckP()->d_dtOut == d_dataManager_p->getOutputDeckP()->d_dtOutCriteria)
       return;
 
     // change from large interval to small interval should be done only once
@@ -960,23 +793,23 @@ void model::FDModel::checkOutputCriteria() {
     // change to small from small interval
     static bool changed_to_small = false;
     bool changed_to_small_at_current = false;
-    if (d_outputDeck_p->d_dtOut > d_outputDeck_p->d_dtOutCriteria &&
+    if (d_dataManager_p->getOutputDeckP()->d_dtOut > d_dataManager_p->getOutputDeckP()->d_dtOutCriteria &&
         !changed_to_small) {
       // get maximum from the damage data
       auto max = util::methods::max((*d_dataManager_p->getDamageFunctionP()));
 
       // check if it is desired range and change output frequency
       if (util::compare::definitelyGreaterThan(
-              max, d_outputDeck_p->d_outCriteriaParams[0])) {
-        d_outputDeck_p->d_dtOut = d_outputDeck_p->d_dtOutCriteria;
+              max, d_dataManager_p->getOutputDeckP()->d_outCriteriaParams[0])) {
+        d_dataManager_p->getOutputDeckP()->d_dtOut = d_dataManager_p->getOutputDeckP()->d_dtOutCriteria;
 
         std::cout << "Message: Changing output interval to smaller value.\n";
 
         // dump this value
-        std::ofstream fdump(d_outputDeck_p->d_path + "dt_out_change.info");
+        std::ofstream fdump(d_dataManager_p->getOutputDeckP()->d_path + "dt_out_change.info");
         fdump << "Large_Dt_To_Small_Dt:\n";
         fdump << "  N: " << d_n << "\n";
-        fdump << "  dN: " << d_n / d_outputDeck_p->d_dtOutCriteria << "\n";
+        fdump << "  dN: " << d_n / d_dataManager_p->getOutputDeckP()->d_dtOutCriteria << "\n";
         fdump.close();
 
         changed_to_small = true;
@@ -984,7 +817,7 @@ void model::FDModel::checkOutputCriteria() {
       }
     }  // if current dt out is larger
 
-    // we now check (only if max_Z_stop is flag is provided) if we need to
+    // we now check (only if max_Z_stop flag is provided) if we need to
     // revert to large time interval
     // we do this if time interval is small at present
     // Also do not change to large interval back if just now we changed it to
@@ -995,11 +828,11 @@ void model::FDModel::checkOutputCriteria() {
     // change to large from small interval
     static bool changed_back_to_large = false;
     if (!changed_to_small_at_current && !changed_back_to_large &&
-        d_outputDeck_p->d_outCriteria == "max_Z_stop" &&
-        d_outputDeck_p->d_dtOut < d_outputDeck_p->d_dtOutOld) {
+        d_dataManager_p->getOutputDeckP()->d_outCriteria == "max_Z_stop" &&
+        d_dataManager_p->getOutputDeckP()->d_dtOut < d_dataManager_p->getOutputDeckP()->d_dtOutOld) {
       // check maximum of Z function in the rectangle
       auto rect = std::make_pair(util::Point3(), util::Point3());
-      auto ps = d_outputDeck_p->d_outCriteriaParams;
+      auto ps = d_dataManager_p->getOutputDeckP()->d_outCriteriaParams;
       auto refZ = ps[1];
       if (ps.size() == 6) {
         rect.first = util::Point3(ps[2], ps[3], 0.);
@@ -1041,16 +874,16 @@ void model::FDModel::checkOutputCriteria() {
         if (!i.empty()) found_valid_node = true;
       }
       if (found_valid_node) {
-        d_outputDeck_p->d_dtOut = d_outputDeck_p->d_dtOutOld;
+        d_dataManager_p->getOutputDeckP()->d_dtOut = d_dataManager_p->getOutputDeckP()->d_dtOutOld;
 
         std::cout << "Message: Changing output interval to larger value.\n";
 
         // dump this value
-        std::ofstream fdump(d_outputDeck_p->d_path + "dt_out_change.info",
+        std::ofstream fdump(d_dataManager_p->getOutputDeckP()->d_path + "dt_out_change.info",
                             std::ios::app);
         fdump << "Small_Dt_To_Large_Dt:\n";
         fdump << "  N: " << d_n << "\n";
-        fdump << "  dN: " << d_n / d_outputDeck_p->d_dtOutCriteria << "\n";
+        fdump << "  dN: " << d_n / d_dataManager_p->getOutputDeckP()->d_dtOutCriteria << "\n";
         fdump.close();
 
         changed_back_to_large = true;
@@ -1060,3 +893,5 @@ void model::FDModel::checkOutputCriteria() {
     }  // if max_Z_stop and current dt out is smaller
   }    // if either max_Z or max_Z_stop criteria
 }
+
+template class model::FDModel<material::pd::RNPBond>;

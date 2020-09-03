@@ -32,28 +32,26 @@ public:
    * @param horizon Horizon
    */
   BaseMaterial(const size_t &dim, const double &horizon)
-      : d_horizon(horizon), d_dimension(dim){};
+      : d_horizon(horizon), d_dimension(dim), d_stateActive(false), d_density
+      (0.), d_name (""){};
 
-  /*! Todo Delete old function
-   * @brief Returns energy and force between bond
-   *
-   * @param r Reference (initial) bond length
-   * @param s Bond strain
-   * @param J Influence function at r
-   * @param fs Bond fracture state
-   * @return pair Pair of energy and force
+  /*!
+   * @brief Returns true if state-based potential is active
+   * @return bool True/false
    */
-  virtual std::pair<double, double> getBondEF(const double &r, const double &s,
-                                              const double &J,
-                                              bool &fs) {
-    return std::make_pair(0., 0.);
-  };
+  bool isStateActive() const { return d_stateActive; };
+
+  /*!
+   * @brief Returns name of the material
+   * @return string Name
+   */
+  std::string name() const {return d_name;};
 
   /*!
    * @brief Returns energy and force between bond
    *
    * @param i Id of node 1
-   * @param j Id of node 2
+   * @param j Local id in the neighborlist of node i
    * @return pair Pair of energy and force
    */
   virtual std::pair<util::Point3,double> getBondEF(size_t i , size_t j){
@@ -62,117 +60,26 @@ public:
 
   };
 
-
-  /*! Todo Delete old version
-   * @brief Returns energy and force between bond for \a no-fail region bonds
-   *
-   * @param r Reference (initial) bond length
-   * @param s Bond strain
-   * @param J Influence function at r
-   * @return pair Pair of energy and force
+  /*!
+   * @brief Returns the bond strain
+   * @param dx Reference bond vector
+   * @param du Difference of displacement
+   * @return strain Bond strain
    */
-  virtual std::pair<double, double>
-  getBondEFNoFail(const double &r, const double &s, const double &J) {
-    return std::make_pair(0., 0.);
+  virtual double getS(const util::Point3 &dx, const util::Point3 &du) {
+    return
+        0.;
   };
 
   /*!
-   * @brief Returns energy and force between bond for \a no-fail region bonds
-
-   * @return pair Pair of energy and force
+   * @brief Returns the bond strain
+   * @param i Id of node 1
+   * @param j Id of node 2
+   * @return strain Bond strain
    */
-  virtual std::pair<double, double>
-    getBondEFNoFail() {
-      return std::make_pair(0., 0.);
-    };
+  virtual double getS(size_t i, size_t j) { return 0.; };
 
-  /*! Todo delete old version
-   * @brief Returns hydrostatic energy density
-   *
-   * @param theta Hydrostatic strain
-   * @return energy Energy density
-   */
-  virtual double getStateEnergy(const double &theta) {
-    return 0.;
-  };
-
-  /*!
-   * @brief Returns hydrostatic energy density
-   *
-   * @return energy Energy density
-   */
-  virtual double getStateEnergy() {
-    return 0.;
-  };
-
-
-  /*! Todo delete old version
-   * @brief Returns hydrostatic force density
-   *
-   * @param theta Hydrostatic strain
-   * @param J Influence function at r
-   * @return force Force density
-   */
-  virtual double getStateForce(const double &theta, const double &J) {
-    return 0.;
-  };
-
-
-  /*!
-   * @brief Returns hydrostatic force density
-   *
-   * @return force Force density
-   */
-  virtual double getStateForce() {
-    return 0.;
-  };
-
-
-  /*! Todo delete old version
-   * @brief Returns true if bond contributes to hydrostatic force
-   * @param S Bond strain
-   * @param r Reference bond length
-   * @return bool True/false
-   */
-  virtual bool doesBondContribToState(const double &S, const double &r) {
-    return false;
-  };
-
-  /*!
-   * @brief Returns true if bond contributes to hydrostatic force
-
-   * @return bool True/false
-   */
-  virtual bool doesBondContribToState() {
-    return false;
-  };
-
-
-
-  /*! Todo delete old version
-   * @brief Returns contribution of bond to hydrostatic strain
-   *
-   * @param S Bond strain
-   * @param r Reference (initial) bond length
-   * @param J Influence function at r
-   * @return strain Contribution to hydrostatic strain
-   */
-  virtual double getBondContribToHydroStrain(const double &S, const double &r, const
-  double &J) {
-    return 0.;
-  };
-
-  /*!
-   * @brief Returns contribution of bond to hydrostatic strain
-   *
-   * @return strain Contribution to hydrostatic strain
-   */
-  virtual double getBondContribToHydroStrain() {
-    return 0.;
-  };
-
-  /*! Todo Delete old version
-   * @brief Returns critical bond strain
+  /*! @brief Returns critical bond strain
    *
    * @param r Reference length of bond
    * @return strain Critical strain
@@ -187,6 +94,16 @@ public:
    * @return strain Critical strain
    */
   virtual double getSc(size_t i , size_t j) { return 0.; };
+
+  /*!
+   * @brief Get direction of bond force
+   * @param dx Relative bond vector (reference configuration)
+   * @param du Relative bond displacement vector
+   * @return vector Unit vector along the bond force
+   */
+  virtual util::Point3 getBondForceDirection(const util::Point3 &dx,
+                                     const util::Point3 &du) const {return
+                                     util::Point3(); }
 
   /*!
    * @brief Returns strain tensor
@@ -217,23 +134,68 @@ public:
   virtual void update(){}
 
   /*!
-   * @brief Get direction of bond force
+   * @brief Returns the value of influence function
    *
-   * @param dx Relative vector of bond
-   * @param du Relative displacement vector of bond
-   * @return vector Unit vector along the bond force
+   * @param r Reference (initial) bond length
+   * @return value Influence function at r
    */
-  virtual util::Point3 getBondForceDirection(const util::Point3 &dx,
-                                     const util::Point3 &du) const {
-    return util::Point3();
+  virtual double getInfFn(const double &r) const {return 0.; };
+
+  /*!
+   * @brief Returns horizon
+   *
+   * @return horizon Horizon
+   */
+  double getHorizon() const {
+    return d_horizon;
   }
 
+  /*!
+   * @brief Returns the density of the material
+   * @return density Density of the material
+   */
+  double getDensity() const {return d_density; };
+
+  /*!
+* @brief Returns the string containing information about the instance of
+* the object
+*
+* @param nt Number of tabs to append before each line of string
+* @param lvl Level of information sought (higher level means more
+* information)
+* @return string String containing information about this object
+* */
+  virtual std::string printStr(int nt = 0, int lvl = 0) const {
+    // TODO implement
+    return "BaseMaterial";
+  };
+
+  /*!
+   * @brief Prints the information about the instance of the object
+   *
+   * @param nt Number of tabs to append before each line of string
+   * @param lvl Level of information sought (higher level means more
+   * information)
+   * */
+  virtual void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt,
+      lvl); };
+
 protected:
+
   /*! @brief Horizon */
   double d_horizon;
 
   /*! @brief Dimension */
   size_t d_dimension;
+
+  /*! @brief Flag indicating if peridynamic state potential is active */
+  bool d_stateActive;
+
+  /*! @brief Density */
+  double d_density;
+
+  /*! @brief Name of material */
+  std::string d_name;
 };
 
 } // namespace pd

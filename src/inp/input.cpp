@@ -242,6 +242,10 @@ void inp::Input::setMeshDeck() {
     d_meshDeck_p->d_isCentroidBasedDiscretization =
         config["Mesh"]["Is_Centroid_Based_Discretization"].as<bool>();
 
+  if (config["Mesh"]["Keep_Element_Conn"])
+    d_meshDeck_p->d_keepElementConn =
+        config["Mesh"]["Keep_Element_Conn"].as<bool>();
+
 }  // setMeshDeck
 
 void inp::Input::setMassMatrixDeck() {
@@ -680,6 +684,11 @@ void inp::Input::setMaterialDeck() {
     std::cerr << "Error: Please specify the density of the material.\n";
     exit(1);
   }
+
+  // enable non-penetration condition, i.e. allow broken bonded nodes to have
+  // normal contact force
+  if (e["No_Penetration"])
+    d_materialDeck_p->d_applyContact = e["No_Penetration"].as<bool>();
 }  // setMaterialDeck
 
 void inp::Input::setOutputDeck() {

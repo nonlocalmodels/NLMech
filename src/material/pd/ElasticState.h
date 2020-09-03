@@ -53,183 +53,190 @@ namespace pd {
  *
  * @see https://doi.org/10.1007/s10659-007-9125-1
  */
-class ElasticState: public BaseMaterial {
+class ElasticState : public BaseMaterial {
 
-public:
-	/*!
-	 * @brief Constructor
-	 * @param deck Pointer to the input deck
-	 * @param DataManager Pointer to the data manager object
-	 */
-	ElasticState(inp::MaterialDeck *deck,data::DataManager* dataManager);
+ public:
+  /*!
+   * @brief Constructor
+   * @param deck Pointer to the input deck
+   * @param DataManager Pointer to the data manager object
+   */
+  ElasticState(inp::MaterialDeck *deck, data::DataManager *dataManager);
 
-	/*!
-	 * @brief Returns energy and force state between node i and node j
-	 * @param i Id of node i
-	 * @param j node of j
-	 * @return Value Pair of energy and force
-	 */
+  /*!
+   * @brief Returns energy and force state between node i and node j
+   * @param i Id of node i
+   * @param j Local id in the neighborlist of node i
+   * @return Value Pair of energy and force
+   */
 
-	std::pair<util::Point3, double> getBondEF(size_t i, size_t j);
+  std::pair<util::Point3, double> getBondEF(size_t i, size_t j);
 
-	/*!
-	 * @brief Returns critical bond strain between node i and node j
-	 *
-	 * @param i Id of node i
-	 * @param j Id of node j
-	 * @return Value Critical strain
-	 */
-	double getSc(size_t i, size_t j);
+  /*!
+   * @brief Returns critical bond strain between node i and node j
+   *
+   * @param i Id of node i
+   * @param j Id of node j
+   * @return Value Critical strain
+   */
+  double getSc(size_t i, size_t j);
 
-	/*!
-	 * @brief Computes the stress tensor for one node
-	 * @param i Id of node i
-	 * @return The stress tensor for node i
-	 */
-	util::Matrix33 getStress(size_t i);
+  /*!
+   * @brief Computes the stress tensor for one node
+   * @param i Id of node i
+   * @return The stress tensor for node i
+   */
+  util::Matrix33 getStress(size_t i);
 
-	/*!
-	 * @brief Computes the strain vector for one node
-	 * @param i ID of node i
-	 * @return The strain tensor for node I
-	 */
-	util::Matrix33 getStrain(size_t i);
+  /*!
+   * @brief Computes the strain vector for one node
+   * @param i ID of node i
+   * @return The strain tensor for node I
+   */
+  util::Matrix33 getStrain(size_t i);
 
-	/*!
-	 * @brief return the factor for two-dimensional problems
-	 */
-	double getFactor2D();
+  /*!
+   * @brief return the factor for two-dimensional problems
+   */
+  double getFactor2D();
 
+  void update();
 
-	void update();
+  /*!
+   * @brief Get direction of bond force
+   * @return vector Unit vector along the bond force
+   */
+  util::Point3
+  getBondForceDirection(const util::Point3 &dx,
+                        const util::Point3 &du) const override {
+    return dx / dx.length();
+  }
 
-        /*!
-         * @brief Get direction of bond force
-         * @return vector Unit vector along the bond force
-         */
-        util::Point3
-        getBondForceDirection(const util::Point3 &dx,
-                              const util::Point3 &du) const override {
-          return dx / dx.length();
-        }
+  /*!
+   * @brief Returns the value of influence function
+   *
+   * @param r Reference (initial) bond length
+   * @return value Influence function at r
+   */
+  double getInfFn(const double &r) const {return 1.; };
 
-      private:
-	/*!
-	 * @brief Computes elastic state-based material parameters from elastic constants
-	 *
-	 * Either Young's modulus E or bulk modulus K, and Poisson ratio \f$ \nu \f$,
-	 * are needed.
-	 *
-	 * @param deck Input material deck
-	 * @param M Moment of influence function
-	 */
-	void computeParameters(inp::MaterialDeck *deck, size_t dim);
+ private:
+  /*!
+   * @brief Computes elastic state-based material parameters from elastic constants
+   *
+   * Either Young's modulus E or bulk modulus K, and Poisson ratio \f$ \nu \f$,
+   * are needed.
+   *
+   * @param deck Input material deck
+   * @param M Moment of influence function
+   */
+  void computeParameters(inp::MaterialDeck *deck, size_t dim);
 
-	/**
-	 * @name Helper functions to compute the stress and strain
-	 */
-	/**@{*/
+  /**
+   * @name Helper functions to compute the stress and strain
+   */
+  /**@{*/
 
-	/*!
-	 * @brief Computes the deformation gradient for node i
-	 * @param i Id of node
-	 * @return The deformation gradient for node i
-	 *
-	 */
-	util::Matrix33 deformation_gradient(size_t i);
+  /*!
+   * @brief Computes the deformation gradient for node i
+   * @param i Id of node
+   * @return The deformation gradient for node i
+   *
+   */
+  util::Matrix33 deformation_gradient(size_t i);
 
-	/*!
-	 * @brief Computes the x vector state between node i and node j
-	 * @param i Id of node
-	 * @param j Id of node
-	 * @return The x vector state
-	 *
-	 */
-	util::Point3 X_vector_state(size_t i, size_t j);
+  /*!
+   * @brief Computes the x vector state between node i and node j
+   * @param i Id of node
+   * @param j Id of node
+   * @return The x vector state
+   *
+   */
+  util::Point3 X_vector_state(size_t i, size_t j);
 
-	/*!
-	 * @brief Computes the y vector state between node i and node j
-	 * @param i Id of node
-	 * @param j Id of node
-	 * @return The y vector state
-	 *
-	 */
-	util::Point3 Y_vector_state(size_t i, size_t j);
+  /*!
+   * @brief Computes the y vector state between node i and node j
+   * @param i Id of node
+   * @param j Id of node
+   * @return The y vector state
+   *
+   */
+  util::Point3 Y_vector_state(size_t i, size_t j);
 
-	/*!
-	 * @brief Computes the K shape tensor for node i
-	 * @param i Id of node
-	 * @return The  K shape tensor for node i
-	 *
-	 */
-	util::Matrix33 K_shape_tensor(size_t i);
+  /*!
+   * @brief Computes the K shape tensor for node i
+   * @param i Id of node
+   * @return The  K shape tensor for node i
+   *
+   */
+  util::Matrix33 K_shape_tensor(size_t i);
 
-	/*!
-	 * @brief Computes the K modulus tensor
-	 * @param i Node i
-	 * @param j Neighbor j
-	 * @param k Neighbor k
-	 * @param m Index for the volume correction
-	 * @return The K modulus tensor
-	 *
-	 */
-	util::Matrix33 K_modulus_tensor(size_t i, size_t j, size_t k, size_t m);
+  /*!
+   * @brief Computes the K modulus tensor
+   * @param i Node i
+   * @param j Neighbor j
+   * @param k Neighbor k
+   * @param m Index for the volume correction
+   * @return The K modulus tensor
+   *
+   */
+  util::Matrix33 K_modulus_tensor(size_t i, size_t j, size_t k, size_t m);
 
-	/*!
-	 * @brief Provide the image of x under the Dirac Delta Function
-	 * @param deck The input deck
-	 * @param problem The corresponding problem
-	 * @param x Node x
-	 * @param i Node i
-	 * @param j Neighbor j
-	 * @param k Neighbor k
-	 * @param m Index for the volume correction
-	 * @return 1 if x is a null-vector, otherwise 0
-	 */
-	double dirac_delta(util::Point3 x, size_t i, size_t j, size_t m);
+  /*!
+   * @brief Provide the image of x under the Dirac Delta Function
+   * @param deck The input deck
+   * @param problem The corresponding problem
+   * @param x Node x
+   * @param i Node i
+   * @param j Neighbor j
+   * @param k Neighbor k
+   * @param m Index for the volume correction
+   * @return 1 if x is a null-vector, otherwise 0
+   */
+  double dirac_delta(util::Point3 x, size_t i, size_t j, size_t m);
 
-	/*@}*/
-
-
-
-	/*! @brief Correction factor for using plain stress */
-	double d_factor2D;
-
-	/*! @brief Dimension of the problem */
-	size_t dim;
-
-	double horizon;
-
-	/*! @brief Compute strain energy */
-	bool strainEnergy;
+  /*@}*/
 
 
-	/**
-	 * @name Pointers for the function parameters
-	 */
-	/**@{*/
 
-	/*! @brief Pointer to the material deck */
-	const inp::MaterialDeck *d_deck;
+  /*! @brief Correction factor for using plain stress */
+  double d_factor2D;
 
-	/*! @brief Pointer to the nodes */
-	//const std::vector<util::Point3> *d_nodes;
+  /*! @brief Dimension of the problem */
+  size_t dim;
 
-	/*! @brief Pointer to the weighted volumes of the nodes */
-	//const std::vector<double> *d_weightedVolume;
+  double horizon;
 
-	/*! @brief Pointer to the volume correction of the nodes */
-	//const std::vector<std::vector<double>> *d_volumeCorrection;
+  /*! @brief Compute strain energy */
+  bool strainEnergy;
 
-	/*! @brief Pointer to the volumes of the nodes */
-	//const std::vector<double> * d_volumes;
 
-	/*! @brief Pointer to the neighbors of the nodes */
-	//geometry::Neighbor *d_neighbors;
+  /**
+   * @name Pointers for the function parameters
+   */
+  /**@{*/
 
-	data::DataManager* d_dataManager_p;
+  /*! @brief Pointer to the material deck */
+  const inp::MaterialDeck *d_deck;
 
-	/*@}*/
+  /*! @brief Pointer to the nodes */
+  //const std::vector<util::Point3> *d_nodes;
+
+  /*! @brief Pointer to the weighted volumes of the nodes */
+  //const std::vector<double> *d_weightedVolume;
+
+  /*! @brief Pointer to the volume correction of the nodes */
+  //const std::vector<std::vector<double>> *d_volumeCorrection;
+
+  /*! @brief Pointer to the volumes of the nodes */
+  //const std::vector<double> * d_volumes;
+
+  /*! @brief Pointer to the neighbors of the nodes */
+  //geometry::Neighbor *d_neighbors;
+
+  data::DataManager *d_dataManager_p;
+
+  /*@}*/
 
 
 };

@@ -76,6 +76,16 @@ public:
   const std::vector<std::vector<size_t>> &getNeighborsList() const;
 
   /*!
+   * @brief Get global id of neighboring node given its local id in the
+   * neighborlist
+   *
+   * @param i Id of node
+   * @param j Local id of node
+   * @return id Global id of neighboring node of i
+   */
+  size_t getNeighbor(const size_t &i, const size_t &j) const;
+
+  /*!
    * @brief Returns the string containing information about the instance of
    * the object
    *

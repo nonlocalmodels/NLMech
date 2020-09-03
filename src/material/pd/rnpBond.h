@@ -6,16 +6,40 @@
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ////////////////////////////////////////////////////////////////////////////////
 
-#ifndef MATERIAL_PD_BONDMATERIAL_H
-#define MATERIAL_PD_BONDMATERIAL_H
+#ifndef MATERIAL_PD_BONDMATERIAL_NEW_H
+#define MATERIAL_PD_BONDMATERIAL_NEW_H
 
 #include "baseMaterial.h"
+#include "util/point.h"
+#include "util/matrixBlaze.h"
+#include "geometry/neighbor.h"
+#include "fe/mesh.h"
+
 #include <vector>
+
+#include <hpx/include/parallel_algorithm.hpp>
 
 // forward declaration
 namespace inp {
 struct MaterialDeck;
+struct OutputDeck;
 }
+
+// forward declaration
+namespace data {
+class DataManager;
+}
+
+// forward declaration of class
+namespace fe {
+class Mesh;
+} // namespace fe
+
+namespace material {
+namespace pd {
+class BaseInfluenceFn;
+} // namespace pd
+} // namespace material
 
 namespace material {
 
@@ -62,91 +86,68 @@ class RNPBond : public BaseMaterial {
 
 public:
   /*!
-   * @brief Constructor
-   * @param deck Input deck which contains user-specified information
-   * @param dim Dimension
-   * @param horizon Horizon
-   * @param M Moment of influence function
-   */
-  RNPBond(inp::MaterialDeck *deck, const size_t &dim, const double &horizon,
-          const double &M);
+	 * @brief Constructor
+	 * @param deck Pointer to the input deck
+	 * @param DataManager Pointer to the data manager object
+	 */
+  RNPBond(inp::MaterialDeck *deck,data::DataManager* dataManager);
 
   /*!
-   * @brief Returns energy and force between bond due to pairwise interaction
-   *
-   * Peridynamic energy at point \f$ x \f$ is
-   * \f[ e(x) = \frac{1}{|B_\epsilon(0)|} \int_{B_\epsilon(x)}
-   * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi(|y-x|S^2) dy \f]
-   * and force at point x is
-   * \f[ f(x) = \frac{4}{|B_\epsilon(0)|} \int_{B_\epsilon(x)}
-   * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi'(|y-x|S^2) S \frac{y-x}{|y-x|}
-   * dy, \f]
-   * where \f$ \psi(r) = C(1-\exp(-\beta r))\f$.
-   *
-   * For given initial bond length \f$ r \f$ and bond strain \f$ s\f$, this
-   * function returns pair of
-   * \f[ \hat{e} =  \frac{J^\epsilon(r)}{\epsilon |B_\epsilon(0)|} \psi(r s^2)
-   * \f]
-   * and
-   * \f[ \hat{f} = \frac{4 J^\epsilon(r) s}{\epsilon |B_\epsilon(0)|}
-   * \psi'(r s^2). \f]
-   *
-   * @param r Reference (initial) bond length
-   * @param s Bond strain
-   * @param J Influence function at r, i.e. \f$ J^\epsilon(r) \f$
-   * @param fs Bond fracture state
-   * @return value Pair of energy and force
-   */
-  std::pair<double, double> getBondEF(const double &r, const double &s,
-                                   const double &J, bool &fs) override;
+	 * @brief Returns energy and force state between node i and node j
+	 * @param i Id of node i
+	 * @param j node of j
+	 * @return Value Pair of energy and force
+	 */
+  std::pair<util::Point3, double> getBondEF(size_t i, size_t j);
 
   /*!
-   * @brief Returns energy and force between bond for \a no-fail region
-   *
-   * Peridynamic energy at point \f$ x \f$ is
-   * \f[ e(x) = \frac{1}{|B_\epsilon(0)|} \int_{B_\epsilon(x)}
-   * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi(|y-x|S^2) dy \f]
-   * and force at point x is
-   * \f[ f(x) = \frac{4}{|B_\epsilon(0)|} \int_{B_\epsilon(x)}
-   * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi'(|y-x|S^2) S \frac{y-x}{|y-x|}
-   * dy. \f]
-   * where \f$\psi(r) = C(1-\exp(-\beta r))\f$.
-   *
-   * For material point \f$ x \f$ in \a no-fail region, we modify the function
-   * \f$ \psi \f$ to \f[ \psi(r) = \psi'(0) r, \qquad \psi'(0) = C\beta . \f]
-   *
-   * For given initial bond length \f$ r \f$ and bond strain \f$ s\f$, this
-   * function returns pair of
-   * \f[ \hat{e} =  \frac{J^\epsilon(r)}{\epsilon |B_\epsilon(0)|} \psi(r s^2)
-   * \f]
-   * and
-   * \f[ \hat{f} = \frac{4 J^\epsilon(r) s}{\epsilon |B_\epsilon(0)|}
-   * \psi'(r s^2). \f]
-   *
-   * @param r Reference (initial) bond length
-   * @param s Bond strain
-   * @param J Influence function at r, i.e. \f$ J^\epsilon(r) \f$
-   * @return value Pair of energy and force
+   * @brief Returns the bond strain
+   * @param dx Reference bond vector
+   * @param du Difference of displacement
+   * @return strain Bond strain
    */
-  std::pair<double, double> getBondEFNoFail(const double &r, const double &s,
-                                            const double &J) override;
+  double getS(const util::Point3 &dx, const util::Point3 &du);
 
   /*!
-   * @brief Returns critical bond strain
+   * @brief Returns the bond strain
+   * @param i Id of node 1
+   * @param j Id of node 2
+   * @return strain Bond strain
+   */
+  double getS(size_t i, size_t j);
+
+  /*! @brief Returns critical bond strain
    *
    * @param r Reference length of bond
    * @return strain Critical strain
    */
-  double getSc(const double &r) override;
+  double getSc(const double &r);
+
+  /*!
+   * @brief Returns critical bond strain
+   *
+   * @param i Id of node 1
+   * @param j Id of node 2
+   * @return strain Critical strain
+   */
+  double getSc(size_t i , size_t j);
 
   /*!
    * @brief Get direction of bond force
+   * @param dx Relative bond vector (reference configuration)
+   * @param du Relative bond displacement vector
    * @return vector Unit vector along the bond force
    */
   util::Point3 getBondForceDirection(const util::Point3 &dx,
-                                     const util::Point3 &du) const override {
-    return dx / dx.length();
-  }
+                                     const util::Point3 &du) const;
+
+  /*!
+   * @brief Returns the value of influence function
+   *
+   * @param r Reference (initial) bond length
+   * @return value Influence function at r
+   */
+  double getInfFn(const double &r) const ;
 
 private:
   /*!
@@ -226,10 +227,25 @@ private:
 
   /*! @brief Flag which indicates if the breaking of bond is irreversible */
   bool d_irrevBondBreak;
+
+  /*! @brief Kn coefficient for normal contact force between broken bonds */
+  double d_contact_Kn = 0.;
+
+  /*! @brief Contact radius for normal contact force between broken bonds */
+  double d_contact_Rc = 0.;
+
+  /*! @brief Pointer to the material deck */
+  const inp::MaterialDeck *d_deck;
+
+  /*! @brief Store pointer to datamanager */
+  data::DataManager* d_dataManager_p;
+
+  /*! @brief Base object for influence function */
+  material::pd::BaseInfluenceFn *d_baseInfluenceFn_p;
 };
 
 } // namespace pd
 
 } // namespace material
 
-#endif // MATERIAL_PD_BONDMATERIAL_H
+#endif // MATERIAL_PD_BONDMATERIAL_NEW_H

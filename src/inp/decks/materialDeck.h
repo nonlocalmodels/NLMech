@@ -274,6 +274,9 @@ struct MaterialDeck {
   /*! @brief Density of material */
   double d_density;
 
+  /*! @brief Enable non-penetration of broken bonds */
+  bool d_applyContact;
+
   /*!
    * @brief Constructor
    */
@@ -282,7 +285,7 @@ struct MaterialDeck {
         d_influenceFnType(0), d_irreversibleBondBreak(true),
         d_stateContributionFromBrokenBond(true), d_checkScFactor(1.),
         d_computeParamsFromElastic(true), d_matData(inp::MatData()),
-        d_density(1.){};
+        d_density(1.), d_applyContact(false){};
 
   /*!
    * @brief Prints the information
@@ -322,6 +325,7 @@ struct MaterialDeck {
         << d_computeParamsFromElastic << std::endl;
     oss << d_matData.printStr(nt + 1, lvl);
     oss << tabS << "Density = " << d_density << std::endl;
+    oss << tabS << "Apply contact on broken bonds = " << d_applyContact << std::endl;
     oss << tabS << std::endl;
 
     return oss.str();

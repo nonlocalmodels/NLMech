@@ -62,6 +62,10 @@ const std::vector<std::vector<size_t>> &geometry::Neighbor::getNeighborsList()
   return d_neighbors;
 }
 
+size_t geometry::Neighbor::getNeighbor(const size_t &i, const size_t &j) const {
+  return d_neighbors[i][j];
+}
+
 std::string geometry::Neighbor::printStr(int nt, int lvl) const {
   auto tabS = util::io::getTabS(nt);
   std::ostringstream oss;

@@ -12,6 +12,7 @@
 #include <cstring>
 #include <vector>
 #include <cmath>
+#include "util/utilIO.h"
 
 namespace material {
 
