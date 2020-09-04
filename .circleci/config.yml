@@ -141,6 +141,6 @@ workflows:
             filters:
               branches:
                 ignore: gh-pages
-              requires:
-                - build
+            requires:
+              - build
 
