@@ -106,17 +106,19 @@ jobs:
               make doc
         - run:
             command: |
-                git clone https://github.com/nonlocalmodels/nonlocalmodels.github.io.git
-                cd nonlocalmodels.github.io
-                git fetch
-                git pull
-                mkdir -p documentation
-                cp -r ../docs/doxy/html/* documentation/
-                git config --global user.name "Circle CI"
-                git config --global user.email "bot@circleci.com"
-                git add ./documentation/*
-                git commit -m "Update documentation [ci skip] " ./documentation/* || true
-                git push https://${TOKEN}@github.com/nonlocalmodels/nonlocalmodels.github.io || true
+                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                  git clone https://github.com/nonlocalmodels/nonlocalmodels.github.io.git
+                  cd nonlocalmodels.github.io
+                  git fetch
+                  git pull
+                  mkdir -p documentation
+                  cp -r ../docs/doxy/html/* documentation/
+                  git config --global user.name "Circle CI"
+                  git config --global user.email "bot@circleci.com"
+                  git add ./documentation/*
+                  git commit -m "Update documentation [ci skip] " ./documentation/* || true
+                  git push https://${TOKEN}@github.com/nonlocalmodels/nonlocalmodels.github.io || true
+                fi
 workflows:
   version: 2
   build_and_deploy:
