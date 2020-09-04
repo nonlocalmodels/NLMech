@@ -39,7 +39,7 @@ The current stable version is [![GitHub release](https://img.shields.io/github/r
 
 ## Code of conduct
 
-We have adopted a [code of conduct]() for this project. Please refer to this document if you would like to know more about the expectations for members of our community, with regard to how they will behave toward each other.
+We have adopted a [code of conduct](CODE_OF_CONDUCT.md) for this project. Please refer to this document if you would like to know more about the expectations for members of our community, with regard to how they will behave toward each other.
 
 ## Contributing
 
