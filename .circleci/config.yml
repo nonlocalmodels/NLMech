@@ -103,9 +103,9 @@ workflows:
             requires:
               - build
       - deploy:
-          filters:
-            branches:
-              ignore: gh-pages
+            filters:
+              branches:
+                ignore: gh-pages
             requires:
               - build
 
