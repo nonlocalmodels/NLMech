@@ -56,9 +56,32 @@ jobs:
         - run:
             name: Publish code coverage
             command: |
-              if [ "${CIRCLE_BRANCH}" == "master" ]; then
                 coveralls --gcov-options '\-lp' -t ${CTOKEN}
-              fi
+    deploy:
+      docker:
+        - image: docker:17.05.0-ce-git
+      environment:
+        IMAGE_FOLDER_NAME: .circleci/Docker
+        IMAGE_NAME: diehlpk/NLMech:latest
+      steps:
+        - checkout
+        - setup_remote_docker
+        - run:
+           name: Build Docker image
+           command: |
+              docker build -t ${IMAGE_NAME} ${IMAGE_FOLDER_NAME}
+              docker images
+        - run: 
+           name: Deploy to DockerHub
+           command: |
+                docker login -u $DOCKER_USER -p $DOCKER_PASS
+                docker push ${IMAGE_NAME}
+        - run: 
+           name: Deploy to GitHub
+           command: |
+               docker login docker.pkg.github.com --username diehlpk -p ${TOKEN}
+               docker tag ${IMAGE_NAME} docker.pkg.github.com/nonlocalmodels/NLMech/NLMech:latest
+               docker push docker.pkg.github.com/nonlocalmodels/NLMech/NLMech:latest
 workflows:
   version: 2
   build_and_deploy:
@@ -71,4 +94,10 @@ workflows:
             filters:
               branches:
                 ignore: gp-pages
+            requires:
+              - build
+      - deploy:
+          filters:
+            branches:
+              ignore: gh-pages
 
