@@ -1,4 +1,7 @@
 # NLMech
+
+[![CircleCI](https://circleci.com/gh/nonlocalmodels/nonlocalheatequation.svg?style=shield)](https://circleci.com/gh/nonlocalmodels/nonlocalheatequation) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6fcd87ddfb4146f7b236c2ac2dc0bd42)](https://app.codacy.com/gh/nonlocalmodels/nonlocalheatequation?utm_source=github.com&utm_medium=referral&utm_content=nonlocalmodels/nonlocalheatequation&utm_campaign=Badge_Grade_Dashboard) [![Coverage Status](https://coveralls.io/repos/github/nonlocalmodels/nonlocalheatequation/badge.svg?branch=master)](https://coveralls.io/github/nonlocalmodels/nonlocalheatequation?branch=master)
+
 Welcome to NLMech repository. In this project we implement 
 nonlocal fracture theory, referred to as Peridynamics, 
 using both finite element and finite difference discretization.  
