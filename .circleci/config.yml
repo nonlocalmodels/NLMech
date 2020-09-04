@@ -1,0 +1,111 @@
+# Copyright (c) 2020 Patrick Diehl
+#               
+#
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+version: 2
+jobs:
+    build:
+        docker:
+          - image: diehlpk/nonlocalmodels:baseimage
+        steps:
+            - checkout
+            - run:
+                name: Configure 
+                command: | 
+                  mkdir -p build 
+                  cd build 
+                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DEnable_Tools=ON ..
+            - run:
+                name: Build
+                command: |  
+                  cd build 
+                  make -j 2
+            - run:
+                name: Test
+                command: |
+                  cd build 
+                  make test
+            - run:
+                name: Documentaiton
+                command: |
+                  cd build
+                  make doc
+    codecoverage:
+      docker: 
+        - image: diehlpk/nonlocalmodels:baseimage
+      steps:
+        - checkout
+        - run:
+            name: Configure
+            command: |
+              mkdir -p build
+              cd build
+              cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Tools=ON -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic" ..
+              make 
+        - run:
+            name: Run tests
+            command: |
+              cd build
+              make test
+        - run:
+            name: Report
+            command: |
+              gcovr -r .
+        - run:
+            name: Publish code coverage
+            command: |
+              if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                coveralls --gcov-options '\-lp' -t ${CTOKEN}
+              fi
+    deploy:
+      docker:
+        - image: docker:17.05.0-ce-git
+      environment:
+        IMAGE_FOLDER_NAME: .circleci/Docker
+        IMAGE_NAME: diehlpk/nlmech:latest
+      steps:
+        - checkout
+        - setup_remote_docker
+        - run:
+           name: Build Docker image
+           command: |
+              docker build -t ${IMAGE_NAME} ${IMAGE_FOLDER_NAME}
+              docker images
+        - run: 
+           name: Deploy to DockerHub
+           command: |
+             if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                docker login -u $DOCKER_USER -p $DOCKER_PASS
+                docker push ${IMAGE_NAME}
+             fi
+        - run: 
+           name: Deploy to GitHub
+           command: |
+              if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                docker login docker.pkg.github.com --username diehlpk -p ${TOKEN}
+                docker tag ${IMAGE_NAME} docker.pkg.github.com/nonlocalmodels/nlmech/nlmech:latest
+                docker push docker.pkg.github.com/nonlocalmodels/nlmech/nlmech:latest
+              fi
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: gh-pages
+      - codecoverage:
+            filters:
+              branches:
+                ignore: gp-pages
+            requires:
+              - build
+      - deploy:
+            filters:
+              branches:
+                ignore: gh-pages
+            requires:
+              - build
+
