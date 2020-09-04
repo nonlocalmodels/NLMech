@@ -16,7 +16,7 @@ jobs:
                 command: | 
                   mkdir -p build 
                   cd build 
-                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON ..
+                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DEnable_Tools=ON ..
             - run:
                 name: Build
                 command: |  
@@ -32,3 +32,43 @@ jobs:
                 command: |
                   cd build
                   make doc
+    codecoverage:
+      docker: 
+        - image: diehlpk/nonlocalmodels:baseimage
+      steps:
+        - checkout
+        - run:
+            name: Configure
+            command: |
+              mkdir -p build
+              cd build
+              cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Tools=ON -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic" ..
+              make 
+        - run:
+            name: Run tests
+            command: |
+              cd build
+              make test
+        - run:
+            name: Report
+            command: |
+              gcovr -r .
+        - run:
+            name: Publish code coverage
+            command: |
+              if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                coveralls --gcov-options '\-lp' -t ${CTOKEN}
+              fi
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: gh-pages
+      - codecoverage:
+            filters:
+              branches:
+                ignore: gp-pages
+
