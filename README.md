@@ -26,7 +26,7 @@ If you just interested the code, we provide a Doker image with the [latest suces
 [YAML](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) files, we provide a bunch of [examples](https://nonlocalmodels.github.io/examples/).
 
 If you encounter any bug or want to submit a feature request, please generate an [issue](https://github.com/nonlocalmodels/NLMech/issues) on GitHub. 
-Right now, we have  [![GitHub issues](https://img.shields.io/github/issues/Naereen/StrapDown.js.svg)](https://GitHub.com/nonlocalmodels/NLMech/issues/). For contributing, we refer to the Contributing section below.
+Right now, we have [![GitHub issues](https://img.shields.io/github/issues/nonlocalmodels/nlmech.svg)](https://github.com/nonlocalmodels/NLMech/issues). For contributing, we refer to the Contributing section below.
 
 ## Documentation
 
