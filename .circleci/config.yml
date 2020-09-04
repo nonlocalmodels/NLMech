@@ -108,7 +108,7 @@ jobs:
             command: |
                 git checkout https://github.com/nonlocalmodels/nonlocalmodels.github.io.git
                 cd nonlocalmodels.github.io
-		mkdir -p documentation
+                mkdir -p documentation
                 git pull
                 cp -r build/docs/doxy/html/* documentation/
                 git config --global user.name "Circle CI"
