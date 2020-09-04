@@ -22,7 +22,7 @@ We provide following support to build the code
 * Docker files to build the code using the [Fedora packages](https://github.com/nonlocalmodels/buildscripts/blob/master/Docker/Fedora) or [build all dependencies](https://github.com/nonlocalmodels/buildscripts/blob/master/Docker/FedoraAll),
 * [Scripts](https://github.com/nonlocalmodels/HPCBuildInfrastructure) to build the code on HPC systems.
 
-If you just interested the code, we provide a Doker image with the [latest stable version]() and the [latest sucessful build]() of the master branch. For writing your own 
+If you just interested the code, we provide a Doker image with the [latest sucessful build](https://github.com/nonlocalmodels/NLMech/packages/384758) of the master branch. For writing your own 
 [YAML](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) files, we provide a bunch of [examples](https://nonlocalmodels.github.io/examples/).
 
 If you encounter any bug or want to submit a feature request, please generate an [issue](https://github.com/nonlocalmodels/NLMech/issues) on GitHub. 
@@ -30,7 +30,7 @@ Right now, we have  [![GitHub issues](https://img.shields.io/github/issues/Naere
 
 ## Documentation
 
-The documentation of the the master branch is available [here]() and for the latest stable release [here]().
+The documentation of the the master branch is available [here](https://nonlocalmodels.github.io/documentation/).
 
 
 ## Releases
