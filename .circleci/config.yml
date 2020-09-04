@@ -111,9 +111,6 @@ jobs:
                 git fetch
                 git pull
                 mkdir -p documentation
-                ls .
-                ls ..
-                ls ../..
                 cp -r ../docs/doxy/html/* documentation/
                 git config --global user.name "Circle CI"
                 git config --global user.email "bot@circleci.com"
@@ -141,7 +138,9 @@ workflows:
             requires:
               - build
       - documentation:
-          filters:
-            branches:
-              ignore: gh-pages
+            filters:
+              branches:
+                ignore: gh-pages
+              requires:
+                - build
 
