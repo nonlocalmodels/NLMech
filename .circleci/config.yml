@@ -106,7 +106,7 @@ jobs:
               make doc
         - run:
             command: |
-                git checkout https://github.com/nonlocalmodels/nonlocalmodels.github.io.git
+                git clone https://github.com/nonlocalmodels/nonlocalmodels.github.io.git
                 cd nonlocalmodels.github.io
                 git fetch
                 git pull
