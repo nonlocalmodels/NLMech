@@ -115,7 +115,7 @@ jobs:
                 git config --global user.email "bot@circleci.com"
                 git add ./documentation/*
                 git commit -m "Update documentation [ci skip] " ./documentation/* || true
-                git push https://${TOKEN}@github.com/nonlocalmodels/nonlocalmodels.github.io.git || true
+                git push https://${TOKEN}@github.com/nonlocalmodels/nonlocalmodels.github.io || true
 workflows:
   version: 2
   build_and_deploy:
