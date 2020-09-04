@@ -56,7 +56,9 @@ jobs:
         - run:
             name: Publish code coverage
             command: |
+              if [ "${CIRCLE_BRANCH}" == "master" ]; then
                 coveralls --gcov-options '\-lp' -t ${CTOKEN}
+              fi
     deploy:
       docker:
         - image: docker:17.05.0-ce-git
@@ -74,14 +76,16 @@ jobs:
         - run: 
            name: Deploy to DockerHub
            command: |
+             if [ "${CIRCLE_BRANCH}" == "master" ]; then
                 docker login -u $DOCKER_USER -p $DOCKER_PASS
                 docker push ${IMAGE_NAME}
+             fi
         - run: 
            name: Deploy to GitHub
            command: |
                docker login docker.pkg.github.com --username diehlpk -p ${TOKEN}
-               docker tag ${IMAGE_NAME} docker.pkg.github.com/nonlocalmodels/NLMech/nlmech:latest
-               docker push docker.pkg.github.com/nonlocalmodels/NLMech/nlmech:latest
+               docker tag ${IMAGE_NAME} docker.pkg.github.com/nonlocalmodels/nlmech/nlmech:latest
+               docker push docker.pkg.github.com/nonlocalmodels/nlmech/nlmech:latest
 workflows:
   version: 2
   build_and_deploy:
