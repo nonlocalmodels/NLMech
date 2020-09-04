@@ -62,7 +62,7 @@ jobs:
         - image: docker:17.05.0-ce-git
       environment:
         IMAGE_FOLDER_NAME: .circleci/Docker
-        IMAGE_NAME: diehlpk/NLMech:latest
+        IMAGE_NAME: diehlpk/nlmech:latest
       steps:
         - checkout
         - setup_remote_docker
@@ -80,8 +80,8 @@ jobs:
            name: Deploy to GitHub
            command: |
                docker login docker.pkg.github.com --username diehlpk -p ${TOKEN}
-               docker tag ${IMAGE_NAME} docker.pkg.github.com/nonlocalmodels/NLMech/NLMech:latest
-               docker push docker.pkg.github.com/nonlocalmodels/NLMech/NLMech:latest
+               docker tag ${IMAGE_NAME} docker.pkg.github.com/nonlocalmodels/NLMech/nlmech:latest
+               docker push docker.pkg.github.com/nonlocalmodels/NLMech/nlmech:latest
 workflows:
   version: 2
   build_and_deploy:
