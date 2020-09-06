@@ -19,7 +19,6 @@
 #include "inp/decks/outputDeck.h"    // definition of OutputDeck
 #include "inp/input.h"               // definition of Input
 #include "inp/policy.h"              // definition of Policy
-#include "material/materialUtil.h"
 #include "material/materials.h"  // definition of Material
 #include "rw/reader.h"           // definition of readVtuFileRestart
 #include "rw/writer.h"           // definition of WriterInterface
@@ -30,6 +29,8 @@
 #include <hpx/include/parallel_algorithm.hpp>
 #include <iostream>
 #include <yaml-cpp/yaml.h>  // YAML reader
+#include <cfloat>
+
 
 namespace {
 
@@ -155,6 +156,9 @@ tools::pp::Compute::Compute(const std::string &filename)
       d_neighbor_p(nullptr),
       d_input_p(nullptr),
       d_material_p(nullptr) {
+
+
+      d_dataManager_p = new data::DataManager();
   init();
 
   // build neighbor list if we need it
@@ -372,20 +376,20 @@ void tools::pp::Compute::init() {
     std::cout << "PP_fe2D: Initializing material object.\n";
     auto &material_deck = *d_input_p->getMaterialDeck();
     if (material_deck.d_materialType == "RNPBond")
-      d_material_p = new material::pd::RnpMaterial(
-          &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
-    else if (material_deck.d_materialType == "PMBBond")
-      d_material_p = new material::pd::PmbMaterial(
-          &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
-    else if (material_deck.d_materialType == "PDElasticBond")
-      d_material_p = new material::pd::PdElastic(
-          &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
-    else if (material_deck.d_materialType == "PDState")
-      d_material_p = new material::pd::PdState(
-          &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
+      d_material_p = new material::pd::RNPBond(
+          &material_deck, d_dataManager_p);
+    //else if (material_deck.d_materialType == "PMBBond")
+     // d_material_p = new material::pd::PmbMaterial(
+     //     &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
+    //else if (material_deck.d_materialType == "PDElasticBond")
+   //   d_material_p = new material::pd::PdElastic(
+    //      &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
+    //else if (material_deck.d_materialType == "PDState")
+     // d_material_p = new material::pd::PdState(
+       //   &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
   }
 
-  d_matDeck_p = d_material_p->getMaterialDeck();
+  d_matDeck_p = d_input_p->getMaterialDeck();
 
   // if material deck does not have valid material properties,
   // search the properties in the pp input file
@@ -1230,6 +1234,7 @@ void tools::pp::Compute::computeJIntegral() {
     if (d_thetaX.size() != d_mesh_p->getNumNodes())
       d_thetaX = std::vector<double>(d_mesh_p->getNumNodes(), 0.);
 
+    /*
     if (d_material_p->name() == "PDState") {
       if (d_mX.size() != d_mesh_p->getNumNodes()) {
         d_mX = std::vector<double>(d_mesh_p->getNumNodes(), 0.);
@@ -1240,8 +1245,10 @@ void tools::pp::Compute::computeJIntegral() {
             d_material_p, d_mX, true);
       }
     }
+    */
 
     // update theta for given displacement
+    /*
     if (d_material_p->name() == "RNPState")
       material::computeHydrostaticStrain(
           d_mesh_p->getNodes(), d_u, d_mesh_p->getNodalVolumes(),
@@ -1258,7 +1265,9 @@ void tools::pp::Compute::computeJIntegral() {
           d_neighbor_p->getNeighborsList(), d_mesh_p->getMeshSize(),
           d_material_p, d_fracture_p, d_mX, d_thetaX, true);
     }
+    */
   }
+
 
   // std::cout << "computeJIntegral processing step = " << d_nOut << "\n";
 
@@ -1617,7 +1626,7 @@ void tools::pp::Compute::computeJIntegral() {
 
             // get bond force
             bool fracture_state = false;
-            auto ef = d_material_p->getBondEF(rji, Sji, fracture_state, true);
+            auto ef = d_material_p->getBondEF(i,j);
 
             // pd internal work rate
             // need factor half (see the formula for internal work rate and
@@ -1694,10 +1703,10 @@ void tools::pp::Compute::computeJIntegral() {
                       d_mesh_p->getMeshSize();
 
             bool fracture_state = false;
-            auto ef = d_material_p->getBondEF(rji, Sji, fracture_state, true);
+            auto ef = d_material_p->getBondEF(i,j);
 
             // add contribution to energy
-            strain_energy += ef.first * volj;
+            strain_energy += ef.second * volj;
           }  // loop over nodes for pd energy density
 
           pd_strain_energies[i] += strain_energy * voli;
@@ -1757,10 +1766,10 @@ void tools::pp::Compute::computeJIntegral() {
                       d_mesh_p->getMeshSize();
 
             bool fracture_state = false;
-            auto ef = d_material_p->getBondEF(rji, Sji, fracture_state, true);
+            auto ef = d_material_p->getBondEF(i,j);
 
             // add contribution to energy
-            fracture_energy += ef.first * volj;
+            fracture_energy += ef.second * volj;
           }  // loop over nodes for pd energy density
 
           if (util::compare::definitelyGreaterThan(Zi, 1.0 - 1.0E-10))
@@ -2154,7 +2163,7 @@ void tools::pp::Compute::getContourContribJInt(
         volj *= (check_up - rjq) / h;
 
       bool fracture_state = false;
-      auto ef = d_material_p->getBondEF(rjq, Sjq, fracture_state, true);
+      auto ef = d_material_p->getBondEF(node_p,j);
 
       // add contribution to energy
       // Debug
@@ -2164,7 +2173,7 @@ void tools::pp::Compute::getContourContribJInt(
       if (false) {
         double sr = std::abs(Sjq) / this->d_material_p->getSc(rjq);
         if (util::compare::definitelyGreaterThan(sr, 1.))
-          loc_pd_energy += ef.first * volj;
+          loc_pd_energy += ef.second * volj;
       }
 
       // Debug
@@ -2172,10 +2181,10 @@ void tools::pp::Compute::getContourContribJInt(
       //  crack line
       if (false) {
         if (doesBondIntersectCrack(xj, p, ctip, crack_orient))
-          loc_pd_energy += ef.first * volj;
+          loc_pd_energy += ef.second * volj;
       }
 
-      loc_pd_energy += ef.first * volj;
+      loc_pd_energy += ef.second * volj;
     }  // loop over nodes for pd energy density
 
   } else {
@@ -2210,12 +2219,12 @@ void tools::pp::Compute::getContourContribJInt(
       if (util::compare::definitelyGreaterThan(rjq, check_low))
         volj *= (check_up - rjq) / h;
 
-      auto fs = this->d_fracture_p->getBondState(node_p, j);
-      auto ef_i = this->d_material_p->getBondEF(rjq, Sjq, fs, mp, thetap);
-      auto ef_j = this->d_material_p->getBondEF(rjq, Sjq, fs, mj, thetaj);
+      //auto fs = this->d_fracture_p->getBondState(node_p, j);
+      auto ef_i = this->d_material_p->getBondEF(node_p,j);
+      auto ef_j = this->d_material_p->getBondEF(node_p,j);
 
       // add contribution to energy
-      loc_pd_energy += (ef_i.first + ef_j.first) * volj;
+      loc_pd_energy += (ef_i.second + ef_j.second) * volj;
     }  // loop over nodes for pd energy density
   }
 

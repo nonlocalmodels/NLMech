@@ -32,7 +32,7 @@ class Neighbor;
 
 namespace material {
 namespace pd {
-class Material;
+class BaseMaterial;
 }
 }
 
@@ -40,6 +40,10 @@ namespace rw {
 namespace writer {
 class Writer;
 }
+}
+
+namespace data {
+class DataManager;
 }
 
 namespace tools {
@@ -774,7 +778,11 @@ private:
   inp::Input *d_input_p;
 
   /*! @brief Pointer to Material object */
-  material::pd::Material *d_material_p;
+  material::pd::BaseMaterial *d_material_p;
+
+  /*! @brief Pointer to the Data Mananger */
+  data::DataManager *d_dataManager_p;
+
 };
 
 } // namespace pp
