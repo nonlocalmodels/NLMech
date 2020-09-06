@@ -771,9 +771,6 @@ private:
   /*! @brief Pointer to Fracture object */
   geometry::Fracture *d_fracture_p;
 
-  /*! @brief Pointer to Neighbor object */
-  geometry::Neighbor *d_neighbor_p;
-
   /*! @brief Pointer to Input object */
   inp::Input *d_input_p;
 

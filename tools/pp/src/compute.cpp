@@ -153,7 +153,6 @@ tools::pp::Compute::Compute(const std::string &filename)
       d_matDeck_p(nullptr),
       d_mesh_p(nullptr),
       d_fracture_p(nullptr),
-      d_neighbor_p(nullptr),
       d_input_p(nullptr),
       d_material_p(nullptr) {
 
@@ -164,9 +163,9 @@ tools::pp::Compute::Compute(const std::string &filename)
   // build neighbor list if we need it
   if (d_needNeighborList) {
     std::cout << "PP: Computing neighbor list\n";
-    d_neighbor_p = new geometry::Neighbor(d_modelDeck_p->d_horizon,
+    d_dataManager_p->setNeighborP(new geometry::Neighbor(d_modelDeck_p->d_horizon,
                                           d_input_p->getNeighborDeck(),
-                                          d_mesh_p->getNodesP());
+                                          d_mesh_p->getNodesP()));
   }
 
   // take the smaller output interval as dt_out
@@ -1167,7 +1166,7 @@ void tools::pp::Compute::computeDamage(rw::writer::Writer *writer,
 
   if (Z->size() != d_mesh_p->getNumNodes()) Z->resize(d_mesh_p->getNumNodes());
 
-  if (d_neighbor_p == nullptr)
+  if (d_dataManager_p->getNeighborP() == nullptr)
     safeExit(
         "Error: Need neighbor list to compute damage. This should have "
         "been created at the beginning.\n");
@@ -1178,7 +1177,7 @@ void tools::pp::Compute::computeDamage(rw::writer::Writer *writer,
         auto xi = d_mesh_p->getNode(i);
 
         double locz = 0.;
-        auto i_neighs = this->d_neighbor_p->getNeighbors(i);
+        auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(i);
         for (const auto &j : i_neighs) {
           if (util::compare::definitelyGreaterThan(
                   xi.dist(d_mesh_p->getNode(j)), d_modelDeck_p->d_horizon) ||
@@ -1227,7 +1226,7 @@ void tools::pp::Compute::computeJIntegral() {
     if (d_fracture_p == nullptr) {
       d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck(),
                                             d_mesh_p->getNodesP(),
-                                            d_neighbor_p->getNeighborsListP());
+                                            d_dataManager_p->getNeighborP()->getNeighborsListP());
     }
 
     // initialization
@@ -1680,7 +1679,7 @@ void tools::pp::Compute::computeJIntegral() {
           double strain_energy = 0.;
 
           // add peridynamic energy
-          auto i_neighs = this->d_neighbor_p->getNeighbors(id);
+          auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(id);
           for (auto j : i_neighs) {
             auto xj = d_mesh_p->getNode(j);
             if (util::compare::definitelyGreaterThan(
@@ -1743,7 +1742,7 @@ void tools::pp::Compute::computeJIntegral() {
           double fracture_energy = 0.;
 
           // add peridynamic energy
-          auto i_neighs = this->d_neighbor_p->getNeighbors(i);
+          auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(i);
           for (auto j : i_neighs) {
             auto xj = d_mesh_p->getNode(j);
             if (util::compare::definitelyGreaterThan(
@@ -2142,7 +2141,7 @@ void tools::pp::Compute::getContourContribJInt(
     auto check_up = d_modelDeck_p->d_horizon + 0.5 * h;
     auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
 
-    auto i_neighs = this->d_neighbor_p->getNeighbors(node_p);
+    auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(node_p);
     for (size_t j = 0; j < i_neighs.size(); j++) {
       auto j_id = i_neighs[j];
 
@@ -2196,7 +2195,7 @@ void tools::pp::Compute::getContourContribJInt(
     auto check_up = d_modelDeck_p->d_horizon + 0.5 * h;
     auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
 
-    auto i_neighs = this->d_neighbor_p->getNeighbors(node_p);
+    auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(node_p);
     for (size_t j = 0; j < i_neighs.size(); j++) {
       auto j_id = i_neighs[j];
 
