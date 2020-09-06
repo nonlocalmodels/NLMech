@@ -16,9 +16,9 @@ The code uses [CMake](https://cmake.org/) as the build system and has following 
 
 We provide following support to build the code
 
-  * Bash scripts to build the code on [Ubuntu](https://github.com/nonlocalmodels/buildscripts/tree/master/Ubuntu) and [Fedora](https://github.com/nonlocalmodels/buildscripts/tree/master/Fedora),
-  * Docker files to build the code using the [Fedora packages](https://github.com/nonlocalmodels/buildscripts/blob/master/Docker/Fedora) or [build all dependencies](https://github.com/nonlocalmodels/buildscripts/blob/master/Docker/FedoraAll),
-  * [Scripts](https://github.com/nonlocalmodels/HPCBuildInfrastructure) to build the code on HPC systems.
+* Bash scripts to build the code on [Ubuntu](https://github.com/nonlocalmodels/buildscripts/tree/master/Ubuntu) and [Fedora](https://github.com/nonlocalmodels/buildscripts/tree/master/Fedora),
+* Docker files to build the code using the [Fedora packages](https://github.com/nonlocalmodels/buildscripts/blob/master/Docker/Fedora) or [build all dependencies](https://github.com/nonlocalmodels/buildscripts/blob/master/Docker/FedoraAll),
+* [Scripts](https://github.com/nonlocalmodels/HPCBuildInfrastructure) to build the code on HPC systems.
 
 If you just interested the code, we provide a Doker image with the [latest sucessful build](https://github.com/nonlocalmodels/NLMech/packages/384758) of the master branch. For writing your own 
 [YAML](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) files, we provide a bunch of [examples](https://nonlocalmodels.github.io/examples/).
