@@ -66,14 +66,14 @@ void geometry::VolumeCorrection::weightedVolume(
       });
 }
 
-
 std::string geometry::VolumeCorrection::printStr(int nt, int lvl) const {
   auto tabS = util::io::getTabS(nt);
   std::ostringstream oss;
   oss << tabS << "------- VolumeCorrection --------" << std::endl << std::endl;
   oss << tabS << "Weighted volume data address = " << d_weightedVolume_p
       << std::endl;
-  oss << tabS << "Volume correction data address = " << d_volumeCorrection_p << std::endl;
+  oss << tabS << "Volume correction data address = " << d_volumeCorrection_p
+      << std::endl;
   oss << tabS << std::endl;
 
   return oss.str();

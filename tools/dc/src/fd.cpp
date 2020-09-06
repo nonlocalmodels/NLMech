@@ -333,8 +333,6 @@ util::Point3 getDisplacementOfNodeCurrent(const util::Point3 &x1,
   // Note that y here is quadrature point's current position
   //
 
-  size_t el_id = 0;
-
   static int debug_counter = 0;
   static bool debug_el_ids = false;
 

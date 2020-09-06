@@ -891,7 +891,6 @@ void inp::Input::setAbsorbingCondDeck() {
   }
 }  // setAbsorbingCondDeck
 
-
 std::string inp::Input::printStr(int nt, int lvl) const {
   auto tabS = util::io::getTabS(nt);
   std::ostringstream oss;

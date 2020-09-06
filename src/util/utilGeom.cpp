@@ -278,8 +278,10 @@ std::pair<util::Point3, double> util::geometry::getCenterAndVol(
   }
 }
 
-bool util::geometry::doLinesIntersect(util::Point3 A, util::Point3 B,
-                                      util::Point3 C, util::Point3 D) {
+bool util::geometry::doLinesIntersect(const util::Point3 A,
+                                      const util::Point3 B,
+                                      const util::Point3 C,
+                                      const util::Point3 D) {
   // four direction for two lines and points of other line
   int dir1 = direction(A, B, C);
   int dir2 = direction(A, B, D);
@@ -303,7 +305,8 @@ bool util::geometry::doLinesIntersect(util::Point3 A, util::Point3 B,
   return false;
 }
 
-bool util::geometry::onLine(util::Point3 A, util::Point3 B, util::Point3 C) {
+bool util::geometry::onLine(const util::Point3 A, const util::Point3 B,
+                            const util::Point3 C) {
   if (C.d_x <= std::max(A.d_x, B.d_x) && C.d_x <= std::min(A.d_x, B.d_x) &&
       (C.d_y <= std::max(A.d_y, B.d_y) && C.d_y <= std::min(A.d_y, B.d_y)))
     return true;
@@ -311,7 +314,8 @@ bool util::geometry::onLine(util::Point3 A, util::Point3 B, util::Point3 C) {
   return false;
 }
 
-int util::geometry::direction(util::Point3 A, util::Point3 B, util::Point3 C) {
+int util::geometry::direction(const util::Point3 A, const util::Point3 B,
+                              const util::Point3 C) {
   int val =
       (B.d_y - A.d_y) * (C.d_x - B.d_x) - (B.d_x - A.d_x) * (C.d_y - B.d_y);
   if (val == 0)
@@ -321,8 +325,8 @@ int util::geometry::direction(util::Point3 A, util::Point3 B, util::Point3 C) {
   return 1;    // clockwise direction
 }
 
-bool util::geometry::isPointinCircle(util::Point3 A, util::Point3 center,
-                                     double radius) {
+bool util::geometry::isPointinCircle(const util::Point3 A,
+                                     const util::Point3 center, double radius) {
   if ((A - center).length() <= radius) return true;
 
   return false;

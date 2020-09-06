@@ -159,7 +159,6 @@ void material::pd::ElasticState::computeParameters(inp::MaterialDeck *deck,
 
 std::pair<util::Point3, double> material::pd::ElasticState::getBondEF(
     size_t i, size_t j) {
-
   // j is the local id in the neighborlist of node i
   // get global id of j
   auto j_id = d_dataManager_p->getNeighborP()->getNeighbor(i, j);

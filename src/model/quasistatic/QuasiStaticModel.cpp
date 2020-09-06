@@ -626,17 +626,15 @@ util::VectorXi model::QuasiStaticModel<T>::computeResidual() {
       switch (e) {
         case 0:
           res[id] = (*d_dataManager_p->getForceP())[i][0] +
-                    (*d_dataManager_p->getBodyForceP())[i][0]; 
+                    (*d_dataManager_p->getBodyForceP())[i][0];
           break;
         case 1:
-          res[id + 1] =
-              (*d_dataManager_p->getForceP())[i][1] +
-              (*d_dataManager_p->getBodyForceP())[i][1];
+          res[id + 1] = (*d_dataManager_p->getForceP())[i][1] +
+                        (*d_dataManager_p->getBodyForceP())[i][1];
           break;
         case 2:
-          res[id + 2] =
-              (*d_dataManager_p->getForceP())[i][2] +
-              (*d_dataManager_p->getBodyForceP())[i][2];
+          res[id + 2] = (*d_dataManager_p->getForceP())[i][2] +
+                        (*d_dataManager_p->getBodyForceP())[i][2];
           break;
         default:
           break;
