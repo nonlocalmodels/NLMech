@@ -754,7 +754,7 @@ private:
   std::vector<double> d_mX;
 
   /*! @brief Model deck */
-  inp::ModelDeck *d_modelDeck_p;
+  //inp::ModelDeck *d_modelDeck_p;
 
   /*! @brief Output deck */
   inp::OutputDeck *d_outputDeck_p;

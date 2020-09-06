@@ -146,7 +146,6 @@ tools::pp::Compute::Compute(const std::string &filename)
       d_fnErrMsg(""),
       d_needDamageZ(false),
       d_needNeighborList(false),
-      d_modelDeck_p(nullptr),
       d_outputDeck_p(nullptr),
       d_fractureDeck_p(nullptr),
       d_matDeck_p(nullptr),
@@ -159,7 +158,7 @@ tools::pp::Compute::Compute(const std::string &filename)
   if (d_needNeighborList) {
     std::cout << "PP: Computing neighbor list\n";
     d_dataManager_p->setNeighborP(new geometry::Neighbor(
-        d_modelDeck_p->d_horizon, d_input_p->getNeighborDeck(),
+        d_dataManager_p->getModelDeckP()->d_horizon, d_input_p->getNeighborDeck(),
         d_dataManager_p->getMeshP()->getNodesP()));
   }
 
@@ -182,7 +181,7 @@ tools::pp::Compute::Compute(const std::string &filename)
     if (d_nOut >= d_dtOutChange) dt_interval_factor = 1;
 
     // current time
-    d_time = current_step * d_modelDeck_p->d_dt;
+    d_time = current_step * d_dataManager_p->getModelDeckP()->d_dt;
 
     std::cout << "PP_fe2D: Processing output file = " << d_nOut << "\n";
 
@@ -213,9 +212,9 @@ tools::pp::Compute::Compute(const std::string &filename)
           hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
           d_dataManager_p->getMeshP()->getNumNodes(),
           [this](boost::uint64_t i) {
-            d_u[i] += util::Point3(d_modelDeck_p->d_dt * d_v[i].d_x,
-                                   d_modelDeck_p->d_dt * d_v[i].d_y,
-                                   d_modelDeck_p->d_dt * d_v[i].d_z);
+            d_u[i] += util::Point3(d_dataManager_p->getModelDeckP()->d_dt * d_v[i].d_x,
+                                   d_dataManager_p->getModelDeckP()->d_dt * d_v[i].d_y,
+                                   d_dataManager_p->getModelDeckP()->d_dt * d_v[i].d_z);
           });
       f2.get();
     }
@@ -324,7 +323,7 @@ void tools::pp::Compute::init() {
   // read input data
   std::cout << "PP_fe2D: Reading simulation input file.\n";
   d_input_p = new inp::Input(d_simInpFilename);
-  d_modelDeck_p = d_input_p->getModelDeck();
+  d_dataManager_p->setModelDeckP(d_input_p->getModelDeck());
   d_outputDeck_p = d_input_p->getOutputDeck();
   d_fractureDeck_p = d_input_p->getFractureDeck();
 
@@ -349,7 +348,7 @@ void tools::pp::Compute::init() {
   d_outPreTag = d_outPath + "/";
 
   // maximum number of output files to process
-  d_dtN = d_modelDeck_p->d_Nt / d_outputDeck_p->d_dtOutCriteria;
+  d_dtN = d_dataManager_p->getModelDeckP()->d_Nt / d_outputDeck_p->d_dtOutCriteria;
 
   // read global start and end output step if provided
   d_dtStart = 1;
@@ -358,7 +357,7 @@ void tools::pp::Compute::init() {
   if (config["Dt_End"]) d_dtEnd = config["Dt_End"].as<int>();
 
   // handle change in output interval
-  d_dtOutChange = d_modelDeck_p->d_Nt;
+  d_dtOutChange = d_dataManager_p->getModelDeckP()->d_Nt;
   if (config["Dt_Out_Change"])
     d_dtOutChange = config["Dt_Out_Change"].as<size_t>();
 
@@ -444,16 +443,16 @@ void tools::pp::Compute::init() {
       for (auto &ck : d.d_findCrackTip_p->d_cracks) {
         // point should be in smaller box inside bounding box
         ck.d_trackt = util::geometry::isPointInsideRectangle(
-            ck.d_pt, bbox.first[0] + d_modelDeck_p->d_horizon,
-            bbox.second[0] - d_modelDeck_p->d_horizon,
-            bbox.first[1] + d_modelDeck_p->d_horizon,
-            bbox.second[1] - d_modelDeck_p->d_horizon);
+            ck.d_pt, bbox.first[0] + d_dataManager_p->getModelDeckP()->d_horizon,
+            bbox.second[0] - d_dataManager_p->getModelDeckP()->d_horizon,
+            bbox.first[1] + d_dataManager_p->getModelDeckP()->d_horizon,
+            bbox.second[1] - d_dataManager_p->getModelDeckP()->d_horizon);
 
         ck.d_trackb = util::geometry::isPointInsideRectangle(
-            ck.d_pb, bbox.first[0] + d_modelDeck_p->d_horizon,
-            bbox.second[0] - d_modelDeck_p->d_horizon,
-            bbox.first[1] + d_modelDeck_p->d_horizon,
-            bbox.second[1] - d_modelDeck_p->d_horizon);
+            ck.d_pb, bbox.first[0] + d_dataManager_p->getModelDeckP()->d_horizon,
+            bbox.second[0] - d_dataManager_p->getModelDeckP()->d_horizon,
+            bbox.first[1] + d_dataManager_p->getModelDeckP()->d_horizon,
+            bbox.second[1] - d_dataManager_p->getModelDeckP()->d_horizon);
       }  // modify crack track status
     }
   }
@@ -1187,7 +1186,7 @@ void tools::pp::Compute::computeDamage(rw::writer::Writer *writer,
         for (const auto &j : i_neighs) {
           if (util::compare::definitelyGreaterThan(
                   xi.dist(d_dataManager_p->getMeshP()->getNode(j)),
-                  d_modelDeck_p->d_horizon) ||
+                  d_dataManager_p->getModelDeckP()->d_horizon) ||
               j == i)
             continue;
 
@@ -1349,8 +1348,8 @@ void tools::pp::Compute::computeJIntegral() {
   if (data->d_contourGiven)
     cd = data->d_contour;
   else {
-    double tolx = 0.5 * data->d_contourFactor[0] * d_modelDeck_p->d_horizon;
-    double toly = 0.5 * data->d_contourFactor[1] * d_modelDeck_p->d_horizon;
+    double tolx = 0.5 * data->d_contourFactor[0] * d_dataManager_p->getModelDeckP()->d_horizon;
+    double toly = 0.5 * data->d_contourFactor[1] * d_dataManager_p->getModelDeckP()->d_horizon;
     cd = std::make_pair(
         util::Point3(ctip.d_p.d_x - tolx, ctip.d_p.d_y - toly, 0.),
         util::Point3(ctip.d_p.d_x + tolx, ctip.d_p.d_y + toly, 0.));
@@ -1360,7 +1359,7 @@ void tools::pp::Compute::computeJIntegral() {
   std::vector<size_t> search_nodes;
   std::vector<size_t> search_elems;
   listElemsAndNodesInDomain(cd,
-                            d_modelDeck_p->d_horizon +
+                            d_dataManager_p->getModelDeckP()->d_horizon +
                                 2. * d_dataManager_p->getMeshP()->getMeshSize(),
                             d_dataManager_p->getMeshP()->getMeshSize(),
                             &search_nodes, &search_elems, calc_in_ref);
@@ -1619,7 +1618,7 @@ void tools::pp::Compute::computeJIntegral() {
             auto xj = d_dataManager_p->getMeshP()->getNode(j);
             auto rji = xj.dist(xi);
             if (util::compare::definitelyGreaterThan(
-                    rji, d_modelDeck_p->d_horizon) ||
+                    rji, d_dataManager_p->getModelDeckP()->d_horizon) ||
                 j == id)
               continue;
 
@@ -1630,8 +1629,8 @@ void tools::pp::Compute::computeJIntegral() {
             // get corrected volume of node j
             auto volj = d_dataManager_p->getMeshP()->getNodalVolume(j);
             if (util::compare::definitelyGreaterThan(
-                    rji, d_modelDeck_p->d_horizon - 0.5 * h))
-              volj *= (d_modelDeck_p->d_horizon + 0.5 * h - rji) / h;
+                    rji, d_dataManager_p->getModelDeckP()->d_horizon - 0.5 * h))
+              volj *= (d_dataManager_p->getModelDeckP()->d_horizon + 0.5 * h - rji) / h;
 
             // get bond force
             bool fracture_state = false;
@@ -1693,7 +1692,7 @@ void tools::pp::Compute::computeJIntegral() {
           for (auto j : i_neighs) {
             auto xj = d_dataManager_p->getMeshP()->getNode(j);
             if (util::compare::definitelyGreaterThan(
-                    xj.dist(xi), d_modelDeck_p->d_horizon) ||
+                    xj.dist(xi), d_dataManager_p->getModelDeckP()->d_horizon) ||
                 util::compare::definitelyLessThan(xj.dist(xi), 1.0E-10))
               continue;
 
@@ -1705,9 +1704,9 @@ void tools::pp::Compute::computeJIntegral() {
             // get volume correction
             auto volj = d_dataManager_p->getMeshP()->getNodalVolume(j);
             if (util::compare::definitelyGreaterThan(
-                    rji, d_modelDeck_p->d_horizon -
+                    rji, d_dataManager_p->getModelDeckP()->d_horizon -
                              0.5 * d_dataManager_p->getMeshP()->getMeshSize()))
-              volj *= (d_modelDeck_p->d_horizon +
+              volj *= (d_dataManager_p->getModelDeckP()->d_horizon +
                        0.5 * d_dataManager_p->getMeshP()->getMeshSize() - rji) /
                       d_dataManager_p->getMeshP()->getMeshSize();
 
@@ -1756,7 +1755,7 @@ void tools::pp::Compute::computeJIntegral() {
           for (auto j : i_neighs) {
             auto xj = d_dataManager_p->getMeshP()->getNode(j);
             if (util::compare::definitelyGreaterThan(
-                    xj.dist(xi), d_modelDeck_p->d_horizon) ||
+                    xj.dist(xi), d_dataManager_p->getModelDeckP()->d_horizon) ||
                 util::compare::definitelyLessThan(xj.dist(xi), 1.0E-10))
               continue;
 
@@ -1768,9 +1767,9 @@ void tools::pp::Compute::computeJIntegral() {
             // get volume correction
             auto volj = d_dataManager_p->getMeshP()->getNodalVolume(j);
             if (util::compare::definitelyGreaterThan(
-                    rji, d_modelDeck_p->d_horizon -
+                    rji, d_dataManager_p->getModelDeckP()->d_horizon -
                              0.5 * d_dataManager_p->getMeshP()->getMeshSize()))
-              volj *= (d_modelDeck_p->d_horizon +
+              volj *= (d_dataManager_p->getModelDeckP()->d_horizon +
                        0.5 * d_dataManager_p->getMeshP()->getMeshSize() - rji) /
                       d_dataManager_p->getMeshP()->getMeshSize();
 
@@ -2153,8 +2152,8 @@ void tools::pp::Compute::getContourContribJInt(
   if (!d_material_p->isStateActive()) {
     // upper and lower bound for volume correction
     auto h = d_dataManager_p->getMeshP()->getMeshSize();
-    auto check_up = d_modelDeck_p->d_horizon + 0.5 * h;
-    auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
+    auto check_up = d_dataManager_p->getModelDeckP()->d_horizon + 0.5 * h;
+    auto check_low = d_dataManager_p->getModelDeckP()->d_horizon - 0.5 * h;
 
     auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(node_p);
     for (size_t j = 0; j < i_neighs.size(); j++) {
@@ -2162,7 +2161,7 @@ void tools::pp::Compute::getContourContribJInt(
 
       auto xj = d_dataManager_p->getMeshP()->getNode(j_id);
       if (util::compare::definitelyGreaterThan(xj.dist(p),
-                                               d_modelDeck_p->d_horizon) ||
+                                               d_dataManager_p->getModelDeckP()->d_horizon) ||
           util::compare::definitelyLessThan(xj.dist(p), 1.0E-10))
         continue;
 
@@ -2207,8 +2206,8 @@ void tools::pp::Compute::getContourContribJInt(
 
     // upper and lower bound for volume correction
     auto h = d_dataManager_p->getMeshP()->getMeshSize();
-    auto check_up = d_modelDeck_p->d_horizon + 0.5 * h;
-    auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
+    auto check_up = d_dataManager_p->getModelDeckP()->d_horizon + 0.5 * h;
+    auto check_low = d_dataManager_p->getModelDeckP()->d_horizon - 0.5 * h;
 
     auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(node_p);
     for (size_t j = 0; j < i_neighs.size(); j++) {
@@ -2217,7 +2216,7 @@ void tools::pp::Compute::getContourContribJInt(
       auto xj = d_dataManager_p->getMeshP()->getNode(j_id);
 
       if (util::compare::definitelyGreaterThan(xj.dist(p),
-                                               d_modelDeck_p->d_horizon) ||
+                                               d_dataManager_p->getModelDeckP()->d_horizon) ||
           util::compare::definitelyLessThan(xj.dist(p), 1.0E-10))
         continue;
 
@@ -2453,7 +2452,7 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
   auto pb = crack.d_pb;
 
   auto h = d_dataManager_p->getMeshP()->getMeshSize();
-  auto horizon = d_modelDeck_p->d_horizon;
+  auto horizon = d_dataManager_p->getModelDeckP()->d_horizon;
   auto bbox = d_dataManager_p->getMeshP()->getBoundingBox();
   auto bbox_small = bbox;
   bbox_small.first[0] += horizon;
