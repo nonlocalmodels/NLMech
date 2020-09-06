@@ -765,11 +765,8 @@ private:
   /*! @brief Material deck */
   inp::MaterialDeck *d_matDeck_p;
 
-  /*! @brief Pointer to Mesh object */
-  //fe::Mesh *d_mesh_p;
-
   /*! @brief Pointer to Fracture object */
-  geometry::Fracture *d_fracture_p;
+  //geometry::Fracture *d_fracture_p;
 
   /*! @brief Pointer to Input object */
   inp::Input *d_input_p;

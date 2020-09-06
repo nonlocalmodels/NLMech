@@ -151,7 +151,6 @@ tools::pp::Compute::Compute(const std::string &filename)
       d_outputDeck_p(nullptr),
       d_fractureDeck_p(nullptr),
       d_matDeck_p(nullptr),
-      d_fracture_p(nullptr),
       d_input_p(nullptr),
       d_material_p(nullptr) {
 
@@ -1222,10 +1221,10 @@ void tools::pp::Compute::computeJIntegral() {
 
   // compute necessary quantities if the material is state-based
   if (d_material_p->isStateActive()) {
-    if (d_fracture_p == nullptr) {
-      d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck(),
+    if (d_dataManager_p->getFractureP() == nullptr) {
+      d_dataManager_p->setFractureP(new geometry::Fracture(d_input_p->getFractureDeck(),
                                             d_dataManager_p->getMeshP()->getNodesP(),
-                                            d_dataManager_p->getNeighborP()->getNeighborsListP());
+                                            d_dataManager_p->getNeighborP()->getNeighborsListP()));
     }
 
     // initialization
