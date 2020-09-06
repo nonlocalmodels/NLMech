@@ -34,7 +34,6 @@ material::pd::RNPBond::RNPBond(inp::MaterialDeck *deck,
       d_deck(nullptr),
       d_dataManager_p(dataManager),
       d_baseInfluenceFn_p(nullptr) {
-
   d_stateActive = false;
   d_name = "RNPBond";
   d_density = deck->d_density;
@@ -43,9 +42,8 @@ material::pd::RNPBond::RNPBond(inp::MaterialDeck *deck,
 
   d_dimension = dataManager->getModelDeckP()->d_dim;
 
-//  std::cout << "RNPBond \n" << std::flush;
-//  exit(0);
-
+  //  std::cout << "RNPBond \n" << std::flush;
+  //  exit(0);
 
   // create influence function class
   if (deck->d_influenceFnType == 0)
@@ -88,13 +86,11 @@ material::pd::RNPBond::RNPBond(inp::MaterialDeck *deck,
     // set contact radius
     d_contact_Rc = 0.9 * d_dataManager_p->getMeshP()->getMeshSize();
     // set contact force coefficient
-    d_contact_Kn = deck->d_matData.d_K * 18. /
-        (M_PI * std::pow(d_horizon, 5));
+    d_contact_Kn = deck->d_matData.d_K * 18. / (M_PI * std::pow(d_horizon, 5));
 
     std::cout << "RNPBonc: Mesh size: "
               << d_dataManager_p->getMeshP()->getMeshSize()
-              << ", Rc: " << d_contact_Rc
-              << ", Kn: " << d_contact_Kn << "\n";
+              << ", Rc: " << d_contact_Rc << ", Kn: " << d_contact_Kn << "\n";
   }
 
   d_deck = deck;
@@ -130,7 +126,7 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
                  "bond-based peridynamic parameters.\n";
     exit(1);
   } else if (util::compare::definitelyGreaterThan(deck->d_matData.d_Gc, 0.) &&
-      util::compare::definitelyGreaterThan(deck->d_matData.d_KIc, 0.)) {
+             util::compare::definitelyGreaterThan(deck->d_matData.d_KIc, 0.)) {
     std::cout << "Warning: Both critical energy release rate Gc and critical "
                  "stress intensity factor KIc are provided.\n";
     std::cout << "Warning: To compute the RNP bond-based peridynamic "
@@ -201,11 +197,10 @@ void material::pd::RNPBond::computeMaterialProperties(inp::MaterialDeck *deck,
       deck->d_matData.d_Gc, deck->d_matData.d_nu, deck->d_matData.d_E);
 }
 
-//std::pair<double, double> material::pd::RNPBond::getBondEF(
+// std::pair<double, double> material::pd::RNPBond::getBondEF(
 //    const double &r, const double &s, const double &influence, bool &fs) {
-std::pair<util::Point3, double> material::pd::RNPBond::getBondEF(
-    size_t i, size_t j) {
-
+std::pair<util::Point3, double> material::pd::RNPBond::getBondEF(size_t i,
+                                                                 size_t j) {
   auto force = util::Point3();
   double energy = 0.;
 
@@ -225,11 +220,10 @@ std::pair<util::Point3, double> material::pd::RNPBond::getBondEF(
   // get interior flags (to enforce no-fail region method)
   auto node_i_interior =
       d_dataManager_p->getInteriorFlagsP()->getInteriorFlag(i, xi);
-  auto node_j_interior = d_dataManager_p->getInteriorFlagsP()
-      ->getInteriorFlag(j_id, xj);
+  auto node_j_interior =
+      d_dataManager_p->getInteriorFlagsP()->getInteriorFlag(j_id, xj);
   bool break_bonds = true;
-  if (!node_i_interior || !node_j_interior)
-    break_bonds = false;
+  if (!node_i_interior || !node_j_interior) break_bonds = false;
 
   // get distance between nodes and bond-strain
   auto rji = xj.dist(xi);
@@ -253,39 +247,38 @@ std::pair<util::Point3, double> material::pd::RNPBond::getBondEF(
   if (break_bonds) {
     // check if fracture state of the bond need to be updated
     if (d_irrevBondBreak && !fs &&
-        util::compare::definitelyGreaterThan(std::abs(Sji), d_factorSc * getSc
-            (rji)))
+        util::compare::definitelyGreaterThan(std::abs(Sji),
+                                             d_factorSc * getSc(rji)))
       fs = true;
 
     // update bond-state
     d_dataManager_p->getFractureP()->setBondState(i, j, fs);
 
-    // if bond is not fractured, return energy and force from nonlinear potential
-    // otherwise return energy of fractured bond, and zero force
+    // if bond is not fractured, return energy and force from nonlinear
+    // potential otherwise return energy of fractured bond, and zero force
     if (!fs) {
       energy = (influence * d_C * (1. - std::exp(-d_beta * rji * Sji * Sji)) /
-          d_invFactor) * volj;
-      force = (influence * 4. * Sji * d_C * d_beta * std::exp(-d_beta * rji *
-          Sji * Sji) / d_invFactor) * volj * eij;
+                d_invFactor) *
+               volj;
+      force = (influence * 4. * Sji * d_C * d_beta *
+               std::exp(-d_beta * rji * Sji * Sji) / d_invFactor) *
+              volj * eij;
       return {force, energy};
     } else {
-
       // energy
       energy = influence * d_C / d_invFactor * volj;
 
       // normal contact force between nodes of broken bond
       auto yji = xj + uj - (xi + ui);
       auto Rji = yji.length();
-      auto scalar_f =
-          d_contact_Kn * (voli * volj / (voli + volj)) * (d_contact_Rc - Rji) /
-              Rji;
-      if (scalar_f < 0.)
-        scalar_f = 0.;
+      auto scalar_f = d_contact_Kn * (voli * volj / (voli + volj)) *
+                      (d_contact_Rc - Rji) / Rji;
+      if (scalar_f < 0.) scalar_f = 0.;
       force += -scalar_f * yji;
 
       return std::make_pair(force, energy);
     }
-  } // if break_bonds
+  }  // if break_bonds
   else {
     energy = (influence * d_C * d_beta * rji * Sji * Sji / d_invFactor) * volj;
     force = (influence * 4. * Sji * d_C * d_beta / d_invFactor) * volj * eij;
@@ -299,7 +292,6 @@ double material::pd::RNPBond::getS(const util::Point3 &dx,
 }
 
 double material::pd::RNPBond::getS(size_t i, size_t j) {
-
   // get location of nodes
   auto xi = d_dataManager_p->getMeshP()->getNode(i);
   auto ui = (*d_dataManager_p->getDisplacementP())[i];
@@ -315,15 +307,14 @@ double material::pd::RNPBond::getSc(const double &r) {
 }
 
 double material::pd::RNPBond::getSc(size_t i, size_t j) {
-
   auto xi = d_dataManager_p->getMeshP()->getNode(i);
   auto xj = d_dataManager_p->getMeshP()->getNode(j);
 
   return d_rbar / std::sqrt(xj.dist(xi));
 }
 
-util::Point3 material::pd::RNPBond::getBondForceDirection(const util::Point3 &dx,
-                                                          const util::Point3 &du) const {
+util::Point3 material::pd::RNPBond::getBondForceDirection(
+    const util::Point3 &dx, const util::Point3 &du) const {
   return dx / dx.length();
 }
 

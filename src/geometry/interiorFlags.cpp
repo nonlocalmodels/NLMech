@@ -29,16 +29,16 @@ bool geometry::BaseInterior::getInteriorFlag(const size_t &i,
   return true;
 }
 
-
 std::string geometry::BaseInterior::printStr(int nt, int lvl) const {
   auto tabS = util::io::getTabS(nt);
   std::ostringstream oss;
   oss << tabS << "------- BaseInterior --------" << std::endl << std::endl;
-  oss << tabS << "Number of interior flags = " << d_intFlags.size() << std::endl;
+  oss << tabS << "Number of interior flags = " << d_intFlags.size()
+      << std::endl;
   oss << tabS << "Bounding box = " << util::io::printBoxStr(d_bbox)
       << std::endl;
-  oss << tabS << "Number of no-fail region = " << d_noFailRegions.size() <<
-      std::endl;
+  oss << tabS << "Number of no-fail region = " << d_noFailRegions.size()
+      << std::endl;
   oss << tabS << "No-fail region tol = " << d_noFailTol << std::endl;
   oss << tabS << std::endl;
 
@@ -103,11 +103,12 @@ std::string geometry::ComputeInterior::printStr(int nt, int lvl) const {
   auto tabS = util::io::getTabS(nt);
   std::ostringstream oss;
   oss << tabS << "------- ComputeInterior --------" << std::endl << std::endl;
-  oss << tabS << "Number of interior flags = " << d_intFlags.size() << std::endl;
+  oss << tabS << "Number of interior flags = " << d_intFlags.size()
+      << std::endl;
   oss << tabS << "Bounding box = " << util::io::printBoxStr(d_bbox)
       << std::endl;
-  oss << tabS << "Number of no-fail region = " << d_noFailRegions.size() <<
-      std::endl;
+  oss << tabS << "Number of no-fail region = " << d_noFailRegions.size()
+      << std::endl;
   oss << tabS << "No-fail region tol = " << d_noFailTol << std::endl;
   oss << tabS << std::endl;
 
@@ -193,11 +194,12 @@ std::string geometry::DataInterior::printStr(int nt, int lvl) const {
   auto tabS = util::io::getTabS(nt);
   std::ostringstream oss;
   oss << tabS << "------- DataInterior --------" << std::endl << std::endl;
-  oss << tabS << "Number of interior flags = " << d_intFlags.size() << std::endl;
+  oss << tabS << "Number of interior flags = " << d_intFlags.size()
+      << std::endl;
   oss << tabS << "Bounding box = " << util::io::printBoxStr(d_bbox)
       << std::endl;
-  oss << tabS << "Number of no-fail region = " << d_noFailRegions.size() <<
-      std::endl;
+  oss << tabS << "Number of no-fail region = " << d_noFailRegions.size()
+      << std::endl;
   oss << tabS << "No-fail region tol = " << d_noFailTol << std::endl;
   oss << tabS << std::endl;
 
@@ -233,7 +235,7 @@ std::string geometry::InteriorFlags::printStr(int nt, int lvl) const {
   std::ostringstream oss;
   oss << tabS << "------- InteriorFlags --------" << std::endl << std::endl;
   oss << tabS << "Interior data" << std::endl;
-  oss << d_interior_p->printStr(nt+1, lvl);
+  oss << d_interior_p->printStr(nt + 1, lvl);
   oss << tabS << std::endl;
 
   return oss.str();

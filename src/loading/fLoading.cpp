@@ -204,9 +204,9 @@ std::string loading::FLoading::printStr(int nt, int lvl) const {
   std::ostringstream oss;
   oss << tabS << "------- FLoading --------" << std::endl << std::endl;
   oss << tabS << "Number of loading data = " << d_bcData.size() << std::endl;
-  for (size_t i=0; i<d_bcData.size(); i++) {
+  for (size_t i = 0; i < d_bcData.size(); i++) {
     oss << tabS << "Loading data " << i + 1 << " information" << std::endl;
-    oss << d_bcData[i].printStr(nt+1) << std::endl;
+    oss << d_bcData[i].printStr(nt + 1) << std::endl;
     oss << "Number of nodes affected = " << d_bcNodes[i].size() << std::endl;
   }
   oss << tabS << std::endl;

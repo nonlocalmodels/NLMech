@@ -36,7 +36,8 @@ std::string fe::MassMatrix::printStr(int nt, int lvl) const {
   auto tabS = util::io::getTabS(nt);
   std::ostringstream oss;
   oss << tabS << "------- MassMatrix --------" << std::endl << std::endl;
-  oss << tabS << "Mass matrix deck address = " << d_massMatrixDeck_p << std::endl;
+  oss << tabS << "Mass matrix deck address = " << d_massMatrixDeck_p
+      << std::endl;
   oss << tabS << "Size of diagonal matrix = " << d_invMDiag.size() << std::endl;
   oss << tabS << std::endl;
 

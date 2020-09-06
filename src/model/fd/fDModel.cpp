@@ -52,7 +52,6 @@ model::FDModel<T>::FDModel(inp::Input *deck)
       d_material_p(nullptr),
       d_dampingGeom_p(nullptr),
       d_stop(false) {
-
   d_dataManager_p = new data::DataManager();
 
   d_dataManager_p->setModelDeckP(deck->getModelDeck());
@@ -209,7 +208,8 @@ void model::FDModel<T>::init() {
 
   // Allocate the reaction force vector
   if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Reaction_Force") or
-      d_dataManager_p->getOutputDeckP()->isTagInOutput("Total_Reaction_Force")) {
+      d_dataManager_p->getOutputDeckP()->isTagInOutput(
+          "Total_Reaction_Force")) {
     d_dataManager_p->setReactionForceP(
         new std::vector<util::Point3>(nnodes, util::Point3()));
     d_dataManager_p->setTotalReactionForceP(
@@ -276,10 +276,13 @@ void model::FDModel<T>::init() {
   if (d_dataManager_p->getOutputDeckP()->d_outCriteria == "max_Z" or
       d_dataManager_p->getOutputDeckP()->d_outCriteria == "max_Z_stop") {
     size_t num_params = 1;
-    if (d_dataManager_p->getOutputDeckP()->d_outCriteria == "max_Z_stop") num_params = 6;
+    if (d_dataManager_p->getOutputDeckP()->d_outCriteria == "max_Z_stop")
+      num_params = 6;
 
-    if (d_dataManager_p->getOutputDeckP()->d_outCriteriaParams.size() < num_params) {
-      std::cerr << "Error: Output criteria " << d_dataManager_p->getOutputDeckP()->d_outCriteria
+    if (d_dataManager_p->getOutputDeckP()->d_outCriteriaParams.size() <
+        num_params) {
+      std::cerr << "Error: Output criteria "
+                << d_dataManager_p->getOutputDeckP()->d_outCriteria
                 << " requires " << num_params << " parameters. \n";
       exit(1);
     }
@@ -287,7 +290,8 @@ void model::FDModel<T>::init() {
     // issue warning when postprocessing is turned off as we need damage data
     // to compute output criteria
     if (!d_policy_p->enablePostProcessing()) {
-      std::cout << "Warning: Output criteria " << d_dataManager_p->getOutputDeckP()->d_outCriteria
+      std::cout << "Warning: Output criteria "
+                << d_dataManager_p->getOutputDeckP()->d_outCriteria
                 << " requires Damage data Z but either "
                    "postprocessing is set to off. "
                    "Therefore setting output criteria to "
@@ -338,9 +342,11 @@ void model::FDModel<T>::integrate() {
   // start time integration
   size_t i = d_n;
   for (i; i < d_dataManager_p->getModelDeckP()->d_Nt; i++) {
-    if (d_dataManager_p->getModelDeckP()->d_timeDiscretization == "central_difference")
+    if (d_dataManager_p->getModelDeckP()->d_timeDiscretization ==
+        "central_difference")
       integrateCD();
-    else if (d_dataManager_p->getModelDeckP()->d_timeDiscretization == "velocity_verlet")
+    else if (d_dataManager_p->getModelDeckP()->d_timeDiscretization ==
+             "velocity_verlet")
       integrateVerlet();
 
     // handle general output
@@ -438,7 +444,6 @@ void model::FDModel<T>::integrateCD() {
 
 template <class T>
 void model::FDModel<T>::integrateVerlet() {
-
   // step 1 and 2 : Compute v_mid and u_new
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
@@ -497,8 +502,8 @@ void model::FDModel<T>::integrateVerlet() {
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       d_dataManager_p->getMeshP()->getNumNodes(), [this](boost::uint64_t i) {
         auto dim = this->d_dataManager_p->getMeshP()->getDimension();
-        auto fact =
-            0.5 * this->d_dataManager_p->getModelDeckP()->d_dt / this->d_material_p->getDensity();
+        auto fact = 0.5 * this->d_dataManager_p->getModelDeckP()->d_dt /
+                    this->d_material_p->getDensity();
 
         // modify dofs which are not marked fixed
         if (this->d_dataManager_p->getMeshP()->isNodeFree(i, 0))
@@ -536,13 +541,15 @@ void model::FDModel<T>::computeForces() {
 }
 
 template <class T>
-std::pair<double, util::Point3> model::FDModel<T>::computeForce(const size_t &i) {
+std::pair<double, util::Point3> model::FDModel<T>::computeForce(
+    const size_t &i) {
   // local variable to hold force
   auto force_i = util::Point3();
   double energy_i = 0.;
 
   if (d_dataManager_p->getOutputDeckP()->isTagInOutput("Reaction_Force") or
-      d_dataManager_p->getOutputDeckP()->isTagInOutput("Total_Reaction_Force")) {
+      d_dataManager_p->getOutputDeckP()->isTagInOutput(
+          "Total_Reaction_Force")) {
     (*d_dataManager_p->getReactionForceP())[i] = util::Point3();
     (*d_dataManager_p->getTotalReactionForceP())[i] = 0.;
   }
@@ -559,10 +566,11 @@ std::pair<double, util::Point3> model::FDModel<T>::computeForce(const size_t &i)
     // Todo: Add reaction force computation
     if (is_reaction_force(i, j_id) and
         (d_dataManager_p->getOutputDeckP()->isTagInOutput("Reaction_Force") or
-         d_dataManager_p->getOutputDeckP()->isTagInOutput("Total_Reaction_Force")))
+         d_dataManager_p->getOutputDeckP()->isTagInOutput(
+             "Total_Reaction_Force")))
       (*d_dataManager_p->getReactionForceP())[i] +=
           (this->d_dataManager_p->getMeshP()->getNodalVolume(i) *
-            fe_pair.first);
+           fe_pair.first);
 
   }  // loop over neighboring nodes
 
@@ -774,7 +782,8 @@ void model::FDModel<T>::checkOutputCriteria() {
   // if output criteria is empty then we do nothing
   // if we two output frequency specified by user is same then we do nothing
   if (d_dataManager_p->getOutputDeckP()->d_outCriteria.empty() ||
-      d_dataManager_p->getOutputDeckP()->d_dtOutOld == d_dataManager_p->getOutputDeckP()->d_dtOutCriteria)
+      d_dataManager_p->getOutputDeckP()->d_dtOutOld ==
+          d_dataManager_p->getOutputDeckP()->d_dtOutCriteria)
     return;
 
   // perform checks every dt large intervals
@@ -785,7 +794,8 @@ void model::FDModel<T>::checkOutputCriteria() {
     // since damage function will not reduce once attaining desired maximum
     // value, we do not check if the criteria was met in the past
     if (d_dataManager_p->getOutputDeckP()->d_outCriteria == "max_Z" &&
-        d_dataManager_p->getOutputDeckP()->d_dtOut == d_dataManager_p->getOutputDeckP()->d_dtOutCriteria)
+        d_dataManager_p->getOutputDeckP()->d_dtOut ==
+            d_dataManager_p->getOutputDeckP()->d_dtOutCriteria)
       return;
 
     // change from large interval to small interval should be done only once
@@ -793,7 +803,8 @@ void model::FDModel<T>::checkOutputCriteria() {
     // change to small from small interval
     static bool changed_to_small = false;
     bool changed_to_small_at_current = false;
-    if (d_dataManager_p->getOutputDeckP()->d_dtOut > d_dataManager_p->getOutputDeckP()->d_dtOutCriteria &&
+    if (d_dataManager_p->getOutputDeckP()->d_dtOut >
+            d_dataManager_p->getOutputDeckP()->d_dtOutCriteria &&
         !changed_to_small) {
       // get maximum from the damage data
       auto max = util::methods::max((*d_dataManager_p->getDamageFunctionP()));
@@ -801,15 +812,19 @@ void model::FDModel<T>::checkOutputCriteria() {
       // check if it is desired range and change output frequency
       if (util::compare::definitelyGreaterThan(
               max, d_dataManager_p->getOutputDeckP()->d_outCriteriaParams[0])) {
-        d_dataManager_p->getOutputDeckP()->d_dtOut = d_dataManager_p->getOutputDeckP()->d_dtOutCriteria;
+        d_dataManager_p->getOutputDeckP()->d_dtOut =
+            d_dataManager_p->getOutputDeckP()->d_dtOutCriteria;
 
         std::cout << "Message: Changing output interval to smaller value.\n";
 
         // dump this value
-        std::ofstream fdump(d_dataManager_p->getOutputDeckP()->d_path + "dt_out_change.info");
+        std::ofstream fdump(d_dataManager_p->getOutputDeckP()->d_path +
+                            "dt_out_change.info");
         fdump << "Large_Dt_To_Small_Dt:\n";
         fdump << "  N: " << d_n << "\n";
-        fdump << "  dN: " << d_n / d_dataManager_p->getOutputDeckP()->d_dtOutCriteria << "\n";
+        fdump << "  dN: "
+              << d_n / d_dataManager_p->getOutputDeckP()->d_dtOutCriteria
+              << "\n";
         fdump.close();
 
         changed_to_small = true;
@@ -829,7 +844,8 @@ void model::FDModel<T>::checkOutputCriteria() {
     static bool changed_back_to_large = false;
     if (!changed_to_small_at_current && !changed_back_to_large &&
         d_dataManager_p->getOutputDeckP()->d_outCriteria == "max_Z_stop" &&
-        d_dataManager_p->getOutputDeckP()->d_dtOut < d_dataManager_p->getOutputDeckP()->d_dtOutOld) {
+        d_dataManager_p->getOutputDeckP()->d_dtOut <
+            d_dataManager_p->getOutputDeckP()->d_dtOutOld) {
       // check maximum of Z function in the rectangle
       auto rect = std::make_pair(util::Point3(), util::Point3());
       auto ps = d_dataManager_p->getOutputDeckP()->d_outCriteriaParams;
@@ -874,16 +890,20 @@ void model::FDModel<T>::checkOutputCriteria() {
         if (!i.empty()) found_valid_node = true;
       }
       if (found_valid_node) {
-        d_dataManager_p->getOutputDeckP()->d_dtOut = d_dataManager_p->getOutputDeckP()->d_dtOutOld;
+        d_dataManager_p->getOutputDeckP()->d_dtOut =
+            d_dataManager_p->getOutputDeckP()->d_dtOutOld;
 
         std::cout << "Message: Changing output interval to larger value.\n";
 
         // dump this value
-        std::ofstream fdump(d_dataManager_p->getOutputDeckP()->d_path + "dt_out_change.info",
-                            std::ios::app);
+        std::ofstream fdump(
+            d_dataManager_p->getOutputDeckP()->d_path + "dt_out_change.info",
+            std::ios::app);
         fdump << "Small_Dt_To_Large_Dt:\n";
         fdump << "  N: " << d_n << "\n";
-        fdump << "  dN: " << d_n / d_dataManager_p->getOutputDeckP()->d_dtOutCriteria << "\n";
+        fdump << "  dN: "
+              << d_n / d_dataManager_p->getOutputDeckP()->d_dtOutCriteria
+              << "\n";
         fdump.close();
 
         changed_back_to_large = true;

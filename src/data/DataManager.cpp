@@ -93,16 +93,15 @@ geometry::VolumeCorrection* data::DataManager::getVolumeCorrectionP() {
 
 geometry::Fracture* data::DataManager::getFractureP() { return d_fracture_p; }
 
-void data::DataManager::setFractureP(
-    geometry::Fracture* pointer) {
+void data::DataManager::setFractureP(geometry::Fracture* pointer) {
   d_fracture_p = pointer;
 }
 
-geometry::InteriorFlags* data::DataManager::getInteriorFlagsP() { return
-d_interiorFlags_p; }
+geometry::InteriorFlags* data::DataManager::getInteriorFlagsP() {
+  return d_interiorFlags_p;
+}
 
-void data::DataManager::setInteriorFlagsP(
-    geometry::InteriorFlags* pointer) {
+void data::DataManager::setInteriorFlagsP(geometry::InteriorFlags* pointer) {
   d_interiorFlags_p = pointer;
 }
 
@@ -179,7 +178,6 @@ std::vector<double>* data::DataManager::getWeightedVolP() {
   return d_weighted_vol_p;
 }
 
-
 void data::DataManager::setReactionForceP(std::vector<util::Point3>* pointer) {
   d_reaction_force_p = pointer;
 }
@@ -236,9 +234,9 @@ std::vector<float>* data::DataManager::getKineticEnergyP() { return d_ke_p; }
 
 std::string data::DataManager::printStr(int nt, int lvl) const {
   // TODO
-    auto tabS = util::io::getTabS(nt);
-    std::ostringstream oss;
-    oss << tabS << "------- DataManager --------" << std::endl << std::endl;
+  auto tabS = util::io::getTabS(nt);
+  std::ostringstream oss;
+  oss << tabS << "------- DataManager --------" << std::endl << std::endl;
   oss << tabS << std::endl;
 
   return oss.str();
