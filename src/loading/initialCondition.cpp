@@ -85,8 +85,7 @@ std::string loading::InitialCondition::printStr(int nt, int lvl) const {
   auto tabS = util::io::getTabS(nt);
   std::ostringstream oss;
   oss << tabS << "------- InitialCondition --------" << std::endl << std::endl;
-  oss << tabS << "Initial condition deck address = " << d_deck_p <<
-      std::endl;
+  oss << tabS << "Initial condition deck address = " << d_deck_p << std::endl;
   oss << tabS << std::endl;
 
   return oss.str();

@@ -32,7 +32,7 @@ class Neighbor;
 
 namespace material {
 namespace pd {
-class Material;
+class BaseMaterial;
 }
 }
 
@@ -40,6 +40,10 @@ namespace rw {
 namespace writer {
 class Writer;
 }
+}
+
+namespace data {
+class DataManager;
 }
 
 namespace tools {
@@ -750,7 +754,7 @@ private:
   std::vector<double> d_mX;
 
   /*! @brief Model deck */
-  inp::ModelDeck *d_modelDeck_p;
+  //inp::ModelDeck *d_modelDeck_p;
 
   /*! @brief Output deck */
   inp::OutputDeck *d_outputDeck_p;
@@ -761,20 +765,18 @@ private:
   /*! @brief Material deck */
   inp::MaterialDeck *d_matDeck_p;
 
-  /*! @brief Pointer to Mesh object */
-  fe::Mesh *d_mesh_p;
-
   /*! @brief Pointer to Fracture object */
-  geometry::Fracture *d_fracture_p;
-
-  /*! @brief Pointer to Neighbor object */
-  geometry::Neighbor *d_neighbor_p;
+  //geometry::Fracture *d_fracture_p;
 
   /*! @brief Pointer to Input object */
   inp::Input *d_input_p;
 
   /*! @brief Pointer to Material object */
-  material::pd::Material *d_material_p;
+  material::pd::BaseMaterial *d_material_p;
+
+  /*! @brief Pointer to the Data Mananger */
+  data::DataManager *d_dataManager_p;
+
 };
 
 } // namespace pp

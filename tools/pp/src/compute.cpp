@@ -19,17 +19,17 @@
 #include "inp/decks/outputDeck.h"    // definition of OutputDeck
 #include "inp/input.h"               // definition of Input
 #include "inp/policy.h"              // definition of Policy
-#include "material/materialUtil.h"
-#include "material/materials.h"  // definition of Material
-#include "rw/reader.h"           // definition of readVtuFileRestart
-#include "rw/writer.h"           // definition of WriterInterface
-#include "util/fastMethods.h"    // max and min operation
-#include "util/feElementDefs.h"  // definition of fe element type
-#include "util/utilGeom.h"       // definition of isPointInsideRectangle
+#include "material/materials.h"      // definition of Material
+#include "rw/reader.h"               // definition of readVtuFileRestart
+#include "rw/writer.h"               // definition of WriterInterface
+#include "util/fastMethods.h"        // max and min operation
+#include "util/feElementDefs.h"      // definition of fe element type
+#include "util/utilGeom.h"           // definition of isPointInsideRectangle
 #include <cmath>
 #include <hpx/include/parallel_algorithm.hpp>
 #include <iostream>
 #include <yaml-cpp/yaml.h>  // YAML reader
+#include <cfloat>
 
 namespace {
 
@@ -146,23 +146,21 @@ tools::pp::Compute::Compute(const std::string &filename)
       d_fnErrMsg(""),
       d_needDamageZ(false),
       d_needNeighborList(false),
-      d_modelDeck_p(nullptr),
       d_outputDeck_p(nullptr),
       d_fractureDeck_p(nullptr),
       d_matDeck_p(nullptr),
-      d_mesh_p(nullptr),
-      d_fracture_p(nullptr),
-      d_neighbor_p(nullptr),
       d_input_p(nullptr),
       d_material_p(nullptr) {
+  d_dataManager_p = new data::DataManager();
   init();
 
   // build neighbor list if we need it
   if (d_needNeighborList) {
     std::cout << "PP: Computing neighbor list\n";
-    d_neighbor_p = new geometry::Neighbor(d_modelDeck_p->d_horizon,
-                                          d_input_p->getNeighborDeck(),
-                                          d_mesh_p->getNodesP());
+    d_dataManager_p->setNeighborP(
+        new geometry::Neighbor(d_dataManager_p->getModelDeckP()->d_horizon,
+                               d_input_p->getNeighborDeck(),
+                               d_dataManager_p->getMeshP()->getNodesP()));
   }
 
   // take the smaller output interval as dt_out
@@ -184,7 +182,7 @@ tools::pp::Compute::Compute(const std::string &filename)
     if (d_nOut >= d_dtOutChange) dt_interval_factor = 1;
 
     // current time
-    d_time = current_step * d_modelDeck_p->d_dt;
+    d_time = current_step * d_dataManager_p->getModelDeckP()->d_dt;
 
     std::cout << "PP_fe2D: Processing output file = " << d_nOut << "\n";
 
@@ -205,18 +203,20 @@ tools::pp::Compute::Compute(const std::string &filename)
     // get displacement and velocity
     if (d_outputDeck_p->d_outFormat == "vtu")
       rw::reader::readVtuFileRestart(sim_out_filename, &d_u, &d_v,
-                                     d_mesh_p->getNodesP());
+                                     d_dataManager_p->getMeshP()->getNodesP());
     else if (d_outputDeck_p->d_outFormat == "msh")
       rw::reader::readMshFileRestart(sim_out_filename, &d_u, &d_v,
-                                     d_mesh_p->getNodesP());
+                                     d_dataManager_p->getMeshP()->getNodesP());
 
     if (d_uPlus) {
       auto f2 = hpx::parallel::for_loop(
           hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-          d_mesh_p->getNumNodes(), [this](boost::uint64_t i) {
-            d_u[i] += util::Point3(d_modelDeck_p->d_dt * d_v[i].d_x,
-                                   d_modelDeck_p->d_dt * d_v[i].d_y,
-                                   d_modelDeck_p->d_dt * d_v[i].d_z);
+          d_dataManager_p->getMeshP()->getNumNodes(),
+          [this](boost::uint64_t i) {
+            d_u[i] += util::Point3(
+                d_dataManager_p->getModelDeckP()->d_dt * d_v[i].d_x,
+                d_dataManager_p->getModelDeckP()->d_dt * d_v[i].d_y,
+                d_dataManager_p->getModelDeckP()->d_dt * d_v[i].d_z);
           });
       f2.get();
     }
@@ -325,7 +325,7 @@ void tools::pp::Compute::init() {
   // read input data
   std::cout << "PP_fe2D: Reading simulation input file.\n";
   d_input_p = new inp::Input(d_simInpFilename);
-  d_modelDeck_p = d_input_p->getModelDeck();
+  d_dataManager_p->setModelDeckP(d_input_p->getModelDeck());
   d_outputDeck_p = d_input_p->getOutputDeck();
   d_fractureDeck_p = d_input_p->getFractureDeck();
 
@@ -350,7 +350,8 @@ void tools::pp::Compute::init() {
   d_outPreTag = d_outPath + "/";
 
   // maximum number of output files to process
-  d_dtN = d_modelDeck_p->d_Nt / d_outputDeck_p->d_dtOutCriteria;
+  d_dtN =
+      d_dataManager_p->getModelDeckP()->d_Nt / d_outputDeck_p->d_dtOutCriteria;
 
   // read global start and end output step if provided
   d_dtStart = 1;
@@ -359,33 +360,32 @@ void tools::pp::Compute::init() {
   if (config["Dt_End"]) d_dtEnd = config["Dt_End"].as<int>();
 
   // handle change in output interval
-  d_dtOutChange = d_modelDeck_p->d_Nt;
+  d_dtOutChange = d_dataManager_p->getModelDeckP()->d_Nt;
   if (config["Dt_Out_Change"])
     d_dtOutChange = config["Dt_Out_Change"].as<size_t>();
 
   // create mesh
   std::cout << "PP_fe2D: Creating mesh.\n";
-  d_mesh_p = new fe::Mesh(d_input_p->getMeshDeck());
+  d_dataManager_p->setMeshP(new fe::Mesh(d_input_p->getMeshDeck()));
 
   // material deck and material
   {
     std::cout << "PP_fe2D: Initializing material object.\n";
     auto &material_deck = *d_input_p->getMaterialDeck();
     if (material_deck.d_materialType == "RNPBond")
-      d_material_p = new material::pd::RnpMaterial(
-          &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
-    else if (material_deck.d_materialType == "PMBBond")
-      d_material_p = new material::pd::PmbMaterial(
-          &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
-    else if (material_deck.d_materialType == "PDElasticBond")
-      d_material_p = new material::pd::PdElastic(
-          &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
-    else if (material_deck.d_materialType == "PDState")
-      d_material_p = new material::pd::PdState(
-          &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
+      d_material_p = new material::pd::RNPBond(&material_deck, d_dataManager_p);
+    // else if (material_deck.d_materialType == "PMBBond")
+    // d_material_p = new material::pd::PmbMaterial(
+    //     &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
+    // else if (material_deck.d_materialType == "PDElasticBond")
+    //   d_material_p = new material::pd::PdElastic(
+    //      &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
+    // else if (material_deck.d_materialType == "PDState")
+    // d_material_p = new material::pd::PdState(
+    //   &material_deck, d_modelDeck_p->d_dim, d_modelDeck_p->d_horizon);
   }
 
-  d_matDeck_p = d_material_p->getMaterialDeck();
+  d_matDeck_p = d_input_p->getMaterialDeck();
 
   // if material deck does not have valid material properties,
   // search the properties in the pp input file
@@ -442,20 +442,22 @@ void tools::pp::Compute::init() {
       d.d_findCrackTip_p->d_cracks = d_fractureDeck_p->d_cracks;
 
       // check which point, top/bottom, we need to track
-      auto bbox = d_mesh_p->getBoundingBox();
+      auto bbox = d_dataManager_p->getMeshP()->getBoundingBox();
       for (auto &ck : d.d_findCrackTip_p->d_cracks) {
         // point should be in smaller box inside bounding box
         ck.d_trackt = util::geometry::isPointInsideRectangle(
-            ck.d_pt, bbox.first[0] + d_modelDeck_p->d_horizon,
-            bbox.second[0] - d_modelDeck_p->d_horizon,
-            bbox.first[1] + d_modelDeck_p->d_horizon,
-            bbox.second[1] - d_modelDeck_p->d_horizon);
+            ck.d_pt,
+            bbox.first[0] + d_dataManager_p->getModelDeckP()->d_horizon,
+            bbox.second[0] - d_dataManager_p->getModelDeckP()->d_horizon,
+            bbox.first[1] + d_dataManager_p->getModelDeckP()->d_horizon,
+            bbox.second[1] - d_dataManager_p->getModelDeckP()->d_horizon);
 
         ck.d_trackb = util::geometry::isPointInsideRectangle(
-            ck.d_pb, bbox.first[0] + d_modelDeck_p->d_horizon,
-            bbox.second[0] - d_modelDeck_p->d_horizon,
-            bbox.first[1] + d_modelDeck_p->d_horizon,
-            bbox.second[1] - d_modelDeck_p->d_horizon);
+            ck.d_pb,
+            bbox.first[0] + d_dataManager_p->getModelDeckP()->d_horizon,
+            bbox.second[0] - d_dataManager_p->getModelDeckP()->d_horizon,
+            bbox.first[1] + d_dataManager_p->getModelDeckP()->d_horizon,
+            bbox.second[1] - d_dataManager_p->getModelDeckP()->d_horizon);
       }  // modify crack track status
     }
   }
@@ -870,10 +872,12 @@ void tools::pp::Compute::initWriter(rw::writer::Writer *writer,
                d_currentData->d_compressType);
   // append mesh (check if only nodes need to be written)
   if (d_currentData->d_outOnlyNodes)
-    writer->appendNodes(d_mesh_p->getNodesP(), u);
+    writer->appendNodes(d_dataManager_p->getMeshP()->getNodesP(), u);
   else
-    writer->appendMesh(d_mesh_p->getNodesP(), d_mesh_p->getElementType(),
-                       d_mesh_p->getElementConnectivitiesP(), u);
+    writer->appendMesh(d_dataManager_p->getMeshP()->getNodesP(),
+                       d_dataManager_p->getMeshP()->getElementType(),
+                       d_dataManager_p->getMeshP()->getElementConnectivitiesP(),
+                       u);
 
   // append current time
   writer->addTimeStep(d_time);
@@ -888,11 +892,13 @@ void tools::pp::Compute::initWriter(rw::writer::Writer *writer,
 void tools::pp::Compute::transformU(rw::writer::Writer *writer) {
   if (!d_currentData->d_transformU_p) return;
 
-  std::vector<util::Point3> u_temp(d_mesh_p->getNumNodes(), util::Point3());
+  std::vector<util::Point3> u_temp(d_dataManager_p->getMeshP()->getNumNodes(),
+                                   util::Point3());
   auto scale = d_currentData->d_transformU_p->d_scale;
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_mesh_p->getNumNodes(), [&u_temp, scale, this](boost::uint64_t i) {
+      d_dataManager_p->getMeshP()->getNumNodes(),
+      [&u_temp, scale, this](boost::uint64_t i) {
         u_temp[i] = util::Point3(scale * d_u[i].d_x, scale * d_u[i].d_y,
                                  scale * d_u[i].d_z);
       });
@@ -926,11 +932,12 @@ void tools::pp::Compute::transformV(rw::writer::Writer *writer) {
     if (data->d_markVInRectGiven) {
       auto f = hpx::parallel::for_loop(
           hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-          d_mesh_p->getNumNodes(), [&v_mark, data, this](boost::uint64_t i) {
+          d_dataManager_p->getMeshP()->getNumNodes(),
+          [&v_mark, data, this](boost::uint64_t i) {
             if (util::geometry::isPointInsideRectangle(
-                    d_mesh_p->getNode(i), data->d_markVRect.first.d_x,
-                    data->d_markVRect.second.d_x, data->d_markVRect.first.d_y,
-                    data->d_markVRect.second.d_y))
+                    d_dataManager_p->getMeshP()->getNode(i),
+                    data->d_markVRect.first.d_x, data->d_markVRect.second.d_x,
+                    data->d_markVRect.first.d_y, data->d_markVRect.second.d_y))
               v_mark[i] = util::Point3();
           });
       f.get();
@@ -940,9 +947,9 @@ void tools::pp::Compute::transformV(rw::writer::Writer *writer) {
       for (auto x : data->d_markVPts) {
         size_t i_found;
         if (data->d_markVPtsAreInCurrentConfig)
-          i_found = findNode(x, d_mesh_p->getNodesP(), &d_u);
+          i_found = findNode(x, d_dataManager_p->getMeshP()->getNodesP(), &d_u);
         else
-          i_found = findNode(x, d_mesh_p->getNodesP());
+          i_found = findNode(x, d_dataManager_p->getMeshP()->getNodesP());
 
         // modify v_new
         v_mark[i_found] = util::Point3();
@@ -967,8 +974,9 @@ void tools::pp::Compute::transformV(rw::writer::Writer *writer) {
 
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        d_mesh_p->getNumNodes(), [&v_mark, data, this](boost::uint64_t i) {
-          auto x = d_mesh_p->getNode(i);
+        d_dataManager_p->getMeshP()->getNumNodes(),
+        [&v_mark, data, this](boost::uint64_t i) {
+          auto x = d_dataManager_p->getMeshP()->getNode(i);
 
           bool proceed = true;
           if (data->d_symmAxis == "y" && util::compare::definitelyLessThan(
@@ -990,7 +998,8 @@ void tools::pp::Compute::transformV(rw::writer::Writer *writer) {
               search_x.d_y = data->d_symmLine - (x.d_y - data->d_symmLine);
 
             // search for node at search_x and obtain velocity
-            size_t i_found = findNode(search_x, d_mesh_p->getNodesP());
+            size_t i_found =
+                findNode(search_x, d_dataManager_p->getMeshP()->getNodesP());
 
             // write velocity
             v_mark[i] = v_mark[i_found];
@@ -1013,17 +1022,17 @@ void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
   auto data = d_currentData->d_compStrain_p;
   if (!data->d_computeStrain) return;
 
-  std::vector<util::SymMatrix3> strain(d_mesh_p->getNumElements(),
-                                       util::SymMatrix3());
-  std::vector<util::SymMatrix3> stress(d_mesh_p->getNumElements(),
-                                       util::SymMatrix3());
+  std::vector<util::SymMatrix3> strain(
+      d_dataManager_p->getMeshP()->getNumElements(), util::SymMatrix3());
+  std::vector<util::SymMatrix3> stress(
+      d_dataManager_p->getMeshP()->getNumElements(), util::SymMatrix3());
   std::vector<float> magS;
 
   // get Quadrature
   fe::BaseElem *quad;
-  if (d_mesh_p->getElementType() == util::vtk_type_triangle)
+  if (d_dataManager_p->getMeshP()->getElementType() == util::vtk_type_triangle)
     quad = new fe::TriElem(1);
-  else if (d_mesh_p->getElementType() == util::vtk_type_quad)
+  else if (d_dataManager_p->getMeshP()->getElementType() == util::vtk_type_quad)
     quad = new fe::QuadElem(1);
   else {
     std::cerr << "Error: Can not compute strain/stress as the element "
@@ -1034,15 +1043,15 @@ void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
   // compute strain and stress
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_mesh_p->getNumElements(),
+      d_dataManager_p->getMeshP()->getNumElements(),
       [&strain, &stress, data, quad, this](boost::uint64_t e) {
         auto ssn = util::SymMatrix3();
         auto sss = util::SymMatrix3();
 
         // get ids of nodes of element, coordinate of nodes, 1st order
         // quad data, and first quad data
-        auto id_nds = d_mesh_p->getElementConnectivity(e);
-        auto nds = d_mesh_p->getElementConnectivityNodes(e);
+        auto id_nds = d_dataManager_p->getMeshP()->getElementConnectivity(e);
+        auto nds = d_dataManager_p->getMeshP()->getElementConnectivityNodes(e);
         auto qds = quad->getQuadDatas(nds);
         auto qd0 = qds[0];
 
@@ -1084,7 +1093,8 @@ void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
     magS = std::vector<float>(strain.size(), 0.);
     auto f2 = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        d_mesh_p->getNumElements(), [&magS, strain, data](boost::uint64_t e) {
+        d_dataManager_p->getMeshP()->getNumElements(),
+        [&magS, strain, data](boost::uint64_t e) {
           if (data->d_magStrainComp.empty()) {
             for (size_t i = 0; i < 6; i++) magS[e] = std::abs(strain[e].get(i));
           } else if (data->d_magStrainComp == "xx") {
@@ -1115,17 +1125,18 @@ void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
   } else {
     // compute 1st order quad points and store them (quad points in
     // current configuration)
-    std::vector<util::Point3> elem_quads =
-        std::vector<util::Point3>(d_mesh_p->getNumElements(), util::Point3());
+    std::vector<util::Point3> elem_quads = std::vector<util::Point3>(
+        d_dataManager_p->getMeshP()->getNumElements(), util::Point3());
 
     auto f2 = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        d_mesh_p->getNumElements(),
+        d_dataManager_p->getMeshP()->getNumElements(),
         [&elem_quads, quad, this](boost::uint64_t e) {
-          auto nds = d_mesh_p->getElementConnectivity(e);
+          auto nds = d_dataManager_p->getMeshP()->getElementConnectivity(e);
           std::vector<util::Point3> nds_current(nds.size(), util::Point3());
           for (size_t j = 0; j < nds.size(); j++)
-            nds_current[j] = d_mesh_p->getNode(nds[j]) + d_u[nds[j]];
+            nds_current[j] =
+                d_dataManager_p->getMeshP()->getNode(nds[j]) + d_u[nds[j]];
 
           auto qds = quad->getQuadPoints(nds_current);
           // store first quad point
@@ -1161,27 +1172,30 @@ void tools::pp::Compute::computeDamage(rw::writer::Writer *writer,
   //  if (!d_currentData->d_damageAtNodes)
   //    return;
 
-  if (Z->size() != d_mesh_p->getNumNodes()) Z->resize(d_mesh_p->getNumNodes());
+  if (Z->size() != d_dataManager_p->getMeshP()->getNumNodes())
+    Z->resize(d_dataManager_p->getMeshP()->getNumNodes());
 
-  if (d_neighbor_p == nullptr)
+  if (d_dataManager_p->getNeighborP() == nullptr)
     safeExit(
         "Error: Need neighbor list to compute damage. This should have "
         "been created at the beginning.\n");
 
   auto f = hpx::parallel::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_mesh_p->getNumNodes(), [&Z, this](boost::uint64_t i) {
-        auto xi = d_mesh_p->getNode(i);
+      d_dataManager_p->getMeshP()->getNumNodes(),
+      [&Z, this](boost::uint64_t i) {
+        auto xi = d_dataManager_p->getMeshP()->getNode(i);
 
         double locz = 0.;
-        auto i_neighs = this->d_neighbor_p->getNeighbors(i);
+        auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(i);
         for (const auto &j : i_neighs) {
           if (util::compare::definitelyGreaterThan(
-                  xi.dist(d_mesh_p->getNode(j)), d_modelDeck_p->d_horizon) ||
+                  xi.dist(d_dataManager_p->getMeshP()->getNode(j)),
+                  d_dataManager_p->getModelDeckP()->d_horizon) ||
               j == i)
             continue;
 
-          auto xj = d_mesh_p->getNode(j);
+          auto xj = d_dataManager_p->getMeshP()->getNode(j);
           if (util::compare::definitelyGreaterThan(xj.dist(xi), 1.0E-10)) {
             auto Sr = std::abs(d_material_p->getS(xj - xi, d_u[j] - d_u[i])) /
                       d_material_p->getSc(xj.dist(xi));
@@ -1220,16 +1234,19 @@ void tools::pp::Compute::computeJIntegral() {
 
   // compute necessary quantities if the material is state-based
   if (d_material_p->isStateActive()) {
-    if (d_fracture_p == nullptr) {
-      d_fracture_p = new geometry::Fracture(d_input_p->getFractureDeck(),
-                                            d_mesh_p->getNodesP(),
-                                            d_neighbor_p->getNeighborsListP());
+    if (d_dataManager_p->getFractureP() == nullptr) {
+      d_dataManager_p->setFractureP(new geometry::Fracture(
+          d_input_p->getFractureDeck(),
+          d_dataManager_p->getMeshP()->getNodesP(),
+          d_dataManager_p->getNeighborP()->getNeighborsListP()));
     }
 
     // initialization
-    if (d_thetaX.size() != d_mesh_p->getNumNodes())
-      d_thetaX = std::vector<double>(d_mesh_p->getNumNodes(), 0.);
+    if (d_thetaX.size() != d_dataManager_p->getMeshP()->getNumNodes())
+      d_thetaX =
+          std::vector<double>(d_dataManager_p->getMeshP()->getNumNodes(), 0.);
 
+    /*
     if (d_material_p->name() == "PDState") {
       if (d_mX.size() != d_mesh_p->getNumNodes()) {
         d_mX = std::vector<double>(d_mesh_p->getNumNodes(), 0.);
@@ -1240,8 +1257,10 @@ void tools::pp::Compute::computeJIntegral() {
             d_material_p, d_mX, true);
       }
     }
+    */
 
     // update theta for given displacement
+    /*
     if (d_material_p->name() == "RNPState")
       material::computeHydrostaticStrain(
           d_mesh_p->getNodes(), d_u, d_mesh_p->getNodalVolumes(),
@@ -1258,6 +1277,7 @@ void tools::pp::Compute::computeJIntegral() {
           d_neighbor_p->getNeighborsList(), d_mesh_p->getMeshSize(),
           d_material_p, d_fracture_p, d_mX, d_thetaX, true);
     }
+    */
   }
 
   // std::cout << "computeJIntegral processing step = " << d_nOut << "\n";
@@ -1333,8 +1353,10 @@ void tools::pp::Compute::computeJIntegral() {
   if (data->d_contourGiven)
     cd = data->d_contour;
   else {
-    double tolx = 0.5 * data->d_contourFactor[0] * d_modelDeck_p->d_horizon;
-    double toly = 0.5 * data->d_contourFactor[1] * d_modelDeck_p->d_horizon;
+    double tolx = 0.5 * data->d_contourFactor[0] *
+                  d_dataManager_p->getModelDeckP()->d_horizon;
+    double toly = 0.5 * data->d_contourFactor[1] *
+                  d_dataManager_p->getModelDeckP()->d_horizon;
     cd = std::make_pair(
         util::Point3(ctip.d_p.d_x - tolx, ctip.d_p.d_y - toly, 0.),
         util::Point3(ctip.d_p.d_x + tolx, ctip.d_p.d_y + toly, 0.));
@@ -1343,16 +1365,18 @@ void tools::pp::Compute::computeJIntegral() {
   // compute nodes and elements list for search
   std::vector<size_t> search_nodes;
   std::vector<size_t> search_elems;
-  listElemsAndNodesInDomain(
-      cd, d_modelDeck_p->d_horizon + 2. * d_mesh_p->getMeshSize(),
-      d_mesh_p->getMeshSize(), &search_nodes, &search_elems, calc_in_ref);
+  listElemsAndNodesInDomain(cd,
+                            d_dataManager_p->getModelDeckP()->d_horizon +
+                                2. * d_dataManager_p->getMeshP()->getMeshSize(),
+                            d_dataManager_p->getMeshP()->getMeshSize(),
+                            &search_nodes, &search_elems, calc_in_ref);
 
   //
   // Compute contour integral
   //
   // create second order quadrature class for 1-d line element
   auto line_quad = fe::LineElem(2);
-  auto h = d_mesh_p->getMeshSize();
+  auto h = d_dataManager_p->getMeshP()->getMeshSize();
 
   // in the expression of contour integrals, we have dot product of
   // normal to the edges in contour with the crack velocity direction.
@@ -1588,20 +1612,20 @@ void tools::pp::Compute::computeJIntegral() {
         [&pd_internal_works, &pd_internal_works_rate, h, cd, search_nodes,
          search_node_comp, this](boost::uint64_t i) {
           auto id = search_node_comp[i];
-          auto xi = d_mesh_p->getNode(id);
+          auto xi = d_dataManager_p->getMeshP()->getNode(id);
           auto ui = d_u[id];
           auto vi = d_v[id];
-          auto voli = d_mesh_p->getNodalVolume(id);
+          auto voli = d_dataManager_p->getMeshP()->getNodalVolume(id);
 
           double pd_internal_work = 0.;
           double pd_internal_work_rate = 0.;
 
           // loop over nodes in domain A
           for (auto j : search_nodes) {
-            auto xj = d_mesh_p->getNode(j);
+            auto xj = d_dataManager_p->getMeshP()->getNode(j);
             auto rji = xj.dist(xi);
             if (util::compare::definitelyGreaterThan(
-                    rji, d_modelDeck_p->d_horizon) ||
+                    rji, d_dataManager_p->getModelDeckP()->d_horizon) ||
                 j == id)
               continue;
 
@@ -1610,14 +1634,16 @@ void tools::pp::Compute::computeJIntegral() {
             auto Sji = d_material_p->getS(xji, d_u[j] - ui);
 
             // get corrected volume of node j
-            auto volj = d_mesh_p->getNodalVolume(j);
+            auto volj = d_dataManager_p->getMeshP()->getNodalVolume(j);
             if (util::compare::definitelyGreaterThan(
-                    rji, d_modelDeck_p->d_horizon - 0.5 * h))
-              volj *= (d_modelDeck_p->d_horizon + 0.5 * h - rji) / h;
+                    rji, d_dataManager_p->getModelDeckP()->d_horizon - 0.5 * h))
+              volj *= (d_dataManager_p->getModelDeckP()->d_horizon + 0.5 * h -
+                       rji) /
+                      h;
 
             // get bond force
             bool fracture_state = false;
-            auto ef = d_material_p->getBondEF(rji, Sji, fracture_state, true);
+            auto ef = d_material_p->getBondEF(i, j);
 
             // pd internal work rate
             // need factor half (see the formula for internal work rate and
@@ -1658,10 +1684,10 @@ void tools::pp::Compute::computeJIntegral() {
         [&pd_strain_energies, &kinetic_energies, h, cd, search_nodes,
          search_node_comp, this](boost::uint64_t i) {
           auto id = search_nodes[i];
-          auto xi = d_mesh_p->getNode(id);
+          auto xi = d_dataManager_p->getMeshP()->getNode(id);
           auto ui = d_u[id];
           auto vi = d_v[id];
-          auto voli = d_mesh_p->getNodalVolume(id);
+          auto voli = d_dataManager_p->getMeshP()->getNodalVolume(id);
 
           // kinetic energy
           kinetic_energies[i] =
@@ -1671,11 +1697,11 @@ void tools::pp::Compute::computeJIntegral() {
           double strain_energy = 0.;
 
           // add peridynamic energy
-          auto i_neighs = this->d_neighbor_p->getNeighbors(id);
+          auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(id);
           for (auto j : i_neighs) {
-            auto xj = d_mesh_p->getNode(j);
+            auto xj = d_dataManager_p->getMeshP()->getNode(j);
             if (util::compare::definitelyGreaterThan(
-                    xj.dist(xi), d_modelDeck_p->d_horizon) ||
+                    xj.dist(xi), d_dataManager_p->getModelDeckP()->d_horizon) ||
                 util::compare::definitelyLessThan(xj.dist(xi), 1.0E-10))
               continue;
 
@@ -1685,19 +1711,19 @@ void tools::pp::Compute::computeJIntegral() {
             auto Sji = d_material_p->getS(xj - xi, uj - ui);
 
             // get volume correction
-            auto volj = d_mesh_p->getNodalVolume(j);
+            auto volj = d_dataManager_p->getMeshP()->getNodalVolume(j);
             if (util::compare::definitelyGreaterThan(
-                    rji,
-                    d_modelDeck_p->d_horizon - 0.5 * d_mesh_p->getMeshSize()))
-              volj *= (d_modelDeck_p->d_horizon +
-                       0.5 * d_mesh_p->getMeshSize() - rji) /
-                      d_mesh_p->getMeshSize();
+                    rji, d_dataManager_p->getModelDeckP()->d_horizon -
+                             0.5 * d_dataManager_p->getMeshP()->getMeshSize()))
+              volj *= (d_dataManager_p->getModelDeckP()->d_horizon +
+                       0.5 * d_dataManager_p->getMeshP()->getMeshSize() - rji) /
+                      d_dataManager_p->getMeshP()->getMeshSize();
 
             bool fracture_state = false;
-            auto ef = d_material_p->getBondEF(rji, Sji, fracture_state, true);
+            auto ef = d_material_p->getBondEF(i, j);
 
             // add contribution to energy
-            strain_energy += ef.first * volj;
+            strain_energy += ef.second * volj;
           }  // loop over nodes for pd energy density
 
           pd_strain_energies[i] += strain_energy * voli;
@@ -1718,27 +1744,27 @@ void tools::pp::Compute::computeJIntegral() {
   // loop over nodes and compute fracture energy
   {
     auto pd_fracture_energies =
-        std::vector<double>(d_mesh_p->getNumNodes(), 0.);
+        std::vector<double>(d_dataManager_p->getMeshP()->getNumNodes(), 0.);
 
     // loop over nodes in compliment of domain A
     auto f = hpx::parallel::for_loop(
         hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        d_mesh_p->getNumNodes(),
+        d_dataManager_p->getMeshP()->getNumNodes(),
         [&pd_fracture_energies, this](boost::uint64_t i) {
-          auto xi = d_mesh_p->getNode(i);
+          auto xi = d_dataManager_p->getMeshP()->getNode(i);
           auto ui = d_u[i];
-          auto voli = d_mesh_p->getNodalVolume(i);
+          auto voli = d_dataManager_p->getMeshP()->getNodalVolume(i);
           auto Zi = this->d_Z[i];
 
           // compute pd strain energy
           double fracture_energy = 0.;
 
           // add peridynamic energy
-          auto i_neighs = this->d_neighbor_p->getNeighbors(i);
+          auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(i);
           for (auto j : i_neighs) {
-            auto xj = d_mesh_p->getNode(j);
+            auto xj = d_dataManager_p->getMeshP()->getNode(j);
             if (util::compare::definitelyGreaterThan(
-                    xj.dist(xi), d_modelDeck_p->d_horizon) ||
+                    xj.dist(xi), d_dataManager_p->getModelDeckP()->d_horizon) ||
                 util::compare::definitelyLessThan(xj.dist(xi), 1.0E-10))
               continue;
 
@@ -1748,19 +1774,19 @@ void tools::pp::Compute::computeJIntegral() {
             auto Sji = d_material_p->getS(xj - xi, uj - ui);
 
             // get volume correction
-            auto volj = d_mesh_p->getNodalVolume(j);
+            auto volj = d_dataManager_p->getMeshP()->getNodalVolume(j);
             if (util::compare::definitelyGreaterThan(
-                    rji,
-                    d_modelDeck_p->d_horizon - 0.5 * d_mesh_p->getMeshSize()))
-              volj *= (d_modelDeck_p->d_horizon +
-                       0.5 * d_mesh_p->getMeshSize() - rji) /
-                      d_mesh_p->getMeshSize();
+                    rji, d_dataManager_p->getModelDeckP()->d_horizon -
+                             0.5 * d_dataManager_p->getMeshP()->getMeshSize()))
+              volj *= (d_dataManager_p->getModelDeckP()->d_horizon +
+                       0.5 * d_dataManager_p->getMeshP()->getMeshSize() - rji) /
+                      d_dataManager_p->getMeshP()->getMeshSize();
 
             bool fracture_state = false;
-            auto ef = d_material_p->getBondEF(rji, Sji, fracture_state, true);
+            auto ef = d_material_p->getBondEF(i, j);
 
             // add contribution to energy
-            fracture_energy += ef.first * volj;
+            fracture_energy += ef.second * volj;
           }  // loop over nodes for pd energy density
 
           if (util::compare::definitelyGreaterThan(Zi, 1.0 - 1.0E-10))
@@ -1894,8 +1920,8 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
     std::vector<size_t> *elements, bool calc_in_ref) {
   // nodes list
   nodes->clear();
-  for (size_t i = 0; i < d_mesh_p->getNumNodes(); i++) {
-    auto x = d_mesh_p->getNode(i);
+  for (size_t i = 0; i < d_dataManager_p->getMeshP()->getNumNodes(); i++) {
+    auto x = d_dataManager_p->getMeshP()->getNode(i);
     if (!calc_in_ref) x += d_u[i];
 
     // check if node is in the bigger domain and not in smaller domain
@@ -1910,8 +1936,8 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
 
   // element list
   elements->clear();
-  for (size_t e = 0; e < d_mesh_p->getNumElements(); e++) {
-    auto ids = d_mesh_p->getElementConnectivity(e);
+  for (size_t e = 0; e < d_dataManager_p->getMeshP()->getNumElements(); e++) {
+    auto ids = d_dataManager_p->getMeshP()->getElementConnectivity(e);
     bool add_e = false;
 
     // idea: if any of the nodes of this element is inside a zone then we add
@@ -1921,7 +1947,7 @@ void tools::pp::Compute::listElemsAndNodesInDomain(
     for (auto i : ids) {
       if (add_e) break;
 
-      auto x = d_mesh_p->getNode(i);
+      auto x = d_dataManager_p->getMeshP()->getNode(i);
       if (!calc_in_ref) x += d_u[i];
 
       // check if node is in the bigger domain and not in smaller domain
@@ -1946,10 +1972,10 @@ void tools::pp::Compute::decomposeSearchNodes(
   nodes_new->clear();
   nodes->clear();
   for (auto i : nodes_temp) {
-    auto xi = d_mesh_p->getNode(i);
-    if (util::geometry::isPointInsideRectangle(d_mesh_p->getNode(i),
-                                               cd.first.d_x, cd.second.d_x,
-                                               cd.first.d_y, cd.second.d_y))
+    auto xi = d_dataManager_p->getMeshP()->getNode(i);
+    if (util::geometry::isPointInsideRectangle(
+            d_dataManager_p->getMeshP()->getNode(i), cd.first.d_x,
+            cd.second.d_x, cd.first.d_y, cd.second.d_y))
       nodes->emplace_back(i);
     else
       nodes_new->emplace_back(i);
@@ -1962,9 +1988,12 @@ bool tools::pp::Compute::triCheckAndInterpolateUV(
   // get triangle element object
   auto tri_quad = fe::TriElem(0);
   auto nodes = std::vector<util::Point3>{
-      d_mesh_p->getNode(ids[0]) + (calc_in_ref ? util::Point3() : d_u[ids[0]]),
-      d_mesh_p->getNode(ids[1]) + (calc_in_ref ? util::Point3() : d_u[ids[1]]),
-      d_mesh_p->getNode(ids[2]) + (calc_in_ref ? util::Point3() : d_u[ids[2]])};
+      d_dataManager_p->getMeshP()->getNode(ids[0]) +
+          (calc_in_ref ? util::Point3() : d_u[ids[0]]),
+      d_dataManager_p->getMeshP()->getNode(ids[1]) +
+          (calc_in_ref ? util::Point3() : d_u[ids[1]]),
+      d_dataManager_p->getMeshP()->getNode(ids[2]) +
+          (calc_in_ref ? util::Point3() : d_u[ids[2]])};
   double area = std::abs(tri_quad.elemSize(nodes));
   double sum_area = 0.;
   for (size_t a = 0; a < nodes.size(); a++)
@@ -2008,7 +2037,7 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     long int loc_i = -1;
     // search for closest node
     for (auto i : *nodes) {
-      auto xi = d_mesh_p->getNode(i);
+      auto xi = d_dataManager_p->getMeshP()->getNode(i);
       if (!calc_in_ref) xi += d_u[i];
 
       if (util::compare::definitelyLessThan(p.dist(xi), dist)) {
@@ -2028,12 +2057,14 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     return;
   } else {
     for (auto e : *elements) {
-      auto ids = d_mesh_p->getElementConnectivity(e);
+      auto ids = d_dataManager_p->getMeshP()->getElementConnectivity(e);
 
       // cases
-      if (d_mesh_p->getElementType() == util::vtk_type_triangle) {
+      if (d_dataManager_p->getMeshP()->getElementType() ==
+          util::vtk_type_triangle) {
         if (triCheckAndInterpolateUV(p, up, vp, ids, calc_in_ref)) return;
-      } else if (d_mesh_p->getElementType() == util::vtk_type_quad) {
+      } else if (d_dataManager_p->getMeshP()->getElementType() ==
+                 util::vtk_type_quad) {
         // check in triangle {v1, v2, v3}
         if (triCheckAndInterpolateUV(
                 p, up, vp, std::vector<size_t>{ids[0], ids[1], ids[2]},
@@ -2056,8 +2087,8 @@ void tools::pp::Compute::interpolateUV(const util::Point3 &p, util::Point3 &up,
     // for debug
     std::vector<util::Point3> enodes;
     for (auto e : *elements) {
-      for (auto n : d_mesh_p->getElementConnectivity(e))
-        enodes.emplace_back(d_mesh_p->getNode(n) +
+      for (auto n : d_dataManager_p->getMeshP()->getElementConnectivity(e))
+        enodes.emplace_back(d_dataManager_p->getMeshP()->getNode(n) +
                             (calc_in_ref ? util::Point3() : d_u[n]));
     }
     enodes.emplace_back(p);
@@ -2084,7 +2115,7 @@ size_t tools::pp::Compute::interpolateUVNodes(const util::Point3 &p,
   long int loc_i = -1;
   // search for closest node
   for (auto i : *nodes) {
-    auto xi = d_mesh_p->getNode(i);
+    auto xi = d_dataManager_p->getMeshP()->getNode(i);
     if (!calc_in_ref) xi += d_u[i];
 
     if (util::compare::definitelyLessThan(p.dist(xi), dist)) {
@@ -2129,17 +2160,17 @@ void tools::pp::Compute::getContourContribJInt(
   double loc_pd_energy = 0.;
   if (!d_material_p->isStateActive()) {
     // upper and lower bound for volume correction
-    auto h = d_mesh_p->getMeshSize();
-    auto check_up = d_modelDeck_p->d_horizon + 0.5 * h;
-    auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
+    auto h = d_dataManager_p->getMeshP()->getMeshSize();
+    auto check_up = d_dataManager_p->getModelDeckP()->d_horizon + 0.5 * h;
+    auto check_low = d_dataManager_p->getModelDeckP()->d_horizon - 0.5 * h;
 
-    auto i_neighs = this->d_neighbor_p->getNeighbors(node_p);
+    auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(node_p);
     for (size_t j = 0; j < i_neighs.size(); j++) {
       auto j_id = i_neighs[j];
 
-      auto xj = d_mesh_p->getNode(j_id);
-      if (util::compare::definitelyGreaterThan(xj.dist(p),
-                                               d_modelDeck_p->d_horizon) ||
+      auto xj = d_dataManager_p->getMeshP()->getNode(j_id);
+      if (util::compare::definitelyGreaterThan(
+              xj.dist(p), d_dataManager_p->getModelDeckP()->d_horizon) ||
           util::compare::definitelyLessThan(xj.dist(p), 1.0E-10))
         continue;
 
@@ -2149,12 +2180,12 @@ void tools::pp::Compute::getContourContribJInt(
       auto Sjq = d_material_p->getS(xj - p, uj - uq);
 
       // get corrected volume of node j
-      auto volj = this->d_mesh_p->getNodalVolume(j_id);
+      auto volj = d_dataManager_p->getMeshP()->getNodalVolume(j_id);
       if (util::compare::definitelyGreaterThan(rjq, check_low))
         volj *= (check_up - rjq) / h;
 
       bool fracture_state = false;
-      auto ef = d_material_p->getBondEF(rjq, Sjq, fracture_state, true);
+      auto ef = d_material_p->getBondEF(node_p, j);
 
       // add contribution to energy
       // Debug
@@ -2164,7 +2195,7 @@ void tools::pp::Compute::getContourContribJInt(
       if (false) {
         double sr = std::abs(Sjq) / this->d_material_p->getSc(rjq);
         if (util::compare::definitelyGreaterThan(sr, 1.))
-          loc_pd_energy += ef.first * volj;
+          loc_pd_energy += ef.second * volj;
       }
 
       // Debug
@@ -2172,10 +2203,10 @@ void tools::pp::Compute::getContourContribJInt(
       //  crack line
       if (false) {
         if (doesBondIntersectCrack(xj, p, ctip, crack_orient))
-          loc_pd_energy += ef.first * volj;
+          loc_pd_energy += ef.second * volj;
       }
 
-      loc_pd_energy += ef.first * volj;
+      loc_pd_energy += ef.second * volj;
     }  // loop over nodes for pd energy density
 
   } else {
@@ -2183,18 +2214,18 @@ void tools::pp::Compute::getContourContribJInt(
     auto mp = d_mX[node_p];
 
     // upper and lower bound for volume correction
-    auto h = d_mesh_p->getMeshSize();
-    auto check_up = d_modelDeck_p->d_horizon + 0.5 * h;
-    auto check_low = d_modelDeck_p->d_horizon - 0.5 * h;
+    auto h = d_dataManager_p->getMeshP()->getMeshSize();
+    auto check_up = d_dataManager_p->getModelDeckP()->d_horizon + 0.5 * h;
+    auto check_low = d_dataManager_p->getModelDeckP()->d_horizon - 0.5 * h;
 
-    auto i_neighs = this->d_neighbor_p->getNeighbors(node_p);
+    auto i_neighs = d_dataManager_p->getNeighborP()->getNeighbors(node_p);
     for (size_t j = 0; j < i_neighs.size(); j++) {
       auto j_id = i_neighs[j];
 
-      auto xj = d_mesh_p->getNode(j_id);
+      auto xj = d_dataManager_p->getMeshP()->getNode(j_id);
 
-      if (util::compare::definitelyGreaterThan(xj.dist(p),
-                                               d_modelDeck_p->d_horizon) ||
+      if (util::compare::definitelyGreaterThan(
+              xj.dist(p), d_dataManager_p->getModelDeckP()->d_horizon) ||
           util::compare::definitelyLessThan(xj.dist(p), 1.0E-10))
         continue;
 
@@ -2206,16 +2237,16 @@ void tools::pp::Compute::getContourContribJInt(
       auto Sjq = d_material_p->getS(xj - p, uj - uq);
 
       // get corrected volume of node j
-      auto volj = this->d_mesh_p->getNodalVolume(j_id);
+      auto volj = d_dataManager_p->getMeshP()->getNodalVolume(j_id);
       if (util::compare::definitelyGreaterThan(rjq, check_low))
         volj *= (check_up - rjq) / h;
 
-      auto fs = this->d_fracture_p->getBondState(node_p, j);
-      auto ef_i = this->d_material_p->getBondEF(rjq, Sjq, fs, mp, thetap);
-      auto ef_j = this->d_material_p->getBondEF(rjq, Sjq, fs, mj, thetaj);
+      // auto fs = this->d_fracture_p->getBondState(node_p, j);
+      auto ef_i = this->d_material_p->getBondEF(node_p, j);
+      auto ef_j = this->d_material_p->getBondEF(node_p, j);
 
       // add contribution to energy
-      loc_pd_energy += (ef_i.first + ef_j.first) * volj;
+      loc_pd_energy += (ef_i.second + ef_j.second) * volj;
     }  // loop over nodes for pd energy density
   }
 
@@ -2226,13 +2257,13 @@ void tools::pp::Compute::getContourContribJInt(
 
   // if there is no element-node connectivity data, we can not compute
   // elastic work done, so return
-  if (d_mesh_p->getNumElements() == 0) return;
+  if (d_dataManager_p->getMeshP()->getNumElements() == 0) return;
 
   // get Quadrature
   fe::BaseElem *quad;
-  if (d_mesh_p->getElementType() == util::vtk_type_triangle)
+  if (d_dataManager_p->getMeshP()->getElementType() == util::vtk_type_triangle)
     quad = new fe::TriElem(1);
-  else if (d_mesh_p->getElementType() == util::vtk_type_quad)
+  else if (d_dataManager_p->getMeshP()->getElementType() == util::vtk_type_quad)
     quad = new fe::QuadElem(1);
   else {
     return;
@@ -2245,8 +2276,8 @@ void tools::pp::Compute::getContourContribJInt(
   for (const auto e : *elements) {
     // get ids of nodes of element, coordinate of nodes, 1st order
     // quad data, and first quad data
-    auto id_nds = d_mesh_p->getElementConnectivity(e);
-    auto nds = d_mesh_p->getElementConnectivityNodes(e);
+    auto id_nds = d_dataManager_p->getMeshP()->getElementConnectivity(e);
+    auto nds = d_dataManager_p->getMeshP()->getElementConnectivityNodes(e);
 
     if (!calc_in_ref) {
       for (size_t i = 0; i < id_nds.size(); i++) nds[i] += d_u[id_nds[i]];
@@ -2268,8 +2299,9 @@ void tools::pp::Compute::getContourContribJInt(
 
     // get ids of nodes of element, coordinate of nodes, 1st order
     // quad data, and first quad data
-    auto id_nds = d_mesh_p->getElementConnectivity(e_found);
-    auto nds = d_mesh_p->getElementConnectivityNodes(e_found);
+    auto id_nds = d_dataManager_p->getMeshP()->getElementConnectivity(e_found);
+    auto nds =
+        d_dataManager_p->getMeshP()->getElementConnectivityNodes(e_found);
     if (!calc_in_ref) {
       for (size_t i = 0; i < id_nds.size(); i++) nds[i] += d_u[id_nds[i]];
     }
@@ -2428,9 +2460,9 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
   auto pt = crack.d_pt;
   auto pb = crack.d_pb;
 
-  auto h = d_mesh_p->getMeshSize();
-  auto horizon = d_modelDeck_p->d_horizon;
-  auto bbox = d_mesh_p->getBoundingBox();
+  auto h = d_dataManager_p->getMeshP()->getMeshSize();
+  auto horizon = d_dataManager_p->getModelDeckP()->d_horizon;
+  auto bbox = d_dataManager_p->getMeshP()->getBoundingBox();
   auto bbox_small = bbox;
   bbox_small.first[0] += horizon;
   bbox_small.first[1] += horizon;
@@ -2533,8 +2565,8 @@ void tools::pp::Compute::getRectsAndNodesForCrackTip(
   Z_t.resize(rects_t.size());
   Z_b.resize(rects_b.size());
 
-  for (size_t i = 0; i < d_mesh_p->getNumNodes(); i++) {
-    auto xi = d_mesh_p->getNode(i);
+  for (size_t i = 0; i < d_dataManager_p->getMeshP()->getNumNodes(); i++) {
+    auto xi = d_dataManager_p->getMeshP()->getNode(i);
     auto damage = (*Z)[i];
     if (util::compare::definitelyLessThan(damage,
                                           compute_data->d_minZAllowed) ||
@@ -2681,7 +2713,7 @@ util::Point3 tools::pp::Compute::findTipInRects(
     if (r > 2) continue;
 
     auto mz = sortZ[r];
-    auto y0 = d_mesh_p->getNode(mz.d_i);
+    auto y0 = d_dataManager_p->getMeshP()->getNode(mz.d_i);
     if (!calc_in_ref) y0 += d_u[mz.d_i];
     auto Z0 = mz.d_Z;
     double diff_Z_for_alternate_point = 0.1;
@@ -2701,7 +2733,7 @@ util::Point3 tools::pp::Compute::findTipInRects(
     for (auto x : nodes[mz.d_r]) {
       if (x == mz.d_i) continue;
 
-      auto y = d_mesh_p->getNode(x);
+      auto y = d_dataManager_p->getMeshP()->getNode(x);
       if (!calc_in_ref) y += d_u[x];
       double dist = 0.;
       if (crack.d_o == -1)
@@ -2764,8 +2796,8 @@ util::Point3 tools::pp::Compute::findTipInRects(
       if (sym_rect[r] >= 0) break;
 
       for (auto x : nodes[mz.d_r]) {
-        auto y = d_mesh_p->getNode(x);
-        auto y0 = d_mesh_p->getNode(mz.d_i);
+        auto y = d_dataManager_p->getMeshP()->getNode(x);
+        auto y0 = d_dataManager_p->getMeshP()->getNode(mz.d_i);
         if (!calc_in_ref) {
           y += d_u[x];
           y0 += d_u[mz.d_i];
@@ -2822,9 +2854,9 @@ util::Point3 tools::pp::Compute::findTipInRects(
   if (sym_rect[0] >= 0) {
     // crack tip is given by average of symmetrically opposite points
     size_t i1 = sortZ[0].d_i;
-    auto y1 = d_mesh_p->getNode(i1);
+    auto y1 = d_dataManager_p->getMeshP()->getNode(i1);
     size_t i2 = sym_rect[0];
-    auto y2 = d_mesh_p->getNode(i2);
+    auto y2 = d_dataManager_p->getMeshP()->getNode(i2);
 
     if (!calc_in_ref) {
       y1 += d_u[i1];
@@ -2849,9 +2881,9 @@ util::Point3 tools::pp::Compute::findTipInRects(
   else {
     if (sym_rect[1] >= 0) {
       size_t i1 = sortZ[1].d_i;
-      auto y1 = d_mesh_p->getNode(i1);
+      auto y1 = d_dataManager_p->getMeshP()->getNode(i1);
       size_t i2 = sym_rect[1];
-      auto y2 = d_mesh_p->getNode(i2);
+      auto y2 = d_dataManager_p->getMeshP()->getNode(i2);
 
       if (!calc_in_ref) {
         y1 += d_u[i1];
@@ -2875,7 +2907,7 @@ util::Point3 tools::pp::Compute::findTipInRects(
     else {
       // use average between best node in rectangle and old tip
       size_t i1 = sortZ[0].d_i;
-      auto y1 = d_mesh_p->getNode(i1);
+      auto y1 = d_dataManager_p->getMeshP()->getNode(i1);
       auto y2 = pold;
 
       if (!calc_in_ref) y1 += d_u[i1];
