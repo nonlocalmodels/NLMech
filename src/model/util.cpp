@@ -58,7 +58,6 @@ model::Output::Output(inp::Input *d_input_p, data::DataManager *d_dataManager_p,
     writer.appendPointData(tag, &force);
   }
 
-  tag = "time";
   writer.addTimeStep(d_time);
 
   //

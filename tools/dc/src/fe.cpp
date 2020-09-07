@@ -576,7 +576,7 @@ util::Point3 getDisplacementAtQuadPointCurrentSimple(
   static bool debug_el_ids = false;
 
   std::string filename = dc->d_pathOut + "/debug_find_elem.txt";
-  static FILE *fout = nullptr;
+  FILE *fout = nullptr;
 
   if (debug_el_ids) fout = fopen(filename.c_str(), "w");
 
@@ -756,7 +756,6 @@ void compute(bool read_12, const YAML::Node &config) {
 
       // get alias for mesh 1 and mesh 2
       const auto mesh1 = sim1.d_mesh_p;
-      const auto mesh2 = sim2.d_mesh_p;
 
       // use hpx loop
       std::vector<double> l2_vec(mesh1->getNumElements(), 0.0);

@@ -193,7 +193,6 @@ util::Point3 fe::TetElem::mapPointToRefElem(
 
   // get transpose of Jacobian
   auto B = util::transpose(J);
-  auto detB = detJ;
 
   // get inverse of B
   auto B_inv = util::inv(B);

@@ -8,9 +8,7 @@ using both finite element and finite difference discretization.
 
 Logo below has been obtained by running Peridynamic simulation on the logo mesh, [see](https://nonlocalmodels.github.io/examples/fd-logo-soft-material.html).
 
-
 <p style="text-align:center;"><img src="assets/logo/logo_sim.png?raw=true" alt="logo" width="400"/></p>
-
 
 ## Building 
 
@@ -31,7 +29,6 @@ Right now, we have [![GitHub issues](https://img.shields.io/github/issues/nonloc
 ## Documentation
 
 The documentation of the the master branch is available [here](https://nonlocalmodels.github.io/documentation/).
-
 
 ## Releases
 

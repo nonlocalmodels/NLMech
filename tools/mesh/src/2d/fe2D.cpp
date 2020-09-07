@@ -430,7 +430,6 @@ void tools::mesh::uniformTriSym(const std::string &filename) {
   std::vector<util::Point3> nodes(num_nodes, util::Point3());
   std::vector<double> nodal_vols(num_nodes, 2. * data.d_h * data.d_h);
 
-  int node_counter = 0;
   for (size_t j = 0; j <= ny_cell; j++)
     for (size_t i = 0; i <= nx_cell; i++) {
       // first node (lattice cite / corner of unit cell)
