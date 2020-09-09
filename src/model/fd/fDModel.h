@@ -195,7 +195,7 @@ private:
 
   /*! @brief Checks if output frequency is to be modified
    *
-   * 1. If valid criteria is specified, this method modifes the current output
+   * 1. If valid criteria is specified, this method modifies the current output
    * interval to new output interval.
    *
    * 2. This is useful when we require snapshot of simulation at small intervals

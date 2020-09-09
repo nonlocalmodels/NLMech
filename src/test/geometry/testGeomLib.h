@@ -16,7 +16,7 @@
 namespace test {
 
 /*!
- * @brief Perform test on Fracture class and check if bitwise functions are
+ * @brief Perform test on Fracture class and check if bit-wise functions are
  * working correctly
  */
 void testFracture();

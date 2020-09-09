@@ -66,7 +66,7 @@ class ElasticState : public BaseMaterial {
   /*!
    * @brief Returns energy and force state between node i and node j
    * @param i Id of node i
-   * @param j Local id in the neighborlist of node i
+   * @param j Local id in the neighbor list of node i
    * @return Value Pair of energy and force
    */
 

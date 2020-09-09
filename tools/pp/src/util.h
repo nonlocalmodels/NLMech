@@ -156,7 +156,7 @@ struct TransformU {
 };
 
 /*!
- * @brief Data for marking and symmetrizing of velocity operation
+ * @brief Data for marking and symmetries of velocity operation
  */
 struct TransformVelocity {
   /*! @brief Specify if velocity is to be marked */
@@ -177,10 +177,10 @@ struct TransformVelocity {
   /*! @brief List of nodes at which velocities should be marked */
   std::vector<size_t> d_markVNodes;
 
-  /*! @brief Specify if velocity is to be symmetrized */
+  /*! @brief Specify if velocity is to be Symmetric */
   bool d_symmetrizeV;
 
-  /*! @brief Specify if combine mark and symmetrize operation */
+  /*! @brief Specify if combine mark and Symmetric operation */
   bool d_combineMarkV;
 
   /*! @brief Axis of symmetry, e.g. "x", "y" */
@@ -320,7 +320,7 @@ struct ComputeJIntegral {
 };
 
 /*!
- * @brief Datatype to hold instructions for postprocessing operation
+ * @brief Datatype to hold instructions for post-processing operation
  */
 struct InstructionData {
 

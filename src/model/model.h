@@ -84,7 +84,7 @@ protected:
   /**
    * @name Minor simulation data
    *
-   * These data are postprocessing data and have no role in the simulation.
+   * These data are post-processing data and have no role in the simulation.
    * Since they do not play direct role in the simulation, we can compromise in
    * their accuracy and use 'float' instead of 'double'. We may also choose
    * to not declare these data and not perform post-processing calculation.

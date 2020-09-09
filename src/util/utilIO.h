@@ -21,7 +21,7 @@ namespace io {
 
 /*! @brief Generate a string contaning nt tabs
 * @param nt Number of tabs
-* @return String contaning nt tabs
+* @return String containing nt tabs
 */
 inline std::string getTabS(int nt) {
   std::string tabS = "";
@@ -33,8 +33,8 @@ inline std::string getTabS(int nt) {
 
 /*!
  * @brief Concatenates the elements of the vector separated with a comma
- * @param list Teh vector with the elements
- * @param nt NUmber of tabs prepend to the contactenated vector
+ * @param list The vector with the elements
+ * @param nt Number of tabs prepend to the concatenated vector
  * @return Resulting string
  */
 template <class T> inline std::string printStr(const std::vector<T> &list,
@@ -57,8 +57,8 @@ template <class T> inline std::string printStr(const std::vector<T> &list,
 
 /*!
  * @brief Concatenates the elements of the vector separated with a comma
- * @param list Teh vector with the elements
- * @param nt NUmber of tabs prepend to the contactenated vector
+ * @param list The vector with the elements
+ * @param nt NUmber of tabs prepend to the concatenated vector
  * @return Resulting string
  */
 template <> inline std::string printStr(const std::vector<util::Point3> &list,
@@ -81,8 +81,8 @@ template <> inline std::string printStr(const std::vector<util::Point3> &list,
 /*!
  * @brief Concatenates the elements of the vector separated with a comma and
  * prints them to the standard output stream
- * @param list Teh vector with the elements
- * @param nt NUmber of tabs prepend to the contactenated vector
+ * @param list The vector with the elements
+ * @param nt Number of tabs prepend to the concatenated vector
  */
 template <class T> inline void print(const std::vector<T> &list, int nt = 0) {
 
@@ -91,8 +91,8 @@ template <class T> inline void print(const std::vector<T> &list, int nt = 0) {
 
 /*!
  * @brief Concatenates the elements of the vector separated with a comma
- * @param list Teh vector with the elements
- * @param nt NUmber of tabs prepend to the contactenated vector
+ * @param list The vector with the elements
+ * @param nt Number of tabs prepend to the concatenated vector
  * @return Resulting string
  */
 template <class T>
@@ -122,8 +122,8 @@ inline std::string printStr(const std::vector<std::vector<T>> &list,
 
 /*!
  * @brief Concatenates the elements of the vector separated with a comma
- * @param list Teh vector with the elements
- * @param nt Number of tabs prepend to the contactenated vector
+ * @param list The vector with the elements
+ * @param nt Number of tabs prepend to the concatenated vector
  */
 template <class T> inline void print(const std::vector<std::vector<T>> &list, int nt = 0) {
 

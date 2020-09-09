@@ -82,10 +82,10 @@ struct BCData {
   double d_r2;
 
   /*!
-   * @brief List of dofs on which this bc will be applied
+   * @brief List of dofs on which this BC will be applied
    *
-   * E.g. if bc is only applied on x-component, d_direction will be 1. If
-   * bc is applied on x- and y-component, d_direction will be vector with
+   * E.g. if BC is only applied on x-component, d_direction will be 1. If
+   * BC is applied on x- and y-component, d_direction will be vector with
    * elements 1 and 2.
    */
   std::vector<size_t> d_direction;

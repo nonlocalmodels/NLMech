@@ -115,8 +115,8 @@ private:
 	void computeForces(bool full=false);
 
 	/*!
-	 * @brief Computes the forces of all nodes using the pertubated displacement
-	 * @param thread The thread which is doing the acutal computation
+	 * @brief Computes the forces of all nodes using the perturbed displacement
+	 * @param thread The thread which is doing the actual computation
 	 */
 	void computePertubatedForces(size_t thread); 
 

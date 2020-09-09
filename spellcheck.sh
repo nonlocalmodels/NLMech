@@ -15,7 +15,7 @@ list="$(git diff --name-only ${branch})"
 
 if [ "${#list}" -eq "0"  ]; then
   echo "No files to check"
-  exit
+#  exit
 fi
 
 files=$(echo $list | tr " " "\n")

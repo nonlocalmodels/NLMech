@@ -106,23 +106,23 @@ double linearStepFunc(const double &x, const double &x1, const double &x2);
 double derLinearStepFunc(const double &x, const double &x1, const double &x2);
 
 /*!
- * @brief Compute gaussian function in 1-d
+ * @brief Compute Gaussian function in 1-d
  *
- * Guassian (1-d) function: \f$ f(r) = a \exp(-\frac{r^2}{\beta}). \f$
+ * Gaussian (1-d) function: \f$ f(r) = a \exp(-\frac{r^2}{\beta}). \f$
  *
  * Here \f$ a\f$ is the amplitude and \f$ \beta \f$ is the exponential factor.
  *
  * @param r Distance from origin
  * @param a Amplitude
  * @param beta Factor in exponential function
- * @return value Component of guassian 1-d function
+ * @return value Component of Gaussian 1-d function
  */
 double gaussian(const double &r, const double &a, const double &beta);
 
 /*!
- * @brief Compute gaussian function in 2-d
+ * @brief Compute Gaussian function in 2-d
  *
- * Guassian (2-d) function:
+ * Gaussian (2-d) function:
  * \f[ f(x,y) = (f_1(x,y), f_2(x,y)), \f]
  * where
  * \f[ f_1(x,y) =  a \exp(-\frac{(x-x_c)^2 + (y-y_c)^2}{\beta}) d_1,
@@ -134,32 +134,32 @@ double gaussian(const double &r, const double &a, const double &beta);
  *
  * @param x  Coordinates of point
  * @param params List of parameters
- * @param dof Component of guassian function
- * @return value Component of guassian 2-d vector function along dof
+ * @param dof Component of Gaussian function
+ * @return value Component of Gaussian 2-d vector function along dof
  */
 double gaussian2d(const util::Point3 &x, const size_t &dof,
                   const std::vector<double> &params);
 
 /*!
- * @brief Compute sum of two gaussian function in 2-d
+ * @brief Compute sum of two Gaussian function in 2-d
  *
- * Double guassian (2-d) function:
+ * Double Gaussian (2-d) function:
  * \f[ f(x,y) = (f_1(x,y), f_2(x,y)) + (g_1(x,y), g_2(x,y)), \f]
- * where \f$ (f_1,f_2)\f$ and \f$(g_1, g_2)\f$ are two guassian 2-d function
- * as described in guassian2d() with different values of \f$ (x_c, y_c), a,
+ * where \f$ (f_1,f_2)\f$ and \f$(g_1, g_2)\f$ are two Gaussian 2-d function
+ * as described in Gaussian2d() with different values of \f$ (x_c, y_c), a,
  * (d_1, d_2)\f$.
  *
  * @param x  Coordinates of point
  * @param params List of parameters
- * @param dof Component of guassian function
- * @return value Component of guassian 2-d vector function along dof
+ * @param dof Component of Gaussian function
+ * @return value Component of Gaussian 2-d vector function along dof
  */
 double doubleGaussian2d(const util::Point3 &x, const size_t &dof,
                         const std::vector<double> &params);
 
 /*!
  * @brief Get vector with plus or minus 1 depending on the sign of component
- * of another vectory
+ * of another vector
  *
  * @param v Vector from which a new vector is created
  * @return vec Vector

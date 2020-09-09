@@ -77,7 +77,7 @@ public:
 
   /*!
    * @brief Get global id of neighboring node given its local id in the
-   * neighborlist
+   * neighbor list
    *
    * @param i Id of node
    * @param j Local id of node

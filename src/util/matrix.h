@@ -197,7 +197,7 @@ struct Matrix3 {
   }
 
   /*!
- * @brief Computes the tranpose of matrix
+ * @brief Computes the transpose of matrix
  * @return Matrix Transpose of m
  */
   Matrix3 transpose() const {
@@ -491,7 +491,7 @@ struct SymMatrix3 {
   }
 
   /*!
- * @brief Computes the tranpose of matrix
+ * @brief Computes the transpose of matrix
  * @return Matrix Transpose of m
  */
   SymMatrix3 transpose() const {
@@ -559,13 +559,13 @@ bool checkMatrix(const std::vector<std::vector<double>> &m);
  *
  * @param m Matrix
  * @param v vector
- * @return vector Dot produc
+ * @return vector Dot product
  */
 std::vector<double> dot(const std::vector<std::vector<double>> &m, const
 std::vector<double> &v);
 
 /*!
- * @brief Computes the tranpose of matrix
+ * @brief Computes the transpose of matrix
  *
  * @param m Matrix
  * @return Matrix Transpose of m

@@ -116,12 +116,12 @@ std::pair<util::Point3, double> getCenterAndVol(const std::vector<util::Point3>
     &nodes, const size_t &elem_type);
 
 /*!
- * @brief Checks if the two lines between A and B and between C and C interesect
+ * @brief Checks if the two lines between A and B and between C and C intersect
  * @param A Start point of the first line
  * @param B End point of the first line
  * @param C Start point of the second line
  * @param D End point of the second line
- * @return interesction 
+ * @return intersection 
  */
 
 bool doLinesIntersect (util::Point3 A , util::Point3 B, util::Point3 C, util::Point3 D);
@@ -132,7 +132,7 @@ bool doLinesIntersect (util::Point3 A , util::Point3 B, util::Point3 C, util::Po
  * @param A Start point of the first line
  * @param B End point of the first line
  * @param C Point to test
- * @return interesction 
+ * @return intersection 
  */
 bool onLine(util::Point3 A , util::Point3 B, util::Point3 C);
 
@@ -146,10 +146,10 @@ bool onLine(util::Point3 A , util::Point3 B, util::Point3 C);
 int direction(util::Point3 A , util::Point3 B, util::Point3 C);
 
 /*!
- * @brief Checks if the point A is within the circle with the center and the radisu
+ * @brief Checks if the point A is within the circle with the center and the radius
  * @param A Point 1
  * @param center Center of the circle
- * @param radius Radius of the cricle
+ * @param radius Radius of the circle
  * @return Direction
  */
 bool isPointinCircle(util::Point3 A, util::Point3 center, double radius);

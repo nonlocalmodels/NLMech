@@ -27,7 +27,7 @@ namespace test {
  * and checks if the sum of quadrature weights is equal to 0.5 (area of
  * reference triangle).
  *
- * Also tests the exactness of the integration of the polynomial upto given
+ * Also tests the exactness of the integration of the polynomial up to given
  * order.
  * Suppose \f$ n\f$ is the order of quadrature point, then we test if the
  * integration of the function \f$ f(s,t) = s^\alpha\, t^\beta \f$ is exact for
@@ -73,7 +73,7 @@ void testLineElem(size_t n);
  * and checks if the sum of quadrature weights is equal to 0.5, i.e. area of
  * reference triangle.
  *
- * Also tests the exactness of the integration of the polynomial upto given
+ * Also tests the exactness of the integration of the polynomial up to given
  * order.
  * Suppose \f$ n\f$ is the order of quadrature point, then we test if the
  * integration of the function \f$ f(s,t) = s^\alpha\, t^\beta \f$ is exact for
@@ -117,7 +117,7 @@ void testTriElem(size_t n);
  * and checks if the sum of quadrature weights is equal to 2, i.e. area of
  * reference quadrangle element.
  *
- * Also tests the exactness of the integration of the polynomial upto given
+ * Also tests the exactness of the integration of the polynomial up to given
  * order.
  * Suppose \f$ n\f$ is the order of quadrature point, then we test if the
  * integration of the function \f$ f(s,t) = s^\alpha\, t^\beta \f$ is exact for

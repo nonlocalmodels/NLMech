@@ -115,7 +115,7 @@ namespace fe {
  * v^3_x - v^1_x & v^4_x - v^1_x\\
  * v^2_y - v^1_y & v^3_y - v^1_y & v^4_y - v^1_y \\
  * v^2_z - v^1_z & v^3_z - v^1_z & v^4_z - v^1_z \end{array}}\right] \f].
- * Note that \f$ B \f$ is transpose of jacobian of map \f$\Phi\f$ therefore
+ * Note that \f$ B \f$ is transpose of Jacobin of map \f$\Phi\f$ therefore
  * \f$ det(B) = det(J)\f$.
  * Inverse of
  * \f$ B\f$ is
