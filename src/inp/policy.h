@@ -99,7 +99,7 @@ public:
   int getMemoryControlFlag();
 
   /*!
-   * @brief Returns true if postprocessing computation is to be done
+   * @brief Returns true if post-processing computation is to be done
    * @return Flag
    */
   bool enablePostProcessing();

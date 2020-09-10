@@ -19,7 +19,7 @@ namespace inp {
 /**@{*/
 
 /*!
- * @brief Structure to read and store inout data for interior flags (**no-fail
+ * @brief Structure to read and store input data for interior flags (**no-fail
  * region**)
  */
 struct InteriorFlagsDeck {

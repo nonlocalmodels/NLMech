@@ -237,7 +237,7 @@ private:
    * @param p Location of point in reference element
    * @param nodes Vertices of element
    * @param J Matrix to store the Jacobian (if not nullptr)
-   * @return det(J) Determinant of the Jacobain (same as Jacobian in 1-d)
+   * @return det(J) Determinant of the Jacobian (same as Jacobian in 1-d)
    */
   double getJacobian(const util::Point3 &p,
                      const std::vector<util::Point3> &nodes,

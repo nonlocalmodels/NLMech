@@ -342,7 +342,7 @@ struct Point3 {
   }
 
   /*!
-  * @brief Substracts a scalar to the point
+  * @brief Subtracts a scalar to the point
   * @param lhs Left-hand side
   * @param rhs Left-hand side
   * @return Shifted point
@@ -352,7 +352,7 @@ struct Point3 {
   }
 
   /*!
-  * @brief Substracts a scalar to the point
+  * @brief Subtracts a scalar to the point
   * @param lhs Left-hand side
   * @param rhs Left-hand side
   * @return Shifted point
@@ -362,7 +362,7 @@ struct Point3 {
   }
 
   /*!
-  * @brief Substracts a scalar to the point
+  * @brief Subtracts a scalar to the point
   * @param lhs Left-hand side
   * @param rhs Left-hand side
   * @return Shifted point
@@ -373,7 +373,7 @@ struct Point3 {
   }
 
   /*!
-  * @brief Divedes a scalar to the point
+  * @brief Divides a scalar to the point
   * @param lhs Left-hand side
   * @param rhs Left-hand side
   * @return Scaled point
@@ -397,7 +397,7 @@ struct Point3 {
   }
 
   /*!
-  * @brief Substracts a scalar to the point
+  * @brief Subtracts a scalar to the point
   * @param b Scalar factor
   * @return Shifted point
   */
@@ -436,7 +436,7 @@ struct Point3 {
   }
 
   /*!
-  * @brief Substracts a point 
+  * @brief Subtracts a point 
   * @param b Point
   * @return Difference of the two points
   */
@@ -449,7 +449,7 @@ struct Point3 {
   }
 
   /*!
-  * @brief Multilpies a point 
+  * @brief Multiplies a point 
   * @param b Point
   * @return Point-wise product of the two points
   */
@@ -462,7 +462,7 @@ struct Point3 {
   }
 
   /*!
-  * @brief Divides a point by a scalr 
+  * @brief Divides a point by a scalar 
   * @param b Scalar factor
   * @return Scaled point
   */
@@ -475,7 +475,7 @@ struct Point3 {
   }
 
   /*!
-  * @brief Access the 0th componnent of a point
+  * @brief Access the 0th component of a point
   * @param i Index
   * @return The i-th index of the point
   */
@@ -490,7 +490,7 @@ struct Point3 {
   }
 
   /*!
-  * @brief Access the 0th componnent of a point
+  * @brief Access the 0th component of a point
   * @param i Index
   * @return The i-th index of the point
   */
@@ -505,7 +505,7 @@ struct Point3 {
   }
   
   /*!
-  * @brief Print the point's vlaue to the standard output stream
+  * @brief Print the point's value to the standard output stream
   * @param os Standard output stream
   * @param p Point
   * @return The standard out stream

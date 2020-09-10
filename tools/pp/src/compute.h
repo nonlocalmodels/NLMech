@@ -58,7 +58,7 @@ namespace tools {
 namespace pp {
 
 /*!
- * @brief Processes simulation results and computes postprocessing
+ * @brief Processes simulation results and computes post-processing
  * quantities
  *
  * Currently we have implemented
@@ -66,7 +66,7 @@ namespace pp {
  * specified factor
  * - Transformation of velocity data such as
  *  1. marking velocity of specified nodes as zero
- *  2. symmetrizing velocity with specified line of symmetry
+ *  2. symmetries velocity with specified line of symmetry
  * - Strain and stress calculation and magnitude of strain calculation
  * - Finding crack tip location and crack tip velocity
  * - Computation of nodal damage
@@ -122,7 +122,7 @@ public:
                   std::vector<util::Point3> *u);
 
   /**
-   * @name Postprocessing methods
+   * @name Post-processing methods
    */
   /**@{*/
 
@@ -141,7 +141,7 @@ public:
    *
    * There are two transformation implemented
    * - Mark velocity of certain nodes as zero
-   * - Symmetrize the velocity field
+   * - Symmetric the velocity field
    *
    * @param writer Pointer to vtk writer
    */
@@ -150,7 +150,7 @@ public:
   /*!
    * @brief Compute strain and stress
    *
-   * We perform following postprocessing calculation
+   * We perform following post-processing calculation
    * - compute strain and stress
    * - compute magnitude (or absolute value of specified component of tensor)
    * of strain tensor
@@ -161,7 +161,7 @@ public:
    * \f[ u(x_q,y_q) = \sum_{i=1}^n N_i(x_q, y_q) u^i, \f]
    * where \f$ u^i \f$ is displacement of node \f$ i\f$. Linear strain is
    * given by
-   * \f[ E(x_q, y_q) = \frac{1}{2}( \nabla u(x_q, y_q) + \nabla u(x_q,y_q)^T ).
+   * \f[ E(x_q, y_q) = \franc{1}{2}( \nabla u(x_q, y_q) + \nabla u(x_q,y_q)^T ).
    * \f]
    * Components of tensor are given by
    * \f[ E_{xx} = \frac{\partial u_x(x_q, y_q)}{\partial x}, \quad E_{yy} =
@@ -218,7 +218,7 @@ public:
    * among nodes with damage above 1.
    *
    * To compute crack tip velocity, we compare the tip at two different times
-   * . If not specified, then the two different times are the previour output
+   * . If not specified, then the two different times are the previous output
    * time and current output time.
    *
    * Since we compute damage in this method, we store the damage in global
@@ -464,7 +464,7 @@ private:
    * are created in listElemsAndNodesInDomain.
    *
    * 2. If element-node connectivity is not available, this method uses
-   * piecewise constant interpolation by searching for node closest to the
+   * piece-wise constant interpolation by searching for node closest to the
    * point and assigning displacement and velocity of that node to the point.
    *
    * 3. If element-node connectivity is available, then we find the element
@@ -672,7 +672,7 @@ private:
   /*! @brief Output path where postprocessed files are created */
   std::string d_outPath;
 
-  /*! @brief Initial tag for each postprocessing output */
+  /*! @brief Initial tag for each post-processing output */
   std::string d_outPreTag;
 
   /*! @brief Simulation input filename
