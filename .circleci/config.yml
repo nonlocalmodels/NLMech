@@ -60,14 +60,13 @@ jobs:
                 coveralls --gcov-options '\-lp' -t ${CTOKEN}
               fi
     deploy:
-      docker:
-        - image: docker:17.05.0-ce-git
+      machine:
+        image: ubuntu-2004:202008-0
       environment:
         IMAGE_FOLDER_NAME: .circleci/Docker
         IMAGE_NAME: diehlpk/nlmech:latest
       steps:
         - checkout
-        - setup_remote_docker
         - run:
            name: Build Docker image
            command: |
