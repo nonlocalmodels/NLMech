@@ -1,6 +1,6 @@
 #include "QuasiStaticModel.h"
 
-#include <hpx/lcos/when_all.hpp>
+#include <hpx/future.hpp>
 #include <vector>
 
 #include "BlazeIterative.hpp"
