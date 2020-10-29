@@ -31,7 +31,7 @@ void util::StateBasedHelperFunctions::dilatation(data::DataManager *dataManager,
   dataManager->setDilatationP(new std::vector<double>(
       dataManager->getMeshP()->getNodesP()->size(), 0.));
 
-  hpx::parallel::for_loop(
+  hpx::for_loop(
       hpx::parallel::execution::par, 0,
       dataManager->getMeshP()->getNodesP()->size(), [&](boost::uint64_t i) {
         size_t k = 0;
