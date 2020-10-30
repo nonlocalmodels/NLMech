@@ -62,3 +62,9 @@ add_test(NAME tools.dc.fd_simple
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/dc -i input.yaml -k fd_simple
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/tools/dc/fd_simple
 )
+
+# Generate 2D mesh
+add_test(NAME tools.mesh.2d
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/mesh -i input_mesh.yaml -d 2
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/tools/mesh/uniform_triangle
+)
