@@ -27,22 +27,6 @@ void rw::reader::MshReader::readMesh(size_t dim,
   gmsh::initialize();
   gmsh::option::setNumber("General.Terminal", 1);
   gmsh::open(d_filename);
-  
-  //std::ifstream filein(d_filename);
-
-  // open file
-  //if (!d_file) d_file.open(d_filename);
-
-  //if (!d_file) {
-   // std::cerr << "Error: Can not open file = " << d_filename + ".msh"
-     //         << ".\n";
-   // exit(1);
-  //}
-
-  //std::string line;
-  //int format = 0;
-  //int size = 0;
-  //double version = 1.0;
 
   // clear data
   nodes->clear();
@@ -76,11 +60,8 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
   for (size_t i = 0 ; i < nodeTags.size() ; i++ )
     {
-    
-    std::cout << nodeTags[i] << std::endl;
     size_t index = (nodeTags[i]-1) * 3;
     (*nodes)[nodeTags[i] - 1] = util::Point3(nodeCoords[index], nodeCoords[index+1], nodeCoords[index+2]);
-    std::cout << (*nodes)[nodeTags[i] - 1] << std::endl;
     }
 
   
@@ -117,27 +98,26 @@ void rw::reader::MshReader::readMesh(size_t dim,
     }
 
 
-  //enc->resize(elemNodeTags[element_id].size());
   nec->resize(elemNodeTags[element_id].size());
 
 
-    num_elems = 67; 
+    
     size_t elem_counter = 0;
     //for (size_t i = 0 ; i < elemNodeTags.size() ; i++)
     for (size_t j = 0 ; j < elemNodeTags[element_id].size() ; j++)
     {
       
-      std::cout << elemNodeTags[element_id][j] << " " << elem_counter << std::endl;
       enc->push_back(elemNodeTags[element_id][j] - 1);
       (*nec)[elemNodeTags[element_id][j] - 1].push_back(elem_counter);
 
       if ((j + 1) % 3 == 0)
         elem_counter++;
     }
+    num_elems = elemNodeTags[element_id].size(); 
 
-     //std::cout << elemNodeTags[element_id][j] << std::endl;
 
-     //exit(1);
+    gmsh::clear();
+    gmsh::finalize();
  
 }
 
@@ -150,72 +130,34 @@ void rw::reader::MshReader::readNodes(std::vector<util::Point3> *nodes) {
     exit(1);
   }
 
-  std::string line;
-  int format = 0;
-  int size = 0;
-  double version = 1.0;
+
+  gmsh::initialize();
+  gmsh::option::setNumber("General.Terminal", 1);
+  gmsh::open(d_filename);
 
   // clear data
   nodes->clear();
-  bool read_nodes = false;
 
-  while (true) {
-    std::getline(d_file, line);
-    if (d_file) {
-      // // read $MeshFormat block
-      if (line.find("$MeshFormat") == static_cast<std::string::size_type>(0)) {
-        d_file >> version >> format >> size;
-        if ((version != 2.0) && (version != 2.1) && (version != 2.2)) {
-          std::cerr << "Error: Unknown .msh file version " << version << "\n";
-          exit(1);
-        }
+    // getting all nodes using GMSH API
+  std::vector<std::size_t> nodeTags;
+  std::vector<double> nodeCoords, nodeParams;
+  gmsh::model::mesh::getNodes(nodeTags, nodeCoords, nodeParams, -1, -1);
 
-        // we only support reading of ascii format, so issue error if this
-        // condition is not met
-        if (format) {
-          std::cerr << "Error: Format of .msh is possibly binary which is not"
-                       " supported currently.\n ";
-          exit(1);
-        }
-      }
-      // read $Nodes block
-      if (line.find("$NOD") == static_cast<std::string::size_type>(0) ||
-          line.find("$NOE") == static_cast<std::string::size_type>(0) ||
-          line.find("$Nodes") == static_cast<std::string::size_type>(0)) {
-        read_nodes = true;
-        unsigned int num_nodes = 0;
-        d_file >> num_nodes;
+  // Convert the coordinates to the internal datastrucutre
+  nodes->resize(nodeTags.size());
 
-        // allocate space
-        nodes->resize(num_nodes);
+  for (size_t i = 0 ; i < nodeTags.size() ; i++ )
+    {
+    
+    std::cout << nodeTags[i] << std::endl;
+    size_t index = (nodeTags[i]-1) * 3;
+    (*nodes)[nodeTags[i] - 1] = util::Point3(nodeCoords[index], nodeCoords[index+1], nodeCoords[index+2]);
+    }
 
-        // read in the nodal coordinates and form points.
-        double x, y, z;
-        unsigned int id;
 
-        // add the nodal coordinates to the d_file
-        for (unsigned int i = 0; i < num_nodes; ++i) {
-          d_file >> id >> x >> y >> z;
-          (*nodes)[id - 1] = util::Point3(x, y, z);
-        }
-        // read the $ENDNOD delimiter
-        std::getline(d_file, line);
-      }  // end of reading nodes
-    }    // if d_file
-
-    // If !d_file, check to see if EOF was set.  If so, break out
-    // of while loop.
-    if (d_file.eof()) break;
-
-    if (read_nodes) break;
-
-    // If !d_file and !d_file.eof(), stream is in a bad state!
-    // std::cerr<<"Error: Stream is bad! Perhaps the file does not exist?\n";
-    // exit(1);
-  }  // while true
-
-  // close file
-  d_file.close();
+    gmsh::clear();
+    gmsh::finalize();
+  
 }
 
 bool rw::reader::MshReader::readPointData(const std::string &name,
