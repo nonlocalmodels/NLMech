@@ -91,7 +91,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
     std::cerr << "Error: Only mesh with one type of elements is supported!" << std::endl ;
   
 
-  if (type = 0)
+  if (type == 0)
     {
       std::cerr << "Error: Only 3-node triangle or 4-node square elements are supported!" << std::endl;
       exit(1);
@@ -99,6 +99,15 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
 
   nec->resize(elemNodeTags[element_id].size());
+
+
+  size_t con_size = 0;
+
+  if ( type == 2)
+      con_size = 3;
+
+    if ( type == 3)
+      con_size = 4;
 
 
     
@@ -110,7 +119,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
       enc->push_back(elemNodeTags[element_id][j] - 1);
       (*nec)[elemNodeTags[element_id][j] - 1].push_back(elem_counter);
 
-      if ((j + 1) % 3 == 0)
+      if ((j + 1) % con_size == 0)
         elem_counter++;
     }
     num_elems = elemNodeTags[element_id].size(); 

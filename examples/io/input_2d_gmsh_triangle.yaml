@@ -8,7 +8,7 @@ Model:
   Horizon: 0.5
   Horizon_h_Ratio: 5
 Mesh: 
-  File: mesh.msh 
+  File: mesh_2d_triangle.msh 
 Material: 
   Type: ElasticState 
   Density: 1200
