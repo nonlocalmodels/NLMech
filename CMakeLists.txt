@@ -82,6 +82,9 @@ if (VTK_VERSION VERSION_LESS "6")
     message(FATAL_ERROR "ERROR: Only VTK library 6+ supported")
 endif ()
 
+# Gmsh
+find_package(Gmsh REQUIRED)
+
 # BLAZE and BlazeIterative
 find_package(blaze REQUIRED NO_CMAKE_PACKAGE_REGISTRY)
 include("${blaze_DIR}/blaze-config-version.cmake")
@@ -162,7 +165,3 @@ endif()
 ##############################################################################
 add_hpx_executable(NLMech SOURCES src/main.cpp 
                    DEPENDENCIES Inp Model ${LAPACK_LIBRARIES})
-
-
-
-
