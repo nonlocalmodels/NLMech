@@ -21,7 +21,6 @@ namespace reader {
 /*!
  * @brief A class to read Gmsh (msh) mesh files
  *
- * This class can only handle Gmsh version 2.0, 2.1, 2.2.
  */
 class MshReader {
 

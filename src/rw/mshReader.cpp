@@ -10,6 +10,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <gmsh.h>
 
 #include "util/feElementDefs.h"
 
@@ -22,27 +23,26 @@ void rw::reader::MshReader::readMesh(size_t dim,
                                      std::vector<size_t> *enc,
                                      std::vector<std::vector<size_t>> *nec,
                                      std::vector<double> *volumes, bool is_fd) {
-  std::ifstream filein(d_filename);
-
-  // open file
-  if (!d_file) d_file.open(d_filename);
-
-  if (!d_file) {
-    std::cerr << "Error: Can not open file = " << d_filename + ".msh"
-              << ".\n";
-    exit(1);
-  }
-
-  std::string line;
-  int format = 0;
-  int size = 0;
-  double version = 1.0;
+  
+  gmsh::initialize();
+  gmsh::option::setNumber("General.Terminal", 1);
+  gmsh::open(d_filename);
 
   // clear data
   nodes->clear();
   enc->clear();
   nec->clear();
   volumes->clear();
+
+  // getting all nodes using GMSH API
+  std::vector<std::size_t> nodeTags;
+  std::vector<double> nodeCoords, nodeParams;
+  gmsh::model::mesh::getNodes(nodeTags, nodeCoords, nodeParams, -1, -1);
+
+  // getting all elements using GMSH API
+  std::vector<int> elemTypes;
+  std::vector<std::vector<std::size_t> > elemTags, elemNodeTags;
+  gmsh::model::mesh::getElements(elemTypes, elemTags, elemNodeTags, -1, -1);
 
   // specify type of element to read
   if (dim != 2 and dim != 3) {
@@ -52,170 +52,82 @@ void rw::reader::MshReader::readMesh(size_t dim,
     exit(1);
   }
 
-  unsigned int num_nodes_con = 0;
-  bool read_nodes = false;
-  bool read_elements = false;
 
-  while (true) {
-    std::getline(filein, line);
-    if (filein) {
-      // // read $MeshFormat block
-      if (line.find("$MeshFormat") == static_cast<std::string::size_type>(0)) {
-        filein >> version >> format >> size;
-        if ((version != 2.0) && (version != 2.1) && (version != 2.2)) {
-          std::cerr << "Error: Unknown .msh file version " << version << "\n";
-          exit(1);
-        }
+  // Convert the coordinates to the internal datastrucutre
+  nodes->resize(nodeTags.size());
 
-        // we only support reading of ascii format, so issue error if this
-        // condition is not met
-        if (format) {
-          std::cerr << "Error: Format of .msh is possibly binary which is not"
-                       " supported currently.\n ";
-          exit(1);
-        }
-      }
-      // read $Nodes block
-      if (line.find("$NOD") == static_cast<std::string::size_type>(0) ||
-          line.find("$NOE") == static_cast<std::string::size_type>(0) ||
-          line.find("$Nodes") == static_cast<std::string::size_type>(0)) {
-        read_nodes = true;
-        unsigned int num_nodes = 0;
-        filein >> num_nodes;
 
-        // allocate space
-        nodes->resize(num_nodes);
-        nec->resize(num_nodes);
 
-        // read in the nodal coordinates and form points.
-        double x, y, z;
-        unsigned int id;
+  for (size_t i = 0 ; i < nodeTags.size() ; i++ )
+    {
+    size_t index = (nodeTags[i]-1) * 3;
+    (*nodes)[nodeTags[i] - 1] = util::Point3(nodeCoords[index], nodeCoords[index+1], nodeCoords[index+2]);
+    }
 
-        // add the nodal coordinates to the filein
-        for (unsigned int i = 0; i < num_nodes; ++i) {
-          filein >> id >> x >> y >> z;
-          (*nodes)[id - 1] = util::Point3(x, y, z);
-        }
-        // read the $ENDNOD delimiter
-        std::getline(filein, line);
-      }  // end of reading nodes
-         // Read the element block
-      else if (line.find("$ELM") == static_cast<std::string::size_type>(0) ||
-               line.find("$Elements") ==
-                   static_cast<std::string::size_type>(0)) {
-        read_elements = true;
+  
+ 
+  // Check for element types
+  // 2 = 3-node triangle
+  // 3 = 4-node square
 
-        // For reading the number of elements and the node ids from the stream
-        unsigned int num_elem = 0;
-        unsigned int node_id = 0;
+  size_t type = 0;
+  size_t element_id;
+  
+  auto f2 = std::find(elemTypes.begin(),elemTypes.end(),2);
+  auto f3 = std::find(elemTypes.begin(),elemTypes.end(),3);
 
-        // read how many elements are there
-        // this includes point element, line element also
-        filein >> num_elem;
+  if (f2 !=  elemTypes.end()){
+    type = 2;
+    element_id = f2 - elemTypes.begin();
+    element_type = util::vtk_type_triangle; 
+  }
+  else if (f3 !=  elemTypes.end()){
+    type = 3;
+    element_id = f3 - elemTypes.begin();
+    element_type = util::vtk_type_quad;
+    }
 
-        // As of version 2.2, the format for each element line is:
-        // elm-number elm-type number-of-tags < tag > ... node-number-list
+  if ( f2 !=  elemTypes.end() and f3 !=  elemTypes.end() )
+    std::cerr << "Error: Only mesh with one type of elements is supported!" << std::endl ;
+  
 
-        // read the elements
-        size_t elem_counter = 0;
-        bool found_tri = false;
-        bool found_quad = false;
-        bool found_tet = false;
-        for (unsigned int iel = 0; iel < num_elem; ++iel) {
-          unsigned int id;
-          unsigned int type;
-          unsigned int ntags;
-          int tag;
-          filein >> id >> type >> ntags;
-          for (unsigned int j = 0; j < ntags; j++) filein >> tag;
+  if (type == 0)
+    {
+      std::cerr << "Error: Only 3-node triangle or 4-node square elements are supported!" << std::endl;
+      exit(1);
+    }
 
-          // we will read only those elements which we support
-          bool read_this_element = false;
 
-          // read element type we desire and for other element type
-          // perform dummy read
-          if (type == util::msh_type_triangle and dim == 2) {
-            read_this_element = true;
-            found_tri = true;
-            element_type = util::vtk_type_triangle;
-            num_nodes_con =
-                util::msh_map_element_to_num_nodes[util::msh_type_triangle];
-          } else if (type == util::msh_type_quadrangle and dim == 2) {
-            read_this_element = true;
-            found_quad = true;
-            element_type = util::vtk_type_quad;
-            num_nodes_con =
-                util::msh_map_element_to_num_nodes[util::msh_type_quadrangle];
-          } else if (type == util::msh_type_tetrahedron and dim == 3) {
-            read_this_element = true;
-            found_tet = true;
-            element_type = util::vtk_type_tetra;
-            num_nodes_con =
-                util::msh_map_element_to_num_nodes[util::msh_type_tetrahedron];
-          }
+  nec->resize(elemNodeTags[element_id].size());
 
-          // std::vector<size_t> e_nodes;
-          if (read_this_element) {
-            // read vertex of this element
-            for (unsigned int i = 0; i < num_nodes_con; i++) {
-              filein >> node_id;
-              // add to the element-node connectivity
-              // substract 1 to correct the numbering convention
-              enc->push_back(node_id - 1);
 
-              // e_nodes.push_back(node_id - 1);
+  size_t con_size = 0;
 
-              // fill the node-element connectivity table
-              (*nec)[node_id - 1].push_back(elem_counter);
-            }
+  if ( type == 2)
+      con_size = 3;
 
-            // debug
-            //            std::cout << "(" << id << ", " << type << ", " <<
-            //            elem_counter
-            //                      << ") = ";
-            //            for (auto enode: e_nodes)
-            //              std::cout << enode << ";";
-            //            std::cout << "\n";
+    if ( type == 3)
+      con_size = 4;
 
-            // increment the element counter
-            elem_counter++;
-          } else {
-            // these are the type of elements we need to ignore.
-            size_t n = util::msh_map_element_to_num_nodes[type];
-            // dummy read
-            for (unsigned int i = 0; i < n; i++) filein >> node_id;
-          }
-        }  // element loop
 
-        // check if mesh contains both triangle and quadrangle elements
-        if (found_quad and found_tri) {
-          std::cerr << "Error: Check mesh file. It appears to have both "
-                       "quadrangle elements and triangle elements. "
-                       "Currently we only support one kind of elements.\n";
-          exit(1);
-        }
+    
+    size_t elem_counter = 0;
+    //for (size_t i = 0 ; i < elemNodeTags.size() ; i++)
+    for (size_t j = 0 ; j < elemNodeTags[element_id].size() ; j++)
+    {
+      
+      enc->push_back(elemNodeTags[element_id][j] - 1);
+      (*nec)[elemNodeTags[element_id][j] - 1].push_back(elem_counter);
 
-        // write the number of elements
-        num_elems = elem_counter;
+      if ((j + 1) % con_size == 0)
+        elem_counter++;
+    }
+    num_elems = elemNodeTags[element_id].size(); 
 
-        // read the $ENDELM delimiter
-        std::getline(filein, line);
-      }  // end of reading elements
-    }    // if filein
 
-    // If !filein, check to see if EOF was set.  If so, break out
-    // of while loop.
-    if (filein.eof()) break;
-
-    if (read_nodes and read_elements) break;
-
-    // If !filein and !filein.eof(), stream is in a bad state!
-    // std::cerr<<"Error: Stream is bad! Perhaps the file does not exist?\n";
-    // exit(1);
-  }  // while true
-
-  // close file
-  filein.close();
+    gmsh::clear();
+    gmsh::finalize();
+ 
 }
 
 void rw::reader::MshReader::readNodes(std::vector<util::Point3> *nodes) {
@@ -227,72 +139,34 @@ void rw::reader::MshReader::readNodes(std::vector<util::Point3> *nodes) {
     exit(1);
   }
 
-  std::string line;
-  int format = 0;
-  int size = 0;
-  double version = 1.0;
+
+  gmsh::initialize();
+  gmsh::option::setNumber("General.Terminal", 1);
+  gmsh::open(d_filename);
 
   // clear data
   nodes->clear();
-  bool read_nodes = false;
 
-  while (true) {
-    std::getline(d_file, line);
-    if (d_file) {
-      // // read $MeshFormat block
-      if (line.find("$MeshFormat") == static_cast<std::string::size_type>(0)) {
-        d_file >> version >> format >> size;
-        if ((version != 2.0) && (version != 2.1) && (version != 2.2)) {
-          std::cerr << "Error: Unknown .msh file version " << version << "\n";
-          exit(1);
-        }
+    // getting all nodes using GMSH API
+  std::vector<std::size_t> nodeTags;
+  std::vector<double> nodeCoords, nodeParams;
+  gmsh::model::mesh::getNodes(nodeTags, nodeCoords, nodeParams, -1, -1);
 
-        // we only support reading of ascii format, so issue error if this
-        // condition is not met
-        if (format) {
-          std::cerr << "Error: Format of .msh is possibly binary which is not"
-                       " supported currently.\n ";
-          exit(1);
-        }
-      }
-      // read $Nodes block
-      if (line.find("$NOD") == static_cast<std::string::size_type>(0) ||
-          line.find("$NOE") == static_cast<std::string::size_type>(0) ||
-          line.find("$Nodes") == static_cast<std::string::size_type>(0)) {
-        read_nodes = true;
-        unsigned int num_nodes = 0;
-        d_file >> num_nodes;
+  // Convert the coordinates to the internal datastrucutre
+  nodes->resize(nodeTags.size());
 
-        // allocate space
-        nodes->resize(num_nodes);
+  for (size_t i = 0 ; i < nodeTags.size() ; i++ )
+    {
+    
+    std::cout << nodeTags[i] << std::endl;
+    size_t index = (nodeTags[i]-1) * 3;
+    (*nodes)[nodeTags[i] - 1] = util::Point3(nodeCoords[index], nodeCoords[index+1], nodeCoords[index+2]);
+    }
 
-        // read in the nodal coordinates and form points.
-        double x, y, z;
-        unsigned int id;
 
-        // add the nodal coordinates to the d_file
-        for (unsigned int i = 0; i < num_nodes; ++i) {
-          d_file >> id >> x >> y >> z;
-          (*nodes)[id - 1] = util::Point3(x, y, z);
-        }
-        // read the $ENDNOD delimiter
-        std::getline(d_file, line);
-      }  // end of reading nodes
-    }    // if d_file
-
-    // If !d_file, check to see if EOF was set.  If so, break out
-    // of while loop.
-    if (d_file.eof()) break;
-
-    if (read_nodes) break;
-
-    // If !d_file and !d_file.eof(), stream is in a bad state!
-    // std::cerr<<"Error: Stream is bad! Perhaps the file does not exist?\n";
-    // exit(1);
-  }  // while true
-
-  // close file
-  d_file.close();
+    gmsh::clear();
+    gmsh::finalize();
+  
 }
 
 bool rw::reader::MshReader::readPointData(const std::string &name,

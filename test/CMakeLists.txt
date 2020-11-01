@@ -68,3 +68,16 @@ add_test(NAME tools.mesh.2d
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/mesh -i input_mesh.yaml -d 2
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/tools/mesh/uniform_triangle
 )
+
+# Read 2D traingle mesh generate with gmsh
+add_test(NAME mesh.2d.read.triangle.gmsh
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/NLMech -i input_2d_gmsh_triangle.yaml --hpx:threads=1
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/io
+)
+
+# Read 2D traingle mesh generate with gmsh
+add_test(NAME mesh.2d.read.quad.gmsh
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/NLMech -i input_2d_gmsh_quad.yaml --hpx:threads=1
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/io
+)
+
