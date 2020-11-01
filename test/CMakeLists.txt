@@ -75,3 +75,9 @@ add_test(NAME mesh.2d.read.triangle.gmsh
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/io
 )
 
+# Read 2D traingle mesh generate with gmsh
+add_test(NAME mesh.2d.read.quad.gmsh
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/NLMech -i input_2d_gmsh_quad.yaml --hpx:threads=1
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/io
+)
+

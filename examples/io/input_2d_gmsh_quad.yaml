@@ -1,0 +1,33 @@
+Model: 
+  Dimension: 2 
+  Discretization_Type:
+    Spatial: finite_difference
+    Time: quasi_static
+  Final_Time: 1 
+  Time_Steps: 1
+  Horizon: 0.5
+  Horizon_h_Ratio: 5
+Mesh: 
+  File: mesh_2d_quad.msh 
+Material: 
+  Type: ElasticState 
+  Density: 1200
+  Compute_From_Classical: true 
+  K: 4000.0 
+  G: 1500.0
+  Is_Plane_Strain: False
+  Influence_Function: 
+    Type: 1 
+Solver:
+  Type: BiCGSTAB
+  Max_Iteration: 200
+  Tolerance: 1e-6
+  Perturbation: 1e-7
+Output: 
+  Path: ./ 
+  Tags: 
+    - Node_Volume 
+  Output_Interval: 1 
+  Compress_Type: zlib 
+HPX: 
+    Partitions: 1 
