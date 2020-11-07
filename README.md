@@ -12,7 +12,20 @@ Logo below has been obtained by running Peridynamic simulation on the logo mesh,
 
 ## Building 
 
-The code uses [CMake](https://cmake.org/) as the build system and has following dependencies: [HPX](https://github.com/STEllAR-GROUP/hpx), [Blaze](https://bitbucket.org/blaze-lib/blaze/src/master/), [Blaze_Iterative](https://github.com/STEllAR-GROUP/BlazeIterative), [Boost](https://www.boost.org/), [VTK](https://www.vtk.org), and [YAML-CPP](https://github.com/jbeder/yaml-cpp).
+The code uses 
+
+* [CMake](https://cmake.org/) 3.10
+
+as the build system and has following dependencies: 
+
+* [HPX](https://github.com/STEllAR-GROUP/hpx) 1.5.1
+* [Blaze](https://bitbucket.org/blaze-lib/blaze/src/master/) 3.8,  
+* [Blaze_Iterative](https://github.com/STEllAR-GROUP/BlazeIterative) master, 
+* [Boost](https://www.boost.org/) 1.73, 
+* [VTK](https://www.vtk.org) 8.2, and 
+* [YAML-CPP](https://github.com/jbeder/yaml-cpp) 0.6.3.
+
+Note that the above provided versions are the minimal rquired versions and we recommend to use these to build the code. 
 
 We provide following support to build the code
 
