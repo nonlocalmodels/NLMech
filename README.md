@@ -21,7 +21,8 @@ as the build system and has following dependencies:
 * [HPX](https://github.com/STEllAR-GROUP/hpx) 1.5.1
 * [Blaze](https://bitbucket.org/blaze-lib/blaze/src/master/) 3.8,  
 * [Blaze_Iterative](https://github.com/STEllAR-GROUP/BlazeIterative) master, 
-* [Boost](https://www.boost.org/) 1.73, 
+* [Boost](https://www.boost.org/) 1.73,
+* [gmsh](https://gmsh.info/) 4.6,
 * [VTK](https://www.vtk.org) 8.2, and 
 * [YAML-CPP](https://github.com/jbeder/yaml-cpp) 0.6.3.
 
