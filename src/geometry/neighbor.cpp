@@ -19,7 +19,7 @@ geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
     : d_neighborDeck_p(deck) {
   d_neighbors.resize(nodes->size());
 
-  auto f = hpx::parallel::for_loop(
+  auto f = hpx::for_loop(
       hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
       nodes->size(), [this, horizon, nodes](boost::uint64_t i) {
         //  for (size_t i=0; i<nodes->size(); i++) {
