@@ -14,17 +14,17 @@ Logo below has been obtained by running Peridynamic simulation on the logo mesh,
 
 The code uses 
 
-* [CMake](https://cmake.org/) 3.10
+  * [CMake](https://cmake.org/) 3.10
 
 as the build system and has following dependencies: 
 
-* [HPX](https://github.com/STEllAR-GROUP/hpx) 1.5.1
-* [Blaze](https://bitbucket.org/blaze-lib/blaze/src/master/) 3.8,  
-* [Blaze_Iterative](https://github.com/STEllAR-GROUP/BlazeIterative) master, 
-* [Boost](https://www.boost.org/) 1.73,
-* [gmsh](https://gmsh.info/) 4.6,
-* [VTK](https://www.vtk.org) 8.2, and 
-* [YAML-CPP](https://github.com/jbeder/yaml-cpp) 0.6.3.
+  * [HPX](https://github.com/STEllAR-GROUP/hpx) 1.5.1
+  * [Blaze](https://bitbucket.org/blaze-lib/blaze/src/master/) 3.8,  
+  * [Blaze_Iterative](https://github.com/STEllAR-GROUP/BlazeIterative) master, 
+  * [Boost](https://www.boost.org/) 1.73,
+  * [gmsh](https://gmsh.info/) 4.6,
+  * [VTK](https://www.vtk.org) 8.2, and 
+  * [YAML-CPP](https://github.com/jbeder/yaml-cpp) 0.6.3.
 
 Note that the above provided versions are the minimal rquired versions and we recommend to use these to build the code. 
 
