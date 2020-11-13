@@ -61,5 +61,7 @@ The source code is released under the [![GitHub license](https://img.shields.io/
 NLMech has been funded by:
 
 *  Army Research Office Grant # W911NF-16-1-0456
+*  Canada Research Chairs Program under the Canada Research Chair in Multiscale Modelling of Advanced Aerospace Materials held by M. Lévesque; Natural Sciences and Engineering Research Council of Canada (NSERC) Discovery Grants Program under Discovery Grant RGPIN-2016-06412.
+
 
 
