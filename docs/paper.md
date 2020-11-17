@@ -7,7 +7,7 @@ tags:
   - Asynchronous many-task systems
   - 
 authors:
-  - name: Patrick Diehl^[patrickdiehl@lsu.edu]
+  - name: Patrick Diehl
     orcid: 0000-0003-0872-7098
     affiliation: 1
 affiliations:
