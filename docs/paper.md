@@ -27,7 +27,7 @@ bibliography: paper.bib
 NLMech was used for following applications:
 
 * Numerical convergence of finite difference approximations for state based perdidynamic fracture
-models 
+models [@jha2019numerical] 
 * Complex fracture nucleation and evoluation with nonlocal elastodynamics
 * Free damage propogation with memory
 * Kinext relations and local energy balance for linear elastic fracture mechancis from a
@@ -42,7 +42,7 @@ NLMech has been funded by:
 *  Army Research Office Grant # W911NF-16-1-0456
 *  Canada Research Chairs Program under the Canada Research Chair in Multiscale Modelling of Advanced Aerospace Materials held by M. Lévesque; Natural Sciences and Engineering Research Council of Canada (NSERC) Discovery Grants Program under Discovery Grant RGPIN-2016-06412.
 
-For a updated list of previous and current funding, we refer to the corresponding [NLMech website](https://github.com/nonlocalmodels/NLMech#acknowledgements0.
+For a updated list of previous and current funding, we refer to the corresponding [NLMech website](https://github.com/nonlocalmodels/NLMech#acknowledgements).
 
 
 # References
