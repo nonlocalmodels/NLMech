@@ -10,17 +10,9 @@ authors:
   - name: Patrick Diehl^[patrickdiehl@lsu.edu]
     orcid: 0000-0003-0872-7098
     affiliation: 1
-  - name: Author Without ORCID
-    affiliation: 2
-  - name: Author with no affiliation
-    affiliation: 3
 affiliations:
  - name: Center for Computation \& Technology, Lousiana State University 
    index: 1
- - name: Institution Name
-   index: 2
- - name: Independent Researcher
-   index: 3
 date: 13 August 2017
 bibliography: paper.bib
 
