@@ -28,10 +28,10 @@ NLMech was used for following applications:
 
 * Numerical convergence of finite difference approximations for state based perdidynamic fracture
 models [@jha2019numerical] 
-* Complex fracture nucleation and evoluation with nonlocal elastodynamics
-* Free damage propogation with memory
+* Complex fracture nucleation and evoluation with nonlocal elastodynamics [@lipton2019complex]
+* Free damage propogation with memory [@lipton2018free] 
 * Kinext relations and local energy balance for linear elastic fracture mechancis from a
-nonlocal peridynamic model
+nonlocal peridynamic model [@jha2020kinetic]
 
 For a updated list of applications, we refer to corresponding [NLMech documentation](https://nonlocalmodels.github.io/publications/).
 
