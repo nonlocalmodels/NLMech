@@ -16,7 +16,7 @@ jobs:
                 command: | 
                   mkdir -p build 
                   cd build 
-                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DEnable_Tools=ON ..
+                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DEnable_Tools=ON -DEnable_RPM=ON ..
             - run:
                 name: Build
                 command: |  
