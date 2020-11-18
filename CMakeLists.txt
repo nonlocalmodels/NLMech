@@ -161,7 +161,19 @@ add_subdirectory(docs)
 endif()
 
 ##############################################################################
+# Build RPM
+##############################################################################
+set(Enable_RPM FALSE CACHE BOOL "Generates target for generating a rpm package")
+if(${Enable_RPM})
+add_subdirectory(cmake/packaging)
+endif()
+
+
+##############################################################################
 # Build NLMech
 ##############################################################################
 add_hpx_executable(NLMech SOURCES src/main.cpp 
                    DEPENDENCIES Inp Model ${LAPACK_LIBRARIES})
+
+
+

@@ -16,7 +16,7 @@ jobs:
                 command: | 
                   mkdir -p build 
                   cd build 
-                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DEnable_Tools=ON ..
+                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DEnable_Tools=ON -DEnable_RPM=ON ..
             - run:
                 name: Build
                 command: |  
@@ -32,6 +32,16 @@ jobs:
                 command: |
                   cd build
                   make doc
+            - run:
+                name: Generate RPM package
+                command: |
+                  mkdir final
+                  cd build
+                  cpack -G RPM
+                  cp *.rpm ../final
+            - store_artifacts:
+                path: final
+                destination: packages
     codecoverage:
       docker: 
         - image: diehlpk/nonlocalmodels:baseimage
@@ -137,7 +147,8 @@ workflows:
               branches:
                 ignore: gh-pages
             requires:
-              - build
+              - codecoverage
+              - documentation
       - documentation:
             filters:
               branches:
