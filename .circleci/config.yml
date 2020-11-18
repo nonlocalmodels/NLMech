@@ -32,6 +32,11 @@ jobs:
                 command: |
                   cd build
                   make doc
+            - run:
+                name: Generate RPM package
+                command: |
+                  cd build
+                  cpack -G RPM
     codecoverage:
       docker: 
         - image: diehlpk/nonlocalmodels:baseimage
