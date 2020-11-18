@@ -35,8 +35,13 @@ jobs:
             - run:
                 name: Generate RPM package
                 command: |
+                  mkdir final
                   cd build
                   cpack -G RPM
+                  cp *.rpm ../final
+            - store_artifacts:
+                path: final
+                destination: packages
     codecoverage:
       docker: 
         - image: diehlpk/nonlocalmodels:baseimage
