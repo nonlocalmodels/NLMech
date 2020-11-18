@@ -137,7 +137,8 @@ workflows:
               branches:
                 ignore: gh-pages
             requires:
-              - build
+              - codecoverage
+              - documentation
       - documentation:
             filters:
               branches:
