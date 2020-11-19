@@ -18,7 +18,7 @@ bibliography: paper.bib
 
 ---
 
-![NLMech's logo which shows the obtained damage of a peridynamic simulation.\label{fig:logo}](../assets/logo/logo_sims_transparent.png)
+![NLMech's logo which shows the obtained damage of a peridynamic simulation.\label{fig:logo}](../assets/logo/logo_joss.png)
 
 
 
