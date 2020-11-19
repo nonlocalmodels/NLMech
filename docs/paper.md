@@ -20,6 +20,16 @@ bibliography: paper.bib
 
 # Summary
 
+
+Following materials models are implemented:
+
+* Elastic state-based PD model [@silling2007peridynamic],
+* Prototype micro-elastic brittle bond-based PD model [@silling2005meshfree],
+* Nonlinear bond-based PD model [@lipton2014dynamic,@lipton2016cohesive], and
+* Nonlocal Double Well state-based peridynamic model [@Lipton2018].
+
+For example input files for these model, we refer to the collection of [examples](https://nonlocalmodels.github.io/examples/) in the documentation.
+
 # Statement of need
 
 Nonlocal models, like peridyanmics, are computaitonal expensive, like molecular dynamics or smoothed-particle hydrodynamics. Serveral 
