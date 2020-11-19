@@ -18,7 +18,7 @@ bibliography: paper.bib
 
 ---
 
-![Caption for example figure.\label{fig:logo}](../assets/logo/logo_sims_transparent.png)
+![NLMech's logo which shows the obtained damage of a peridynamic simulation. For the input files and more details we refer to the collection of [examples](https://nonlocalmodels.github.io/examples/).\label{fig:logo}](../assets/logo/logo_sims_transparent.png)
 
 
 # Summary
