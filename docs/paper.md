@@ -22,6 +22,9 @@ bibliography: paper.bib
 
 # Statement of need
 
+Nonlocal models, like peridyanmics, are computaitonal expensive, like molecular dynamics or smoothed-particle hydrodynamics. Serveral 
+publications of GPU-based implementations [@mossaiby2017opencl,@diehl2012implementierung,@diehl2015efficient] and one commerical implementation in LS-DYNA [@ren20173d] can be found in literature. However, 
+from an open source perspective only two other peridynamic implementations: [Peridigm](https://github.com/peridigm/peridigm) [@littlewood2015roadmap] and [PDLammps](https://lammps.sandia.gov/doc/pair_peri.html) [@parks2008implementing], are available. Both of these codes rely on the Message Passing Interface (MPI).
 
 
 # Applications 
