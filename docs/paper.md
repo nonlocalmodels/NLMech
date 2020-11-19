@@ -20,12 +20,9 @@ bibliography: paper.bib
 
 ![NLMech's logo which shows the obtained damage of a peridynamic simulation.\label{fig:logo}](../assets/logo/logo_joss.png)
 
-
-
+# Summary
 
 For the input files and more details we refer to the collection of [examples](https://nonlocalmodels.github.io/examples/).
-
-# Summary
 
 
 Following materials models are implemented:
@@ -41,7 +38,7 @@ For example input files for these models, we refer to the collection of [example
 
 Nonlocal models, like peridyanmics, are computaitonal expensive, like molecular dynamics or smoothed-particle hydrodynamics. Serveral 
 publications of GPU-based implementations [@mossaiby2017opencl,@diehl2012implementierung,@diehl2015efficient] and one commerical implementation in LS-DYNA [@ren20173d] can be found in literature. However, 
-from an open source perspective only two other peridynamic implementations: [Peridigm](https://github.com/peridigm/peridigm) [@littlewood2015roadmap] and [PDLammps](https://lammps.sandia.gov/doc/pair_peri.html) [@parks2008implementing], are available. Both of these codes rely on the Message Passing Interface (MPI).
+from an open source perspective only two other peridynamic implementations: [Peridigm](https://github.com/peridigm/peridigm) [@littlewood2015roadmap] and [PDLammps](https://lammps.sandia.gov/doc/pair_peri.html) [@parks2008implementing], are available. Both of these codes rely on the Message Passing Interface (MPI). Second, the code implements the nonlinear bond-based and the nonlocal Double Well state-based model. The benefit of these models is that results from numerical analysis [@jha2019numerical,@jha2020kinetic] are available. 
 
 # Applications 
 
