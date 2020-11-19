@@ -1,11 +1,11 @@
 ---
-title: 'Gala: A Python package for galactic dynamics'
+title: 'NLMech: Implementation of finite element and finite difference approximation of Nonlocal models'
 tags:
   - Peridynamics
   - Finite difference
+  - Finite element
   - HPX
   - Asynchronous many-task systems
-  - 
 authors:
   - name: Patrick Diehl
     orcid: 0000-0003-0872-7098
