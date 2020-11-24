@@ -30,11 +30,12 @@ bibliography: paper.bib
 The open source code *NLMech* is an implementation of finite element and finite difference approximation of nonlocal models, \emph{e.g.}\ peridynamic. Peridyanmic (PD) [@silling2007peridynamic,@silling2005meshfree] is a nonlocal formulation of classical continnum mechanics wit a focus on 
 disconintuties as they arise at crack and fractures. Sucessfull comparision against a variaty of experiments have been done [@diehl2019review]. The governing equation of montion for bond-based PD [@silling2005meshfree] reads as
 
+$$ \varrho(\mathbf{X})\ddot{\mathbf{u}}(t,\mathbf{X}) = \int\limits_{B_\delta(\mathbf{X})}\mathbf{f}(\mathbf{u}(t,\mathbf{X}')-\mathbf{u}(t,\mathbf{X}),\mathbf{X}'-\mathbf{X}) d\mathbf{X}' + \mathbf{b}(t,\mathbf{X}) \text{ in } \Omega$$
 
 and the governing equaiton for state-based PD [@silling2007peridynamic] reads as 
 
 
-The constitutive law of the material is described in the pair-wise force function f or the PD state T. Following materials models are implemented:
+The constitutive law of the material is described in the pair-wise force function $\mathbf{f}$ or the PD state $\underline{\mathbf{T}}$. Following materials models are implemented:
 
 * Elastic state-based PD model [@silling2007peridynamic],
 * Prototype micro-elastic brittle bond-based PD model [@silling2005meshfree],
