@@ -35,9 +35,7 @@ $$ \varrho(\mathbf{X})\ddot{\mathbf{u}}(t,\mathbf{X}) = \int\limits_{B_\delta(\m
 and the governing equaiton for state-based PD [@silling2007peridynamic] reads as 
 
 $$  \varrho (\mathbf{X})\ddot{\mathbf{u}}(t,\mathbf{X}) =  \int\limits_{B_\delta(\mathbf{X})} (T[\mathbf{X},t]\langle \mathbf{X}' - \mathbf{X} \rangle - T[\mathbf{X}',t]\langle \mathbf{X} - \mathbf{X}' \rangle) d\mathbf{X}' + \mathbf{b}(t,\mathbf{X}) \text{ in } \Omega \text{.} $$
-
-
-The constitutive law of the material is described in the pair-wise force function $\mathbf{f}$ or the PD state $\underline{\mathbf{T}}$. Following materials models are implemented:
+Where $\varrho$ is the material's density, $\ddot{\mathbf{u}}$ is the acceleration, and $\mathbf{b}(t,\mathbf{X})$ is the external force density. The constitutive law of the material is described in the pair-wise force function $\mathbf{f}$ or the PD state $T$. Following materials models are implemented:
 
 * Elastic state-based PD model [@silling2007peridynamic],
 * Prototype micro-elastic brittle bond-based PD model [@silling2005meshfree],
