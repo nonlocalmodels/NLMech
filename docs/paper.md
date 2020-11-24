@@ -10,9 +10,14 @@ authors:
   - name: Patrick Diehl
     orcid: 0000-0003-0872-7098
     affiliation: 1
+  - name: Prashant K. Jha
+    orcid: 0000-0003-2158-364X
+    affiliation: 2
 affiliations:
  - name: Center for Computation \& Technology, Lousiana State University 
    index: 1
+ - name: Oden Institute for Computational Engineering and Sciences, The University of Texas at Austin 
+   index: 2
 date: 13 August 2017
 bibliography: paper.bib
 
