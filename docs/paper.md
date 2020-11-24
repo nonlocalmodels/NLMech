@@ -24,7 +24,6 @@ bibliography: paper.bib
 
 For the input files and more details we refer to the collection of [examples](https://nonlocalmodels.github.io/examples/).
 
-
 Following materials models are implemented:
 
 * Elastic state-based PD model [@silling2007peridynamic],
@@ -52,6 +51,8 @@ models [@jha2019numerical]
 nonlocal peridynamic model [@jha2020kinetic]
 
 For a updated list of applications, we refer to corresponding [NLMech documentation](https://nonlocalmodels.github.io/publications/).
+
+NLMech utilizes relies on following open source software: HPX, 
 
 # Acknowledgements
 
