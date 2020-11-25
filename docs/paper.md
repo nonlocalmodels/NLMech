@@ -27,7 +27,7 @@ bibliography: paper.bib
 
 # Summary
 
-The open source code *NLMech* is an implementation of finite element and finite difference approximation of nonlocal models, \emph{e.g.}\ peridynamic. Peridyanmic (PD) [@silling2007peridynamic,@silling2005meshfree] is a nonlocal formulation of classical continuum mechanics wit a focus on 
+The open source code *NLMech* is an implementation of finite element and finite difference approximation of nonlocal models, \emph{e.g.}\ peridynamic. Peridynamic (PD) [@silling2007peridynamic,@silling2005meshfree] is a nonlocal formulation of classical continuum mechanics wit a focus on 
 discontinuities as they arise at crack and fractures. Successful comparison against a variety of experiments have been done [@diehl2019review]. The governing equation of motion for bond-based PD [@silling2005meshfree] reads as
 
 $$ \varrho(\mathbf{X})\ddot{\mathbf{u}}(t,\mathbf{X}) = \int\limits_{B_\delta(\mathbf{X})}\mathbf{f}(\mathbf{u}(t,\mathbf{X}')-\mathbf{u}(t,\mathbf{X}),\mathbf{X}'-\mathbf{X}) d\mathbf{X}' + \mathbf{b}(t,\mathbf{X}) \text{ in } D$$
