@@ -44,10 +44,10 @@ Where $\varrho$ is the material's density, $\ddot{\mathbf{u}}$ is the accelerati
 
 For example input files for these models, we refer to the collection of [examples](https://nonlocalmodels.github.io/examples/) in the documentation.
 
-For the discretization in space two discretization schemes: \textit{1)} a finite difference approximation and \text{2)} a finite element approximation is implemented. We briefly introduce the finite difference scheme and for the more complex finite element, we refer for the sake of keeping the paper short to [].
+For the discretization in space two schemes: \textit{1)} a finite difference approximation and \text{2)} a finite element approximation is implemented. We briefly introduce the finite difference scheme and for the more complex finite element, we refer for the sake of keeping the paper short to [].
 
 
-For the discretization in time following integration schemes are available: 
+For the discretization in time following two schemes are available: \textit{1)} implicit time integration and \textit{2)} explicit time integration using a central difference scheme and velocity verlet scheme.
 
 NLMech utilizes relies on following open source software: HPX [@Kaiser2020], Blaze [@iglberger2012high], Blaze_Iterative, Gmsh [@geuzaine2009gmsh], VTK [@schroeder2004visualization], and yaml-cpp. For details 
 about the specific version, we refer to NLMech's [documentation](https://github.com/nonlocalmodels/NLMech#building).
