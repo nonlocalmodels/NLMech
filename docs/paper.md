@@ -62,13 +62,7 @@ For the discretization in time following two schemes are available: \textit{1)} 
 NLMech utilizes relies on following open source software: HPX [@Kaiser2020], Blaze [@iglberger2012high], Blaze_Iterative, Gmsh [@geuzaine2009gmsh], VTK [@schroeder2004visualization], and yaml-cpp. For details 
 about the specific version, we refer to NLMech's [documentation](https://github.com/nonlocalmodels/NLMech#building).
 
-# Statement of need
-
-Nonlocal models, like peridynamic, are computational expensive, like molecular dynamics or smoothed-particle hydrodynamics. Several 
-publications of GPU-based implementations [@mossaiby2017opencl,@diehl2012implementierung,@diehl2015efficient] and one commercial implementation in LS-DYNA [@ren20173d] can be found in literature. However, 
-from an open source perspective only two other peridynamic implementations: [Peridigm](https://github.com/peridigm/peridigm) [@littlewood2015roadmap] and [PDLammps](https://lammps.sandia.gov/doc/pair_peri.html) [@parks2008implementing], are available. Both of these codes rely on the Message Passing Interface (MPI). On modern super computers' many core architectures where the threads per computational node increase, it is more and more important to focus on the fine-grain parallelism with increasing cores per computational nodes. NLMech utilizes the C++ standard library for parallelism and concurrency (HPX) [@Kaiser2020] to address this challenge. For more details about use utilization of asynchronous many-task systems, we refer to [@diehl2018implementation]. Second, the code implements the nonlinear bond-based and the nonlocal Double Well state-based model. The benefit of these models is that results from numerical analysis [@jha2019numerical,@jha2020kinetic] are available. Todo: Prashant elaborate here.
-
-# Applications 
+## Applications 
 
 NLMech was used for following applications:
 
@@ -80,6 +74,17 @@ models [@jha2019numerical]
 nonlocal peridynamic model [@jha2020kinetic]
 
 For a updated list of applications, we refer to corresponding [NLMech documentation](https://nonlocalmodels.github.io/publications/).
+
+## Numerical analysis
+
+
+
+
+# Statement of need
+
+Nonlocal models, like peridynamic, are computational expensive, like molecular dynamics or smoothed-particle hydrodynamics. Several 
+publications of GPU-based implementations [@mossaiby2017opencl,@diehl2012implementierung,@diehl2015efficient] and one commercial implementation in LS-DYNA [@ren20173d] can be found in literature. However, 
+from an open source perspective only two other peridynamic implementations: [Peridigm](https://github.com/peridigm/peridigm) [@littlewood2015roadmap] and [PDLammps](https://lammps.sandia.gov/doc/pair_peri.html) [@parks2008implementing], are available. Both of these codes rely on the Message Passing Interface (MPI). On modern super computers' many core architectures where the threads per computational node increase, it is more and more important to focus on the fine-grain parallelism with increasing cores per computational nodes. NLMech utilizes the C++ standard library for parallelism and concurrency (HPX) [@Kaiser2020] to address this challenge. For more details about use utilization of asynchronous many-task systems, we refer to [@diehl2018implementation]. Second, the code implements the nonlinear bond-based and the nonlocal Double Well state-based model. The benefit of these models is that results from numerical analysis [@jha2019numerical,@jha2020kinetic] are available. Todo: Prashant elaborate here.
 
 # Acknowledgments
 
