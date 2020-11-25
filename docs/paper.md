@@ -44,7 +44,7 @@ Where $\varrho$ is the material's density, $\ddot{\mathbf{u}}$ is the accelerati
 
 For example input files for these models, we refer to the collection of [examples](https://nonlocalmodels.github.io/examples/) in the documentation.
 
-For the discretization in space two schemes: \textit{1)} a finite difference approximation and \text{2)} a finite element approximation is implemented. We briefly introduce the finite difference scheme and for the more complex finite element, we refer for the sake of keeping the paper short to []. Figure \autoref{fig:discrete} shows the domain D discretized with the nodes $X = \{ X_i \in \mathbb{R}^3 \vert i=1,\ldots,n\}$ which the associated surronding volumes $V = \{ V_i \in \mathbb{R} \vert i=1,\ldots,n\}$. All discrete nodes $X_i$ interact with all other discrete nodes within their interaction zone $B_{\delta(X_i)}:= \{ x_j \vert \, \vert\vert X_j - X_i \vert\vert < \delta \} $.
+For the discretization in space two schemes: \textit{1)} a finite difference approximation and \text{2)} a finite element approximation is implemented. We briefly introduce the finite difference scheme and for the more complex finite element, we refer for the sake of keeping the paper short to []. Figure \autoref{fig:discrete} shows the domain D discretized with the nodes $X = \{ X_i \in \mathbb{R}^3 \vert i=1,\ldots,n\}$ which the associated surronding volumes $V = \{ V_i \in \mathbb{R} \vert i=1,\ldots,n\}$. All discrete nodes $X_i$ interact with all other discrete nodes within their interaction zone $B_{\delta(X_i)}:=$.
 
 
 ![ Adpated from [@Diehl2020].\label{fig:discrete}](discrete.pdf)
