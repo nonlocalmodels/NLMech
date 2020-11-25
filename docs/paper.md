@@ -36,7 +36,7 @@ $$ \varrho(\mathbf{X})\ddot{\mathbf{u}}(t,\mathbf{X}) = \int\limits_{B_\delta(\m
 and the governing equation for the state-based PD [@silling2007peridynamic] reads as 
 
 $$  \varrho (\mathbf{X})\ddot{\mathbf{u}}(t,\mathbf{X}) =  \int\limits_{B_\delta(\mathbf{X})} (T[\mathbf{X},t]\langle \mathbf{X}' - \mathbf{X} \rangle - T[\mathbf{X}',t]\langle \mathbf{X} - \mathbf{X}' \rangle) d\mathbf{X}' + \mathbf{b}(t,\mathbf{X}) \text{ in } D \text{.} $$
-Where $\varrho$ is the material's density, $\ddot{\mathbf{u}}$ is the acceleration, and $\mathbf{b}(t,\mathbf{X})$ is the external force density. The constitutive law, relating bond strain with bond force, is prescribed using either the pairwise force function $\mathbf{f}$ or the PD state $T$ [@silling2007peridynamic]. In the library, following material models are implemented:
+Here $\varrho$ denotes the material's density, $\mathbf{u}$ displacement field in the material, $\ddot{\mathbf{u}}$ acceleration, and $\mathbf{b}$ external force density. The constitutive law, relating bond strain with bond force, is prescribed using either the pairwise force function $\mathbf{f}$ or the PD state $T$ [@silling2007peridynamic]. In the library, following material models are implemented:
 
 * Elastic state-based PD model [@silling2007peridynamic],
 * Prototype micro-elastic brittle bond-based PD model [@silling2005meshfree],
@@ -57,7 +57,7 @@ and, the state-based PD,
 
 $$  \varrho (X_i)\ddot{\mathbf{u}}(t,X_i) =  \sum\limits_{j \in B_\delta(X_i)} (T[X_i,t]\langle X_j - X_i \rangle - T[X_j,t]\langle X_i - X_j \rangle) V_j + \mathbf{b}(t,X_i) \text{ in } D \text{.} $$
 
-Here $\mathbf{u}}(t,X_i)$ denotes the displacement of node $X_i$ at time $0 \leq t\leq T$. For the time discretization, we can consider: \textit{1)} implicit time integration and \textit{2)} explicit time integration using either central difference or velocity verlet scheme.
+Here $\mathbf{u}(t,X_i)$ denotes the displacement of node $X_i$ at time $0 \leq t\leq T$. For the time discretization, we can consider: \textit{1)} implicit time integration and \textit{2)} explicit time integration using either central difference or velocity verlet scheme.
 
 NLMech relies on the following open source softwares: HPX [@Kaiser2020], Blaze [@iglberger2012high], Blaze_Iterative, Gmsh [@geuzaine2009gmsh], VTK [@schroeder2004visualization], and yaml-cpp. For details 
 about the specific version, we refer to NLMech's [documentation](https://github.com/nonlocalmodels/NLMech#building).
