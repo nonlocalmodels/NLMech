@@ -23,7 +23,7 @@ bibliography: paper.bib
 
 ---
 
-![NLMech's logo which shows the obtained damage of a peridynamic simulation.\label{fig:logo}](../assets/logo/logo_joss.png){ width=20% }
+![NLMech's logo which shows the obtained damage of a peridynamic simulation.\label{fig:logo}](../assets/logo/logo_joss.png){ width=40% }
 
 # Summary
 
@@ -47,7 +47,7 @@ For example input files for these models, we refer to the collection of [example
 
 Currently, the library supports finite difference (or more generally meshfree) discretization. Using the triangulation of arbitrary domain using library such as Gmsh [@geuzaine2009gmsh], the library can create a meshfree discretization. Library is quipped with necessary modules, such as FE elements and quadrature integration rules, for finite element discretization of PD. We briefly discuss the finite difference/meshfree discretization of PD next. Figure \autoref{fig:discrete} shows the domain D discretized with the nodes $X = \{ X_i \in \mathbb{R}^3 \vert i=1,\ldots,n\}$. Each node $X_i$ represents a small area/volume denoted by $V_i$. In PD, as said earlier, each point $X_i$ interacts with neighboring points in discrete ball $B_\delta(X_i) = \{X_j: |X_i - X_j| < \delta \}$. 
 
-![ Adpated from [@Diehl2020].\label{fig:discrete}](discrete.pdf)
+![ Adpated from [@Diehl2020].\label{fig:discrete}](discrete.pdf){ width=30% }
 
 The discrete equation of motion is written as, for the bond-based PD,
 
