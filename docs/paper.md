@@ -47,6 +47,9 @@ For example input files for these models, we refer to the collection of [example
 For the discretization in space two schemes: \textit{1)} a finite difference approximation and \text{2)} a finite element approximation is implemented. We briefly introduce the finite difference scheme and for the more complex finite element, we refer for the sake of keeping the paper short to [].
 
 
+![ Adpated from [@Diehl2020].\label{fig:discrete}](discrete.pdf)
+
+
 For the discretization in time following two schemes are available: \textit{1)} implicit time integration and \textit{2)} explicit time integration using a central difference scheme and velocity verlet scheme.
 
 NLMech utilizes relies on following open source software: HPX [@Kaiser2020], Blaze [@iglberger2012high], Blaze_Iterative, Gmsh [@geuzaine2009gmsh], VTK [@schroeder2004visualization], and yaml-cpp. For details 
