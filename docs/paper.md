@@ -1,5 +1,5 @@
 ---
-title: 'NLMech: Implementation of finite element and finite difference approximation of Nonlocal models'
+title: 'NLMech: Implementation of finite difference/meshfree discretization of nonlocal fracture models'
 tags:
   - Peridynamics
   - Finite difference
@@ -7,18 +7,18 @@ tags:
   - HPX
   - Asynchronous many-task systems
 authors:
-  - name: Patrick Diehl
-    orcid: 0000-0003-0872-7098
-    affiliation: 1
   - name: Prashant K. Jha
     orcid: 0000-0003-2158-364X
+    affiliation: 1
+  - name: Patrick Diehl
+    orcid: 0000-0003-0872-7098
     affiliation: 2
 affiliations:
- - name: Center for Computation \& Technology, Louisiana State University, Baton Rouge, LA, United States of America
-   index: 1
  - name: Oden Institute for Computational Engineering and Sciences, The University of Texas at Austin, Austin, TX, United States of America
+   index: 1
+ - name: Center for Computation \& Technology, Louisiana State University, Baton Rouge, LA, United States of America
    index: 2
-date: 13 August 2017
+date: 25 November 2020
 bibliography: paper.bib
 
 ---
