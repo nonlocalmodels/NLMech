@@ -23,11 +23,11 @@ bibliography: paper.bib
 
 ---
 
-![NLMech's logo which shows the obtained damage of a peridynamic simulation.\label{fig:logo}](../assets/logo/logo_joss.png){ width=50% }
+![NLMech's logo which shows the obtained damage of a peridynamic simulation.\label{fig:logo}](../assets/logo/logo_joss.png){ width=20% }
 
 # Summary
 
-The open source code *NLMech* is an implementation of finite difference approximation of nonlocal models, \emph{e.g.}\ peridynamic. Peridynamic (PD) [@silling2007peridynamic,@silling2005meshfree] is a nonlocal formulation of classical continuum mechanics that is particularly robust with mechanical deformations involving crack (discontinuous displacement) and damage. The model seamlessly handles the two regime of deformation: elastic/smooth deformation and fracture. The constitutive laws describing the material behavior are simple to conseptualize and implement. Particularly, in numerical implementation, no special care for the modeling of cracks is required. Successful comparison of PD against a variety of experiments have been done [@diehl2019review]. 
+The open source code *NLMech* is an implementation of finite difference approximation of nonlocal models, \emph{e.g.}\ peridynamic. Peridynamic (PD) [@silling2007peridynamic;@silling2005meshfree] is a nonlocal formulation of classical continuum mechanics that is particularly robust with mechanical deformations involving crack (discontinuous displacement) and damage. The model seamlessly handles the two regime of deformation: elastic/smooth deformation and fracture. The constitutive laws describing the material behavior are simple to conseptualize and implement. Particularly, in numerical implementation, no special care for the modeling of cracks is required. Successful comparison of PD against a variety of experiments have been done [@diehl2019review]. 
 
 Unlike classical continuum mechanics, where the internal force in the material is given by the stress at the material point, in PD, the internal force at given material point is due to the sum of the pairwise forces with the neighboring points. I.e. the force is expressed as the integral of the pairwise force density between the given point and another point in the neighborhood. Neighborhood of point $x$ is defined as set of nearby points $y$ sharing the bond with $x$. This is typically taken as ball centered at $x$ with radius $\delta$. $\delta$ is the nonlocal length scale and is referred to as \textit{horizon}. PD is often divided in two classes: bond-based and state-based models. In bond-based models, the two material points interact via a pairwise force law and the forces between the material points do not depend on the deformation state of surrounding points. In contrast, state-based models also describe the interaction between two material points but now the volumetric deformation in the neighborhood of two points play a role. The governing equation of motion for the bond-based PD [@silling2005meshfree] reads as
 
@@ -40,8 +40,8 @@ Here $\varrho$ denotes the material's density, $\mathbf{u}$ displacement field i
 
 * Elastic state-based PD model [@silling2007peridynamic],
 * Prototype micro-elastic brittle bond-based PD model [@silling2005meshfree],
-* Nonlinear bond-based PD model [@lipton2014dynamic,@lipton2016cohesive], and
-* Nonlocal double-well state-based peridynamic model [@Lipton2018,@jha2019numerical].
+* Nonlinear bond-based PD model [@lipton2014dynamic;@lipton2016cohesive], and
+* Nonlocal double-well state-based peridynamic model [@Lipton2018;@jha2019numerical].
 
 For example input files for these models, we refer to the collection of [examples](https://nonlocalmodels.github.io/examples/) in the documentation.
 
@@ -78,11 +78,11 @@ For an updated list of applications/publications, we refer to corresponding [NLM
 # Statement of need
 
 Nonlocal models, like peridynamic, are computational expensive, like molecular dynamics or smoothed-particle hydrodynamics. Several 
-publications of GPU-based implementations [@mossaiby2017opencl,@diehl2012implementierung,@diehl2015efficient] and one commercial implementation in LS-DYNA [@ren20173d] can be found in literature. However, 
+publications of GPU-based implementations [@mossaiby2017opencl;@diehl2012implementierung;@diehl2015efficient] and one commercial implementation in LS-DYNA [@ren20173d] can be found in literature. However, 
 from an open source perspective only two other peridynamic implementations: [Peridigm](https://github.com/peridigm/peridigm) [@littlewood2015roadmap] and [PDLammps](https://lammps.sandia.gov/doc/pair_peri.html) [@parks2008implementing], are available. Both of these codes rely on the Message Passing Interface (MPI). On modern super computers' many core architectures where the threads per computational node increase, it is more and more important to focus on the fine-grain parallelism with increasing cores per computational nodes. NLMech utilizes the C++ standard library for parallelism and concurrency (HPX) [@Kaiser2020] to address this challenge. For more details about use utilization of asynchronous many-task systems, we refer to [@diehl2018implementation]. Second, the code implements the experimental nonlinear bond-based and state-based model. Nonlinear bond-based PD models [@lipton2016cohesive] enables one to show mathematical properties in rigorous way:
 
 * limit of PD to classical fracture mechanics theory (LEFM) [@lipton2016cohesive] 
-* well-posedness of PD solutions in spaces appropriate for numerical analysis and apriori error estimates of numerical discretization [@jha2018numerical,@jha2019numerical].
+* well-posedness of PD solutions in spaces appropriate for numerical analysis and apriori error estimates of numerical discretization [@jha2018numerical;@jha2019numerical].
 
 # Future directions
 
