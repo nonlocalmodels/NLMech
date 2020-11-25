@@ -50,8 +50,11 @@ For the discretization in space two schemes: \textit{1)} a finite difference app
 
 Applying the finite difference approximation yields to following discrete equation of motion for bond-based PD
 
-$$ \varrho(\mathbf{X})\ddot{\mathbf{u}}(t,\mathbf{X}) = \sum\limits_{j \in B_\delta(X_i)}\mathbf{f}(\mathbf{u}(t,X_j)-\mathbf{u}(t,X_i),X_j-X_i) V_j + \mathbf{b}(t,X_i) \text{ in } D$$
+$$ \varrho(X_i)\ddot{\mathbf{u}}(t,X_i) = \sum\limits_{j \in B_\delta(X_i)}\mathbf{f}(\mathbf{u}(t,X_j)-\mathbf{u}(t,X_i),X_j-X_i) V_j + \mathbf{b}(t,X_i) \text{ in } D$$
 
+and the governing equation for state-based PD reads as 
+
+$$  \varrho (X_i)\ddot{\mathbf{u}}(t,X_i) =  \sum\limits_{j \in B_\delta(X_i)} (T[X_i,t]\langle X_j - X_i \rangle - T[X_j,t]\langle X_i - X_j \rangle) V_j + \mathbf{b}(t,X_i) \text{ in } D \text{.} $$
 
 
 For the discretization in time following two schemes are available: \textit{1)} implicit time integration and \textit{2)} explicit time integration using a central difference scheme and velocity verlet scheme.
