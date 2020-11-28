@@ -7,10 +7,10 @@ tags:
   - HPX
   - Asynchronous many-task systems
 authors:
-  - name: Prashant K. Jha
+  - name: Prashant K. Jha^[co-first author]
     orcid: 0000-0003-2158-364X
     affiliation: 1
-  - name: Patrick Diehl
+  - name: Patrick Diehl^[co-first author]
     orcid: 0000-0003-0872-7098
     affiliation: 2
 affiliations:
