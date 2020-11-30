@@ -83,14 +83,14 @@ from an open source perspective only two other peridynamic implementations: [Per
 
 # Future directions
 
-NLMech uses parallel \textit{for loop} within HPX library for multithreaded computation. Towards massively parallel implementation, the project titled "Domain decomposition, load balancing, and massively parallel solvers for the class of nonlocal models" was introduced in Google Summer of Code 2020, see [code repository](https://github.com/nonlocalmodels/nonlocalheatequation) for more details. The goal was to develop shared parallel library based on HPX for nonlocal diffusion equation and implement load balancing algorithm using novel ideas. With GSoC 2020 work as a base, we aim to extend NLMech from multithreading parallelism to massively parallel implementation. 
-
 We are also interested in extending/improving the library with
 
 - implementation of new material models
 - higher order time discretization schemes
 - local-nonlocal coupling methods
 - further optimization of nonlocal computation. 
+ 
+If you are interested in contributing, please read our contribution [guide lines](https://github.com/nonlocalmodels/NLMech#contributing) and our [code of conduct](https://github.com/nonlocalmodels/NLMech/blob/master/CODE_OF_CONDUCT.md) before contributing. 
 
 # Acknowledgments
 
