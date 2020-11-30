@@ -85,9 +85,9 @@ from an open source perspective only two other peridynamic implementations: [Per
 
 We are interested in extending/improving the library with
 
-- implementation of new material models
-- higher order time discretization schemes
-- local-nonlocal coupling methods
+- implementation of new material models,
+- higher order time discretization schemes,
+- local-nonlocal coupling methods, and
 - further optimization of nonlocal computation. 
  
 If you are interested in contributing, please read our contribution [guide lines](https://github.com/nonlocalmodels/NLMech#contributing) and our [code of conduct](https://github.com/nonlocalmodels/NLMech/blob/master/CODE_OF_CONDUCT.md) before contributing. 
