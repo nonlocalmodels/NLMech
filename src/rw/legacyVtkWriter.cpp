@@ -39,8 +39,11 @@ void rw::writer::LegacyVtkWriter::appendNodes(
   for (auto n : *nodes)
     d_myfile << n[0] << " " << n[1] << " " << n[2] << std::endl;
 
-  // No cell information is needed since we have only verticies
-  d_myfile << "CELLS " << "0 0" << std::endl;
+  d_myfile << "CELLS " << nodes->size() << " " << 2 * nodes->size()
+           << std::endl;
+  for (size_t i = 0; i < nodes->size(); i++)
+    d_myfile << "1"
+             << " " << i << std::endl;
 
   // Write the VTK cell type ( 1 = vtk vertex)
   d_myfile << "CELL_TYPES " << nodes->size() << std::endl;
@@ -59,8 +62,11 @@ void rw::writer::LegacyVtkWriter::appendNodes(
     d_myfile << p[0] << " " << p[1] << " " << p[2] << std::endl;
   }
 
-  // No cell information is needed since we have only verticies
-  d_myfile << "CELLS " << "0 0" << std::endl;
+  d_myfile << "CELLS " << nodes->size() << " " << 2 * nodes->size()
+           << std::endl;
+  for (size_t i = 0; i < nodes->size(); i++)
+    d_myfile << "1"
+             << " " << i << std::endl;
 
   // Write the VTK cell type ( 1 = vtk vertex)
   d_myfile << "CELL_TYPES " << nodes->size() << std::endl;
