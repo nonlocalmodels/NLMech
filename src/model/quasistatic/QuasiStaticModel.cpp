@@ -172,11 +172,11 @@ void model::QuasiStaticModel<T>::computeForces(bool full) {
   // Clear the vector
 
   hpx::for_loop(hpx::parallel::execution::par, 0, d_nnodes,
-                          [&](boost::uint64_t i) {
-                            (*d_dataManager_p->getForceP())[i].d_x = 0.;
-                            (*d_dataManager_p->getForceP())[i].d_y = 0.;
-                            (*d_dataManager_p->getForceP())[i].d_z = 0.;
-                          });
+                [&](boost::uint64_t i) {
+                  (*d_dataManager_p->getForceP())[i].d_x = 0.;
+                  (*d_dataManager_p->getForceP())[i].d_y = 0.;
+                  (*d_dataManager_p->getForceP())[i].d_z = 0.;
+                });
 
   hpx::lcos::local::mutex m;
 
@@ -248,11 +248,11 @@ inline void model::QuasiStaticModel<T>::computePertubatedForces(size_t thread) {
   // Clear the vector
 
   hpx::for_loop(hpx::parallel::execution::par, 0, d_nnodes,
-                          [&](boost::uint64_t i) {
-                            (*d_dataManagers[thread]->getForceP())[i].d_x = 0.;
-                            (*d_dataManagers[thread]->getForceP())[i].d_y = 0.;
-                            (*d_dataManagers[thread]->getForceP())[i].d_z = 0.;
-                          });
+                [&](boost::uint64_t i) {
+                  (*d_dataManagers[thread]->getForceP())[i].d_x = 0.;
+                  (*d_dataManagers[thread]->getForceP())[i].d_y = 0.;
+                  (*d_dataManagers[thread]->getForceP())[i].d_z = 0.;
+                });
 
   hpx::lcos::local::mutex m;
 

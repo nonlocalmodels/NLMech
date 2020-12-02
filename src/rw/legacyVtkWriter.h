@@ -192,6 +192,9 @@ private:
 
   /*! @brief vtk/vtu file */
   std::ofstream d_file;
+
+  /*! @brief output stream to write the vtu file */
+  std::ofstream d_myfile;
 };
 
 } // namespace writer
