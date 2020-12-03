@@ -149,6 +149,16 @@ public:
   void appendCellData(const std::string &name,
                        const std::vector<util::SymMatrix3> *data);
 
+
+  /*!
+   * @brief Writes the matrix data associated to cells to the file
+   * @param name Name of the data
+   * @param data Vector containing the data
+   */
+  void appendPointData(
+    const std::string &name,
+    const std::vector<blaze::StaticMatrix<double, 3, 3> > *data);
+
   /** @}*/
 
   /**
@@ -192,6 +202,9 @@ private:
 
   /*! @brief vtk/vtu file */
   std::ofstream d_file;
+
+  /*! @brief output stream to write the vtu file */
+  std::ofstream d_myfile;
 };
 
 } // namespace writer

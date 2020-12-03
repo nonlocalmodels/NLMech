@@ -81,3 +81,17 @@ add_test(NAME mesh.2d.read.quad.gmsh
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/io
 )
 
+
+##############################################################################
+# IO
+##############################################################################
+
+# Test the legacy vtk writer 
+add_test(NAME quasistatic.1D.elastic_legacy_vtk
+COMMAND ${EXECUTABLE_OUTPUT_PATH}/NLMech -i input_legacy_vtk.yaml --hpx:threads=1
+WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/qsModel/1D
+)
+
+# Depencies
+set_tests_properties(quasistatic.1D.elastic_legacy_vtk PROPERTIES
+  FIXTURES_SETUP quasistatic.1D.elastic.mesh)

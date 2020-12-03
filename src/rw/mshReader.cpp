@@ -23,7 +23,6 @@ void rw::reader::MshReader::readMesh(size_t dim,
                                      std::vector<size_t> *enc,
                                      std::vector<std::vector<size_t>> *nec,
                                      std::vector<double> *volumes, bool is_fd) {
-  
   gmsh::initialize();
   gmsh::option::setNumber("General.Terminal", 1);
   gmsh::open(d_filename);
@@ -41,7 +40,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
   // getting all elements using GMSH API
   std::vector<int> elemTypes;
-  std::vector<std::vector<std::size_t> > elemTags, elemNodeTags;
+  std::vector<std::vector<std::size_t>> elemTags, elemNodeTags;
   gmsh::model::mesh::getElements(elemTypes, elemTags, elemNodeTags, -1, -1);
 
   // specify type of element to read
@@ -52,82 +51,66 @@ void rw::reader::MshReader::readMesh(size_t dim,
     exit(1);
   }
 
-
   // Convert the coordinates to the internal datastrucutre
   nodes->resize(nodeTags.size());
 
+  for (size_t i = 0; i < nodeTags.size(); i++) {
+    size_t index = (nodeTags[i] - 1) * 3;
+    (*nodes)[nodeTags[i] - 1] = util::Point3(
+        nodeCoords[index], nodeCoords[index + 1], nodeCoords[index + 2]);
+  }
 
-
-  for (size_t i = 0 ; i < nodeTags.size() ; i++ )
-    {
-    size_t index = (nodeTags[i]-1) * 3;
-    (*nodes)[nodeTags[i] - 1] = util::Point3(nodeCoords[index], nodeCoords[index+1], nodeCoords[index+2]);
-    }
-
-  
- 
   // Check for element types
   // 2 = 3-node triangle
   // 3 = 4-node square
 
   size_t type = 0;
   size_t element_id;
-  
-  auto f2 = std::find(elemTypes.begin(),elemTypes.end(),2);
-  auto f3 = std::find(elemTypes.begin(),elemTypes.end(),3);
 
-  if (f2 !=  elemTypes.end()){
+  auto f2 = std::find(elemTypes.begin(), elemTypes.end(), 2);
+  auto f3 = std::find(elemTypes.begin(), elemTypes.end(), 3);
+
+  if (f2 != elemTypes.end()) {
     type = 2;
     element_id = f2 - elemTypes.begin();
-    element_type = util::vtk_type_triangle; 
-  }
-  else if (f3 !=  elemTypes.end()){
+    element_type = util::vtk_type_triangle;
+  } else if (f3 != elemTypes.end()) {
     type = 3;
     element_id = f3 - elemTypes.begin();
     element_type = util::vtk_type_quad;
-    }
+  }
 
-  if ( f2 !=  elemTypes.end() and f3 !=  elemTypes.end() )
-    std::cerr << "Error: Only mesh with one type of elements is supported!" << std::endl ;
-  
+  if (f2 != elemTypes.end() and f3 != elemTypes.end())
+    std::cerr << "Error: Only mesh with one type of elements is supported!"
+              << std::endl;
 
-  if (type == 0)
-    {
-      std::cerr << "Error: Only 3-node triangle or 4-node square elements are supported!" << std::endl;
-      exit(1);
-    }
-
+  if (type == 0) {
+    std::cerr << "Error: Only 3-node triangle or 4-node square elements are "
+                 "supported!"
+              << std::endl;
+    exit(1);
+  }
 
   nec->resize(elemNodeTags[element_id].size());
 
-
   size_t con_size = 0;
 
-  if ( type == 2)
-      con_size = 3;
+  if (type == 2) con_size = 3;
 
-    if ( type == 3)
-      con_size = 4;
+  if (type == 3) con_size = 4;
 
+  size_t elem_counter = 0;
+  // for (size_t i = 0 ; i < elemNodeTags.size() ; i++)
+  for (size_t j = 0; j < elemNodeTags[element_id].size(); j++) {
+    enc->push_back(elemNodeTags[element_id][j] - 1);
+    (*nec)[elemNodeTags[element_id][j] - 1].push_back(elem_counter);
 
-    
-    size_t elem_counter = 0;
-    //for (size_t i = 0 ; i < elemNodeTags.size() ; i++)
-    for (size_t j = 0 ; j < elemNodeTags[element_id].size() ; j++)
-    {
-      
-      enc->push_back(elemNodeTags[element_id][j] - 1);
-      (*nec)[elemNodeTags[element_id][j] - 1].push_back(elem_counter);
+    if ((j + 1) % con_size == 0) elem_counter++;
+  }
+  num_elems = elemNodeTags[element_id].size();
 
-      if ((j + 1) % con_size == 0)
-        elem_counter++;
-    }
-    num_elems = elemNodeTags[element_id].size(); 
-
-
-    gmsh::clear();
-    gmsh::finalize();
- 
+  gmsh::clear();
+  gmsh::finalize();
 }
 
 void rw::reader::MshReader::readNodes(std::vector<util::Point3> *nodes) {
@@ -139,7 +122,6 @@ void rw::reader::MshReader::readNodes(std::vector<util::Point3> *nodes) {
     exit(1);
   }
 
-
   gmsh::initialize();
   gmsh::option::setNumber("General.Terminal", 1);
   gmsh::open(d_filename);
@@ -147,7 +129,7 @@ void rw::reader::MshReader::readNodes(std::vector<util::Point3> *nodes) {
   // clear data
   nodes->clear();
 
-    // getting all nodes using GMSH API
+  // getting all nodes using GMSH API
   std::vector<std::size_t> nodeTags;
   std::vector<double> nodeCoords, nodeParams;
   gmsh::model::mesh::getNodes(nodeTags, nodeCoords, nodeParams, -1, -1);
@@ -155,18 +137,15 @@ void rw::reader::MshReader::readNodes(std::vector<util::Point3> *nodes) {
   // Convert the coordinates to the internal datastrucutre
   nodes->resize(nodeTags.size());
 
-  for (size_t i = 0 ; i < nodeTags.size() ; i++ )
-    {
-    
+  for (size_t i = 0; i < nodeTags.size(); i++) {
     std::cout << nodeTags[i] << std::endl;
-    size_t index = (nodeTags[i]-1) * 3;
-    (*nodes)[nodeTags[i] - 1] = util::Point3(nodeCoords[index], nodeCoords[index+1], nodeCoords[index+2]);
-    }
+    size_t index = (nodeTags[i] - 1) * 3;
+    (*nodes)[nodeTags[i] - 1] = util::Point3(
+        nodeCoords[index], nodeCoords[index + 1], nodeCoords[index + 2]);
+  }
 
-
-    gmsh::clear();
-    gmsh::finalize();
-  
+  gmsh::clear();
+  gmsh::finalize();
 }
 
 bool rw::reader::MshReader::readPointData(const std::string &name,
