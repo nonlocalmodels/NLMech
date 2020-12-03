@@ -77,7 +77,11 @@ void rw::writer::LegacyVtkWriter::appendNodes(
 
 void rw::writer::LegacyVtkWriter::appendMesh(
     const std::vector<util::Point3> *nodes, const size_t &element_type,
-    const std::vector<size_t> *en_con, const std::vector<util::Point3> *u) {}
+    const std::vector<size_t> *en_con, const std::vector<util::Point3> *u) {
+  std::cerr
+      << "Warning: Field data is not implementend in the legacy vtk writer"
+      << std::endl;
+}
 
 void rw::writer::LegacyVtkWriter::appendPointData(
     const std::string &name, const std::vector<uint8_t> *data) {
@@ -159,17 +163,33 @@ void rw::writer::LegacyVtkWriter::appendPointData(
 }
 
 void rw::writer::LegacyVtkWriter::appendCellData(
-    const std::string &name, const std::vector<float> *data) {}
+    const std::string &name, const std::vector<float> *data) {
+  std::cerr
+      << "Warning: Field data is not implementend in the legacy vtk writer"
+      << std::endl;
+}
 
 void rw::writer::LegacyVtkWriter::appendCellData(
-    const std::string &name, const std::vector<util::SymMatrix3> *data) {}
+    const std::string &name, const std::vector<util::SymMatrix3> *data) {
+  std::cerr
+      << "Warning: Field data is not implementend in the legacy vtk writer"
+      << std::endl;
+}
 
 void rw::writer::LegacyVtkWriter::addTimeStep(const double &timestep) {}
 
 void rw::writer::LegacyVtkWriter::close() { d_myfile.close(); }
 
 void rw::writer::LegacyVtkWriter::appendFieldData(const std::string &name,
-                                                  const double &data) {}
+                                                  const double &data) {
+  std::cerr
+      << "Warning: Field data is not implementend in the legacy vtk writer"
+      << std::endl;
+}
 
 void rw::writer::LegacyVtkWriter::appendFieldData(const std::string &name,
-                                                  const float &data) {}
+                                                  const float &data) {
+  std::cerr
+      << "Warning: Field data is not implementend in the legacy vtk writer"
+      << std::endl;
+}
