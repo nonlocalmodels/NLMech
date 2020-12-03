@@ -33,7 +33,6 @@ rw::writer::LegacyVtkWriter::LegacyVtkWriter(const std::string &filename,
 
 void rw::writer::LegacyVtkWriter::appendNodes(
     const std::vector<util::Point3> *nodes) {
-  std::cout << "drin";
   d_myfile << "DATASET UNSTRUCTURED_GRID" << std::endl;
   d_myfile << "POINTS " << nodes->size() << " double" << std::endl;
   for (auto n : *nodes)
@@ -55,7 +54,6 @@ void rw::writer::LegacyVtkWriter::appendNodes(
 void rw::writer::LegacyVtkWriter::appendNodes(
     const std::vector<util::Point3> *nodes,
     const std::vector<util::Point3> *u) {
-  std::cout << "drin";
   d_myfile << "DATASET UNSTRUCTURED_GRID" << std::endl;
   d_myfile << "POINTS " << nodes->size() << " double" << std::endl;
   for (size_t i = 0; i < nodes->size(); i++) {
@@ -132,7 +130,33 @@ void rw::writer::LegacyVtkWriter::appendPointData(
 }
 
 void rw::writer::LegacyVtkWriter::appendPointData(
-    const std::string &name, const std::vector<util::SymMatrix3> *data) {}
+    const std::string &name, const std::vector<util::SymMatrix3> *data) {
+  d_myfile << "TENSORS " << name << " double " << std::endl;
+
+  for (size_t i = 0; i < data->size(); i++) {
+    d_myfile << (*data)[i](0, 0) << " " << (*data)[i](0, 1) << " "
+             << (*data)[i](0, 2) << std::endl;
+    d_myfile << (*data)[i](1, 0) << " " << (*data)[i](1, 1) << " "
+             << (*data)[i](1, 2) << std::endl;
+    d_myfile << (*data)[i](2, 0) << " " << (*data)[i](2, 1) << " "
+             << (*data)[i](2, 2) << std::endl;
+  }
+}
+
+void rw::writer::LegacyVtkWriter::appendPointData(
+    const std::string &name,
+    const std::vector<blaze::StaticMatrix<double, 3, 3> > *data) {
+  d_myfile << "TENSORS " << name << " double " << std::endl;
+
+  for (size_t i = 0; i < data->size(); i++) {
+    d_myfile << (*data)[i](0, 0) << " " << (*data)[i](0, 1) << " "
+             << (*data)[i](0, 2) << std::endl;
+    d_myfile << (*data)[i](1, 0) << " " << (*data)[i](1, 1) << " "
+             << (*data)[i](1, 2) << std::endl;
+    d_myfile << (*data)[i](2, 0) << " " << (*data)[i](2, 1) << " "
+             << (*data)[i](2, 2) << std::endl;
+  }
+}
 
 void rw::writer::LegacyVtkWriter::appendCellData(
     const std::string &name, const std::vector<float> *data) {}
