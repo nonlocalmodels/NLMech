@@ -48,6 +48,8 @@ void rw::writer::LegacyVtkWriter::appendNodes(
   // Write the VTK cell type ( 1 = vtk vertex)
   d_myfile << "CELL_TYPES " << nodes->size() << std::endl;
   for (size_t i = 0; i < nodes->size(); i++) d_myfile << "1" << std::endl;
+
+  d_myfile << "POINT_DATA " << nodes->size() << std::endl;
 }
 
 void rw::writer::LegacyVtkWriter::appendNodes(
@@ -71,6 +73,8 @@ void rw::writer::LegacyVtkWriter::appendNodes(
   // Write the VTK cell type ( 1 = vtk vertex)
   d_myfile << "CELL_TYPES " << nodes->size() << std::endl;
   for (size_t i = 0; i < nodes->size(); i++) d_myfile << "1" << std::endl;
+
+  d_myfile << "POINT_DATA " << nodes->size() << std::endl;
 }
 
 void rw::writer::LegacyVtkWriter::appendMesh(
@@ -78,22 +82,54 @@ void rw::writer::LegacyVtkWriter::appendMesh(
     const std::vector<size_t> *en_con, const std::vector<util::Point3> *u) {}
 
 void rw::writer::LegacyVtkWriter::appendPointData(
-    const std::string &name, const std::vector<uint8_t> *data) {}
+    const std::string &name, const std::vector<uint8_t> *data) {
+  d_myfile << "SCALARS " << name << " int "
+           << "1" << std::endl;
+  d_myfile << "LOOKUP_TABLE default" << std::endl;
+  for (size_t i = 0; i < data->size(); i++) d_myfile << (*data)[i] << std::endl;
+}
 
 void rw::writer::LegacyVtkWriter::appendPointData(
-    const std::string &name, const std::vector<size_t> *data) {}
+    const std::string &name, const std::vector<size_t> *data) {
+  d_myfile << "SCALARS " << name << " int "
+           << "1" << std::endl;
+  d_myfile << "LOOKUP_TABLE default" << std::endl;
+  for (size_t i = 0; i < data->size(); i++) d_myfile << (*data)[i] << std::endl;
+}
 
 void rw::writer::LegacyVtkWriter::appendPointData(
-    const std::string &name, const std::vector<int> *data) {}
+    const std::string &name, const std::vector<int> *data) {
+  d_myfile << "SCALARS " << name << " int "
+           << "1" << std::endl;
+  d_myfile << "LOOKUP_TABLE default" << std::endl;
+  for (size_t i = 0; i < data->size(); i++) d_myfile << (*data)[i] << std::endl;
+}
 
 void rw::writer::LegacyVtkWriter::appendPointData(
-    const std::string &name, const std::vector<float> *data) {}
+    const std::string &name, const std::vector<float> *data) {
+  d_myfile << "SCALARS " << name << " float "
+           << "1" << std::endl;
+  d_myfile << "LOOKUP_TABLE default" << std::endl;
+  for (size_t i = 0; i < data->size(); i++) d_myfile << (*data)[i] << std::endl;
+}
 
 void rw::writer::LegacyVtkWriter::appendPointData(
-    const std::string &name, const std::vector<double> *data) {}
+    const std::string &name, const std::vector<double> *data) {
+  d_myfile << "SCALARS " << name << " double "
+           << "1" << std::endl;
+  d_myfile << "LOOKUP_TABLE default" << std::endl;
+  for (size_t i = 0; i < data->size(); i++) d_myfile << (*data)[i] << std::endl;
+}
 
 void rw::writer::LegacyVtkWriter::appendPointData(
-    const std::string &name, const std::vector<util::Point3> *data) {}
+    const std::string &name, const std::vector<util::Point3> *data) {
+  d_myfile << "SCALARS " << name << " double "
+           << "3" << std::endl;
+  d_myfile << "LOOKUP_TABLE default" << std::endl;
+  for (size_t i = 0; i < data->size(); i++)
+    d_myfile << (*data)[i][0] << " " << (*data)[i][1] << " " << (*data)[i][2]
+             << std::endl;
+}
 
 void rw::writer::LegacyVtkWriter::appendPointData(
     const std::string &name, const std::vector<util::SymMatrix3> *data) {}
