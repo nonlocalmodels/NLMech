@@ -239,6 +239,14 @@ private:
   /*! @brief Format of output file */
   std::string d_format;
 
+  /*! @brief Check if the field is not zero 
+   *  This check is important for the legacy vtk writer, since empty fields result 
+   *  in warnings while laoding the data
+   *  @param length Size of the field
+   *  @param name Name of the field
+   */
+  inline void checkLength(size_t length, std::string name);
+
 }; // class Writer
 
 } // namespace writer

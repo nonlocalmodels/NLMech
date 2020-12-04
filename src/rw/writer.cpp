@@ -66,6 +66,8 @@ void rw::writer::Writer::appendMesh(const std::vector<util::Point3> *nodes,
 
 void rw::writer::Writer::appendPointData(const std::string &name,
                                          const std::vector<uint8_t> *data) {
+  checkLength(data->size(), name);
+
   if (d_format == "vtu")
     d_vtkWriter_p->appendPointData(name, data);
   else if (d_format == "msh")
@@ -76,6 +78,8 @@ void rw::writer::Writer::appendPointData(const std::string &name,
 
 void rw::writer::Writer::appendPointData(const std::string &name,
                                          const std::vector<size_t> *data) {
+  checkLength(data->size(), name);
+
   if (d_format == "vtu")
     d_vtkWriter_p->appendPointData(name, data);
   else if (d_format == "msh")
@@ -86,6 +90,7 @@ void rw::writer::Writer::appendPointData(const std::string &name,
 
 void rw::writer::Writer::appendPointData(const std::string &name,
                                          const std::vector<int> *data) {
+  checkLength(data->size(), name);
   if (d_format == "vtu")
     d_vtkWriter_p->appendPointData(name, data);
   else if (d_format == "msh")
@@ -96,6 +101,7 @@ void rw::writer::Writer::appendPointData(const std::string &name,
 
 void rw::writer::Writer::appendPointData(const std::string &name,
                                          const std::vector<float> *data) {
+  checkLength(data->size(), name);
   if (d_format == "vtu")
     d_vtkWriter_p->appendPointData(name, data);
   else if (d_format == "msh")
@@ -106,6 +112,8 @@ void rw::writer::Writer::appendPointData(const std::string &name,
 
 void rw::writer::Writer::appendPointData(const std::string &name,
                                          const std::vector<double> *data) {
+  checkLength(data->size(), name);
+
   if (d_format == "vtu")
     d_vtkWriter_p->appendPointData(name, data);
   else if (d_format == "msh")
@@ -116,6 +124,8 @@ void rw::writer::Writer::appendPointData(const std::string &name,
 
 void rw::writer::Writer::appendPointData(
     const std::string &name, const std::vector<util::Point3> *data) {
+  checkLength(data->size(), name);
+
   if (d_format == "vtu")
     d_vtkWriter_p->appendPointData(name, data);
   else if (d_format == "msh")
@@ -126,6 +136,7 @@ void rw::writer::Writer::appendPointData(
 
 void rw::writer::Writer::appendPointData(
     const std::string &name, const std::vector<util::SymMatrix3> *data) {
+  checkLength(data->size(), name);
   if (d_format == "vtu")
     d_vtkWriter_p->appendPointData(name, data);
   else if (d_format == "msh")
@@ -135,6 +146,8 @@ void rw::writer::Writer::appendPointData(
 }
 
 void rw::writer::Writer::appendPointData(
+
+    checkLength(data->size(), name);
     const std::string &name,
     const std::vector<blaze::StaticMatrix<double, 3, 3> > *data) {
   if (d_format == "vtu") d_vtkWriter_p->appendPointData(name, data);
@@ -146,6 +159,7 @@ void rw::writer::Writer::appendPointData(
 
 void rw::writer::Writer::appendCellData(const std::string &name,
                                         const std::vector<float> *data) {
+  checkLength(data->size(), name);
   if (d_format == "vtu")
     d_vtkWriter_p->appendCellData(name, data);
   else if (d_format == "msh")
@@ -156,6 +170,7 @@ void rw::writer::Writer::appendCellData(const std::string &name,
 
 void rw::writer::Writer::appendCellData(
     const std::string &name, const std::vector<util::SymMatrix3> *data) {
+  checkLength(data->size(), name);
   if (d_format == "vtu")
     d_vtkWriter_p->appendCellData(name, data);
   else if (d_format == "msh")
@@ -165,6 +180,8 @@ void rw::writer::Writer::appendCellData(
 }
 
 void rw::writer::Writer::addTimeStep(const double &timestep) {
+  checkLength(data->size(), name);
+
   if (d_format == "vtu")
     d_vtkWriter_p->addTimeStep(timestep);
   else if (d_format == "msh")
@@ -181,6 +198,8 @@ void rw::writer::Writer::appendFieldData(const std::string &name,
     d_mshWriter_p->appendFieldData(name, data);
   else if (d_format == "legacy_vtk")
     d_legacyVtkWriter_p->appendFieldData(name, data);
+
+  checkLength(data->size(), name);
 }
 
 void rw::writer::Writer::appendFieldData(const std::string &name,
@@ -194,10 +213,18 @@ void rw::writer::Writer::appendFieldData(const std::string &name,
 }
 
 void rw::writer::Writer::close() {
+  checkLength(data->size(), name);
+
   if (d_format == "vtu")
     d_vtkWriter_p->close();
   else if (d_format == "msh")
     d_mshWriter_p->close();
   else if (d_format == "legacy_vtk")
     d_legacyVtkWriter_p->close();
+}
+
+inline void rw::writer::Writer::checkLength(size_t length, std::string name) {
+  if (length == 0) {
+    std::cerr << "Warning: Output field " << name << " is empty!" << std::endl;
+  }
 }
