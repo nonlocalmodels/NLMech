@@ -17,7 +17,7 @@
 rw::writer::LegacyVtkWriter::LegacyVtkWriter(const std::string &filename,
                                              const std::string &compress_type)
     : d_filename(filename), d_compressType(compress_type) {
-  std::string f = filename + ".vtu";
+  std::string f = filename + ".vtk";
 
   d_myfile.open(f);
 
