@@ -68,7 +68,7 @@ void rw::writer::VtkWriter::appendMesh(const std::vector<util::Point3> *nodes,
   cells->Allocate(num_vertex, num_elems);
 
   // element type
-  int* cell_types = new int[num_elems];
+  int *cell_types = new int[num_elems];
 
   vtkIdType ids[num_vertex];
 
