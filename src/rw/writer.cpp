@@ -146,10 +146,11 @@ void rw::writer::Writer::appendPointData(
 }
 
 void rw::writer::Writer::appendPointData(
-
-    checkLength(data->size(), name);
     const std::string &name,
     const std::vector<blaze::StaticMatrix<double, 3, 3> > *data) {
+
+
+         checkLength(data->size(), name);
   if (d_format == "vtu") d_vtkWriter_p->appendPointData(name, data);
   // else if (d_format == "msh")
   //  d_mshWriter_p->appendPointData(name, data);
@@ -180,8 +181,7 @@ void rw::writer::Writer::appendCellData(
 }
 
 void rw::writer::Writer::addTimeStep(const double &timestep) {
-  checkLength(data->size(), name);
-
+  
   if (d_format == "vtu")
     d_vtkWriter_p->addTimeStep(timestep);
   else if (d_format == "msh")
@@ -199,7 +199,6 @@ void rw::writer::Writer::appendFieldData(const std::string &name,
   else if (d_format == "legacy_vtk")
     d_legacyVtkWriter_p->appendFieldData(name, data);
 
-  checkLength(data->size(), name);
 }
 
 void rw::writer::Writer::appendFieldData(const std::string &name,
@@ -213,8 +212,7 @@ void rw::writer::Writer::appendFieldData(const std::string &name,
 }
 
 void rw::writer::Writer::close() {
-  checkLength(data->size(), name);
-
+  
   if (d_format == "vtu")
     d_vtkWriter_p->close();
   else if (d_format == "msh")

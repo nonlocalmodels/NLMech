@@ -62,7 +62,7 @@ jobs:
         - run:
             name: Report
             command: |
-              gcovr -e CMakeFiles/ -e build/ -e data/ -r .
+              gcovr --exclude-directories=build --exclude-directories=data -r .
         - run:
             name: Publish code coverage
             command: |

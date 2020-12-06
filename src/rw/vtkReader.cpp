@@ -19,6 +19,7 @@
 #include <vtkPoints.h>
 #include <vtkUnsignedCharArray.h>
 #include <vtkUnsignedIntArray.h>
+#include <vtkVersion.h>
 
 #include "util/feElementDefs.h"
 
@@ -184,7 +185,14 @@ void rw::reader::VtkReader::readMesh(size_t dim,
   for (size_t i = 0; i < num_elems; i++) {
     vtkIdType id = i;
     vtkIdType num_ids;
-    vtkIdType *nodes_ids;
+
+    #if VTK_MAJOR_VERSION == 9 
+    #define vtk_prefix const 
+    #else
+    #define vtk_prefix
+    #endif 
+    
+    vtk_prefix vtkIdType* nodes_ids;
 
     d_grid_p->GetCellPoints(id, num_ids, nodes_ids);
 
@@ -260,7 +268,14 @@ void rw::reader::VtkReader::readCells(size_t dim, size_t &element_type,
   for (size_t i = 0; i < num_elems; i++) {
     vtkIdType id = i;
     vtkIdType num_ids;
-    vtkIdType *nodes_ids;
+    
+    #if VTK_MAJOR_VERSION == 9 
+    #define vtk_prefix const 
+    #else
+    #define vtk_prefix
+    #endif 
+
+    vtk_prefix vtkIdType* nodes_ids;
 
     d_grid_p->GetCellPoints(id, num_ids, nodes_ids);
 
