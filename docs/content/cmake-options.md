@@ -6,6 +6,7 @@
 * Enable_Tools : Enables the tools to the build target (Default = False)
 * Enable_Expensive_Tests : Enables the computation intense tests (Default = False)
 * Enable_RPM: Enables to generate RPM packages (Default = False)
+* Enable_PCL: Add [PCL](https://github.com/PointCloudLibrary/pcl) for faster neighborseach. Recommend for large amount of nodes (Default=False)
 
 ## General options
 

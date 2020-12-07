@@ -23,8 +23,12 @@ as the build system and has following dependencies:
   * [Blaze_Iterative](https://github.com/STEllAR-GROUP/BlazeIterative) master, 
   * [Boost](https://www.boost.org/) 1.73,
   * [gmsh](https://gmsh.info/) 4.6,
-  * [VTK](https://www.vtk.org) 8.2, and 
+  * [VTK](https://www.vtk.org) 9.0, and 
   * [YAML-CPP](https://github.com/jbeder/yaml-cpp) 0.6.3.
+
+Following dependencies are optional, but are recommend for large simualtions:
+
+  * [PCL](https://github.com/PointCloudLibrary/pcl) 1.11. 
 
 Note that the above provided versions are the minimal rquired versions and we recommend to use these to build the code. 
 
