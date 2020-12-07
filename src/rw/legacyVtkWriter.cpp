@@ -17,7 +17,8 @@
 rw::writer::LegacyVtkWriter::LegacyVtkWriter(const std::string &filename,
                                              const std::string &compress_type)
     : d_filename(filename), d_compressType(compress_type) {
-  std::string f = filename + ".vtu";
+  // Note file ending must be vtk so that paraview detects the legacy format
+  std::string f = filename + ".vtk";
 
   d_myfile.open(f);
 
