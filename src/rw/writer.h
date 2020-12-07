@@ -245,7 +245,7 @@ private:
    *  @param length Size of the field
    *  @param name Name of the field
    */
-  inline void checkLength(size_t length, std::string name);
+  inline void checkLength(const size_t length, const std::string &name);
 
 }; // class Writer
 

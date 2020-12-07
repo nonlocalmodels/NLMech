@@ -216,7 +216,7 @@ void rw::writer::Writer::close() {
     d_legacyVtkWriter_p->close();
 }
 
-inline void rw::writer::Writer::checkLength(size_t length, std::string name) {
+inline void rw::writer::Writer::checkLength(const size_t length, const std::string &name) {
   if (length == 0) {
     std::cerr << "Warning: Output field " << name << " is empty!" << std::endl;
   }
