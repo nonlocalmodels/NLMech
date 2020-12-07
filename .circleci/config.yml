@@ -176,9 +176,9 @@ workflows:
                 ignore: gh-pages
             requires:
               - build
-      - build_with_pcl:
+      - build_pcl:
             filters:
               branches:
                 ignore: gh-pages
             requires:
-              - build_pcl
+              - build
