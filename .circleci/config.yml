@@ -42,6 +42,27 @@ jobs:
             - store_artifacts:
                 path: final
                 destination: packages
+    build_pcl:
+        docker:
+          - image: diehlpk/nonlocalmodels:baseimage
+        steps:
+            - checkout
+            - run:
+                name: Configure 
+                command: | 
+                  mkdir -p build 
+                  cd build 
+                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DEnable_Tools=ON -DEnable_PCL=ON ..
+            - run:
+                name: Build
+                command: |  
+                  cd build 
+                  make -j 2
+            - run:
+                name: Test
+                command: |
+                  cd build 
+                  make test
     codecoverage:
       docker: 
         - image: diehlpk/nonlocalmodels:baseimage
