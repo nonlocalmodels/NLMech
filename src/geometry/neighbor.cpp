@@ -50,8 +50,8 @@ geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
 
                   pcl::PointXYZ searchPoint;
                   searchPoint.x = (*nodes)[i].d_x;
-                  searchPoint.x = (*nodes)[i].d_y;
-                  searchPoint.x = (*nodes)[i].d_z;
+                  searchPoint.y = (*nodes)[i].d_y;
+                  searchPoint.z = (*nodes)[i].d_z;
 
                   this->d_neighbors[i] = std::vector<size_t>();
 
@@ -63,8 +63,6 @@ geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
                       }
                   }
                 });
-
-  exit(1);
 
 #else
 
