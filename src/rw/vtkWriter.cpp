@@ -70,7 +70,7 @@ void rw::writer::VtkWriter::appendMesh(const std::vector<util::Point3> *nodes,
   // element type
   int *cell_types = new int[num_elems];
 
-  vtkIdType ids[num_vertex];
+  vtkIdType *ids = new vtkIdType[num_vertex];
 
   for (size_t i = 0; i < num_elems; i++) {
     // get ids of vertex of this element
