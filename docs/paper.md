@@ -43,7 +43,7 @@ Here $\varrho$ denotes density of the material, $\mathbf{u}$ displacement field 
 * Nonlinear bond-based PD model [@lipton2014dynamic;@lipton2016cohesive], and
 * Nonlocal double-well state-based peridynamic model [@Lipton2018;@jha2019numerical].
 
-For example input files for these models, we refer to the collection of [examples](https://nonlocalmodels.github.io/examples/) in the documentation.
+For example, regarding input files for these models, we refer to the collection of [examples](https://nonlocalmodels.github.io/examples/) in the documentation.
 
 Currently, the library supports finite difference (or more generally meshfree) discretization. Using the triangulation of arbitrary domain, the library can create a meshfree discretization. The library is equipped with necessary modules, such as FE elements and quadrature integration rules, for finite element discretization of PD. Next, we briefly discuss the finite difference/meshfree discretization of PD. Figure \autoref{fig:discrete} shows the domain D discretized with the nodes $X = \{ X_i \in \mathbb{R}^3 \vert i=1,\ldots,n\}$. Each node $X_i$ represents a small area/volume denoted by $V_i$. In PD, as previously mentioned, each point $X_i$ interacts with neighboring points in ball (discrete)  $B_\delta(X_i) = \{X_j: |X_i - X_j| < \delta \}$. 
 
