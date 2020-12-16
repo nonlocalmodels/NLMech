@@ -3,6 +3,10 @@
 
 model::Output::Output(inp::Input *d_input_p, data::DataManager *d_dataManager_p,
                       size_t d_n, double d_time) {
+
+  if  (d_input_p->getModelDeck()->d_isRestartActive)
+    d_n +=  d_input_p->getRestartDeck()->d_step;
+
   std::cout << "Output: time step = " << d_n << "\n";
 
   // write out % completion of simulation at 10% interval
