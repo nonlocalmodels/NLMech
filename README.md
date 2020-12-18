@@ -50,7 +50,7 @@ The documentation of the the master branch is available [here](https://nonlocalm
 
 ## Releases
 
-The current stable version is [![GitHub release](https://img.shields.io/github/release/nonlocalmodels/NLMech.svg)](https://GitHub.com/nonlocalmodels/NLMech/releases/) and the current developement happens in the [master branch](https://github.com/nonlocalmodels/NLMech). For more details, we refer to the [Changelog]() file.
+The current stable version is [![GitHub release](https://img.shields.io/github/release/nonlocalmodels/NLMech.svg)](https://GitHub.com/nonlocalmodels/NLMech/releases/) and the current developement happens in the [master branch](https://github.com/nonlocalmodels/NLMech). For more details, we refer to the [Changelog](https://github.com/nonlocalmodels/NLMech/blob/master/CHANGELOG.md) file.
 
 ## Code of conduct
 

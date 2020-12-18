@@ -34,10 +34,13 @@ loading::FLoading::FLoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
         bc.d_spatialFnType != "hat_y" and bc.d_spatialFnType != "hat_z" and
         bc.d_spatialFnType != "sin_x" and bc.d_spatialFnType != "sin_y" and
         bc.d_spatialFnType != "sin_z" and bc.d_spatialFnType != "linear_x" and
-        bc.d_spatialFnType != "linear_y" and bc.d_spatialFnType != "linear_z") {
+        bc.d_spatialFnType != "linear_y" and
+        bc.d_spatialFnType != "linear_z" and
+        bc.d_spatialFnType != "line_load") {
       std::cerr << "Error: Force bc space function type = "
                 << bc.d_spatialFnType << " not recognized. "
-                << "Currently only constant, hat_x, hat_y function is "
+                << "Currently only constant, hat_{x,y,z}, sin_{x,y,z}, "
+                   "linear_{x,y,z}, and line_load function is "
                    "implemented. \n";
       exit(1);
     }
@@ -134,7 +137,7 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
         //       |     /      |      \
         //       |   /        |        \
         //       | /          |          \
-	//       o____________o____________o______\ x
+	      //       o____________o____________o______\ x
         //                                        /
         //    loc_x_min                 loc_x_max
         //
@@ -166,6 +169,84 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
         fmax = bc.d_spatialFnParams[0] * a * x.d_z;
       } else if (bc.d_spatialFnType == "constant") {
         fmax = bc.d_spatialFnParams[0];
+      } else if (bc.d_spatialFnType == "line_load") {
+        double h = mesh->getMeshSize();
+
+        if (bc.d_direction.size() != 1)
+          std::cerr << "Error: This load needs to be applied to each direction "
+                       "separated!"
+                    << std::endl;
+
+        for (auto d : bc.d_direction) {
+          switch (d) {
+            case 1: {
+              double min = bc.d_x1;
+              double max = bc.d_x2;
+
+              if (bc.d_spatialFnParams[0] == -1) {
+                double max = bc.d_x1;
+                double min = bc.d_x2;
+              }
+
+              double length = std::abs(max - min);
+              size_t nodes = length / h;
+              double scale = 1. / nodes;
+
+              size_t pos = (x.d_x - min) / h;
+
+              if (bc.d_spatialFnParams[0] == -1) pos = (max - x.d_x) / h;
+
+              fmax *= pos * scale;
+
+            } break;
+            case 2: {
+              double min = bc.d_y1;
+              double max = bc.d_y2;
+
+              if (bc.d_spatialFnParams[0] == -1) {
+                double max = bc.d_y1;
+                double min = bc.d_y2;
+              }
+
+              double length = std::abs(max - min);
+              size_t nodes = length / h;
+              double scale = 1. / nodes;
+
+              size_t pos = (x.d_y - min) / h;
+
+              if (bc.d_spatialFnParams[0] == -1) pos = (max - x.d_y) / h;
+
+              // std::cout << pos << " " << scale << std::endl;
+
+              fmax *= pos * scale;
+
+            } break;
+            case 3: {
+              double min = bc.d_z1;
+              double max = bc.d_z2;
+
+              if (bc.d_spatialFnParams[0] == -1) {
+                double max = bc.d_z1;
+                double min = bc.d_z2;
+              }
+
+              double length = std::abs(max - min);
+              size_t nodes = length / h;
+              double scale = 1. / nodes;
+
+              size_t pos = (x.d_z - min) / h;
+
+              if (bc.d_spatialFnParams[0] == -1) pos = (max - x.d_z) / h;
+
+              fmax *= pos * scale;
+
+            } break;
+
+            default:
+              std::cerr << "Invalid dimension" << std::endl;
+              break;
+          }
+        }
       }
 
       // apply time function
