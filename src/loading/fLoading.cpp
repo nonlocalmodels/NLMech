@@ -214,11 +214,9 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
 
               size_t pos = (x.d_y - min) / h;
 
-              
-
               if (bc.d_spatialFnParams[0] == -1) pos = (max - x.d_y) / h;
 
-              //std::cout << pos << " " << scale << std::endl;
+              // std::cout << pos << " " << scale << std::endl;
 
               fmax *= pos * scale;
 
