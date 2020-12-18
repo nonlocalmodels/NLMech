@@ -172,6 +172,9 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
       } else if (bc.d_spatialFnType == "line_load") {
         double h = mesh->getMeshSize();
 
+        if (bc.d_direction.size() != 1)
+        std::cerr << "Error: This load needs to be applied to each direction separated!"
+
         for (auto d : bc.d_direction) {
           switch (d) {
             case 1: {
@@ -193,9 +196,6 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
 
               fmax *= pos * scale;
 
-              std::cout << nodes << " " << pos << " " << pos * scale
-                        << std::endl;
-
             } break;
             case 2: {
               double min = bc.d_y1;
@@ -215,9 +215,6 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
               if (bc.d_spatialFnParams[0] == -1) pos = (max - x.d_y) / h;
 
               fmax *= pos * scale;
-
-              std::cout << nodes << " " << pos << " " << pos * scale
-                        << std::endl;
 
             } break;
             case 3: {
