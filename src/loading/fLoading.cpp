@@ -173,7 +173,9 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
         double h = mesh->getMeshSize();
 
         if (bc.d_direction.size() != 1)
-        std::cerr << "Error: This load needs to be applied to each direction separated!"
+          std::cerr << "Error: This load needs to be applied to each direction "
+                       "separated!"
+                    << std::endl;
 
         for (auto d : bc.d_direction) {
           switch (d) {
@@ -186,7 +188,7 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
                 double min = bc.d_x2;
               }
 
-              double length = max - min;
+              double length = std::abs(max - min);
               size_t nodes = length / h;
               double scale = 1. / nodes;
 
@@ -206,13 +208,17 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
                 double min = bc.d_y2;
               }
 
-              double length = max - min;
+              double length = std::abs(max - min);
               size_t nodes = length / h;
               double scale = 1. / nodes;
 
               size_t pos = (x.d_y - min) / h;
 
+              
+
               if (bc.d_spatialFnParams[0] == -1) pos = (max - x.d_y) / h;
+
+              //std::cout << pos << " " << scale << std::endl;
 
               fmax *= pos * scale;
 
@@ -226,7 +232,7 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
                 double min = bc.d_z2;
               }
 
-              double length = max - min;
+              double length = std::abs(max - min);
               size_t nodes = length / h;
               double scale = 1. / nodes;
 
@@ -274,8 +280,6 @@ void loading::FLoading::apply(const double &time, std::vector<util::Point3> *f,
       }
     }  // loop over nodes
   }    // loop over bc sets
-
-  exit(0);
 }
 
 std::string loading::FLoading::printStr(int nt, int lvl) const {
