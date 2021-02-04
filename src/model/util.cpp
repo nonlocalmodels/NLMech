@@ -4,10 +4,6 @@
 model::Output::Output(inp::Input *d_input_p, data::DataManager *d_dataManager_p,
                       size_t d_n, double d_time) {
 
-  std::cout << d_n << std::endl;
-
-  if  (d_input_p->getModelDeck()->d_isRestartActive)
-    d_n +=  d_input_p->getRestartDeck()->d_step * 500;
 
   std::cout << "Output: time step = " << d_n << "\n";
 
