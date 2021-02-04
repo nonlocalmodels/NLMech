@@ -1,0 +1,55 @@
+Model:
+  Dimension: 2
+  Discretization_Type:
+    Spatial: finite_difference
+    Time: velocity_verlet
+  Final_Time: 0.0000001
+  Time_Steps: 5
+  Horizon: 0.002000
+  Horizon_h_Ratio: 4
+Policy:
+  Enable_PostProcessing: true
+Mesh:
+  File: mesh.vtu
+  Keep_Element_Conn: true
+Material:
+  Type: PDBond
+  Density: 1200.000000
+  Compute_From_Classical: true
+  E: 3240000000.000000
+  Gc: 500.000000
+  Bond_Potential:
+    Type: 1
+    Check_Sc_Factor: 10.0
+    Irreversible_Bond_Fracture: true
+  Influence_Function:
+    Type: 1
+Force_BC:
+  Sets: 1
+  Set_1:
+    Location:
+      Rectangle: [0, 0, 0.1, 0.002]
+    Direction: [2]
+    Time_Function:
+      Type: linear
+      Parameters:
+        - -5000000000.0
+      Parameters: [1]
+    Spatial_Function:
+      Type: constant
+      Parameters: [1]
+Output:
+  Path: ./restart_
+  Tags:
+    - Displacement
+    - Velocity
+    - Force
+    - Damage_Z
+  Output_Interval: 1
+  Compress_Type: zlib
+  Perform_FE_Out: true
+Restart:
+  File: ./output_4.vtu  
+  Step: 4
+HPX:
+  Partitions: 1
