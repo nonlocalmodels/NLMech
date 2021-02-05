@@ -15,6 +15,7 @@
 #include "inp/decks/modelDeck.h"
 #include "inp/decks/outputDeck.h"
 #include "inp/decks/policyDeck.h"
+#include "inp/decks/restartDeck.h"
 #include "rw/writer.h"
 #include "data/DataManager.h"
 #include "fe/mesh.h"
@@ -28,6 +29,7 @@ struct ModelDeck;
 struct OutputDeck;
 struct MeshDeck;
 struct PolicyDeck;
+struct RestartDeck;
 class Policy;
 } // namespace inp
 

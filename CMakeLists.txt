@@ -3,21 +3,22 @@
 #
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-cmake_minimum_required(VERSION 3.10)
 
 #####################################################################
 # Setup 
 #####################################################################
+project(NLMech
+    DESCRIPTION "Framework for non-local mechanics"
+    LANGUAGES CXX)
 
 # Set the version 
 set (VERSION_MAJOR 0)
 set (VERSION_MINOR 1)
 set (VERSION_UPDATE 0)
 
-project(NLMech 
-    VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_UPDATE}
-    DESCRIPTION "Framework for non-local mechanics"
-    LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.10)
+
+
 
 # Provide the configuration file to get the version
 configure_file (

@@ -95,3 +95,39 @@ WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/qsModel/1D
 # Depencies
 set_tests_properties(quasistatic.1D.elastic_legacy_vtk PROPERTIES
   FIXTURES_SETUP quasistatic.1D.elastic.mesh)
+
+##############################################################################
+# Restart
+##############################################################################
+
+add_test(NAME explicit.restart.mesh
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/mesh -i input_mesh.yaml -d 2
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/fdModel/restart
+)
+
+add_test(NAME explicit.restart.run
+COMMAND ${EXECUTABLE_OUTPUT_PATH}/NLMech -i input.yaml --hpx:threads=1
+WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/fdModel/restart
+)
+
+add_test(NAME explicit.restart.restart
+COMMAND ${EXECUTABLE_OUTPUT_PATH}/NLMech -i restart.yaml --hpx:threads=1
+WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/fdModel/restart
+)
+
+
+add_test(NAME explicit.restart.compare
+COMMAND ${EXECUTABLE_OUTPUT_PATH}/dc -i input_compare.yaml -k fd_simple
+WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/examples/fdModel/restart
+)
+
+
+# Depencies
+set_tests_properties(explicit.restart.run PROPERTIES
+  FIXTURES_SETUP explicit.restart.mesh)
+
+set_tests_properties(explicit.restart.restart PROPERTIES
+  FIXTURES_SETUP explicit.restart.run)
+
+  set_tests_properties(explicit.restart.compare PROPERTIES
+  FIXTURES_SETUP explicit.restart.restart)
