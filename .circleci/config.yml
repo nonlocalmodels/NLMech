@@ -83,11 +83,13 @@ jobs:
         - run:
             name: Report
             command: |
-              gcovr --exclude-directories=build --exclude-directories=data -r .
+              cd build
+              gcovr --exclude-directories=build --exclude-directories=data -r ..
         - run:
             name: Publish code coverage
             command: |
               if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                cd build
                 coveralls --gcov-options '\-lp' -t ${CTOKEN}
               fi
     deploy:
