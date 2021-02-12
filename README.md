@@ -64,7 +64,7 @@ The source code is released under the [![GitHub license](https://img.shields.io/
 
 In publications, please use our paper as the main citation for NLMech: 
 
-* P. Diehl, P. K. Jha, H. Kaiser, R. Lipton, and M. Lévesque. An asynchronous and task-based implementation of peridynamics utilizing hpx—the C++ standard library for parallelism and concurrency. SN Applied Sciences, 2(12):2144, 2020, [10.1007/s42452-020-03784-x]({https://doi.org/10.1007/s42452-020-03784-x), [Preprint](https://arxiv.org/abs/1806.06917).
+* P. Diehl, P. K. Jha, H. Kaiser, R. Lipton, and M. Lévesque. An asynchronous and task-based implementation of peridynamics utilizing hpx—the C++ standard library for parallelism and concurrency. SN Applied Sciences, 2(12):2144, 2020, [10.1007/s42452-020-03784-x](https://doi.org/10.1007/s42452-020-03784-x), [Preprint](https://arxiv.org/abs/1806.06917).
 
 For more references, we refer to NLMech's [publication list](https://nonlocalmodels.github.io/publications/).
 
