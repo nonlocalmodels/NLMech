@@ -17,11 +17,19 @@ namespace rw {
 
 
 /*!
-* @brief Returnd the data type
+* @brief Returns the data type
 * @param  data_name Name of the data element
 * @return The data type
 */
 std::string getDataType(const std::string &data_name);
+
+/*!
+* @brief checks if the file exists 
+* @param file_name The path and name to the file to be checked
+* @return True if the file exists and False if not
+*/
+
+bool fileExists(std::string file_name);
 
 } // namespace rw
 
