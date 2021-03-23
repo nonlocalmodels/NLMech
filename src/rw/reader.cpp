@@ -61,8 +61,6 @@ void rw::reader::readVtuFile(const std::string &filename, size_t dim,
                              std::vector<size_t> *enc,
                              std::vector<std::vector<size_t>> *nec,
                              std::vector<double> *volumes, bool is_fd) {
-
-
   // Check if file exists
   fileExists(filename);
 
@@ -104,7 +102,6 @@ void rw::reader::readVtuFileNodes(const std::string &filename, size_t dim,
 
 bool rw::reader::vtuHasPointData(const std::string &filename,
                                  const std::string &tag) {
-
   // Check if file exists
   fileExists(filename);
 
@@ -117,7 +114,6 @@ bool rw::reader::vtuHasPointData(const std::string &filename,
 
 bool rw::reader::vtuHasCellData(const std::string &filename,
                                 const std::string &tag) {
-
   // Check if file exists
   fileExists(filename);
 
@@ -130,7 +126,6 @@ bool rw::reader::vtuHasCellData(const std::string &filename,
 
 std::vector<std::string> rw::reader::readVtuFilePointTags(
     const std::string &filename) {
-
   // Check if file exists
   fileExists(filename);
 
@@ -143,10 +138,9 @@ std::vector<std::string> rw::reader::readVtuFilePointTags(
 
 std::vector<std::string> rw::reader::readVtuFileCellTags(
     const std::string &filename) {
-  
   // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   auto data = rdr.readVtuFileCellTags();
@@ -160,7 +154,7 @@ void rw::reader::readVtuFileCells(const std::string &filename, size_t dim,
                                   std::vector<std::vector<size_t>> *nec) {
   // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
 
@@ -174,7 +168,6 @@ void rw::reader::readVtuFileRestart(const std::string &filename,
                                     std::vector<util::Point3> *u,
                                     std::vector<util::Point3> *v,
                                     const std::vector<util::Point3> *X) {
-  
   // Check if file exists
   fileExists(filename);
 
@@ -203,10 +196,9 @@ void rw::reader::readVtuFileRestart(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<uint8_t> *data) {
-  
   // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -218,10 +210,9 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<size_t> *data) {
-  
   // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -233,9 +224,9 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<int> *data) {
-    // Check if file exists
+  // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -249,7 +240,7 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       std::vector<float> *data) {
   // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -261,10 +252,9 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<double> *data) {
-  
   // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -276,10 +266,9 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<util::Point3> *data) {
-  
   // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -293,7 +282,7 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       std::vector<util::SymMatrix3> *data) {
   // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -305,10 +294,9 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<util::Matrix33> *data) {
-  
-    // Check if file exists
+  // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -320,10 +308,9 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFileCellData(const std::string &filename,
                                      const std::string &tag,
                                      std::vector<float> *data) {
-    // Check if file exists
+  // Check if file exists
   fileExists(filename);
-  
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -335,9 +322,9 @@ bool rw::reader::readVtuFileCellData(const std::string &filename,
 bool rw::reader::readVtuFileCellData(const std::string &filename,
                                      const std::string &tag,
                                      std::vector<double> *data) {
-    // Check if file exists
+  // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -349,10 +336,9 @@ bool rw::reader::readVtuFileCellData(const std::string &filename,
 bool rw::reader::readVtuFileCellData(const std::string &filename,
                                      const std::string &tag,
                                      std::vector<util::Point3> *data) {
-  
-    // Check if file exists
+  // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -364,10 +350,9 @@ bool rw::reader::readVtuFileCellData(const std::string &filename,
 bool rw::reader::readVtuFileCellData(const std::string &filename,
                                      const std::string &tag,
                                      std::vector<util::SymMatrix3> *data) {
-  
-    // Check if file exists
+  // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -379,9 +364,9 @@ bool rw::reader::readVtuFileCellData(const std::string &filename,
 bool rw::reader::readVtuFileCellData(const std::string &filename,
                                      const std::string &tag,
                                      std::vector<util::Matrix33> *data) {
-    // Check if file exists
+  // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -396,10 +381,9 @@ void rw::reader::readMshFile(const std::string &filename, size_t dim,
                              std::vector<size_t> *enc,
                              std::vector<std::vector<size_t>> *nec,
                              std::vector<double> *volumes, bool is_fd) {
-  
-    // Check if file exists
+  // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::MshReader(filename);
   rdr.readMesh(dim, nodes, element_type, num_elem, enc, nec, volumes, is_fd);
@@ -410,10 +394,9 @@ void rw::reader::readMshFileRestart(const std::string &filename,
                                     std::vector<util::Point3> *u,
                                     std::vector<util::Point3> *v,
                                     const std::vector<util::Point3> *X) {
-  
-    // Check if file exists
+  // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::MshReader(filename);
   // if displacement is not in input file, use reference coordinate to get
@@ -439,10 +422,9 @@ void rw::reader::readMshFileRestart(const std::string &filename,
 bool rw::reader::readMshFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<double> *data) {
-  
-    // Check if file exists
+  // Check if file exists
   fileExists(filename);
-  
+
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // get velocity
