@@ -32,10 +32,10 @@ rw::reader::VtkReader::VtkReader(const std::string &filename) {
   std::ifstream d_myfile;
   d_myfile.open(filename);
 
-    if (!d_myfile.is_open()) {
-    std::cerr << "Error: Could not open or generate following file: " << filename
-              << std::endl;
-              std::exit(1);
+  if (!d_myfile.is_open()) {
+    std::cerr << "Error: Could not open or generate following file: "
+              << filename << std::endl;
+    std::exit(1);
   }
   d_myfile.close();
 

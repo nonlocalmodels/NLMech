@@ -61,7 +61,6 @@ void rw::reader::readVtuFile(const std::string &filename, size_t dim,
                              std::vector<size_t> *enc,
                              std::vector<std::vector<size_t>> *nec,
                              std::vector<double> *volumes, bool is_fd) {
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   rdr.readMesh(dim, nodes, element_type, num_elem, enc, nec, volumes, is_fd);
@@ -100,7 +99,6 @@ void rw::reader::readVtuFileNodes(const std::string &filename, size_t dim,
 
 bool rw::reader::vtuHasPointData(const std::string &filename,
                                  const std::string &tag) {
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   auto has_data = rdr.vtuHasPointData(tag);
@@ -110,7 +108,6 @@ bool rw::reader::vtuHasPointData(const std::string &filename,
 
 bool rw::reader::vtuHasCellData(const std::string &filename,
                                 const std::string &tag) {
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   auto has_data = rdr.vtuHasCellData(tag);
@@ -120,8 +117,6 @@ bool rw::reader::vtuHasCellData(const std::string &filename,
 
 std::vector<std::string> rw::reader::readVtuFilePointTags(
     const std::string &filename) {
-
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   auto data = rdr.readVtuFilePointTags();
@@ -131,8 +126,6 @@ std::vector<std::string> rw::reader::readVtuFilePointTags(
 
 std::vector<std::string> rw::reader::readVtuFileCellTags(
     const std::string &filename) {
-
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   auto data = rdr.readVtuFileCellTags();
@@ -144,8 +137,6 @@ void rw::reader::readVtuFileCells(const std::string &filename, size_t dim,
                                   size_t &element_type, size_t &num_elem,
                                   std::vector<size_t> *enc,
                                   std::vector<std::vector<size_t>> *nec) {
-
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
 
@@ -159,8 +150,6 @@ void rw::reader::readVtuFileRestart(const std::string &filename,
                                     std::vector<util::Point3> *u,
                                     std::vector<util::Point3> *v,
                                     const std::vector<util::Point3> *X) {
-  
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // if displacement is not in input file, use reference coordinate to get
@@ -186,7 +175,6 @@ void rw::reader::readVtuFileRestart(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<uint8_t> *data) {
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -198,7 +186,6 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<size_t> *data) {
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -210,8 +197,6 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<int> *data) {
-
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -223,7 +208,6 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<float> *data) {
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -235,8 +219,6 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<double> *data) {
-
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -248,8 +230,6 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<util::Point3> *data) {
-
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -261,8 +241,6 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<util::SymMatrix3> *data) {
-
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -274,8 +252,6 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<util::Matrix33> *data) {
-  
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -287,8 +263,6 @@ bool rw::reader::readVtuFilePointData(const std::string &filename,
 bool rw::reader::readVtuFileCellData(const std::string &filename,
                                      const std::string &tag,
                                      std::vector<float> *data) {
-
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -300,8 +274,6 @@ bool rw::reader::readVtuFileCellData(const std::string &filename,
 bool rw::reader::readVtuFileCellData(const std::string &filename,
                                      const std::string &tag,
                                      std::vector<double> *data) {
-
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -313,8 +285,6 @@ bool rw::reader::readVtuFileCellData(const std::string &filename,
 bool rw::reader::readVtuFileCellData(const std::string &filename,
                                      const std::string &tag,
                                      std::vector<util::Point3> *data) {
-
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -326,8 +296,6 @@ bool rw::reader::readVtuFileCellData(const std::string &filename,
 bool rw::reader::readVtuFileCellData(const std::string &filename,
                                      const std::string &tag,
                                      std::vector<util::SymMatrix3> *data) {
-
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -339,7 +307,6 @@ bool rw::reader::readVtuFileCellData(const std::string &filename,
 bool rw::reader::readVtuFileCellData(const std::string &filename,
                                      const std::string &tag,
                                      std::vector<util::Matrix33> *data) {
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // read data
@@ -354,8 +321,6 @@ void rw::reader::readMshFile(const std::string &filename, size_t dim,
                              std::vector<size_t> *enc,
                              std::vector<std::vector<size_t>> *nec,
                              std::vector<double> *volumes, bool is_fd) {
-  
-
   // call vtk reader
   auto rdr = rw::reader::MshReader(filename);
   rdr.readMesh(dim, nodes, element_type, num_elem, enc, nec, volumes, is_fd);
@@ -366,8 +331,6 @@ void rw::reader::readMshFileRestart(const std::string &filename,
                                     std::vector<util::Point3> *u,
                                     std::vector<util::Point3> *v,
                                     const std::vector<util::Point3> *X) {
- 
-
   // call vtk reader
   auto rdr = rw::reader::MshReader(filename);
   // if displacement is not in input file, use reference coordinate to get
@@ -393,8 +356,6 @@ void rw::reader::readMshFileRestart(const std::string &filename,
 bool rw::reader::readMshFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<double> *data) {
-
-
   // call vtk reader
   auto rdr = rw::reader::VtkReader(filename);
   // get velocity
