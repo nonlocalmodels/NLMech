@@ -27,11 +27,4 @@ std::string rw::getDataType(const std::string &data_name) {
   return "";
 }
 
-bool rw::fileExists(std::string file_name) {
-  bool result = boost::filesystem::exists(file_name);
-
-  if (!result) {
-    std::cerr << "Error: File " + file_name + " not found!";
-    std::exit(1);
-  }
 }
