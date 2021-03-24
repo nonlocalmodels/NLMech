@@ -26,5 +26,3 @@ std::string rw::getDataType(const std::string &data_name) {
 
   return "";
 }
-
-}
