@@ -8,8 +8,6 @@
 
 #include "util.h"
 
-namespace {
-
 std::vector<std::string> get_double_tags() {
   return {"Damage",       "Damage_Phi", "Damage_Z",  "Node_Volume",
           "Nodal_Volume", "Fixity",     "Work_Done", "Strain_Energy"};
@@ -18,8 +16,6 @@ std::vector<std::string> get_double_tags() {
 std::vector<std::string> get_point_tags() {
   return {"Displacement", "Velocity", "Force", "Force_Density"};
 }
-
-}  // namespace
 
 std::string rw::getDataType(const std::string &data_name) {
   for (const auto &tag : get_double_tags())

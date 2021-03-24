@@ -20,6 +20,7 @@
 #include <vtkUnsignedCharArray.h>
 #include <vtkUnsignedIntArray.h>
 #include <vtkVersion.h>
+#include <vtkErrorCode.h>
 
 #include "util/feElementDefs.h"
 
@@ -27,6 +28,16 @@ size_t rw::reader::VtkReader::d_count = 0;
 
 rw::reader::VtkReader::VtkReader(const std::string &filename) {
   d_count++;
+
+  std::ifstream d_myfile;
+  d_myfile.open(filename);
+
+  if (!d_myfile.is_open()) {
+    std::cerr << "Error: Could not open or generate following file: "
+              << filename << std::endl;
+    std::exit(1);
+  }
+  d_myfile.close();
 
   // Append the extension vtu to file_name
   d_reader_p = vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
