@@ -29,8 +29,6 @@ std::string getDataType(const std::string &data_name);
 * @return True if the file exists and False if not
 */
 
-bool fileExists(std::string file_name);
-
 } // namespace rw
 
 #endif // RW_UTIL_H
