@@ -143,7 +143,7 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
 
   if (d_dimension == 2)
   // set Poisson's ratio to 1/3
-  deck->d_matData.d_nu = 1/3;
+  deck->d_matData.d_nu = 1./3.;
 
   // compute E if not provided or K if not provided
   if (deck->d_matData.d_E > 0.)
