@@ -102,7 +102,8 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
   // Need following elastic and fracture properties
   // 1. E or K
   // 2. Gc or KIc
-  // For bond-based, Poisson's ratio is fixed to 1/4
+  // For bond-based, Poisson's ratio is fixed to 1/4 for three-dimensions
+  // and fixed to 1/3 for two dimensions
   //
   if (util::compare::definitelyLessThan(deck->d_matData.d_E, 0.) &&
       util::compare::definitelyLessThan(deck->d_matData.d_K, 0.)) {
@@ -135,8 +136,14 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
                  "compute parameters.\n";
   }
 
+
+  if (d_dimension == 3)
   // set Poisson's ratio to 1/4
   deck->d_matData.d_nu = 0.25;
+
+  if (d_dimension == 2)
+  // set Poisson's ratio to 1/3
+  deck->d_matData.d_nu = 1./3.;
 
   // compute E if not provided or K if not provided
   if (deck->d_matData.d_E > 0.)
@@ -176,8 +183,6 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
 
 void material::pd::RNPBond::computeMaterialProperties(inp::MaterialDeck *deck,
                                                       const double &M) {
-  // set Poisson's ratio to 1/4
-  deck->d_matData.d_nu = 0.25;
 
   // compute peridynamic parameters
   if (d_dimension == 2) {
