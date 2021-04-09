@@ -135,13 +135,17 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
                  "compute parameters.\n";
   }
 
-  if (deck->d_isPlaneStrain == true)
+  if (deck->d_isPlaneStrain == true) {
     // set Poisson's ratio to 1/4 for plain strain
     deck->d_matData.d_nu = 0.25;
-  else if (deck->d_isPlaneStrain == false)
+    std::cout << "FDModel: Plane Strain and nu=" << deck->d_matData.d_nu << "."
+              << std::endl;
+  } else if (deck->d_isPlaneStrain == false) {
     // set Poisson's ratio to 1/3 for plain stress
     deck->d_matData.d_nu = 1. / 3.;
-  else {
+    std::cout << "FDModel: Plane Stress and nu=" << deck->d_matData.d_nu << "."
+              << std::endl;
+  } else {
     std::cerr << "Error: Please specifiy the Is_Plane_Strain attribute in the "
                  "Material section!"
               << std::endl;
