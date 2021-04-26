@@ -231,6 +231,10 @@ void inp::Input::setMeshDeck() {
     std::cerr << "Error: Please specify mesh filename.\n";
     exit(1);
   }
+  if (config["Mesh"]["Load_PUM_data"])
+  d_meshDeck_p->d_loadPUMData = config["Mesh"]["Load_PUM_data"].as<bool>();
+  else
+  d_meshDeck_p->d_loadPUMData = false;
 
   if (d_modelDeck_p->d_h < 1.0E-12)
     d_meshDeck_p->d_computeMeshSize = true;
@@ -573,6 +577,10 @@ void inp::Input::setLoadingDeck() {
           bc.d_z1 = locs[2];
           bc.d_z2 = locs[5];
         }  // read bc region
+        else if (e["Location"]["Displacement_from_pum"]) {
+          bc.d_regionType = "displacement_from_pum";
+
+        }
 
         // read direction
         for (auto j : e["Direction"]) bc.d_direction.push_back(j.as<size_t>());

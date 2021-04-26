@@ -27,6 +27,7 @@ struct BCData {
    * - \a rectangle (2d)
    * - \a angled_rectangle (2d)
    * - \a cuboid (3d)
+   * - \a displacement_from_pum (2d only)
    */
   std::string d_regionType;
 

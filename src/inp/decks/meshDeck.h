@@ -56,6 +56,11 @@ struct MeshDeck {
   bool d_keepElementConn;
 
   /*!
+   * @brief Specify if coupling data from PUM is loaded
+   */
+  bool d_loadPUMData;
+
+  /*!
    * @brief Constructor
    */
   MeshDeck()
