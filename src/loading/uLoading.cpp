@@ -20,15 +20,18 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
   // fill the list of nodes where bc is applied and also set fixity of these
   // nodes
+
+  
   for (const auto &bc : d_bcData) {
     // check bc first
+   
     if (bc.d_regionType != "rectangle" and
         bc.d_regionType != "angled_rectangle" and
         bc.d_regionType != "circle" and bc.d_regionType != "torus" and
-        bc.d_regionType != "line") {
+        bc.d_regionType != "line" and bc.d_regionType != "displacement_from_pum")  {
       std::cerr << "Error: Displacement bc region type = " << bc.d_regionType
                 << " not recognised. Should be rectangle or angled_rectangle "
-                   "or circle or torus. \n";
+                   "or circle or torus or displacement_from_pum. \n";
       exit(1);
     }
 
@@ -148,6 +151,11 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
           mesh->setFixity(i, dof - 1, true);
         }
       }
+      else if (bc.d_regionType == "displacement_from_pum"){
+
+        if (mesh->getPrescribedNodes()[i]==1)
+          node_fixed = true;
+      }
 
       // store the id of this node
       if (node_fixed) fix_nodes.push_back(i);
@@ -167,6 +175,19 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
       double umax = bc.d_timeFnParams[0];
       double du = 0.;
       double dv = 0.;
+
+      if (bc.d_regionType == "displacement_from_pum")
+      {
+
+        if (bc.d_direction.size() != 1)
+        {
+          std::cerr << "The region type: displacement_from_pum support only one direction per set. One set per direction is needed if multiple directions are used for the coupling." << std::endl;
+          exit(1);
+        }
+        umax = mesh->getPrescribedValues()[i][bc.d_direction[0]-1] / 0.001 ;
+        //std::cout << i << " " << umax << " " << bc.d_direction[0] << std::endl;
+
+      }
 
       // apply spatial function
       if (bc.d_spatialFnType == "sin_x") {
@@ -222,8 +243,8 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
           (*u)[i].d_x = du;
           (*v)[i].d_x = dv;
         } else if (d == 2) {
-          (*u)[i].d_y = du;
-          (*v)[i].d_y = dv;
+          (*u)[i].d_y = du ;
+          (*v)[i].d_y = dv ;
         } else if (d == 3) {
           (*u)[i].d_z = du;
           (*v)[i].d_z = dv;
