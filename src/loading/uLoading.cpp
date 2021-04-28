@@ -21,7 +21,6 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
   // fill the list of nodes where bc is applied and also set fixity of these
   // nodes
 
-  
   for (const auto &bc : d_bcData) {
     // check bc first
    
@@ -184,9 +183,8 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
           std::cerr << "The region type: displacement_from_pum support only one direction per set. One set per direction is needed if multiple directions are used for the coupling." << std::endl;
           exit(1);
         }
-        umax = mesh->getPrescribedValues()[i][bc.d_direction[0]-1] / 0.001 ;
-        //std::cout << i << " " << umax << " " << bc.d_direction[0] << std::endl;
-
+        umax = mesh->getPrescribedValues()[i][bc.d_direction[0]-1]  ;
+      
       }
 
       // apply spatial function
@@ -208,7 +206,12 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
       } else if (bc.d_spatialFnType == "linear_z") {
         double a = bc.d_spatialFnParams[0];
         umax = umax * a * x.d_z;
+      } else if (bc.d_spatialFnType == "constant")
+      {
+         double a = bc.d_spatialFnParams[0];
+         umax = umax * a;
       }
+
 
       // apply time function
       if (bc.d_timeFnType == "constant")
