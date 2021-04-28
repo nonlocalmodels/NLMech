@@ -75,7 +75,8 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
     inp::Policy::getInstance()->addToTags(1, "Mesh_d_vol");
 
   // read mesh data from file
-  createData(d_filename, false, deck->d_isCentroidBasedDiscretization, deck->d_loadPUMData);
+  createData(d_filename, false, deck->d_isCentroidBasedDiscretization,
+             deck->d_loadPUMData);
 
   // check if we need to compute mesh size
   if (deck->d_computeMeshSize) computeMeshSize();
@@ -163,12 +164,12 @@ void fe::Mesh::createData(const std::string &filename, bool ref_config,
     rw::reader::readVtuFilePointData(filename, "Fixity", &d_fix);
 
     // Read the data for coupling
-    if (has_coupling_data){
+    if (has_coupling_data) {
+      rw::reader::readVtuFilePointData(filename, "Boundary-Layer",
+                                       &d_prescribed_nodes);
 
-       rw::reader::readVtuFilePointData(filename, "Boundary-Layer", &d_prescribed_nodes);
-
-       rw::reader::readVtuFilePointData(filename, "PUM-Displacement", &d_prescribed_values);
-
+      rw::reader::readVtuFilePointData(filename, "PUM-Displacement",
+                                       &d_prescribed_values);
     }
   }
 
@@ -417,7 +418,8 @@ void fe::Mesh::readFromFile(inp::MeshDeck *deck, const std::string &filename) {
   d_filename = filename;
 
   // read file
-  createData(filename, false, deck->d_isCentroidBasedDiscretization, deck->d_loadPUMData);
+  createData(filename, false, deck->d_isCentroidBasedDiscretization,
+             deck->d_loadPUMData);
 
   // check if we need to compute mesh size
   if (deck->d_computeMeshSize) computeMeshSize();

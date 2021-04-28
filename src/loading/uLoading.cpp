@@ -23,11 +23,12 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
 
   for (const auto &bc : d_bcData) {
     // check bc first
-   
+
     if (bc.d_regionType != "rectangle" and
         bc.d_regionType != "angled_rectangle" and
         bc.d_regionType != "circle" and bc.d_regionType != "torus" and
-        bc.d_regionType != "line" and bc.d_regionType != "displacement_from_pum")  {
+        bc.d_regionType != "line" and
+        bc.d_regionType != "displacement_from_pum") {
       std::cerr << "Error: Displacement bc region type = " << bc.d_regionType
                 << " not recognised. Should be rectangle or angled_rectangle "
                    "or circle or torus or displacement_from_pum. \n";
@@ -149,11 +150,8 @@ loading::ULoading::ULoading(inp::LoadingDeck *deck, fe::Mesh *mesh) {
           // pass 0 for x, 1 for y, and 2 for z dof
           mesh->setFixity(i, dof - 1, true);
         }
-      }
-      else if (bc.d_regionType == "displacement_from_pum"){
-
-        if (mesh->getPrescribedNodes()[i]==1)
-          node_fixed = true;
+      } else if (bc.d_regionType == "displacement_from_pum") {
+        if (mesh->getPrescribedNodes()[i] == 1) node_fixed = true;
       }
 
       // store the id of this node
@@ -175,16 +173,15 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
       double du = 0.;
       double dv = 0.;
 
-      if (bc.d_regionType == "displacement_from_pum")
-      {
-
-        if (bc.d_direction.size() != 1)
-        {
-          std::cerr << "The region type: displacement_from_pum support only one direction per set. One set per direction is needed if multiple directions are used for the coupling." << std::endl;
+      if (bc.d_regionType == "displacement_from_pum") {
+        if (bc.d_direction.size() != 1) {
+          std::cerr << "The region type: displacement_from_pum support only "
+                       "one direction per set. One set per direction is needed "
+                       "if multiple directions are used for the coupling."
+                    << std::endl;
           exit(1);
         }
-        umax = mesh->getPrescribedValues()[i][bc.d_direction[0]-1]  ;
-      
+        umax = mesh->getPrescribedValues()[i][bc.d_direction[0] - 1];
       }
 
       // apply spatial function
@@ -206,12 +203,10 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
       } else if (bc.d_spatialFnType == "linear_z") {
         double a = bc.d_spatialFnParams[0];
         umax = umax * a * x.d_z;
-      } else if (bc.d_spatialFnType == "constant")
-      {
-         double a = bc.d_spatialFnParams[0];
-         umax = umax * a;
+      } else if (bc.d_spatialFnType == "constant") {
+        double a = bc.d_spatialFnParams[0];
+        umax = umax * a;
       }
-
 
       // apply time function
       if (bc.d_timeFnType == "constant")
@@ -246,8 +241,8 @@ void loading::ULoading::apply(const double &time, std::vector<util::Point3> *u,
           (*u)[i].d_x = du;
           (*v)[i].d_x = dv;
         } else if (d == 2) {
-          (*u)[i].d_y = du ;
-          (*v)[i].d_y = dv ;
+          (*u)[i].d_y = du;
+          (*v)[i].d_y = dv;
         } else if (d == 3) {
           (*u)[i].d_z = du;
           (*v)[i].d_z = dv;
