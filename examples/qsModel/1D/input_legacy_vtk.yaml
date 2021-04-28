@@ -28,6 +28,7 @@ Displacement_BC:
         - 0.0 
     Spatial_Function: 
       Type: constant 
+      Parameters: [1]
 Force_BC:
   Sets: 1
   Set_1:
