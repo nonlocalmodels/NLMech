@@ -28,7 +28,7 @@ void geometry::VolumeCorrection::correctVolume(
   d_volumeCorrection_p = new std::vector<std::vector<double>>(nodes->size());
 
   hpx::for_loop(
-      hpx::parallel::execution::par, 0, nodes->size(), [&](boost::uint64_t i) {
+      hpx::execution::par, 0, nodes->size(), [&](boost::uint64_t i) {
         (*d_volumeCorrection_p)[i] =
             std::vector<double>(neighbors->getNeighbors(i).size(), 1.);
 
@@ -51,7 +51,7 @@ void geometry::VolumeCorrection::weightedVolume(
   d_weightedVolume_p = new std::vector<double>(nodes->size(), 1);
 
   hpx::for_loop(
-      hpx::parallel::execution::par, 0, nodes->size(), [&](boost::uint64_t i) {
+      hpx::execution::par, 0, nodes->size(), [&](boost::uint64_t i) {
         double tmp = 0;
         size_t k = 0;
 

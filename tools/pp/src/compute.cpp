@@ -210,7 +210,7 @@ tools::pp::Compute::Compute(const std::string &filename)
 
     if (d_uPlus) {
       auto f2 = hpx::for_loop(
-          hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+          hpx::execution::par(hpx::parallel::execution::task), 0,
           d_dataManager_p->getMeshP()->getNumNodes(),
           [this](boost::uint64_t i) {
             d_u[i] += util::Point3(
@@ -896,7 +896,7 @@ void tools::pp::Compute::transformU(rw::writer::Writer *writer) {
                                    util::Point3());
   auto scale = d_currentData->d_transformU_p->d_scale;
   auto f = hpx::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      hpx::execution::par(hpx::parallel::execution::task), 0,
       d_dataManager_p->getMeshP()->getNumNodes(),
       [&u_temp, scale, this](boost::uint64_t i) {
         u_temp[i] = util::Point3(scale * d_u[i].d_x, scale * d_u[i].d_y,
@@ -931,7 +931,7 @@ void tools::pp::Compute::transformV(rw::writer::Writer *writer) {
 
     if (data->d_markVInRectGiven) {
       auto f = hpx::for_loop(
-          hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+          hpx::execution::par(hpx::parallel::execution::task), 0,
           d_dataManager_p->getMeshP()->getNumNodes(),
           [&v_mark, data, this](boost::uint64_t i) {
             if (util::geometry::isPointInsideRectangle(
@@ -973,7 +973,7 @@ void tools::pp::Compute::transformV(rw::writer::Writer *writer) {
     if (!data->d_combineMarkV) v_mark = d_v;
 
     auto f = hpx::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+        hpx::execution::par(hpx::parallel::execution::task), 0,
         d_dataManager_p->getMeshP()->getNumNodes(),
         [&v_mark, data, this](boost::uint64_t i) {
           auto x = d_dataManager_p->getMeshP()->getNode(i);
@@ -1042,7 +1042,7 @@ void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
 
   // compute strain and stress
   auto f = hpx::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      hpx::execution::par(hpx::parallel::execution::task), 0,
       d_dataManager_p->getMeshP()->getNumElements(),
       [&strain, &stress, data, quad, this](boost::uint64_t e) {
         auto ssn = util::SymMatrix3();
@@ -1092,7 +1092,7 @@ void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
   if (data->d_magStrainTensor) {
     magS = std::vector<float>(strain.size(), 0.);
     auto f2 = hpx::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+        hpx::execution::par(hpx::parallel::execution::task), 0,
         d_dataManager_p->getMeshP()->getNumElements(),
         [&magS, strain, data](boost::uint64_t e) {
           if (data->d_magStrainComp.empty()) {
@@ -1129,7 +1129,7 @@ void tools::pp::Compute::computeStrain(rw::writer::Writer *writer) {
         d_dataManager_p->getMeshP()->getNumElements(), util::Point3());
 
     auto f2 = hpx::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+        hpx::execution::par(hpx::parallel::execution::task), 0,
         d_dataManager_p->getMeshP()->getNumElements(),
         [&elem_quads, quad, this](boost::uint64_t e) {
           auto nds = d_dataManager_p->getMeshP()->getElementConnectivity(e);
@@ -1181,7 +1181,7 @@ void tools::pp::Compute::computeDamage(rw::writer::Writer *writer,
         "been created at the beginning.\n");
 
   auto f = hpx::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      hpx::execution::par(hpx::parallel::execution::task), 0,
       d_dataManager_p->getMeshP()->getNumNodes(),
       [&Z, this](boost::uint64_t i) {
         auto xi = d_dataManager_p->getMeshP()->getNode(i);
@@ -1451,7 +1451,7 @@ void tools::pp::Compute::computeJIntegral() {
     // std::vector<util::Point3> quad_points(2 * N, util::Point3());
 
     //    auto f = hpx::for_loop(
-    //        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+    //        hpx::execution::par(hpx::parallel::execution::task), 0,
     //        N,
     //        [&ced, N, h, cd, ctip, &line_quad, search_nodes, search_elems,
     //         E, this, calc_in_ref](boost::uint64_t I) {
@@ -1607,7 +1607,7 @@ void tools::pp::Compute::computeJIntegral() {
 
     // loop over nodes in compliment of domain A
     auto f = hpx::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+        hpx::execution::par(hpx::parallel::execution::task), 0,
         search_node_comp.size(),
         [&pd_internal_works, &pd_internal_works_rate, h, cd, search_nodes,
          search_node_comp, this](boost::uint64_t i) {
@@ -1679,7 +1679,7 @@ void tools::pp::Compute::computeJIntegral() {
 
     // loop over nodes in compliment of domain A
     auto f = hpx::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+        hpx::execution::par(hpx::parallel::execution::task), 0,
         search_nodes.size(),
         [&pd_strain_energies, &kinetic_energies, h, cd, search_nodes,
          search_node_comp, this](boost::uint64_t i) {
@@ -1748,7 +1748,7 @@ void tools::pp::Compute::computeJIntegral() {
 
     // loop over nodes in compliment of domain A
     auto f = hpx::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+        hpx::execution::par(hpx::parallel::execution::task), 0,
         d_dataManager_p->getMeshP()->getNumNodes(),
         [&pd_fracture_energies, this](boost::uint64_t i) {
           auto xi = d_dataManager_p->getMeshP()->getNode(i);

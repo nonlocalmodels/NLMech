@@ -18,12 +18,12 @@ static bool compare_point(const util::Point3 &a, const util::Point3 &b) {
 }
 
 double util::methods::add(const std::vector<double> &data) {
-  return hpx::parallel::reduce(hpx::parallel::execution::par, data.begin(),
+  return hpx::parallel::reduce(hpx::execution::par, data.begin(),
                                data.end());
 }
 
 double util::methods::max(const std::vector<double> &data, size_t *i) {
-  auto max_i = hpx::parallel::max_element(hpx::parallel::execution::par,
+  auto max_i = hpx::parallel::max_element(hpx::execution::par,
                                           data.begin(), data.end());
 
   if (i != nullptr) *i = std::distance(data.begin(), max_i);
@@ -31,7 +31,7 @@ double util::methods::max(const std::vector<double> &data, size_t *i) {
 }
 
 double util::methods::min(const std::vector<double> &data, size_t *i) {
-  auto min_i = hpx::parallel::min_element(hpx::parallel::execution::par,
+  auto min_i = hpx::parallel::min_element(hpx::execution::par,
                                           data.begin(), data.end());
 
   if (i != nullptr) *i = std::distance(data.begin(), min_i);
@@ -39,12 +39,12 @@ double util::methods::min(const std::vector<double> &data, size_t *i) {
 }
 
 float util::methods::add(const std::vector<float> &data) {
-  return hpx::parallel::reduce(hpx::parallel::execution::par, data.begin(),
+  return hpx::parallel::reduce(hpx::execution::par, data.begin(),
                                data.end());
 }
 
 float util::methods::max(const std::vector<float> &data, size_t *i) {
-  auto max_i = hpx::parallel::max_element(hpx::parallel::execution::par,
+  auto max_i = hpx::parallel::max_element(hpx::execution::par,
                                           data.begin(), data.end());
 
   if (i != nullptr) *i = std::distance(data.begin(), max_i);
@@ -52,7 +52,7 @@ float util::methods::max(const std::vector<float> &data, size_t *i) {
 }
 
 float util::methods::min(const std::vector<float> &data, size_t *i) {
-  auto min_i = hpx::parallel::min_element(hpx::parallel::execution::par,
+  auto min_i = hpx::parallel::min_element(hpx::execution::par,
                                           data.begin(), data.end());
 
   if (i != nullptr) *i = std::distance(data.begin(), min_i);
@@ -61,7 +61,7 @@ float util::methods::min(const std::vector<float> &data, size_t *i) {
 
 util::Point3 util::methods::maxLength(const std::vector<util::Point3> &data) {
   auto max_i = hpx::parallel::max_element(
-      hpx::parallel::execution::par, data.begin(), data.end(), &compare_point);
+      hpx::execution::par, data.begin(), data.end(), &compare_point);
 
   return data[std::distance(data.begin(), max_i)];
 }
