@@ -269,7 +269,7 @@ void fe::Mesh::computeVol() {
   //
   d_vol.resize(d_numNodes);
   auto f = hpx::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      hpx::execution::par(hpx::parallel::execution::task), 0,
       this->d_numNodes, [this, quads](boost::uint64_t i) {
         double v = 0.0;
 

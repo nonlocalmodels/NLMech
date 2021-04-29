@@ -32,7 +32,7 @@ geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
 
   cloud->points.resize(nodes->size());
 
-  hpx::for_loop(hpx::parallel::execution::par, 0, nodes->size(),
+  hpx::for_loop(hpx::execution::par, 0, nodes->size(),
                 [this, cloud, nodes](boost::uint64_t i) {
                   (*cloud)[i].x = (*nodes)[i].d_x;
                   (*cloud)[i].y = (*nodes)[i].d_y;
@@ -43,7 +43,7 @@ geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
 
   kdtree.setInputCloud(cloud);
 
-  hpx::for_loop(hpx::parallel::execution::par, 0, nodes->size(),
+  hpx::for_loop(hpx::execution::par, 0, nodes->size(),
                 [this, kdtree, nodes, horizon](boost::uint64_t i) {
                   std::vector<int> neighs;
                   std::vector<float> pointRadiusSquaredDistance;
@@ -67,7 +67,7 @@ geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
 #else
 
   auto f = hpx::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      hpx::execution::par(hpx::parallel::execution::task), 0,
       nodes->size(), [this, horizon, nodes](boost::uint64_t i) {
         //  for (size_t i=0; i<nodes->size(); i++) {
         util::Point3 xi = (*nodes)[i];
