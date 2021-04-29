@@ -18,7 +18,7 @@ static bool compare_point(const util::Point3 &a, const util::Point3 &b) {
 }
 
 double util::methods::add(const std::vector<double> &data) {
-  return hpx::parallel::reduce(hpx::execution::par, data.begin(),
+  return hpx::ranges::reduce(hpx::execution::par, data.begin(),
                                data.end());
 }
 
@@ -39,7 +39,7 @@ double util::methods::min(const std::vector<double> &data, size_t *i) {
 }
 
 float util::methods::add(const std::vector<float> &data) {
-  return hpx::parallel::reduce(hpx::execution::par, data.begin(),
+  return hpx::ranges::reduce(hpx::execution::par, data.begin(),
                                data.end());
 }
 
