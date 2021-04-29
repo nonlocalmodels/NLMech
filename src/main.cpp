@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
   std::cout << argv[0] << " (Version " << MAJOR_VERSION << "." << MINOR_VERSION
             << "." << UPDATE_VERSION << ")" << std::endl;
   // record current time
-  std::uint64_t begin = hpx::util::high_resolution_clock::now();
+  std::uint64_t begin = hpx::chrono::high_resolution_clock::now();
 
   // read input data
   auto *deck = new inp::Input(filename);
@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
   }
 
   // get time elapsed
-  std::uint64_t end = hpx::util::high_resolution_clock::now();
+  std::uint64_t end = hpx::chrono::high_resolution_clock::now();
   double elapsed_secs = double(end - begin) / 1.0e9;
 
   std::cout << " Time elapsed = " << elapsed_secs << " sec \n";
