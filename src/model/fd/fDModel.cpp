@@ -377,7 +377,7 @@ template <class T>
 void model::FDModel<T>::integrateCD() {
   // parallel for loop
   auto f = hpx::for_loop(
-      hpx::execution::par(hpx::parallel::execution::task), 0,
+      hpx::execution::par(hpx::execution::task), 0,
       d_dataManager_p->getMeshP()->getNumNodes(), [this](boost::uint64_t i) {
         auto dim = this->d_dataManager_p->getMeshP()->getDimension();
         auto delta_t = this->d_dataManager_p->getModelDeckP()->d_dt;
@@ -446,7 +446,7 @@ template <class T>
 void model::FDModel<T>::integrateVerlet() {
   // step 1 and 2 : Compute v_mid and u_new
   auto f = hpx::for_loop(
-      hpx::execution::par(hpx::parallel::execution::task), 0,
+      hpx::execution::par(hpx::execution::task), 0,
       d_dataManager_p->getMeshP()->getNumNodes(), [this](boost::uint64_t i) {
         auto dim = this->d_dataManager_p->getMeshP()->getDimension();
         auto delta_t = this->d_dataManager_p->getModelDeckP()->d_dt;
@@ -499,7 +499,7 @@ void model::FDModel<T>::integrateVerlet() {
 
   // Step 3: Compute v_new
   f = hpx::for_loop(
-      hpx::execution::par(hpx::parallel::execution::task), 0,
+      hpx::execution::par(hpx::execution::task), 0,
       d_dataManager_p->getMeshP()->getNumNodes(), [this](boost::uint64_t i) {
         auto dim = this->d_dataManager_p->getMeshP()->getDimension();
         auto fact = 0.5 * this->d_dataManager_p->getModelDeckP()->d_dt /
@@ -530,7 +530,7 @@ void model::FDModel<T>::computeForces() {
   const auto &volumes = d_dataManager_p->getMeshP()->getNodalVolumes();
 
   auto f = hpx::for_loop(
-      hpx::execution::par(hpx::parallel::execution::task), 0,
+      hpx::execution::par(hpx::execution::task), 0,
       d_dataManager_p->getMeshP()->getNumNodes(),
       [this](boost::uint64_t i) {
         (*this->d_dataManager_p->getForceP())[i] +=
@@ -613,7 +613,7 @@ void model::FDModel<T>::computeDampingForces() {
   bool is_viscous_damping = d_dampingGeom_p->isViscousDamping();
 
   auto f = hpx::for_loop(
-      hpx::execution::par(hpx::parallel::execution::task), 0,
+      hpx::execution::par(hpx::execution::task), 0,
       d_dataManager_p->getMeshP()->getNumNodes(),
       [this, delta_t, is_viscous_damping, dim](boost::uint64_t i) {
         // local variable to hold force
@@ -667,7 +667,7 @@ void model::FDModel<T>::computePostProcFields() {
     vec_ke = (*d_dataManager_p->getKineticEnergyP());
 
   auto f = hpx::for_loop(
-      hpx::execution::par(hpx::parallel::execution::task), 0,
+      hpx::execution::par(hpx::execution::task), 0,
       d_dataManager_p->getMeshP()->getNumNodes(),
       [this, &f_ext, &vec_ke](boost::uint64_t i) {
         // local variable
@@ -866,7 +866,7 @@ void model::FDModel<T>::checkOutputCriteria() {
       rect_ids.resize(N);
 
       auto f = hpx::for_loop(
-          hpx::execution::par(hpx::parallel::execution::task), 0, N,
+          hpx::execution::par(hpx::execution::task), 0, N,
           [this, N, rect, refZ, &rect_ids](boost::uint64_t I) {
             size_t ibegin = I * N;
             size_t iend = (I + 1) * N;
