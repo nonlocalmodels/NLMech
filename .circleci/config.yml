@@ -28,7 +28,7 @@ jobs:
                   cd build 
                   make test
             - run:
-                name: Documentaiton
+                name: Documentation
                 command: |
                   cd build
                   make doc
@@ -84,7 +84,7 @@ jobs:
             name: Report
             command: |
               cd build
-              gcovr --exclude-directories=build --exclude-directories=data -r ..
+              gcovr --exclude-directories=build --exclude-directories=data --exclude-directories=/usr/include/ -r ..
         - run:
             name: Publish code coverage
             command: |
