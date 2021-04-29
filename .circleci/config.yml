@@ -108,18 +108,14 @@ jobs:
         - run: 
            name: Deploy to DockerHub
            command: |
-             if [ "${CIRCLE_BRANCH}" == "main" ]; then
                 docker login -u $DOCKER_USER -p $DOCKER_PASS
                 docker push ${IMAGE_NAME}
-             fi
         - run: 
            name: Deploy to GitHub
            command: |
-              if [ "${CIRCLE_BRANCH}" == "main" ]; then
                 docker login docker.pkg.github.com --username diehlpk -p ${TOKEN}
                 docker tag ${IMAGE_NAME} docker.pkg.github.com/nonlocalmodels/nlmech/nlmech:latest
                 docker push docker.pkg.github.com/nonlocalmodels/nlmech/nlmech:latest
-              fi
     documentation:
       docker:
         - image: diehlpk/nonlocalmodels:baseimage
@@ -168,7 +164,8 @@ workflows:
       - deploy:
             filters:
               branches:
-                ignore: gh-pages
+                - ignore: gh-pages
+                - only: main
             requires:
               - codecoverage
               - documentation
