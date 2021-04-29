@@ -9,8 +9,8 @@
 #include <Config.h>
 
 #include <hpx/hpx_main.hpp>           // Need main source file
-#include <boost/program_options.hpp>  // program options
 #include <hpx/timing/high_resolution_clock.hpp>
+#include <hpx/modules/program_options.hpp>
 #include <iostream>
 
 #include "inp/decks/materialDeck.h"
@@ -23,15 +23,15 @@ struct MaterialDeck;
 }  // namespace inp
 
 int main(int argc, char *argv[]) {
-  boost::program_options::options_description desc("Allowed options");
+  hpx::program_options::options_description desc("Allowed options");
   desc.add_options()("help", "produce help message")(
-      "input-file,i", boost::program_options::value<std::string>(),
+      "input-file,i", hpx::program_options::value<std::string>(),
       "Configuration file");
 
-  boost::program_options::variables_map vm;
-  boost::program_options::store(
-      boost::program_options::parse_command_line(argc, argv, desc), vm);
-  boost::program_options::notify(vm);
+ hpx::program_options::variables_map vm;
+  hpx::program_options::store(
+      hpx::program_options::parse_command_line(argc, argv, desc), vm);
+  hpx::program_options::notify(vm);
 
   if (vm.count("help")) {
     std::cout << desc << "\n";

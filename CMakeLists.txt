@@ -9,7 +9,7 @@
 #####################################################################
 project(NLMech
     DESCRIPTION "Framework for non-local mechanics"
-    LANGUAGES CXX)
+    LANGUAGES CXX C)
 
 # Set the version 
 set (VERSION_MAJOR 0)
