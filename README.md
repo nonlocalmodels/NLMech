@@ -28,7 +28,8 @@ as the build system and has following dependencies:
 
 Following dependencies are optional, but are recommended for large simulations:
 
-  * [PCL](https://github.com/PointCloudLibrary/pcl) 1.11.
+  * [PCL](https://github.com/PointCloudLibrary/pcl) 1.11 and
+  * [Flann](https://github.com/flann-lib/flann)  1.9.
 
 Since we use the latest stable [Fedora](https://getfedora.org/) workstation spin for our continuous testing, we recommend
 to use a Docker image to build the code. Thus, these are the minimal required versions are meet. For the master branch the same versions
@@ -36,7 +37,7 @@ should work. We strongly recommend to use the same CMake version to build HPX an
 
 We provide following support to build the code
 
-* Bash scripts to build the code on [Ubuntu](https://github.com/nonlocalmodels/buildscripts/tree/main/Ubuntu) and [Fedora](https://github.com/nonlocalmodels/buildscripts/tree/main/Fedora),
+* [Bash scripts](https://github.com/nonlocalmodels/buildscripts/tree/main/bash)) to build the code,
 * Docker files to build the code using the [Fedora packages](https://github.com/nonlocalmodels/buildscripts/blob/main/Docker/Fedora) or [build all dependencies](https://github.com/nonlocalmodels/buildscripts/blob/main/Docker/FedoraAll),
 * [Scripts](https://github.com/nonlocalmodels/HPCBuildInfrastructure) to build the code on HPC systems.
 
