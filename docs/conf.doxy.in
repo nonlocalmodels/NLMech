@@ -811,6 +811,7 @@ INPUT                  = ../src/main.cpp \
                          ../tools/pp \
                          ../tools/mesh \
                          ../docs/content/cmake-options.md \
+                         ../docs/content/install-instructions.md \
                          ../README.md 
                          
 
