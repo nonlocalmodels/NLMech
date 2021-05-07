@@ -10,7 +10,12 @@ Logo below has been obtained by running Peridynamic simulation on the logo mesh,
 
 <p style="text-align:center;"><img src="https://github.com/nonlocalmodels/NLMech/blob/main/assets/logo/logo_sim.png?raw=true" alt="logo" width="400"/></p>
 
-## Building 
+## Getting started
+
+Depends on your needs, we provide various opportunities to build the code and Docker images to play around with the code. If you are interested in running the code on large scale simulations or extend the code, please have a look at the building section. If you like to play around with the code and run some examples, please proceed with the section "running the code". 
+
+
+### Building 
 
 The code uses 
 
@@ -35,11 +40,15 @@ Since we use the latest stable [Fedora](https://getfedora.org/) workstation spin
 to use a Docker image to build the code. Thus, these are the minimal required versions are meet. For the master branch the same versions
 should work. We strongly recommend to use the same CMake version to build HPX and NLMech.
 
-We provide following support to build the code
+We provide following support to build the code:
 
 * [Bash scripts](https://github.com/nonlocalmodels/buildscripts/tree/main/bash)) to build the code,
 * Docker files to build the code using the [Fedora packages](https://github.com/nonlocalmodels/buildscripts/blob/main/Docker/Fedora) or [build all dependencies](https://github.com/nonlocalmodels/buildscripts/blob/main/Docker/FedoraAll),
 * [Scripts](https://github.com/nonlocalmodels/HPCBuildInfrastructure) to build the code on HPC systems.
+
+A detailed description to build the code on HPC systems is available in [NLMech's documentation]().
+
+### Ruining the code
 
 If you just interested in running the application, we provide a Doker image with the [latest Successful build](https://github.com/nonlocalmodels/NLMech/packages/384758) of the main branch. For writing your own 
 [YAML](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) files, we provide a bunch of [examples](https://nonlocalmodels.github.io/examples/).
