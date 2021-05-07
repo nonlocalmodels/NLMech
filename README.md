@@ -14,24 +14,24 @@ Logo below has been obtained by running Peridynamic simulation on the logo mesh,
 
 The code uses 
 
-  * [CMake](https://cmake.org/) 
+  * [CMake](https://cmake.org/) 3.16
 
 as the build system and has following dependencies: 
 
-  * [HPX](https://github.com/STEllAR-GROUP/hpx) 1.6
-  * [Blaze](https://bitbucket.org/blaze-lib/blaze/src/master/),  
+  * [HPX](https://github.com/STEllAR-GROUP/hpx) 1.6.0
+  * [Blaze](https://bitbucket.org/blaze-lib/blaze/src/master/) 3.8, 
   * [Blaze_Iterative](https://github.com/STEllAR-GROUP/BlazeIterative) master, 
-  * [Boost](https://www.boost.org/),
-  * [gmsh](https://gmsh.info/),
-  * [VTK](https://www.vtk.org), and 
-  * [YAML-CPP](https://github.com/jbeder/yaml-cpp).
+  * [Boost](https://www.boost.org/) 1.75,  
+  * [gmsh](https://gmsh.info/) 4.7 ,
+  * [VTK](https://www.vtk.org) 9.0, and 
+  * [YAML-CPP](https://github.com/jbeder/yaml-cpp) 0.6.
 
-Following dependencies are optional, but are recommend for large simulations:
+Following dependencies are optional, but are recommended for large simulations:
 
-  * [PCL](https://github.com/PointCloudLibrary/pcl).
+  * [PCL](https://github.com/PointCloudLibrary/pcl) 1.11.
 
 Since we use the latest stable [Fedora](https://getfedora.org/) workstation spin for our continuous testing, we recommend
-these are the minimal required versions to build the latest stable version of the code. For the master branch the same versions
+to use a Docker image to build the code. Thus, these are the minimal required versions are meet. For the master branch the same versions
 should work. We strongly recommend to use the same CMake version to build HPX and NLMech.
 
 We provide following support to build the code
