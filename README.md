@@ -50,7 +50,7 @@ A detailed description to build the code on HPC systems is available in [NLMech'
 
 ### Ruining the code
 
-If you just interested in running the application, we provide a Doker image with the [latest Successful build](https://github.com/nonlocalmodels/NLMech/packages/384758) of the main branch. For writing your own 
+If you just interested in running the application, we provide a Doker image with the [latest Successful build](https://hub.docker.com/r/diehlpk/nlmech/tags?page=1&ordering=last_updated) of the main branch. For writing your own 
 [YAML](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) files, we provide a bunch of [examples](https://nonlocalmodels.github.io/examples/).
 
 If you encounter any bug or want to submit a feature request, please generate an [issue](https://github.com/nonlocalmodels/NLMech/issues) on GitHub. 
