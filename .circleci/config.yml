@@ -90,7 +90,7 @@ jobs:
             command: |
               if [ "${CIRCLE_BRANCH}" == "main" ]; then
                 cd build
-                coveralls --gcov-options '\-lp' -t ${CTOKEN}
+                COVERALLS_REPO_TOKEN="${CTOKEN}" coveralls -i src --gcov-options '\-lp' 
               fi
     deploy:
       machine:
