@@ -1,13 +1,13 @@
 # Installation 
 
-This tutorial guides you how to install [NLMech](https://github.com/nonlocalmodels/NLMech) from scratch. In addtion, we provide some [Docker files](https://github.com/nonlocalmodels/buildscripts/blob/main/Docker/) to build the conde on [Fedora](https://getfedora.org/), since we use the same OS on [Circle-CI](https://app.circleci.com/pipelines/github/nonlocalmodels/NLMech). In addition, we provide some [bash script](https://github.com/nonlocalmodels/buildscripts/tree/main/bash) to install the code in one step. 
+This tutorial guides you how to install [NLMech](https://github.com/nonlocalmodels/NLMech) from scratch. In addition, we provide some [Docker files](https://github.com/nonlocalmodels/buildscripts/blob/main/Docker/) to build the code on [Fedora](https://getfedora.org/), since we use the same OS on [Circle-CI](https://app.circleci.com/pipelines/github/nonlocalmodels/NLMech). In addition, we provide some [bash script](https://github.com/nonlocalmodels/buildscripts/tree/main/bash) to install the code in one step. 
 
 In this installation guide, we will use a set of [scripts](https://github.com/nonlocalmodels/HPCBuildInfrastructure) to build the code on HPC clusters.
 
-## Prerequists 
+## Prerequisites 
 
 * Any gcc compiler collection (gcc) > 4.9, however, gcc >= 8 is recommended 
-* Lapack and BLAS are required. Here, we recommend to isntall these libraries using the package manager.
+* Lapack and BLAS are required. Here, we recommend to install these libraries using the package manager.
 
 ## Using the HPCBuildInfrastructure
 
@@ -17,7 +17,7 @@ First, we clone the [HPCBuildInfrastructure](https://github.com/nonlocalmodels/H
 git clone https://github.com/nonlocalmodels/HPCBuildInfrastructure.git
 cd HPCBuildInfrastructure/
 ```
-The uses version of each library is defined in the `config.sh`, if you need to chnage them. 
+The uses version of each library is defined in the `config.sh`, if you need to change them. 
 
 ### Build cmake
 
@@ -50,7 +50,7 @@ The first command `Release` specifies the `CMAKE_BUILD_TYPE` of the build. Note 
 ./build-all.sh Release without-gcc vtk
 ```
 
-### Build VTK
+### Build yampl-cpp
 
 ```bash
 ./build-all.sh Release without-gcc yamlcpp
