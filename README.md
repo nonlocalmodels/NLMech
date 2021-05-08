@@ -2,15 +2,18 @@
 
 [![CircleCI](https://circleci.com/gh/nonlocalmodels/NLMech.svg?style=shield)](https://circleci.com/gh/nonlocalmodels/NLMech) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/118379d7d745464584b73e9e06f60462)](https://www.codacy.com/gh/nonlocalmodels/NLMech?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=nonlocalmodels/NLMech&amp;utm_campaign=Badge_Grade) [![Coverage Status](https://coveralls.io/repos/github/nonlocalmodels/NLMech/badge.svg?branch=main)](https://coveralls.io/github/nonlocalmodels/NLMech?branch=main) [![status](https://joss.theoj.org/papers/271dd66ea91b7fbfdccb4b10a7ba462c/status.svg)](https://joss.theoj.org/papers/271dd66ea91b7fbfdccb4b10a7ba462c)
 
-Welcome to NLMech repository. In this project we implement 
-nonlocal fracture theory, referred to as Peridynamics, 
-using both finite element and finite difference discretization.  
-
-Logo below has been obtained by running Peridynamic simulation on the logo mesh, [see](https://nonlocalmodels.github.io/examples/fd-logo-soft-material.html).
-
 <p style="text-align:center;"><img src="https://github.com/nonlocalmodels/NLMech/blob/main/assets/logo/logo_sim.png?raw=true" alt="logo" width="400"/></p>
 
+Welcome to the NLMech repository. In this project, we implement Peridynamics model of fracture using meshfree and finite element discretizations. NLMech primarily served as a code for academic research (e.g., [1,2]), however, we plan to improve it further for a large-scale usage. The plan also includes development of fully distributed solver using HPX library for asynchronous computation to its maximum potential. In [3], we discuss the structure of NLMech and use HPX library for multi-threading computation.  
+
+At present, the library consists of multiple material models such as 
+- **RNP** -- Regularized Nonlinear Potential. This is implemented in class [RNPBond](src/material/pd/rnpBond.h).
+- **State-based peridynamics** -- State-based peridynamics model. This is implemented in class [ElasticState](src/material/pd/ElasticState.h).
+
+One of the main features of NLMech is the implementation of both explicit time discretization for dynamic problems (see [FDModel](src/model/fd/fDModel.h)) and implicit discretization for quasi-static problems (see [QuasiStaticModel](src/model/quasistatic/QuasiStaticModel.h)). 
+
 ## Getting started
+We provide shell scripts to help with installation of dependencies and the NLMech code itself. Docker images are also provided for quick test of the library and to run the examples. In `running the code` section, we discuss 
 
 Depends on your needs, we provide various opportunities to build the code and Docker images to play around with the code. If you are interested in running the code on large scale simulations or extend the code, please have a look at the building section. If you like to play around with the code and run some examples, please proceed with the section "running the code". 
 
