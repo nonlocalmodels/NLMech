@@ -5,7 +5,7 @@
 <p style="text-align:center;"><img src="https://github.com/nonlocalmodels/NLMech/blob/main/assets/logo/logo_sim.png?raw=true" alt="logo" width="400"/></p>
 
 ## Introduction
-Welcome to the NLMech repository. In this project, we implement Peridynamics model of fracture using meshfree and finite element discretizations. NLMech primarily served as a code for academic research (e.g., [1,2]), however, we plan to improve it further for a large-scale usage. The plan also includes development of fully distributed solver using HPX library for asynchronous computation to its maximum potential. In [3], we discuss the structure of NLMech and use HPX library for multi-threading computation.  
+Welcome to the NLMech repository. In this project, we implement Peridynamics model of fracture using meshfree and finite element discretizations. NLMech primarily served as a code for academic research (e.g., [1,2]), however, we plan to improve it further for a large-scale usage. The plan also includes development of fully distributed solver using HPX library for asynchronous computation to its maximum potential. In [3], we discuss the structure of NLMech and use HPX library for multi-threading computation. For further list of publications based on this library, we refer to the [publication list](https://nonlocalmodels.github.io/publications/).
 
 At present, the library consists of multiple material models such as 
 - **RNP** - Regularized Nonlinear Potential. This is implemented in class [RNPBond](src/material/pd/rnpBond.h).
@@ -128,5 +128,6 @@ NLMech has been funded by:
 * We are grateful for the support of the [Google Summer of Code program](https://summerofcode.withgoogle.com/) funding internships.
 
 ## References
-
-
+[1] Jha, P. K., & Lipton, R. (2019). Numerical convergence of finite difference approximations for state based peridynamic fracture models. Computer Methods in Applied Mechanics and Engineering, 351, 184-225.
+[2] Jha, P. K., & Lipton, R. P. (2020). Kinetic relations and local energy balance for LEFM from a nonlocal peridynamic model. International Journal of Fracture, 226(1), 81-95.
+[3] Diehl, P., Jha, P. K., Kaiser, H., Lipton, R., & Lévesque, M. (2020). An asynchronous and task-based implementation of peridynamics utilizing HPX—the C++ standard library for parallelism and concurrency. SN Applied Sciences, 2(12), 1-21.
