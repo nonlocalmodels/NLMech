@@ -59,7 +59,7 @@ Further, we provide various docker files
 
 In [Scripts](https://github.com/nonlocalmodels/HPCBuildInfrastructure), bash scripts to build individual dependencies such as blaze, vtk, hpx, etc, on HPC systems is provided.
 
-A more detailed instructions on building the code will follow soon.
+A more detailed version of the build instruction is available [here](https://nonlocalmodels.github.io/documentation/md_content_install_instructions.html).
 
 > :exclamation: We recommend to use the same CMake version to build the HPX and NLMech.
 
@@ -101,6 +101,17 @@ make -j $(cat /proc/cpuinfo | grep processor | wc -l) VERBOSE=1
 To quickly run the tests and examples, you may use Docker image with the [latest Successful build](https://hub.docker.com/r/diehlpk/nlmech/tags?page=1&ordering=last_updated) of the main branch. 
 
 In [examples](https://nonlocalmodels.github.io/examples/), we provide information on how to prepare a simulation setup input file using [YAML](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html).
+
+Asume, you have build NLMech on your own, you can go the the `build` folder and run the executable as below
+
+```sh
+cd build
+./bin/NLMech -i input.yaml --hpx:threads=n
+```
+
+with the first argument `-i` the `input.yaml` file is specified and the second argument `--hpx:threads` the amount
+of CPU cores HPX is allowed to use is specified. If you do not specify any number there all coes of the CPU are used
+to run the simulation. 
 
 ## Trouble, issues, bugs
 In case you found a bug in the library, want to contribute, or need a feature, please create a new [issue](https://github.com/nonlocalmodels/NLMech/issues). 
