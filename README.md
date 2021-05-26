@@ -100,6 +100,16 @@ make -j $(cat /proc/cpuinfo | grep processor | wc -l) VERBOSE=1
 ## Running NLMech
 To quickly run the tests and examples, you may use Docker image with the [latest Successful build](https://hub.docker.com/r/diehlpk/nlmech/tags?page=1&ordering=last_updated) of the main branch. 
 
+```sh
+podman/docker pull diehlpk/nlmech:latest
+podman/docker run -it docker.io/diehlpk/nlmech /bin/bash
+cd examples/qsModel/1D
+# Generate the mesh file
+/app/NLMech/build/bin/mesh -i input_mesh.yaml -d 1
+# Run the simulation
+/app/NLMech/build/bin/NLMech -i input.yaml --hpx:threads=2
+```
+
 In [examples](https://nonlocalmodels.github.io/examples/), we provide information on how to prepare a simulation setup input file using [YAML](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html).
 
 Asume, you have build NLMech on your own, you can go the the `build` folder and run the executable as below
