@@ -59,10 +59,10 @@ $$  \varrho (X_i)\ddot{\mathbf{u}}(t,X_i) =  \sum\limits_{j \in B_\delta(X_i)} (
 
 Here $\mathbf{u}(t,X_i)$ denotes the displacement of node $X_i$ at time $0 \leq t\leq T$. For the time discretization, we can consider: \textit{1)} implicit time integration and \textit{2)} explicit time integration using either central difference or velocity verlet scheme.
 
+## Software Implementation and Applications
+
 NLMech relies on the following open source softwares: HPX [@Kaiser2020], Blaze [@iglberger2012high], Blaze_Iterative, Gmsh [@geuzaine2009gmsh], VTK [@schroeder2004visualization], and yaml-cpp. For details 
 about the specific version, we refer to NLMech's [documentation](https://github.com/nonlocalmodels/NLMech#building).
-
-## Applications 
 
 NLMech was used for the following applications/publications:
 
