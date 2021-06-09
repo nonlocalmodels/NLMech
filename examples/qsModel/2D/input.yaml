@@ -29,7 +29,9 @@ Displacement_BC:
       Parameters: 
         - 0.0 
     Spatial_Function: 
-      Type: constant 
+      Type: constant
+      Parameters: 
+        - 1.0
   Set_2:  
     Location:   
       Line: [1.55, 1.65]
@@ -39,7 +41,9 @@ Displacement_BC:
       Parameters: 
         - 0.0 
     Spatial_Function: 
-      Type: constant 
+      Type: constant
+      Parameters:
+        - 1.0 
 Force_BC:
   Sets: 1
   Set_1:
