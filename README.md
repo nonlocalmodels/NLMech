@@ -121,7 +121,8 @@ cd build
 
 with the first argument `-i` the `input.yaml` file is specified and the second argument `--hpx:threads` the amount
 of CPU cores HPX is allowed to use is specified. If you do not specify any number there all coes of the CPU are used
-to run the simulation. 
+to run the simulation. Note that in the current version only shared memory parallism is provided, however, we plan to add
+dsitributed memory to the code in the near future. 
 
 ## Trouble, issues, bugs
 In case you found a bug in the library, want to contribute, or need a feature, please create a new [issue](https://github.com/nonlocalmodels/NLMech/issues). 
