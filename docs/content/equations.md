@@ -9,7 +9,7 @@
   </script>
   <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
 
-# Brief introduction to the equations
+# Brief overview of the equations
 
 The governing equations and the discretization is briefly introduced on this page. For more details we
 refer to the following two references [1,2].
@@ -30,7 +30,6 @@ Here `$\varrho$` denotes density of the material, `$\mathbf{u}$` displacement fi
 ## Discretization 
 
 Currently, the library supports finite difference (or more generally meshfree) discretization. Using the triangulation of arbitrary domain, the library can create a meshfree discretization. The library is equipped with necessary modules, such as FE elements and quadrature integration rules, for finite element discretization of PD. Next, we briefly discuss the finite difference/meshfree discretization of PD. Figure 1 shows the domain $D$ discretized with the nodes `$X = \{ X_i \in \mathbb{R}^3 \vert i=1,\ldots,n\}$`. Each node $X_i$ represents a small area/volume denoted by `$V_i$`. In PD, as previously mentioned, each point `$X_i$` interacts with neighboring points in ball (discrete) `$B_\delta(X_i) = \{X_j: \vert X_i - X_j| < \delta \}$`. 
-
 
 
 The discrete equation of motion is written as, for the bond-based PD,
