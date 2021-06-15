@@ -47,7 +47,7 @@ For more complex geometries, the [Gmsh](https://gmsh.info/) tool is recommended.
 
 ## Simulation
 
-Here, all tags and attributes of ther YAML files are listed and described. A detailed set of examples is available [here](https://nonlocalmodels.github.io/examples/).
+Here, all tags and attributes of the YAML files are listed and described. A detailed set of examples is available [here](https://nonlocalmodels.github.io/examples/).
 
 ### Model deck
 
@@ -89,7 +89,7 @@ Restart:
 
 The tag `Restart` describes a restart of the simulation using following attributes:
 
-* `File` The path and file name of the last sucessfull simulation step
+* `File` The path and file name of the last Successful simulation step
 * `Step` The time step to restart from
 
 One example of the restart of one simulation is available [here](https://nonlocalmodels.github.io/examples/restart.html).
@@ -158,11 +158,11 @@ Displacement_BC:
 ```
 
 
-The tag `Displacement_BC` describes the displacement boundary conditions and the attribute `Sets` speifies the amount of boundary conditions. If boundary conditions is defined by `Set_1`, `Set_2`, and so on using following attributes:
+The tag `Displacement_BC` describes the displacement boundary conditions and the attribute `Sets` specifies the amount of boundary conditions. If boundary conditions is defined by `Set_1`, `Set_2`, and so on using following attributes:
 
 * `Location` Defines the location of the boundary condition
-  *  `Line: [ a, b ]` Applies the boudnary condition along the line from `a` to `b`
-  *  `Rectangle: [a, b, c, d]` Applies the boundary condition on all nodes inside the recangle given by the two points `(a,b)` and `c,d)`  
+  *  `Line: [ a, b ]` Applies the boundary condition along the line from `a` to `b`
+  *  `Rectangle: [a, b, c, d]` Applies the boundary condition on all nodes inside the rectangle given by the two points `(a,b)` and `c,d)`  
 * `Direction: [n]` Defines the direction (x=1, y=2, or z=3) of the boundary condition 
 * `Time_Function` Specifies how the boundary condition is applied over time
   * `Type` Defines the type of loading
@@ -202,11 +202,11 @@ Force_BC:
       Parameters: [1]
 ```
 
-The tag `Force_BC` describes the displacement boundary conditions and the attribute `Sets` speifies the amount of boundary conditions. If boundary conditions is defined by `Set_1`, `Set_2`, and so on using following attributes:
+The tag `Force_BC` describes the displacement boundary conditions and the attribute `Sets` specifies the amount of boundary conditions. If boundary conditions is defined by `Set_1`, `Set_2`, and so on using following attributes:
 
 * `Location` Defines the location of the boundary condition
-  *  `Line: [ a, b ]` Applies the boudnary condition along the line from `a` to `b`
-  *  `Rectangle: [a, b, c, d]` Applies the boundary condition on all nodes inside the recangle given by the two points `(a,b)` and `c,d)`  
+  *  `Line: [ a, b ]` Applies the boundary condition along the line from `a` to `b`
+  *  `Rectangle: [a, b, c, d]` Applies the boundary condition on all nodes inside the rectangle given by the two points `(a,b)` and `c,d)`  
 * `Direction: [n]` Defines the direction (x=1, y=2, or z=3) of the boundary condition 
 * `Time_Function` Specifies how the boundary condition is applied over time
   * `Type` Defines the type of loading
@@ -229,7 +229,7 @@ Fracture:
       Line: [5.000500e-02, 0.000000e+00, 5.000500e-02, 2.000000e-02]
 ```
 
-The tag `Fracture` describes the displacement boundary conditions and the attribute `Sets` speifies the amount of boundary conditions. If boundary conditions is defined by `Set_1`, `Set_2`, and so on using following attributes:
+The tag `Fracture` describes the displacement boundary conditions and the attribute `Sets` specifies the amount of boundary conditions. If boundary conditions is defined by `Set_1`, `Set_2`, and so on using following attributes:
 
 * `Orientation` Describes the orientation of the crack
 * `Line` Describes a line and all bonds interesting this line are initially broken
