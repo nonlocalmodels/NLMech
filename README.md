@@ -61,7 +61,7 @@ In [Scripts](https://github.com/nonlocalmodels/HPCBuildInfrastructure), bash scr
 
 A more detailed version of the build instruction is available [here](https://nonlocalmodels.github.io/documentation/md_content_install_instructions.html).
 
-> :exclamation: We recommend to use the same CMake version to build the HPX and NLMech.
+> :exclamation: We recommend to use the same CMake version and same compiler version to build the HPX and NLMech.
 
 ### Compiling library
 Assuming all the dependencies are installed at standard paths such as `/usr/local`, we build NLMech as follows
