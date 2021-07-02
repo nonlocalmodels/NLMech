@@ -103,7 +103,7 @@ To quickly run the tests and examples, you may use Docker image with the [latest
 ```sh
 podman/docker pull diehlpk/nlmech:latest
 podman/docker run -it docker.io/diehlpk/nlmech /bin/bash
-cd examples/qsModel/1D
+cd /app/NLMech/examples/qsModel/1D
 # Generate the mesh file
 /app/NLMech/build/bin/mesh -i input_mesh.yaml -d 1
 # Run the simulation
