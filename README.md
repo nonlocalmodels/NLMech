@@ -124,6 +124,9 @@ of CPU cores HPX is allowed to use is specified. If you do not specify any numbe
 to run the simulation. Note that in the current version only shared memory parallism is provided, however, we plan to add
 dsitributed memory to the code in the near future. 
 
+The one-dimensional quasi-static example is computational inexpesive, therfore, we used it in the Docker example to finish the
+simulation soon. For scaling test, we recommend to use any of the two-dimensional examples. 
+
 ## Trouble, issues, bugs
 In case you found a bug in the library, want to contribute, or need a feature, please create a new [issue](https://github.com/nonlocalmodels/NLMech/issues). 
 
