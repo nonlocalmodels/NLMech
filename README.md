@@ -103,7 +103,7 @@ To quickly run the tests and examples, you may use Docker image with the [latest
 ```sh
 podman/docker pull diehlpk/nlmech:latest
 podman/docker run -it docker.io/diehlpk/nlmech /bin/bash
-cd examples/qsModel/1D
+cd /app/NLMech/examples/qsModel/1D
 # Generate the mesh file
 /app/NLMech/build/bin/mesh -i input_mesh.yaml -d 1
 # Run the simulation
@@ -123,6 +123,9 @@ with the first argument `-i` the `input.yaml` file is specified and the second a
 of CPU cores HPX is allowed to use is specified. If you do not specify any number there all coes of the CPU are used
 to run the simulation. Note that in the current version only shared memory parallism is provided, however, we plan to add
 dsitributed memory to the code in the near future. 
+
+The one-dimensional quasi-static example is computational inexpesive, therfore, we used it in the Docker example to finish the
+simulation soon. For scaling test, we recommend to use any of the two-dimensional examples. 
 
 ## Trouble, issues, bugs
 In case you found a bug in the library, want to contribute, or need a feature, please create a new [issue](https://github.com/nonlocalmodels/NLMech/issues). 
