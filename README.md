@@ -20,6 +20,28 @@ We provide shell scripts to help with the installation of dependencies and the N
 
 
 ## Installation
+
+### Build tools
+The following build tools are needed to compile the NLMech and its dependencies:
+  * GCC compiler collection (gcc) > 4.9, however, gcc >= 8 is recommended
+  * [autoconf](https://www.gnu.org/software/autoconf/)
+  * [wget](https://www.gnu.org/software/wget/)
+  * [cmake](https://cmake.org/)
+  * [git](https://git-scm.com/)
+
+   On Ubuntu you might install all dependencies using the papackage manager:
+
+  ```bash
+  apt-get install build-essential git wget cmake libssl-dev libblas-dev liblapack-dev autoconf freeglut3-dev
+
+  ```
+
+  On Fedora you might install all dependencies  using the package manager
+
+  ```bash
+  dnf install @development-tools cmake git wget blas-devel lapack-devel freeglut-devel
+  ```
+
 ### Dependencies
 We use cmake to build the code. We list the dependencies and how they are used in the code below:
   * [CMake](https://cmake.org/) 3.16
@@ -34,20 +56,33 @@ We use cmake to build the code. We list the dependencies and how they are used i
     - Provides linear algebra support such as storage and inversion of stiffness matrix
   * [gmsh](https://gmsh.info/) 4.7
     - Our code directly interfaces with gmsh to use input-ouput functions of gmsh
-    - On ubuntu, you may use `apt-get gmsh` to install
   * [VTK](https://www.vtk.org) 9.0
     - For read-write operations on `.vtu` type files
-    - On ubuntu, you may use `apt-get libvtk7-dev` to install
   * [YAML-CPP](https://github.com/jbeder/yaml-cpp) 0.6
     - To parse `.yaml` input files
-    - On ubuntu, you may use `apt-get libyaml-cpp-dev` to install.
+
+  On Ubuntu you might install all dependencies using the papackage manager:
+
+  ```bash
+  apt-get install libyaml-cpp-dev libvtk7-dev gmsh boost-devel
+  ```
+
+  Note that on Ubuntu you need to install HPX, Blaze, and Blaze_Iterative since
+  there is no package available.
+
+  On Fedora you might install all dependencies  using the package manager
+
+  ```bash
+  dnf install hpx-devel cmake blaze-devel vtk-devel yaml-cpp-devel gmsh-devel
+  ```
+
+  Note on Fedora, you need only to install Blaze_Itertaive.
 
 Following dependencies are optional, but are recommended for the large simulations:
   * [PCL](https://github.com/PointCloudLibrary/pcl) 1.11 
     - Used in neighbor search calculation (KDTree)
   * [Flann](https://github.com/flann-lib/flann)  1.9
     - Required to build PCL library
-    - On ubuntu, you may use `apt-get libflann-dev` to install.
 
 ### Building dependencies
 Building above dependencies is quite a challenge. To help with this, we provide the bash scripts for Ubuntu-20.04 and Fedor operating systems: [Bash scripts](https://github.com/nonlocalmodels/buildscripts/tree/main/bash)).
