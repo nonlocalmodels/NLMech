@@ -6,8 +6,32 @@ In this installation guide, we will use a set of [scripts](https://github.com/no
 
 ## Prerequisites 
 
-* Any gcc compiler collection (gcc) > 4.9, however, gcc >= 8 is recommended 
-* Lapack and BLAS are required. Here, we recommend to install these libraries using the package manager.
+### Tools
+
+To compile NLMech and its dependencies the following tools are needed:
+* GCC compiler collection (gcc) > 4.9, however, gcc >= 8 is recommended
+* [autoconf](https://www.gnu.org/software/autoconf/)
+* [wget](https://www.gnu.org/software/wget/)
+* [cmake](https://cmake.org/)
+* [git](https://git-scm.com/)
+
+### Dependencies
+
+* [Lapack](http://www.netlib.org/lapack/)
+* [BLAS](http://www.netlib.org/blas/)
+* [Openssl](https://www.openssl.org/)
+* [OpenGL](https://www.opengl.org/)
+
+We recommend to install these libraries using the package manager. Bewlow you can find some
+examples to install them using apt and dnf
+
+```bash
+apt-get install build-essential git wget cmake libssl-dev libblas-dev liblapack-dev autoconf freeglut3-dev
+```
+
+```bash
+dnf install @development-tools cmake git wget blas-devel lapack-devel freeglut-devel
+```
 
 ## Using the HPCBuildInfrastructure
 
