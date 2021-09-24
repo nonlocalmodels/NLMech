@@ -27,7 +27,7 @@ bibliography: paper.bib
 
 # Summary
 
-The open source code *NLMech* is an implementation of finite difference approximation of nonlocal models, \emph{e.g.}\ peridynamic. Peridynamic (PD) [@silling2007peridynamic;@silling2005meshfree] is a nonlocal formulation of classical continuum mechanics that is particularly robust in mechanical deformations involving crack (discontinuous displacement) and damage. The model seamlessly handles the two regimes of deformation: elastic/smooth deformation and fracture. The constitutive laws describing the material behavior are simple to conceptualize and implement. Particularly, in numerical implementation, no special care for the modeling of cracks is required. Successful comparison of PD against a variety of experiments has been done [@diehl2019review]. 
+The open source code *NLMech* is an implementation of finite difference approximation of nonlocal models, \emph{e.g.}\ peridynamic. Peridynamic (PD) [@silling2007peridynamic;@silling2005meshfree] is a nonlocal formulation of classical continuum mechanics that is particularly robust in mechanical deformations involving crack (discontinuous displacement) and damage. The model seamlessly handles the two regimes of deformation: elastic/smooth deformation and fracture. The constitutive laws describing the material behavior are simple to conceptualize and implement. Particularly, in numerical implementation, no special care for the modeling of cracks is required. Successful comparison of PD against a variety of experiments has been done [@diehl2019review,diehl2021comparative]. 
 
 Unlike classical continuum mechanics, where the internal force is written in terms of the stress, in PD, the internal force at a given material point is due to the sum of the pairwise forces of the neighboring points. \emph{i.e.}\ the force in PD is expressed as the integral of the pairwise force density between the given point and another point in the neighborhood. The neighborhood of point $x$ is typically defined as all points in the sphere of radius $\delta$, centered at $x$, where $\delta$ is the nonlocal length scale and is referred to as \textit{horizon}. PD is often divided in two classes: bond-based and state-based models. In bond-based models, the two material points interact via a pairwise force law and the forces between the material points do not depend on the deformation state of surrounding points. In contrast, in the state-based models the volumetric deformation in the neighborhood of two points plays a role in the pairwise force. The governing equation of motion for the bond-based PD [@silling2005meshfree] reads as
 
@@ -72,6 +72,8 @@ models [@jha2019numerical]
 * Free damage propagation with memory [@lipton2018free] 
 * Kinetic relations and local energy balance for linear elastic fracture mechanics from a
 nonlocal peridynamic model [@jha2020kinetic]
+* A Fracture Multiscale Model for Peridynamic enrichment within the Partition of Unity Method [@DBLP:journals/corr/abs-2108-02336]
+* Peridynamics for Quasistatic Fracture Modeling [@bhattacharya2021peridynamics]
 
 For an updated list of applications/publications, we refer to corresponding [NLMech documentation](https://nonlocalmodels.github.io/publications/).
 
