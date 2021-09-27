@@ -17,7 +17,7 @@ set (VERSION_UPDATE 0)
 project(NLMech 
     VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_UPDATE}
     DESCRIPTION "Framework for non-local mechanics"
-    LANGUAGES CXX)
+    LANGUAGES CXX C)
 
 # Provide the configuration file to get the version
 configure_file (
