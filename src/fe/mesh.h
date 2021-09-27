@@ -166,10 +166,24 @@ public:
 
   /*!
    * @brief Get the pointer to nodal volume data
-   * @return pointer Pointer to nodal volume data
+   * @return Pointer to nodal volume data
    */
   const std::vector<double> *getNodalVolumesP() const { return &d_vol; };
   std::vector<double> *getNodalVolumesP() { return &d_vol; };
+
+/*!
+*  @brief Get the vector of indicies with prescribed values from the couplign method
+* @return Vector with the indicies
+*/
+  const std::vector<size_t> getPrescribedNodes() const {return d_prescribed_nodes;};
+  std::vector<size_t> getPrescribedNodes() {return d_prescribed_nodes;};
+
+/*!
+*  @brief Get the vector of values of the prescribed nodes from the couplign method
+* @return Vector with the prescribed values
+*/
+  const std::vector<util::Point3> getPrescribedValues() const {return d_prescribed_values;};
+  std::vector<util::Point3> getPrescribedValues() {return d_prescribed_values;};
 
   /*!
    * @brief Return true if node is free
@@ -354,8 +368,9 @@ private:
    * @param ref_config Base the mesh on reference configuration (obtain
    * reference configuration using point data and displacement data)
    * @param is_centroid_based Specify if we create node at the center of element
+   * @param has_coupling_data Specify if we read the additional data needed for coupling
    */
-  void createData(const std::string &filename, bool ref_config, bool is_centroid_based);
+  void createData(const std::string &filename, bool ref_config, bool is_centroid_based, bool has_coupling_data);
 
   /*!
    * @brief Converts standard fem mesh to particle mesh with nodes at the
@@ -459,6 +474,21 @@ private:
    * volume is computed using the element-node connectivity of the mesh.
    */
   std::vector<double> d_vol;
+
+/*! @brief Vector with the indicies of all nodes with prescribed boundary data
+* 
+* For coupling with other codes, e.g. FEM or PUM, prescribed values for displacement or force
+* are given by the local method and applied to these PD nodes. 
+*/
+  std::vector<size_t> d_prescribed_nodes;
+
+
+/*! @brief Vector with the values of all nodes with prescribed boundary data
+* 
+* For coupling with other codes, e.g. FEM or PUM, prescribed values for displacement or force
+* are given by the local method and applied to these PD nodes. 
+*/
+  std::vector<util::Point3> d_prescribed_values;
 
   /** @}*/
 

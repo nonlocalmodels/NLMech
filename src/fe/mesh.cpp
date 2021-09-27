@@ -75,7 +75,8 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
     inp::Policy::getInstance()->addToTags(1, "Mesh_d_vol");
 
   // read mesh data from file
-  createData(d_filename, false, deck->d_isCentroidBasedDiscretization);
+  createData(d_filename, false, deck->d_isCentroidBasedDiscretization,
+             deck->d_loadPUMData);
 
   // check if we need to compute mesh size
   if (deck->d_computeMeshSize) computeMeshSize();
@@ -99,7 +100,7 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
 // Utility functions
 //
 void fe::Mesh::createData(const std::string &filename, bool ref_config,
-                          bool is_centroid_based) {
+                          bool is_centroid_based, bool has_coupling_data) {
   int file_type = -1;
 
   // find the extension of file and call correct reader
@@ -161,6 +162,15 @@ void fe::Mesh::createData(const std::string &filename, bool ref_config,
 
     // check if file has fixity data
     rw::reader::readVtuFilePointData(filename, "Fixity", &d_fix);
+
+    // Read the data for coupling
+    if (has_coupling_data) {
+      rw::reader::readVtuFilePointData(filename, "Boundary-Layer",
+                                       &d_prescribed_nodes);
+
+      rw::reader::readVtuFilePointData(filename, "PUM-Displacement",
+                                       &d_prescribed_values);
+    }
   }
 
   // compute data from mesh data
@@ -259,7 +269,7 @@ void fe::Mesh::computeVol() {
   //
   d_vol.resize(d_numNodes);
   auto f = hpx::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      hpx::execution::par(hpx::execution::task), 0,
       this->d_numNodes, [this, quads](boost::uint64_t i) {
         double v = 0.0;
 
@@ -408,7 +418,8 @@ void fe::Mesh::readFromFile(inp::MeshDeck *deck, const std::string &filename) {
   d_filename = filename;
 
   // read file
-  createData(filename, false, deck->d_isCentroidBasedDiscretization);
+  createData(filename, false, deck->d_isCentroidBasedDiscretization,
+             deck->d_loadPUMData);
 
   // check if we need to compute mesh size
   if (deck->d_computeMeshSize) computeMeshSize();

@@ -1,54 +1,39 @@
 Model: 
-  Dimension: 2 
+  Dimension: 1 
   Discretization_Type:
     Spatial: finite_difference
     Time: quasi_static
   Final_Time: 1 
   Time_Steps: 1
-  Horizon: 0.5
-  Horizon_h_Ratio: 5
+  Horizon: 1
+  Horizon_h_Ratio: 3
 Mesh: 
   File: mesh.vtu 
 Material: 
   Type: ElasticState 
-  Density: 1200
+  Density: 1
   Compute_From_Classical: true 
-  K: 4000.0 
-  G: 1500.0
-  Is_Plane_Strain: False
+  E: 4000 
   Influence_Function: 
     Type: 1 
 Displacement_BC: 
-  Sets: 2 
+  Sets: 1 
   Set_1:  
     Location:   
-      Line: [1.55, 1.65]
+      Line: [-0.1, 0.3 ]
     Direction: [1] 
     Time_Function: 
       Type: constant 
       Parameters: 
         - 0.0 
     Spatial_Function: 
-      Type: constant
-      Parameters: 
-        - 1.0
-  Set_2:  
-    Location:   
-      Line: [1.55, 1.65]
-    Direction: [2] 
-    Time_Function: 
       Type: constant 
-      Parameters: 
-        - 0.0 
-    Spatial_Function: 
-      Type: constant
-      Parameters:
-        - 1.0 
+      Parameters: [1]
 Force_BC:
   Sets: 1
   Set_1:
     Location:
-      Line: [-0.1, 0.05]
+      Line: [15.8, 16.5]
     Direction: [1]
     Time_Function:
       Type: linear
@@ -57,12 +42,11 @@ Force_BC:
     Spatial_Function:
       Type: constant
       Parameters:
-        - -250.0
-
+        - 160
 Solver:
-  Type: BiCGSTAB
-  Max_Iteration: 200
-  Tolerance: 1e-6
+  Type: ConjugateGradient
+  Max_Iteration: 100
+  Tolerance: 1e-9
   Perturbation: 1e-7
 Output: 
   Path: ./ 
@@ -75,8 +59,8 @@ Output:
     - Stress_Tensor
     - Strain_Tensor
     - Fixity
-    - Node_Volume 
   Output_Interval: 1 
-  Compress_Type: zlib 
+  File_Format: legacy_vtk
+  Perform_FE_Out: false
 HPX: 
     Partitions: 1 

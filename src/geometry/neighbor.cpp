@@ -14,13 +14,60 @@
 #include "util/compare.h"
 #include "util/utilIO.h"
 
+#ifdef ENABLE_PCL
+
+#include <pcl/point_cloud.h>
+#include <pcl/kdtree/kdtree_flann.h>
+
+#endif
+
 geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
                              const std::vector<util::Point3> *nodes)
     : d_neighborDeck_p(deck) {
   d_neighbors.resize(nodes->size());
 
+#ifdef ENABLE_PCL
+
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+
+  cloud->points.resize(nodes->size());
+
+  hpx::for_loop(hpx::execution::par, 0, nodes->size(),
+                [this, cloud, nodes](boost::uint64_t i) {
+                  (*cloud)[i].x = (*nodes)[i].d_x;
+                  (*cloud)[i].y = (*nodes)[i].d_y;
+                  (*cloud)[i].z = (*nodes)[i].d_z;
+                });
+
+  pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
+
+  kdtree.setInputCloud(cloud);
+
+  hpx::for_loop(hpx::execution::par, 0, nodes->size(),
+                [this, kdtree, nodes, horizon](boost::uint64_t i) {
+                  std::vector<int> neighs;
+                  std::vector<float> pointRadiusSquaredDistance;
+
+                  pcl::PointXYZ searchPoint;
+                  searchPoint.x = (*nodes)[i].d_x;
+                  searchPoint.y = (*nodes)[i].d_y;
+                  searchPoint.z = (*nodes)[i].d_z;
+
+                  this->d_neighbors[i] = std::vector<size_t>();
+
+                  if (kdtree.radiusSearch(searchPoint, horizon, neighs,
+                                          pointRadiusSquaredDistance) > 0) {
+                    for (std::size_t j = 0; j < neighs.size(); ++j)
+                      if (neighs[j] != i) {
+                        this->d_neighbors[i].push_back(size_t(neighs[j]));
+                      }
+                  }
+                });
+
+#else
+
   auto f = hpx::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+      hpx::execution::par(hpx::execution::task), 0,
       nodes->size(), [this, horizon, nodes](boost::uint64_t i) {
         //  for (size_t i=0; i<nodes->size(); i++) {
         util::Point3 xi = (*nodes)[i];
@@ -40,6 +87,8 @@ geometry::Neighbor::Neighbor(const double &horizon, inp::NeighborDeck *deck,
       });  // end of parallel for loop
 
   f.get();
+
+#endif
 }
 
 const std::vector<size_t> &geometry::Neighbor::getNeighbors(const size_t &i) {

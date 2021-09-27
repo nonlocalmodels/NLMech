@@ -16,7 +16,7 @@ jobs:
                 command: | 
                   mkdir -p build 
                   cd build 
-                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DEnable_Tools=ON ..
+                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DEnable_Tools=ON -DEnable_RPM=ON ..
             - run:
                 name: Build
                 command: |  
@@ -28,10 +28,41 @@ jobs:
                   cd build 
                   make test
             - run:
-                name: Documentaiton
+                name: Documentation
                 command: |
                   cd build
                   make doc
+            - run:
+                name: Generate RPM package
+                command: |
+                  mkdir final
+                  cd build
+                  cpack -G RPM
+                  cp *.rpm ../final
+            - store_artifacts:
+                path: final
+                destination: packages
+    build_pcl:
+        docker:
+          - image: diehlpk/nonlocalmodels:baseimage
+        steps:
+            - checkout
+            - run:
+                name: Configure 
+                command: | 
+                  mkdir -p build 
+                  cd build 
+                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DEnable_Tools=ON -DEnable_PCL=ON ..
+            - run:
+                name: Build
+                command: |  
+                  cd build 
+                  make -j 2
+            - run:
+                name: Test
+                command: |
+                  cd build 
+                  make test
     codecoverage:
       docker: 
         - image: diehlpk/nonlocalmodels:baseimage
@@ -52,12 +83,14 @@ jobs:
         - run:
             name: Report
             command: |
-              gcovr -e CMakeFiles/ -r .
+              cd build
+              gcovr --exclude-directories=build --exclude-directories=data --exclude-directories=/usr/include/ -r ..
         - run:
             name: Publish code coverage
             command: |
-              if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                coveralls --gcov-options '\-lp' -t ${CTOKEN}
+              if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                cd build
+                COVERALLS_REPO_TOKEN="${CTOKEN}" coveralls -i src --gcov-options '\-lp' 
               fi
     deploy:
       machine:
@@ -75,18 +108,14 @@ jobs:
         - run: 
            name: Deploy to DockerHub
            command: |
-             if [ "${CIRCLE_BRANCH}" == "master" ]; then
                 docker login -u $DOCKER_USER -p $DOCKER_PASS
                 docker push ${IMAGE_NAME}
-             fi
         - run: 
            name: Deploy to GitHub
            command: |
-              if [ "${CIRCLE_BRANCH}" == "master" ]; then
                 docker login docker.pkg.github.com --username diehlpk -p ${TOKEN}
                 docker tag ${IMAGE_NAME} docker.pkg.github.com/nonlocalmodels/nlmech/nlmech:latest
                 docker push docker.pkg.github.com/nonlocalmodels/nlmech/nlmech:latest
-              fi
     documentation:
       docker:
         - image: diehlpk/nonlocalmodels:baseimage
@@ -105,7 +134,7 @@ jobs:
               make doc
         - run:
             command: |
-                if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                if [ "${CIRCLE_BRANCH}" == "main" ]; then
                   git clone https://github.com/nonlocalmodels/nonlocalmodels.github.io.git
                   cd nonlocalmodels.github.io
                   git fetch
@@ -135,13 +164,20 @@ workflows:
       - deploy:
             filters:
               branches:
-                ignore: gh-pages
+                 ignore: gh-pages
+                 only: main
             requires:
-              - build
+              - codecoverage
+              - documentation
       - documentation:
             filters:
               branches:
                 ignore: gh-pages
             requires:
               - build
-
+      - build_pcl:
+            filters:
+              branches:
+                ignore: gh-pages
+            requires:
+              - build

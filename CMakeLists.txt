@@ -3,27 +3,20 @@
 #
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-cmake_minimum_required(VERSION 3.10)
 
 #####################################################################
 # Setup 
 #####################################################################
+project(NLMech
+    DESCRIPTION "Framework for non-local mechanics"
+    LANGUAGES CXX C)
 
 # Set the version 
 set (VERSION_MAJOR 0)
 set (VERSION_MINOR 1)
 set (VERSION_UPDATE 0)
 
-project(NLMech 
-    VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_UPDATE}
-    DESCRIPTION "Framework for non-local mechanics"
-    LANGUAGES CXX C)
-
-# Provide the configuration file to get the version
-configure_file (
-  "${PROJECT_SOURCE_DIR}/Config.h.in"
-  "${PROJECT_SOURCE_DIR}/src/Config.h"
-  )
+cmake_minimum_required(VERSION 3.10)
 
 # Set director for all exectuables
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin")
@@ -95,6 +88,12 @@ find_package(BlazeIterative REQUIRED)
 find_package(LAPACK REQUIRED)
 find_package(BLAS REQUIRED)
 
+
+set(Enable_PCL FALSE CACHE BOOL "Enables PCL for faster neighborsearch")
+if(${Enable_PCL})
+    find_package(PCL REQUIRED)
+endif()
+
 #####################################################################
 # Set the compiler flags
 #####################################################################
@@ -161,7 +160,19 @@ add_subdirectory(docs)
 endif()
 
 ##############################################################################
+# Build RPM
+##############################################################################
+set(Enable_RPM FALSE CACHE BOOL "Generates target for generating a rpm package")
+if(${Enable_RPM})
+add_subdirectory(cmake/packaging)
+endif()
+
+
+##############################################################################
 # Build NLMech
 ##############################################################################
 add_hpx_executable(NLMech SOURCES src/main.cpp 
                    DEPENDENCIES Inp Model ${LAPACK_LIBRARIES})
+
+
+

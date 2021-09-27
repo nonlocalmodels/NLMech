@@ -19,6 +19,8 @@
 #include <vtkPoints.h>
 #include <vtkUnsignedCharArray.h>
 #include <vtkUnsignedIntArray.h>
+#include <vtkVersion.h>
+#include <vtkErrorCode.h>
 
 #include "util/feElementDefs.h"
 
@@ -26,6 +28,16 @@ size_t rw::reader::VtkReader::d_count = 0;
 
 rw::reader::VtkReader::VtkReader(const std::string &filename) {
   d_count++;
+
+  std::ifstream d_myfile;
+  d_myfile.open(filename);
+
+  if (!d_myfile.is_open()) {
+    std::cerr << "Error: Could not open or generate following file: "
+              << filename << std::endl;
+    std::exit(1);
+  }
+  d_myfile.close();
 
   // Append the extension vtu to file_name
   d_reader_p = vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
@@ -184,7 +196,14 @@ void rw::reader::VtkReader::readMesh(size_t dim,
   for (size_t i = 0; i < num_elems; i++) {
     vtkIdType id = i;
     vtkIdType num_ids;
-    vtkIdType *nodes_ids;
+
+#if VTK_MAJOR_VERSION == 9
+#define vtk_prefix const
+#else
+#define vtk_prefix
+#endif
+
+    vtk_prefix vtkIdType *nodes_ids;
 
     d_grid_p->GetCellPoints(id, num_ids, nodes_ids);
 
@@ -260,7 +279,14 @@ void rw::reader::VtkReader::readCells(size_t dim, size_t &element_type,
   for (size_t i = 0; i < num_elems; i++) {
     vtkIdType id = i;
     vtkIdType num_ids;
-    vtkIdType *nodes_ids;
+
+#if VTK_MAJOR_VERSION == 9
+#define vtk_prefix const
+#else
+#define vtk_prefix
+#endif
+
+    vtk_prefix vtkIdType *nodes_ids;
 
     d_grid_p->GetCellPoints(id, num_ids, nodes_ids);
 

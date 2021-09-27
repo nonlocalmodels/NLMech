@@ -6,5 +6,15 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
+if(${Enable_PCL})
+    add_definitions(-DENABLE_PCL)
+    include_directories(${PCL_INCLUDE_DIRS})
+    link_directories(${PCL_LIBRARY_DIRS})
+endif()
+
 add_hpx_library(Geometry
     SOURCES ${SOURCES})
+
+if(${Enable_PCL})
+    target_link_libraries(Geometry PUBLIC ${PCL_LIBRARIES})
+endif()

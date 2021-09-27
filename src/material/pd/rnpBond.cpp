@@ -135,8 +135,22 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
                  "compute parameters.\n";
   }
 
-  // set Poisson's ratio to 1/4
-  deck->d_matData.d_nu = 0.25;
+  if (deck->d_isPlaneStrain == true) {
+    // set Poisson's ratio to 1/4 for plain strain
+    deck->d_matData.d_nu = 0.25;
+    std::cout << "FDModel: Plane Strain and nu=" << deck->d_matData.d_nu << "."
+              << std::endl;
+  } else if (deck->d_isPlaneStrain == false) {
+    // set Poisson's ratio to 1/3 for plain stress
+    deck->d_matData.d_nu = 1. / 3.;
+    std::cout << "FDModel: Plane Stress and nu=" << deck->d_matData.d_nu << "."
+              << std::endl;
+  } else {
+    std::cerr << "Error: Please specifiy the Is_Plane_Strain attribute in the "
+                 "Material section!"
+              << std::endl;
+    std::exit(1);
+  }
 
   // compute E if not provided or K if not provided
   if (deck->d_matData.d_E > 0.)
@@ -177,7 +191,7 @@ void material::pd::RNPBond::computeParameters(inp::MaterialDeck *deck,
 void material::pd::RNPBond::computeMaterialProperties(inp::MaterialDeck *deck,
                                                       const double &M) {
   // set Poisson's ratio to 1/4
-  deck->d_matData.d_nu = 0.25;
+  deck->d_matData.d_nu = 0.33;
 
   // compute peridynamic parameters
   if (d_dimension == 2) {

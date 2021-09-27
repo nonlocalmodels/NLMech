@@ -24,7 +24,7 @@ namespace parallel {
 template<typename T>
 inline void copy(T in, T &out) {
 
-	hpx::for_loop(hpx::parallel::execution::par, 0, in.size(),
+	hpx::for_loop(hpx::execution::par, 0, in.size(),
 			[&out, in](boost::uint64_t i) {
 
 				out[i] = in[i];
@@ -43,7 +43,7 @@ template<typename T>
 inline void addInplace(T &a, T b) {
 
 
-	hpx::for_loop(hpx::parallel::execution::par, 0, a.size(),
+	hpx::for_loop(hpx::execution::par, 0, a.size(),
 			[&a, b](boost::uint64_t i) {
 
 				a[i] = a[i] + b[i];
@@ -60,7 +60,7 @@ inline void addInplace(T &a, T b) {
 template<typename T>
 inline void subInplace(T &a, T b) {
 
-	hpx::for_loop(hpx::parallel::execution::par, 0, a.size(),
+	hpx::for_loop(hpx::execution::par, 0, a.size(),
 			[&a, b](boost::uint64_t i) {
 
 				a[i] = a[i] - b[i];
