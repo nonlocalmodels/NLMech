@@ -18,6 +18,12 @@ set (VERSION_UPDATE 0)
 
 cmake_minimum_required(VERSION 3.10)
 
+# Provide the configuration file to get the version
+configure_file (
+  "${PROJECT_SOURCE_DIR}/Config.h.in"
+  "${PROJECT_SOURCE_DIR}/src/Config.h"
+  )
+
 # Set director for all exectuables
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin")
 
