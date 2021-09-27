@@ -18,8 +18,6 @@ set (VERSION_UPDATE 0)
 
 cmake_minimum_required(VERSION 3.10)
 
-
-
 # Provide the configuration file to get the version
 configure_file (
   "${PROJECT_SOURCE_DIR}/Config.h.in"
