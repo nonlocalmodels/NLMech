@@ -180,6 +180,9 @@ The source code is released under the [![GitHub license](https://img.shields.io/
 ## Citing
 In publications, please use our paper as the main citation for NLMech: 
 * Diehl, P., Jha, P. K., Kaiser, H., Lipton, R., & Lévesque, M. (2020). An asynchronous and task-based implementation of peridynamics utilizing HPX—the C++ standard library for parallelism and concurrency. SN Applied Sciences, 2(12), 1-21.
+In addition, please use our [JOSS](https://joss.theoj.org/) for the referencing the code
+
+* Jha et al., (2021). NLMech: Implementation of finite difference/meshfree discretization of nonlocal fracture models. Journal of Open Source Software, 6(65), 3020, [10.21105/joss.03020](https://doi.org/10.21105/joss.03020)
 
 For more references, we refer to NLMech's [publication list](https://nonlocalmodels.github.io/publications/).
 
